@@ -2,18 +2,56 @@
 layout: home
 title: MyCoon
 ---
-<h1 class="page-heading">Posts</h1>
+<div class="thumbnail">
+	<div class="container-fluid">
+		<div class="content">
+			<div class="title-text">
+				<h1>MyCoon</h1>
+				<p>麥睏。</p>
+			</div><!-- /.title-text -->
+		</div><!-- /.content -->
+	</div><!-- /.container-fluid -->
+</div><!-- /.thumbnail -->
 
-<ul class="post-list">
-	{% for post in site.posts %}
-		<li>
-			<span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
+<div class="about-mycoon">
+	<div class="container-fluid">
+		<div class="content">
+			<div class="title-text">
+				<h1><span>About</span> <span>MyCoon</span><span> 麥睏。</span></h1>
+			</div><!-- /.title-text -->
+			<div class="description">
+				<p>This is MyCoon. A blog hosted by Rachel.</p>
+			</div><!-- /.description -->
+		</div><!-- /.content -->
+	</div><!-- /.container-fluid -->
+</div><!-- /.about-mycoon -->
 
-			<h2>
-				<a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title | escape }}</a>
-			</h2>
-		</li>
-	{% endfor %}
-</ul>
-
-<p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
+<div class="cv">
+	<div class="container-fluid">
+		<div class="content">
+			<div class="title-text isClosed">
+				<h1>See My</h1>
+			</div><!-- /.title-text -->
+			<div class="cv-circle isClosed">
+				<h1>CV</h1>
+			</div><!-- /.cv-circle -->
+			<div class="description">
+				<div class="basic-info">
+					<p>This is MyCoon.</p>
+				</div>
+				<div class="education">
+					<p>This is MyCoon.</p>
+				</div>
+				<div class="experience">
+					<p>This is MyCoon.</p>
+				</div>
+				<div class="skillset">
+					<p>This is MyCoon.</p>
+				</div>
+				<div class="language">
+					<p>This is MyCoon.</p>
+				</div>
+			</div><!-- /.description -->
+		</div><!-- /.content -->
+	</div><!-- /.container-fluid -->
+</div><!-- /.cv -->

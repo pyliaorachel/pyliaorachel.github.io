@@ -41,20 +41,21 @@ $dark-green-color: #33691E;
 
 // Import partials from the `minima` theme.
 @import "minima";
+@import "home";
 
 // body
 body {
 	background-color: $dark-green-color;
 }
 .page-content {
-	padding: 150px 0;
+	padding: 150px 0 0;
 	background-color: white;
 }
 
 // navbar
 .navbar-default {
-	background-color: rgba(255, 255, 255, 0.8);
-	border-color: rgba(255, 255, 255, 0.8);
+	background-color: rgba(255, 255, 255, 0.9);
+	border-color: rgba(255, 255, 255, 0.9);
 	border-bottom: 1px solid $dark-green-color;
 }
 .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
