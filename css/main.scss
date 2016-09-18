@@ -3,7 +3,7 @@
 ---
 @charset "utf-8";
 
-// Our variables
+// Jekyll's variables
 $base-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 $base-font-size:   16px;
 $base-font-weight: 400;
@@ -26,6 +26,10 @@ $content-width:    800px;
 $on-palm:          600px;
 $on-laptop:        800px;
 
+// My variables
+$light-green-color: #91DC5A;
+$dark-green-color: #33691E;
+
 // Minima also includes a mixin for defining media queries.
 // Use media queries like this:
 // @include media-query($on-palm) {
@@ -37,3 +41,57 @@ $on-laptop:        800px;
 
 // Import partials from the `minima` theme.
 @import "minima";
+
+// body
+body {
+	background-color: $dark-green-color;
+}
+article, .home {
+	padding: 150px 100px;
+	background-color: white;
+}
+
+// navbar
+.navbar-default {
+	background-color: rgba(255, 255, 255, 0.8);
+	border-color: rgba(255, 255, 255, 0.8);
+	border-bottom: 1px solid $dark-green-color;
+}
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
+	background-color: transparent;
+	border-bottom: 3px solid $light-green-color;
+}
+#special>a {
+	color: #eeeeee; 
+	background-color: $dark-green-color; 
+	border-bottom: 3px solid $dark-green-color;
+}
+#special.active>a {
+	border-bottom: 3px solid $light-green-color;
+}
+
+// footer
+footer {
+	padding: 30px 0;
+	background-color: $dark-green-color;
+}
+.footer-link, .footer-copy-right {
+	text-align: center;
+}
+.footer-link>a {
+	color: $light-green-color;
+	text-decoration: none;
+}
+.footer-link .username {
+	margin-left: 5px;
+}
+.footer-copy-right {
+	color: rgba(255, 255, 255, 0.5);
+	margin-top: 10px;
+}
+
+// assets
+.icon>img {
+	width: 20px;
+	height: 20px;
+}
