@@ -42,6 +42,8 @@ $dark-green-color: #33691E;
 // Import partials from the `minima` theme.
 @import "minima";
 @import "home";
+@import "blog";
+@import "post";
 
 // body
 body {
@@ -62,6 +64,9 @@ body {
 	background-color: transparent;
 	border-bottom: 3px solid $light-green-color;
 }
+.navbar-default .navbar-brand {
+	font-family: 'Rock Salt', cursive;
+}
 #special>a {
 	color: #eeeeee; 
 	background-color: $dark-green-color; 
@@ -74,7 +79,7 @@ body {
 // footer
 footer {
 	padding: 30px 0;
-	background-color: $dark-green-color;
+	background-color: rgba($dark-green-color, 0.9);
 }
 .footer-link, .footer-copy-right {
 	text-align: center;
@@ -87,7 +92,7 @@ footer {
 	margin-left: 5px;
 }
 .footer-copy-right {
-	color: rgba(255, 255, 255, 0.5);
+	color: rgba(255, 255, 255, 0.8);
 	margin-top: 10px;
 }
 

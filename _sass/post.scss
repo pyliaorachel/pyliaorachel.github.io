@@ -1,0 +1,34 @@
+$text-color:       #f8f8f8;
+
+$grey-color:       #828282;
+$grey-color-light: lighten($grey-color, 40%);
+$grey-color-dark:  darken($grey-color, 25%);
+
+$light-green-color: #91DC5A;
+$dark-green-color: #33691E;
+
+$big-title-font: 'Rock Salt', cursive;
+$small-title-font: 'Space Mono', monospace;
+$post-title-font: 'Rajdhani', sans-serif;
+$meta-font: 'Scope One', serif;
+$p-font: 'Source Code Pro', monospace;
+$chinese-font: 'Microsoft YaHei', '微软雅黑', sans-serif;
+
+.post {
+	padding: 150px 70px !important;
+
+	.post-article {
+		.post-header {
+			margin-bottom: 60px;
+			.post-title {
+				font-family: $big-title-font;
+				color: $dark-green-color;
+				margin-bottom: 30px;
+			}
+			.post-meta {
+				font-family: $meta-font;
+			}
+		}
+	}
+}
+

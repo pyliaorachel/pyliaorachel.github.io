@@ -1,0 +1,64 @@
+$text-color:       #f8f8f8;
+
+$grey-color:       #828282;
+$grey-color-light: lighten($grey-color, 40%);
+$grey-color-dark:  darken($grey-color, 25%);
+
+$light-green-color: #91DC5A;
+$dark-green-color: #33691E;
+
+$big-title-font: 'Rock Salt', cursive;
+$small-title-font: 'Space Mono', monospace;
+$post-title-font: 'Rajdhani', sans-serif;
+$meta-font: 'Scope One', serif;
+$p-font: 'Source Code Pro', monospace;
+$chinese-font: 'Microsoft YaHei', '微软雅黑', sans-serif;
+
+.blog {
+	padding: 150px 100px !important;
+
+	.title-text {
+		font-size: 88px;
+		font-family: $big-title-font;
+		color: $light-green-color;
+		margin-bottom: 140px;
+	}
+
+	.post-list {
+		.excerpt {
+			margin: 50px 0;
+			h2 {
+				margin: 40px 0;
+			}
+			.post-title {
+				color: $dark-green-color;
+				text-decoration: none;
+				font-size: 36px;
+				font-family: $post-title-font;
+			}
+			.post-meta {
+				margin-left: 20px;
+				font-size: 20px;
+				font-family: $meta-font;
+				color: $grey-color;
+			}
+			.tag-list {
+				list-style: none;
+				margin: 0;
+				.tag {
+					padding: 5px 15px;
+					background-color: rgba($dark-green-color, 0.9);
+					border-radius: 2px;
+					display: inline-block;
+					margin-right: 10px;
+					font-size: 16px;
+					color: white;
+				}
+			}
+		}
+		.separator {
+			color: $grey-color-light;
+			font-size: 20px;
+		}
+	}
+}
