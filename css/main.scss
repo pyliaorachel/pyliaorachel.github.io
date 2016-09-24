@@ -41,9 +41,11 @@ $dark-green-color: #33691E;
 
 // Import partials from the `minima` theme.
 @import "minima";
+
 @import "home";
 @import "blog";
 @import "post";
+@import "syntax_style";
 
 // body
 body {
