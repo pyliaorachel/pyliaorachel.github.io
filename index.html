@@ -21,7 +21,7 @@ subtitle: 麥睏。
 				<h1><span>About</span> <span>{{ page.title }}</span><span> {{ page.subtitle }}</span></h1>
 			</div><!-- /.title-text -->
 			<div class="description">
-				<p>This is MyCoon. A blog hosted by Rachel.</p>
+				<p>{{ site.data.about.description }}</p>
 			</div><!-- /.description -->
 		</div><!-- /.content -->
 	</div><!-- /.container-fluid -->
@@ -36,22 +36,124 @@ subtitle: 麥睏。
 			<div class="cv-circle isClosed">
 				<h1>CV</h1>
 			</div><!-- /.cv-circle -->
+			{% assign cv = site.data.cv %}
 			<div class="description">
-				<div class="basic-info">
-					<p>This is MyCoon.</p>
+
+				<div class="info">
+					{% assign info = cv.info %}
+					<h2>{{ info.name }} {{ info.chineseName }}</h2>
+					<div class="contact">
+						<a href="mailto:rachel5566kk@gmail.com">
+							<span class="icon icon-email">
+								<img src="/assets/svg/email-logo.svg" alt="Email Logo">
+							</span>
+							<span class="username">rachel5566kk@gmail.com</span>
+						</a>
+						<a href="https://github.com/pyliaorachel"  target="_blank">
+							<span class="icon icon-github">
+								<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+							</span>
+							<span class="username">pyliaorachel</span>
+						</a>
+						<a href="https://tw.linkedin.com/in/peiyu-liao" target="_blank">
+							<span class="icon icon-linkedin">
+								<img src="/assets/svg/linkedin-logo.svg" alt="LinkedIn Logo">
+							</span>
+							<span class="username">Peiyu Liao</span>
+						</a>
+					</div>
 				</div>
-				<div class="education">
-					<p>This is MyCoon.</p>
+
+				<div class="timeline">
+					{% assign elements = cv.education %}
+					{% for element in cv.experience.work %}
+						{% assign elements = elements | push: element %}
+					{% endfor %}
+					{% for element in cv.experience.voluntary %}
+						{% assign elements = elements | push: element %}
+					{% endfor %}
+					{% for element in cv.experience.competition %}
+						{% assign elements = elements | push: element %}
+					{% endfor %}
+					{% for element in cv.experience.extracurricular %}
+						{% assign elements = elements | push: element %}
+					{% endfor %}
+
+					{% assign elements = elements | sort: 'start' | reverse %}
+					<!--{% assign startY = elements.first.start | slice: 0, 4 %}
+					{% assign startM = elements.first.start | slice: 4, 2 %}
+					{% assign endY = elements.last.start | slice: 0, 4 %}
+					{% assign endM = elements.first.start | slice: 4, 2 %}
+					
+					{% assign totalMonths = startY | minus: endY | plus: 1 | times: 12 | minus: startM | minus: endM %}
+
+					{{ totalMonths}}-->
+
+					{% for element in elements %}
+
+						<!--hack here, either one will have value-->
+						<!--<p>{{ element.school | append: element.position | append: element.title}}</p>-->
+						<div class="timeline-block row">
+							<div class="timeline-time col-md-4">
+								<p>ey</p>
+							</div>
+
+							<div class="timeline-draw col-md-2">
+								<div class="timeline-line">
+								</div>
+								<div class="timeline-circle {{element.type}}-circle">
+									<span class="icon icon-{{element.type}}">
+										<img src="/assets/svg/{{element.type}}-logo.svg" alt="{{element.type}} Logo">
+									</span>
+								</div>
+								<div class="timeline-line">
+								</div>
+							</div>
+
+							<div class="timeline-description col-md-6">
+								<p>ey</p>
+							</div>
+						</div>
+
+					{% endfor %}
 				</div>
+
+				<!--<div class="education">
+					{% for education in cv.education %}
+						<div class="education-block row">
+							<div class="col-md-4">
+								<p>
+									<span>
+										{{ education.startYear }} {{education.startMonth | date: "%b"}}
+										 - {{ education.endYear }} {{education.endMonth | date: "%b"}}
+									</span>
+								</p>
+							</div>
+							<div class="col-md-8">
+								<p>
+									<span>{{ education.school }}</span>
+									<span>{{ education.location }}</span>
+								</p>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+
 				<div class="experience">
+					{% assign experience = cv.experience %}
 					<p>This is MyCoon.</p>
 				</div>
-				<div class="skillset">
+
+				<div class="skill">
+					{% assign skill = cv.skill %}
 					<p>This is MyCoon.</p>
 				</div>
+
 				<div class="language">
+					{% assign language = cv.language %}
 					<p>This is MyCoon.</p>
-				</div>
+				</div>-->
+
 			</div><!-- /.description -->
 		</div><!-- /.content -->
 	</div><!-- /.container-fluid -->

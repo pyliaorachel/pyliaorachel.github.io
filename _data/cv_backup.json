@@ -1,0 +1,166 @@
+{
+	"info": {
+		"name": "Peiyu Liao (Rachel)",
+		"chineseName": "廖珮妤",
+		"contact": {
+			"email": ["rachel5566kk@gmail.com", "u3512485@connect.hku.hk"],
+			"github": "https://github.com/pyliaorachel",
+			"linkedin": "https://tw.linkedin.com/in/peiyu-liao"
+		}
+	},
+	"personalStatement": "my personal statement",
+	"education": [
+		{
+			"school": "The University of Hong Kong (HKU)",
+			"location": "Hong Kong",
+			"start": "201409",
+			"end": "201806",
+			"program": "Bachelor of Engineering in Computer Engineering",
+			"grade": "CGPA 3.91/4.3",
+			"awards": [
+				"HKU Foundation Scholarship for Outstanding International Students",
+				"Dean’s Honors List (2014-15)",
+				"EE 72 Chan Kam Yin Scholarship (2015-16)",
+				"Chevalier Engineering Scholarship (2016-17)"
+			]
+		},
+		{
+			"school": "Taipei First Girls Senior High School (TFG)",
+			"location": "Taipei, Taiwan",
+			"start": "201109",
+			"end": "201406",
+			"program": "",
+			"grade": "",
+			"awards": [
+				"Mayor’s Award (1st place in class)",
+				"Award for Academic Excellence"
+			]
+		}
+	],
+	"experience": {
+		"work": [
+			{
+				"position": "Technical Intern",
+				"company": "Yahoo! Taiwan",
+				"location": "Taipei, Taiwan",
+				"startYear": "2016",
+				"startMonth": "7",
+				"endYear": "2016",
+				"endMonth": "8",
+				"description": "Build a live streaming app for Yahoo Auction in 2 months using React Native, with 1 techinical partner and 1 designer",
+				"highlight": [
+					"Managed to learn React Native & Redux from zero knowledge to being able to fully assist in deploying an app",
+					"Technical components include React Native, Redux, WebRTC, Firebase, OAuth 2"
+				]
+			},
+			{
+				"position": "Lab Assistant",
+				"company": "Course Introduction to EEE (ENGG1203), HKU",
+				"location": "Hong Kong",
+				"startYear": "2015",
+				"startMonth": "9",
+				"endYear": "2016",
+				"endMonth": "5",
+				"description": "Troubleshooting and queries answering in the lab, with over 120 students",
+				"highlight": [
+					"Firm knowledge in circuit theory & lab equipment operation",
+					"Ability to come up with solutions efficiently when facing problems or failures"
+				]
+			}
+		],
+		"voluntary": [
+			{
+				"responsibility": "English Teaching",
+				"company": "Karen Students' Center",
+				"location": "Hpa-an, Myanmar",
+				"startYear": "2015",
+				"startMonth": "6",
+				"endYear": "2015",
+				"endMonth": "6",
+				"description": "English course design and teaching, targeted on grade nine and university students",
+				"highlight": [
+					"Ability to convey complicated ideas to others in a compact and simplified form",
+					"Ability to design creative course material"
+				]
+			}
+		],
+		"competition": [
+			{
+				"title": "UBS Group Technology Case Study Challenge",
+				"company": "Union Bank of Switzerland (UBS)",
+				"location": "Hong Kong",
+				"startYear": "2016",
+				"startMonth": "6",
+				"endYear": "2016",
+				"endMonth": "7",
+				"result": "The Winning Team",
+				"description": "Developing a plan to improve client experience using technology, with a team of 3",
+				"highlight": [
+					"Technically independent on implementing a simple FB BOT on AWS",
+					"Team collaboratation on idea forming",
+					"Technical components include NodeJS, AWS deployment, Firebase, FB API"
+				]
+			},
+			{
+				"title": "ACM Hong Kong Chapter",
+				"company": "",
+				"location": "Hong Kong",
+				"startYear": "2016",
+				"startMonth": "6",
+				"endYear": "2016",
+				"endMonth": "6",
+				"result": "3rd Runner-up Team",
+				"description": "3rd runner-up team competing with over 30 teams from universities of Hong Kong and Macau, 3 members each",
+				"highlight": [
+					"Problem solving & team collaboratation"
+				]
+			},
+			{
+				"title": "Project Competition",
+				"company": "Course Introduction to EEE (ENGG1203), HKU",
+				"location": "Hong Kong",
+				"startYear": "2015",
+				"startMonth": "4",
+				"endYear": "2015",
+				"endMonth": "4",
+				"result": "3rd Place",
+				"description": "Building a Rube Goldberg Machine; 3rd place out of 30 teams with 5 members each",
+				"highlight": [
+					"Ability to collaborate with people from a diversity of backgrounds",
+					"Leadership & communication ability",
+					"Project management skills",
+					"Practical circuit design & building skills"
+				]
+			}
+		],
+		"extracurricular": [
+			{
+				"position": "Head of Academic Section",
+				"company": "Information Studies Club, TFG",
+				"location": "Taipei, Taiwan",
+				"startYear": "2012",
+				"startMonth": "6",
+				"endYear": "2013",
+				"endMonth": "6",
+				"description": "Course preparations, teaching, course book writing & editing",
+				"highlight": [
+					"Designing & teaching courses in C, Flash, ActionScript, & hardware knowledge",
+					"Self-learning ability (developed skills in Flash & ActionScript 3.0 with projects made)"
+				]
+			}
+		]
+	},
+	"skill": {
+		"technical": {
+			"language": ["C", "C++", "Java"],
+			"appDevelopment": ["HTML", "CSS", "JavaScript", "jQuery", "Node.js", "React Native"],
+			"database": ["Firebase", "MySQL"],
+			"os": ["Windows", "OSX", "Linux"],
+			"others": ["Shell Script", "Git"]
+		}	
+	},
+	"language": [
+		"Mandarin (native)", "English (fluent)", "Taiwanese (fluent)", "Cantonese (intermediary)"
+	]
+
+}
