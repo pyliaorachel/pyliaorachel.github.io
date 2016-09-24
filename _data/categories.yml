@@ -1,0 +1,16 @@
+- name: 'Tech'
+  children: 
+    - 'Web'
+    - 'APP'
+    - 'ProblemSolving'
+- name: 'Notes'
+  children: 
+    - 'Algorithm'
+    - 'AI'
+    - 'CheatSheet'
+    - 'Courses'
+
+- name: 'Life'
+  children: 
+    - 'Internship'
+    - 'ProjectDiary'

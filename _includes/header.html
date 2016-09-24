@@ -22,7 +22,26 @@
 
 			<ul class="nav navbar-nav navbar-right" id="nav-links">
 				<li class="active"><a href="#">Home</a></li>
-				<li><a href="/blog">Blog</a></li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Blog<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/blog">MyCoon Blog</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/blog/categories">Categories</a></li>
+						{% assign categories = "" %}
+						{% for post in site.posts %}
+							{% assign categories = categories | append:post.categories[1] | append:'|' %}
+						{% endfor %}
+						{% assign categories = categories | split:'|' | uniq %}
+
+						{% for category in categories %}
+							<li class="category"><a href="/blog/{{ category | slugify }}">{{ category }}</a></li>
+						{%endfor%}
+						<li><a href="/blog/tags">Tags</a></li>
+					</ul>
+				</li>
 				<li><a href="#">Tutorials</a></li>
 				<li><a href="#">Projects</a></li>
 				<li id="special"><a href="#">?</a></li>

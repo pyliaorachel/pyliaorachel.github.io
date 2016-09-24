@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "Hello World!"
-date:   2016-09-18 22:24:27 -0400
-categories: web jekyll
+title:  "Welcome to Jekyll!"
+date:   2016-09-17 22:24:27 -0400
+categories: Blog Notes AI
 tags: jekyll github
 author: Jekyll
 excerpt_separator: <!--more-->

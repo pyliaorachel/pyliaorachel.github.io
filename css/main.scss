@@ -45,6 +45,7 @@ $dark-green-color: #33691E;
 @import "home";
 @import "blog";
 @import "post";
+@import "categories";
 @import "syntax_style";
 
 // body
@@ -77,25 +78,34 @@ body {
 #special.active>a {
 	border-bottom: 3px solid $light-green-color;
 }
+.category a {
+	color: $grey-color !important;
+	padding-left: 40px !important;
+}
 
 // footer
 footer {
 	padding: 30px 0;
 	background-color: rgba($dark-green-color, 0.9);
-}
-.footer-link, .footer-copy-right {
-	text-align: center;
-}
-.footer-link>a {
-	color: $light-green-color;
-	text-decoration: none;
-}
-.footer-link .username {
-	margin-left: 5px;
-}
-.footer-copy-right {
-	color: rgba(255, 255, 255, 0.8);
-	margin-top: 10px;
+
+	.footer-link {
+		margin-top: 10px;
+		margin-bottom: 10px;
+		&>a {
+			color: $light-green-color;
+			text-decoration: none;
+		}
+		.username {
+			margin-left: 5px;
+		}
+	}
+	.footer-copy-right {
+		color: rgba(255, 255, 255, 0.8);
+		margin-top: 10px;
+	}
+	.footer-link, .footer-copy-right {
+		text-align: center;
+	}
 }
 
 // assets

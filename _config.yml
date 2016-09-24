@@ -26,3 +26,5 @@ github_username:  pyliaorachel
 # Build settings
 markdown: kramdown
 theme: minima
+
+permalink: /:categories/:title

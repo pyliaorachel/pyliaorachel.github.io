@@ -14,18 +14,55 @@ $meta-font: 'Scope One', serif;
 $p-font: 'Source Code Pro', monospace;
 $chinese-font: 'Microsoft YaHei', '微软雅黑', sans-serif;
 
+@media screen and (max-width: 900px) {
+	// remember to be more specific to override properties
+	body main.blog {
+		padding: 120px 60px;
+		.title-text { 
+			font-size: 56px;
+			margin-bottom: 50px;
+		}
+		.post-list {
+			.ignore-excerpt {
+				.tag-container {
+					display: block;
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 600px) {
+	body main.blog {
+		padding: 100px 30px;
+		.title-text { 
+			font-size: 46px;
+			margin-bottom: 40px;
+		}
+	}
+}
+
+body .blog {
+	padding: 150px 60px;
+}
 .blog {
-	padding: 150px 100px !important;
 
 	.title-text {
 		font-size: 88px;
 		font-family: $big-title-font;
 		color: $light-green-color;
-		margin-bottom: 140px;
+		margin-bottom: 80px;
+		padding: 0px 40px;
+	}
+
+	.blog-main-page {
+		.post-list {
+			padding: 0px 60px;
+		}
 	}
 
 	.post-list {
-		.excerpt {
+		.excerpt, .ignore-excerpt {
 			margin: 50px 0;
 			h2 {
 				margin: 40px 0;
@@ -38,6 +75,7 @@ $chinese-font: 'Microsoft YaHei', '微软雅黑', sans-serif;
 			}
 			.post-meta {
 				margin-left: 20px;
+				margin-right: 50px;
 				font-size: 20px;
 				font-family: $meta-font;
 				color: $grey-color;
@@ -54,6 +92,24 @@ $chinese-font: 'Microsoft YaHei', '微软雅黑', sans-serif;
 					font-size: 16px;
 					color: white;
 				}
+			}
+			.tag-container {
+				display: inline-block;
+			}
+		}
+		.ignore-excerpt {
+			.post-meta {
+				margin: 20px 0;
+				font-size: 14px;
+			}
+			.tag {
+				padding: 5px 15px;
+				background-color: rgba($dark-green-color, 0.9);
+				border-radius: 2px;
+				display: inline-block;
+				margin-left: 5px;
+				font-size: 16px;
+				color: white;
 			}
 		}
 		.separator {

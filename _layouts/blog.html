@@ -4,6 +4,48 @@ class: blog
 ---
 <div class="blog-wrapper">
 
-  {{ content }}
+	<div class="blog-main-page">
+
+		<h1 class="title-text">
+			{% if page.subtitle and page.subtitle != "" %}{{ page.subtitle }}
+			{% else %}{{ page.title }}
+			{% endif %}
+		</h1>
+
+		<ul class="post-list">
+			{% for post in site.posts %}
+				{% if page.subtitle and page.subtitle == post.categories[1] or page.subtitle == "" %} 
+					<li>
+						<span class="separator"> • • • </span>
+					</li>
+					<li class="excerpt">
+						<h2>
+							<a class="post-title" href="{{ post.url | prepend: site.baseurl }}">
+							{{ post.title | escape }}
+							</a>
+							<span class="post-meta"> 
+								{{ post.date | date: "%b %-d, %Y" }}
+								{% if post.categories %}  •  {{ post.categories | last }}{% endif %}
+								{% if post.author %}  •  by {{ post.author }}{% endif %}
+							</span>
+						</h2>
+
+						{{ post.excerpt }}
+
+						<ul class="tag-list">
+							{% for tag in post.tags %}
+
+							<li class="tag">
+								{{ tag }}
+							</li>
+
+							{% endfor %}
+						</ul>
+					</li>
+				{% endif %}
+			{% endfor %}
+		</ul>
+
+	</div>
 
 </div>

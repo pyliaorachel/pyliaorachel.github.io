@@ -25,8 +25,8 @@ $chinese-font: 'Microsoft YaHei', '微软雅黑', sans-serif;
 	transition-duration: $duration;
 }
 
-.home {
-	padding-top: 0 !important;
+body .home {
+	padding-top: 0;
 }
 
 .thumbnail {

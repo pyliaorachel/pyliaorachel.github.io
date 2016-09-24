@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>{{ page.title }}</title>
+		<title>{{ page.title }}{% if page.subtitle and page.subtitle != "" %} - {{ page.subtitle }}{% endif %}</title>
 		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
 		<link rel="stylesheet" href="/css/main.css" type="text/css">
 		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Inconsolata|Muli:300|Poiret+One|Rajdhani|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
