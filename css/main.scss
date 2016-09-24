@@ -30,6 +30,8 @@ $on-laptop:        900px;
 $light-green-color: #91DC5A;
 $dark-green-color: #33691E;
 
+$big-title-font: 'Rock Salt', cursive;
+
 // Minima also includes a mixin for defining media queries.
 // Use media queries like this:
 // @include media-query($on-palm) {
@@ -41,7 +43,6 @@ $dark-green-color: #33691E;
 
 // Import partials from the `minima` theme.
 @import "minima";
-
 @import "home";
 @import "blog";
 @import "post";
@@ -105,6 +106,23 @@ footer {
 	}
 	.footer-link, .footer-copy-right {
 		text-align: center;
+	}
+}
+
+// under_construction
+.under-construction {
+	.under-construction-emoji {
+		font-size: 108px;
+		color: rgba($light-green-color, 20%);
+		margin-bottom: 30px;
+		font-family: 'Scope One', serif;
+	}
+	.title-text {
+		font-size: 26px;
+		font-family: $big-title-font;
+		color: darken($light-green-color, 20%);
+		margin-bottom: 150px;
+		padding: 0px 40px;
 	}
 }
 
