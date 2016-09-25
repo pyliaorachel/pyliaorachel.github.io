@@ -15,12 +15,28 @@ To add new posts, simply add a file in the `_posts` directory that follows the c
 
 Jekyll also offers powerful support for code snippets:
 
-{% highlight ruby %}
-def print_hi(name)
-  puts "Hi, #{name}"
-end
-print_hi('Tom')
-#=> prints 'Hi, Tom' to STDOUT.
+{% highlight javascript %}
+function MyCoon (Author author) {
+  author.setIntroduction('This is Rachel (≧∀≦)ゞ');
+  author.createBlog('MyCoon');
+  author.setBlogVisions(
+    ['Post Tech-related Reflections', 
+    'Introduce Educational Tutorials', 
+    'Showcase Projects', 'Have Fun!'] 
+  );
+  author.setBlogIntroduction(
+    'MyCoon sounds like \"do not sleep\" in Taiwanese. 
+    I just wanna remind myself of this every time I get lazy.'
+  );
+
+  author.shout('Go explore my blog now!!! (ง๑ •̀_•́)ง’');
+
+  author.addSuggestionListener((suggestion) => {
+    author.appreciate();
+  });
+
+  return 'View my CV below ( σ՞ਊ ՞)σ ';
+}
 {% endhighlight %}
 
 Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
