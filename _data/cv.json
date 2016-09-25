@@ -27,7 +27,7 @@
 		},
 		{
 			"school": "Taipei First Girls Senior High School (TFG)",
-			"location": "Taipei, Taiwan",
+			"location": "Taiwan",
 			"start": "201109",
 			"end": "201406",
 			"program": "",
@@ -44,11 +44,11 @@
 			{
 				"position": "Technical Intern",
 				"company": "Yahoo! Taiwan",
-				"location": "Taipei, Taiwan",
+				"location": "Taiwan",
 				"start": "201607",
 				"end": "201608",
 				"description": "Build a live streaming app for Yahoo Auction in 2 months using React Native, with 1 techinical partner and 1 designer",
-				"highlight": [
+				"highlights": [
 					"Managed to learn React Native & Redux from zero knowledge to being able to fully assist in deploying an app",
 					"Technical components include React Native, Redux, WebRTC, Firebase, OAuth 2"
 				],
@@ -56,12 +56,12 @@
 			},
 			{
 				"position": "Lab Assistant",
-				"company": "Course Introduction to EEE (ENGG1203), HKU",
+				"company": "Introduction to EEE, HKU",
 				"location": "Hong Kong",
 				"start": "201509",
 				"end": "201605",
 				"description": "Troubleshooting and queries answering in the lab, with over 120 students",
-				"highlight": [
+				"highlights": [
 					"Firm knowledge in circuit theory & lab equipment operation",
 					"Ability to come up with solutions efficiently when facing problems or failures"
 				],
@@ -76,7 +76,7 @@
 				"start": "201506",
 				"end": "201506",
 				"description": "English course design and teaching, targeted on grade nine and university students",
-				"highlight": [
+				"highlights": [
 					"Ability to convey complicated ideas to others in a compact and simplified form",
 					"Ability to design creative course material"
 				],
@@ -86,13 +86,13 @@
 		"competition": [
 			{
 				"title": "UBS Group Technology Case Study Challenge",
-				"company": "Union Bank of Switzerland (UBS)",
+				"company": "UBS",
 				"location": "Hong Kong",
 				"start": "201606",
 				"end": "201607",
 				"result": "The Winning Team",
 				"description": "Developing a plan to improve client experience using technology, with a team of 3",
-				"highlight": [
+				"highlights": [
 					"Technically independent on implementing a simple FB BOT on AWS",
 					"Team collaboratation on idea forming",
 					"Technical components include NodeJS, AWS deployment, Firebase, FB API"
@@ -106,21 +106,21 @@
 				"start": "201606",
 				"end": "201606",
 				"result": "3rd Runner-up Team",
-				"description": "3rd runner-up team competing with over 30 teams from universities of Hong Kong and Macau, 3 members each",
-				"highlight": [
+				"description": "3rd runner-up team competing with over 30 teams from universities of Hong Kong and Macau, with a team of 3",
+				"highlights": [
 					"Problem solving & team collaboratation"
 				],
 				"type": "competition"
 			},
 			{
 				"title": "Project Competition",
-				"company": "Course Introduction to EEE (ENGG1203), HKU",
+				"company": "Introduction to EEE, HKU",
 				"location": "Hong Kong",
 				"start": "201504",
 				"end": "201504",
 				"result": "3rd Place",
 				"description": "Building a Rube Goldberg Machine; 3rd place out of 30 teams with 5 members each",
-				"highlight": [
+				"highlights": [
 					"Ability to collaborate with people from a diversity of backgrounds",
 					"Leadership & communication ability",
 					"Project management skills",
@@ -133,11 +133,11 @@
 			{
 				"position": "Head of Academic Section",
 				"company": "Information Studies Club, TFG",
-				"location": "Taipei, Taiwan",
+				"location": "Taiwan",
 				"start": "201206",
 				"end": "201306",
 				"description": "Course preparations, teaching, course book writing & editing",
-				"highlight": [
+				"highlights": [
 					"Designing & teaching courses in C, Flash, ActionScript, & hardware knowledge",
 					"Self-learning ability (developed skills in Flash & ActionScript 3.0 with projects made)"
 				],

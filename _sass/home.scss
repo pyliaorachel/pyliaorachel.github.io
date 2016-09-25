@@ -10,6 +10,8 @@ $grey-color:       #828282;
 $grey-color-light: lighten($grey-color, 40%);
 $grey-color-dark:  darken($grey-color, 25%);
 
+$highlight-color: #FFC107;
+
 //font-family: 'Muli', sans-serif;
 //font-family: 'Inconsolata', monospace;
 //font-family: 'Source Code Pro', monospace;
@@ -215,6 +217,7 @@ body .home {
 				font-size: 26px;
 			}
 
+			// specific
 			.info {
 				margin: 50px 0 0;
 				h2 {
@@ -240,16 +243,69 @@ body .home {
 
 			.timeline {
 				.timeline-time {
-					height: 100px;
-					background-color: $light-green-color;
+					height: 50px;
+					color: $dark-green-color;
+					background-color: rgba($light-green-color, 1);
 					border-radius: 5px;
-					margin-top: 15px;
+					margin-top: 90px;
+					text-align: center;
+					p {
+						font-size: 20px;
+						line-height: 50px;
+					}
 				}
 				.timeline-description {
-					height: 120px;
-					background-color: $light-green-color;
+					color: $dark-green-color;
+					min-height: 210px;
+					background-color: rgba($light-green-color, 0.5);
 					border-radius: 5px;
-					margin-bottom: 5px;
+					padding: 20px;
+					//margin-bottom: 15px;
+
+					p.title {
+						font-size: 20px;
+						font-weight: 800;
+						margin: 0;
+						span {
+							margin-left: 5px;
+							font-size: 16px;
+							font-weight: 300;
+						}
+						span.grey-tag {
+							background-color: rgba($grey-color-dark, 0.4);
+							border-radius: 8px;
+							padding: 0 5px;
+							margin-right: 5px;
+							margin-bottom: 7px;
+							display: inline-block;
+						}
+					}
+
+					.education-description, .non-education-description {
+						font-size: 16px;
+						margin-top: 5px;
+						span.green-tag {
+							background-color: rgba($dark-green-color, 0.6);
+							border-radius: 8px;
+							padding: 0 5px;
+							margin-right: 5px;
+							margin-bottom: 7px;
+							display: inline-block;
+						}
+
+						span.orange-tag {
+							background-color: rgba($highlight-color, 0.6);
+							border-radius: 8px;
+							padding: 0 5px;
+							margin-right: 5px;
+							margin-bottom: 5px;
+							display: inline-block;
+						}
+
+						/*span.plain-description {
+							font-style: italic;
+						}*/
+					}
 				}
 				.timeline-circle {
 					.icon {
@@ -269,7 +325,7 @@ body .home {
 				}
 				.timeline-line {
 					width: 5px;
-					height: 40px;
+					height: 90px;
 					background-color: rgba($grey-color, 0.4);
 					margin: auto;
 				}
@@ -292,7 +348,40 @@ body .home {
 	}
 }
 
+@media screen and (max-width: 900px) {
+	body main.home .cv .content{
+		.description .timeline .timeline-block {
+			.timeline-description {
+				height: auto;
+			}
+			.timeline-time {
+				margin-top: 20px;
+			}
+			.timeline-line {
+				height: 30px;
+			}
+		}
+	}
+}
 
+@media screen and (max-width: 600px) {
+	body main.home .cv .content{
+		.description .timeline .timeline-block {
+			.timeline-description {
+				height: auto;
+			}
+			.timeline-time {
+				margin-top: 20px;
+				p {
+					font-size: 18px;
+				}
+			}
+			.timeline-line {
+				height: 20px;
+			}
+		}
+	}
+}
 
 
 

@@ -2,6 +2,7 @@
 layout: home
 title: MyCoon
 subtitle: 麥睏。
+month-convert: ['No', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 ---
 <div class="thumbnail">
 	<div class="container-fluid">
@@ -91,11 +92,13 @@ subtitle: 麥睏。
 
 					{% for element in elements %}
 
-						<!--hack here, either one will have value-->
-						<!--<p>{{ element.school | append: element.position | append: element.title}}</p>-->
 						<div class="timeline-block row">
-							<div class="timeline-time col-md-4">
-								<p>ey</p>
+							<div class="timeline-time col-md-3">
+								{% assign startY = element.start | slice: 0, 4 %}
+								{% assign startM = element.start | slice: 4, 2 | plus: 0 %}
+								{% assign endY = element.end | slice: 0, 4 %}
+								{% assign endM = element.end | slice: 4, 2 | plus: 0 %}
+								<p>{{ startY }} {{ page.month-convert[startM] }} - {{ endY }} {{ page.month-convert[endM] }}</p>
 							</div>
 
 							<div class="timeline-draw col-md-2">
@@ -110,8 +113,51 @@ subtitle: 麥睏。
 								</div>
 							</div>
 
-							<div class="timeline-description col-md-6">
-								<p>ey</p>
+							<div class="timeline-description col-md-7">
+								<p class="title">
+									{{ element.school | append: element.position | append: element.title}}
+									<span class="grey-tag"> 
+										{% if element.company and element.company != "" %}
+											{{ element.company | append: ', ' | append: element.location}}
+										{% else %}
+											{{ element.location}}
+										{% endif %}
+									</span>
+								</p>
+								{% if element.type == "education" %}
+									<p class="education-description">
+										{% if element.program != "" %}
+											<span class="green-tag">{{ element.program }}</span><br>
+										{% endif %}
+										{% if element.grade != "" %}
+											<span class="green-tag">{{ element.grade }}</span><br>
+										{% endif %}
+
+										{% assign awards_size = element.awards | size%}
+										{% if awards_size > 1 %}
+											<span class="orange-tag">{{ awards_size }} awards</span>
+											<!--{% for award in element.awards %}
+												<span class="green-tag">{{ awards_size }} awards</span>
+											{% endfor %}-->
+										{% else if awards_size == 1%}
+											<span class="orange-tag">{{ element.awards[0] }}</span>
+										{% endif %}
+									</p>
+								{% else %}
+									<p class="non-education-description">
+										<span class="green-tag">{{ element.description }}</span><br>
+
+										{% assign highlights_size = element.highlights | size%}
+										{% if highlights_size > 1 %}
+											<span class="orange-tag">{{ highlights_size }} highlights</span>
+											<!--{% for highlight in element.highlights %}
+												<span class="green-tag">{{ highlights_size }} highlights</span>
+											{% endfor %}-->
+										{% else if highlights_size == 1%}
+											<span class="orange-tag">{{ element.highlights[0] }}</span>
+										{% endif %}
+									</p>
+								{% endif %}
 							</div>
 						</div>
 
