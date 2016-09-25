@@ -1,0 +1,49 @@
+.thumbnail {
+	position: relative;
+	height: 500px;
+	margin: 0;
+	padding: 0;
+
+	.content {
+		position: absolute;
+		left: 0;
+		right: 0;
+		z-index: 0;
+		width: 100%;
+		height: 100%;
+
+		&:before {
+			content: "";
+			position: absolute;
+			left: 0;
+			right: 0;
+			z-index: -1;
+
+			display: block;
+			background: white url('/assets/img/thumbnail.png') no-repeat center center;
+			background-size: cover;
+			width: 100%;
+			height: 100%;
+
+			//@include filter(blur(1px));
+		}
+
+		.title-text {
+			margin-top: 220px;
+			text-align: center;
+
+			h1 {
+				font-size: 88px;
+				font-family: $big-title-font;
+				color: $light-green-color;
+				//text-shadow: 2px 2px 5px white;
+			}
+
+			p {
+				font-size: 26px;
+				font-family: $chinese-font;
+				color: rgba(255, 255, 255, 0.8);
+			}
+		}
+	}
+}

@@ -1,0 +1,41 @@
+.about-mycoon {
+	min-height: 600px;
+
+	.content {
+		padding: 150px 100px;
+
+		.title-text {
+			span{
+				line-height: 70px;
+
+				&:first-child {
+					color: $light-green-color;
+					font-family: $small-title-font;
+					font-size: 56px;
+				}
+
+				&:nth-child(2) {
+					color: $dark-green-color;
+					font-family: $small-title-font;
+					font-size: 56px;
+				}
+
+				&:nth-child(3){
+					color: $light-green-color;
+					font-family: $chinese-font;
+					font-size: 36px;
+				}
+			}
+		}
+
+		.description {
+			margin-top: 50px;
+
+			p{
+				color: rgba(0, 0, 0, 0.8);
+				font-family: $p-font;
+				font-size: 26px;
+			}
+		}
+	}
+}
