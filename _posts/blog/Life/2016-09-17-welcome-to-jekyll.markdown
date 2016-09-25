@@ -16,25 +16,8 @@ To add new posts, simply add a file in the `_posts` directory that follows the c
 Jekyll also offers powerful support for code snippets:
 
 {% highlight javascript %}
-function MyCoon (Object author) {
-  author.setIntroduction('This is Rachel');
-  author.createBlog('MyCoon');
-  author.setBlogVisions(
-    ['Post Tech-related Reflections', 
-    'Introduce Educational Tutorials', 
-    'Showcase Projects', 'Have Fun!'] 
-  );
-  author.setBlogIntroduction(
-    'MyCoon sounds like \"do not sleep\" in Taiwanese. 
-    I just wanna remind myself of this every time I get lazy.'
-  );
-
-  author.shout('Go explore my blog now!!!');
-
-  author.addSuggestionListener((suggestion) => {
-    author.appreciate();
-  });
-
+function MyCoon (author) {
+  console.log(author.fullName());
   return 'View my CV below';
 }
 {% endhighlight %}
