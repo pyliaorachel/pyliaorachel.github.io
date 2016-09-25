@@ -14,7 +14,7 @@
 	{% endfor %}
 
 	{% assign elements = elements | sort: 'start' | reverse %}
-	
+
 	<!--{% assign startY = elements.first.start | slice: 0, 4 %}
 	{% assign startM = elements.first.start | slice: 4, 2 %}
 	{% assign endY = elements.last.start | slice: 0, 4 %}
@@ -69,10 +69,14 @@
 
 						{% assign awards_size = element.awards | size%}
 						{% if awards_size > 1 %}
-							<span class="orange-tag">{{ awards_size }} awards</span>
-							<!--{% for award in element.awards %}
-								<span class="green-tag">{{ awards_size }} awards</span>
-							{% endfor %}-->
+							{% assign award_list = "" %}
+							{% for award in element.awards %}
+								{% assign award_elem = award | prepend: '<p>' | append: '</p>'%}
+								{% assign award_list = award_list | append: award_elem %}
+							{% endfor %}
+							<span class="orange-tag canHover"><a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-animation="true" title="Honors" data-content="{{award_list}}" data-html="true">
+								{{ awards_size }} Honors
+							</a></span>
 						{% else if awards_size == 1%}
 							<span class="orange-tag">{{ element.awards[0] }}</span>
 						{% endif %}
@@ -83,10 +87,14 @@
 
 						{% assign highlights_size = element.highlights | size%}
 						{% if highlights_size > 1 %}
-							<span class="orange-tag">{{ highlights_size }} highlights</span>
-							<!--{% for highlight in element.highlights %}
-								<span class="green-tag">{{ highlights_size }} highlights</span>
-							{% endfor %}-->
+							{% assign highlight_list = "" %}
+							{% for highlight in element.highlights %}
+								{% assign highlight_elem = highlight | prepend: '<p>' | append: '</p>'%}
+								{% assign highlight_list = highlight_list | append: highlight_elem %}
+							{% endfor %}
+							<span class="orange-tag canHover"><a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-animation="true" title="Highlights" data-content="{{highlight_list}}" data-html="true">
+								{{ highlights_size }} Highlights
+							</a></span>
 						{% else if highlights_size == 1%}
 							<span class="orange-tag">{{ element.highlights[0] }}</span>
 						{% endif %}

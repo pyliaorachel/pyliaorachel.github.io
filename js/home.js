@@ -11,4 +11,5 @@ $(document).ready(function(){
 			$('.cv .title-text').slideUp('slow');
 		}
 	});
+	$('[data-toggle="popover"]').popover();
 });

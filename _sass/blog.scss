@@ -84,13 +84,12 @@ body .blog {
 				list-style: none;
 				margin: 0;
 				.tag {
-					padding: 5px 15px;
-					background-color: rgba($dark-green-color, 0.9);
-					border-radius: 2px;
-					display: inline-block;
-					margin-right: 10px;
-					font-size: 16px;
 					color: white;
+					background-color: rgba($dark-green-color, 0.8);
+					border-radius: 0 8px 8px 8px;
+					padding: 5px 15px;
+					margin-right: 5px;
+					display: inline-block;
 				}
 			}
 			.tag-container {

@@ -26,6 +26,7 @@
 			border-radius: 50%;
 			z-index: 999;
 			cursor: pointer;
+			border: 5px solid $light-green-color;
 			@include transition-duration(0.4s);
 
 			h1{
@@ -54,6 +55,7 @@
 				color: $dark-green-color;
 				margin: auto;
 				border-radius: 50%;
+				border: 0;
 				z-index: 999;
 				@include transition-duration(0.4s);
 
@@ -103,11 +105,15 @@
 						color: rgba(0, 0, 0, 0.8);
 						font-family: $p-font;
 						font-size: 24px;
-						margin-right: 10px;
+						margin-left: 10px;
 					}
 					a {
 						text-decoration: none;
 						margin: 0 10px;
+					}
+					.col-md-3, .col-md-6 {
+						margin: 6px 0;
+						padding: 0;
 					}
 				}
 			}
@@ -134,7 +140,7 @@
 					//margin-bottom: 15px;
 
 					p.title {
-						font-size: 20px;
+						font-size: 24px;
 						font-weight: 800;
 						margin: 0;
 						span {
@@ -144,7 +150,7 @@
 						}
 						span.grey-tag {
 							background-color: rgba($grey-color-dark, 0.4);
-							border-radius: 8px;
+							border-radius: 0 8px 8px 8px;
 							padding: 0 5px;
 							margin-right: 5px;
 							margin-bottom: 7px;
@@ -155,22 +161,49 @@
 					.education-description, .non-education-description {
 						font-size: 16px;
 						margin-top: 5px;
-						span.green-tag {
-							background-color: rgba($dark-green-color, 0.6);
-							border-radius: 8px;
-							padding: 0 5px;
-							margin-right: 5px;
-							margin-bottom: 7px;
-							display: inline-block;
-						}
-
-						span.orange-tag {
-							background-color: rgba($highlight-color, 0.6);
-							border-radius: 8px;
-							padding: 0 5px;
-							margin-right: 5px;
-							margin-bottom: 5px;
-							display: inline-block;
+						span {
+							&.green-tag {
+								background-color: rgba($dark-green-color, 0.6);
+								border-radius: 0 8px 8px 8px;
+								padding: 0 5px;
+								margin-right: 5px;
+								margin-bottom: 7px;
+								display: inline-block;
+							}
+							&.orange-tag {
+								background-color: rgba($highlight-color, 0.8);
+								border-radius: 0 8px 8px 8px;
+								padding: 0 5px;
+								margin-right: 5px;
+								margin-bottom: 5px;
+								display: inline-block;
+								a {
+									text-decoration: none;
+									color: white;
+									&:focus {
+										outline: initial;
+									}
+									&:hover {
+										color: rgba($highlight-color, 0.8);
+									}
+								}
+								&.canHover:hover {
+									background-color: white;
+								}
+								.popover-title {
+									text-align: center;
+									font-size: 16px;
+									background-color: rgba($highlight-color, 0.8);
+								}
+								.popover-content p{
+									font-size: 16px;
+									margin: 8px;
+									&:not(:last-child) {
+										border-bottom: 1px solid $grey-color-light;
+										padding-bottom: 5px;
+									}
+								}
+							}
 						}
 
 						/*span.plain-description {
@@ -237,18 +270,30 @@
 
 @media screen and (max-width: 600px) {
 	body main.home .cv .content{
-		.description .timeline .timeline-block {
-			.timeline-description {
-				height: auto;
-			}
-			.timeline-time {
-				margin-top: 20px;
-				p {
-					font-size: 18px;
+		.description {
+			padding: 60px 20px;
+			.info .contact {
+				img {
+					width: 30px;
+					height: 30px;
+				}
+				.username {
+					font-size: 20px;
 				}
 			}
-			.timeline-line {
-				height: 20px;
+			.timeline .timeline-block {
+				.timeline-description {
+					height: auto;
+				}
+				.timeline-time {
+					margin-top: 20px;
+					p {
+						font-size: 18px;
+					}
+				}
+				.timeline-line {
+					height: 20px;
+				}
 			}
 		}
 	}
