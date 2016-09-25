@@ -1,3 +1,23 @@
 {
-	"description": "test"
+	"description": "function MyCoon (author) {
+		author.setIntroduction('This is Rachel (≧∀≦)ゞ');
+		author.createBlog('MyCoon');
+		author.setBlogVisions(
+			['Post Tech-related Reflections', 
+			 'Introduce Educational Tutorials', 
+			 'Showcase Projects', 'Have Fun!'] 
+		);
+		author.setBlogIntroduction(
+			'MyCoon sounds like \"do not sleep\" in Taiwanese. 
+			 I just wanna remind myself of this every time I get lazy.'
+		);
+
+		author.shout('Go explore my blog now!!! (ง๑ •̀_•́)ง’');
+
+		author.addSuggestionListener((suggestion) => {
+			author.appreciate();
+		});
+
+		return 'View my CV below ( σ՞ਊ ՞)σ ';
+	}"
 }

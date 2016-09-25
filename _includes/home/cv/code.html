@@ -1,0 +1,21 @@
+<figure class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nf">MyCoon</span> <span class="p">(</span><span class="vc">author</span><span class="p">)</span> <span class="p">{</span>
+	<span class="vc">author</span><span class="p">.</span><span class="nx">setIntroduction</span><span class="p">(</span><span class="s1">'This is Rachel (≧∀≦)ゞ'</span><span class="p">);</span>
+	<span class="vc">author</span><span class="p">.</span><span class="nx">createBlog</span><span class="p">(</span><span class="s1">'MyCoon'</span><span class="p">);</span>
+	<span class="vc">author</span><span class="p">.</span><span class="nx">setBlogVisions</span><span class="p">(</span>
+		<span class="p">[</span><span class="s1">'Post Tech-related Reflections'</span><span class="p">,</span> 
+		 <span class="s1">'Introduce Educational Tutorials'</span><span class="p">,</span> 
+		 <span class="s1">'Showcase Projects'</span><span class="p">,</span> <span class="s1">'Have Fun!'</span><span class="p">]</span> 
+	<span class="p">);</span>
+	<span class="vc">author</span><span class="p">.</span><span class="nx">setBlogIntroduction</span><span class="p">(</span>
+		<span class="s1">'MyCoon sounds like \"do not sleep\" in Taiwanese. 
+		 Just wanna remind myself of this every time I get lazy.'</span>
+	<span class="p">);</span>
+
+	<span class="vc">author</span><span class="p">.</span><span class="nx">shout</span><span class="p">(</span><span class="s1">'Go explore my blog now!!! (ง๑ •̀_•́)ง’'</span><span class="p">);</span>
+
+	<span class="vc">author</span><span class="p">.</span><span class="nx">addSuggestionListener</span><span class="p">((</span><span class="vc">suggestion</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+		<span class="vc">author</span><span class="p">.</span><span class="nx">appreciate</span><span class="p">(</span><span class="vc">suggestion</span><span class="p">);</span>
+	<span class="p">});</span>
+
+	<span class="k">return</span> <span class="s1">'View my CV below ( σ՞ਊ ՞)σ '</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
