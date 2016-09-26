@@ -155,7 +155,10 @@
 		}	
 	},
 	"language": [
-		"Mandarin (native)", "English (fluent)", "Taiwanese (fluent)", "Cantonese (intermediary)"
+		{ "Mandarin": "0"}, 
+		{ "English": "1"}, 
+		{ "Taiwanese": "1"}, 
+		{ "Cantonese": "2"}
 	]
 
 }

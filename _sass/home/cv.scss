@@ -1,3 +1,5 @@
+$skill-title-font: 'Rock Salt', cursive;
+
 .cv {
 	min-height: 500px;
 	background-color: $light-green-color;
@@ -248,9 +250,69 @@
 					}
 				}
 			}
+
+			@mixin circle-color($color, $index, $amount) {
+				background-color: lighten($color, $index * $amount);
+			}
+
+			.skill {
+				margin: 150px 0;
+
+				.skill-title {
+					h1 {
+						text-align: center;
+						font-family: $big-title-font;
+						font-size: 40px;
+						margin: 30px 0 70px;
+					}
+				}
+
+				.technical-skill {
+					@for $i from 0 through 10 {
+						.t#{$i} {
+							.skill-circle {
+								@include circle-color($dark-green-color, $i, 5%);
+							}
+						}
+					}
+				}
+				.language-skill {
+					margin: 150px 0;
+					@for $i from 0 through 10 {
+						.l#{$i} {
+							&.skill-circle {
+								@include circle-color(#FF6F00, $i, 8%);
+							}
+						}
+					}
+				}
+
+				ul {
+					list-style: none;
+					text-align: center;
+					margin: 0;
+					li {
+						display: inline-block;
+					}
+				}
+
+				.skill-circle {
+					width: 120px;
+					height: 120px;
+					border-radius: 50%;
+					text-align: center;
+					line-height: 120px;
+					color: white;
+					margin: 10px;
+					font-size: 18px;
+					font-family: $p-font;
+				}
+			}
 		}
 	}
 }
+
+
 
 @media screen and (max-width: 900px) {
 	body main.home .cv .content{
@@ -293,6 +355,15 @@
 				}
 				.timeline-line {
 					height: 20px;
+				}
+			}
+			.skill {
+				margin: 40px 0;
+				.skill-circle {
+					width: 100px;
+					height: 100px;
+					line-height: 100px;
+					margin: 5px;
 				}
 			}
 		}

@@ -1,0 +1,36 @@
+<div class="skill">
+
+	<div class="skill-title">
+		<h1>Skills &amp; Languages </h1>
+	</div>
+
+	<div class="technical-skill">
+
+		{% for skill-cat in cv.skill.technical %}
+			<div class="t{{ forloop.index }} t">
+				<ul>
+					{% for skill in skill-cat[1] %}
+						<li class="skill-circle">
+							{{ skill }}
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		{% endfor %}
+
+	</div>
+	<div class="language-skill">
+
+		<ul>
+			{% assign languages = cv.language%}
+			{% for language in cv.language %}
+				{% for key-value in language %}
+					<li class="skill-circle l l{{ key-value[1] }}">
+						{{ key-value[0] }}
+					</li>
+				{% endfor %}
+			{% endfor %}
+		</ul>
+
+	</div>
+</div>
