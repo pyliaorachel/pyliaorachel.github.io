@@ -52,9 +52,28 @@ body .blog .category-post-list .separator {
 				text-decoration: none;
 			}
 		}
+		.ignore-excerpt {
+			.post-meta {
+				margin: 5px;
+			}
+			.tag-list, .post-title-container {
+				//height: 45px;
+				display: inline-block;
+				.tag {
+					margin: 0;
+					padding: 3px 9px;
+					font-size: 14px;
+				}
+			}
+			div:first-child {
+				vertical-align: middle;
+			}
+			.post-title-container h2 {
+				margin: 0;
+			}
+		}
+		&:nth-child(even) {
+			background-color: rgba($light-green-color, 0.4);
+		}
 	}
-}
-
-#notes-category {
-	background-color: rgba($light-green-color, 0.4);
 }

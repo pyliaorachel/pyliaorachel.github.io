@@ -2,7 +2,7 @@
 layout: page
 class: blog
 ---
-<div class="blog-main-page">
+<div class="tutorial-main-page">
 
 	<h1 class="title-text">
 		{% if page.subtitle and page.subtitle != "" %}{{ page.subtitle }}
@@ -12,7 +12,7 @@ class: blog
 
 	<ul class="post-list">
 		{% for post in site.posts %}
-			{% if post.categories[0] == "Blog" %}
+			{% if post.categories[0] == "Tutorial" %}
 				{% if page.subtitle and page.subtitle == post.categories[1] or page.subtitle == "" %} 
 					<li>
 						<span class="separator"> • • • </span>
@@ -25,8 +25,7 @@ class: blog
 							<span class="post-meta"> 
 								{{ post.date | date: "%b %-d, %Y" }}
 								{% if post.categories %}
-								  •  <a href="/blog/{{ post.categories[1] | slugify }}">{{ post.categories[1] }}</a>
-								  •  {{ post.categories | last }}
+								  •  <a href="/tutorial/{{ post.categories[1] | slugify }}">{{ post.categories[1] }}</a>
 								{% endif %}
 								{% if post.author %}
 								  •  by {{ post.author }}

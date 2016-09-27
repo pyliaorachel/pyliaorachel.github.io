@@ -2,5 +2,7 @@
 layout: default
 ---
 <main class="page-content {{ layout.class }}" aria-label="Content">
-	{{ content }}
+	<div class="{{ layout.class }}-wrapper">
+		{{ content }}
+	</div>
 </main>

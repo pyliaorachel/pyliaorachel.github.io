@@ -32,7 +32,9 @@
 						<li><a href="/blog/categories">Categories</a></li>
 						{% assign categories = "" %}
 						{% for post in site.posts %}
-							{% assign categories = categories | append:post.categories[1] | append:'|' %}
+							{% if post.categories[0] == "Blog" %}
+								{% assign categories = categories | append:post.categories[1] | append:'|' %}
+							{% endif %}
 						{% endfor %}
 						{% assign categories = categories | split:'|' | uniq %}
 
@@ -42,8 +44,29 @@
 						<li><a href="/blog/tags">Tags</a></li>
 					</ul>
 				</li>
-				<li class="nav-tutorials"><a href="/tutorials">Tutorials</a></li>
-				<li  class="nav-projects"><a href="/projects">Projects</a></li>
+				<li class="dropdown nav-tutorial">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Tutorials<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/tutorial">MyCoon Tutorial</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/tutorial/categories">Categories</a></li>
+						{% assign categories = "" %}
+						{% for post in site.posts %}
+							{% if post.categories[0] == "Tutorial" %}
+								{% assign categories = categories | append:post.categories[1] | append:'|' %}
+							{% endif %}
+						{% endfor %}
+						{% assign categories = categories | split:'|' | uniq %}
+
+						{% for category in categories %}
+							<li class="category"><a href="/tutorial/{{ category | slugify }}">{{ category }}</a></li>
+						{%endfor%}
+						<li><a href="/tutorial/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li  class="nav-project"><a href="/projects">Projects</a></li>
 				<li class="nav-special" id="special"><a href="#">?</a></li>
 			</ul>
 		</div><!-- /.navbar-collapse -->
