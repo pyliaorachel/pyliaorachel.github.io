@@ -2,7 +2,7 @@ module Jekyll
   module Paginate
     class Pager
       attr_reader :page, :per_page, :posts, :total_posts, :total_pages,
-        :previous_page, :previous_page_path, :next_page, :next_page_path, :paginate_type
+        :previous_page, :previous_page_path, :next_page, :next_page_path, :paginate_type, :first_page_path
 
       # Calculate the number of pages.
       #
@@ -118,6 +118,7 @@ module Jekyll
         @page = page
         @per_page = site.config['paginate'].to_i
         @total_pages = num_pages || Pager.calculate_pages(all_posts, @per_page)
+        @first_page_path = Pagination.first_page_url(site, paginate_type)
 
         if @page > @total_pages
           raise RuntimeError, "page number can't be greater than total pages: #{@page} > #{@total_pages}"
@@ -148,7 +149,8 @@ module Jekyll
           'previous_page_path' => previous_page_path,
           'next_page' => next_page,
           'next_page_path' => next_page_path,
-          'paginate_type' => paginate_type
+          'paginate_type' => paginate_type,
+          'first_page_path' => first_page_path
         }
       end
 
