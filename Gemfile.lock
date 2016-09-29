@@ -1,3 +1,8 @@
+PATH
+  remote: ./gems/jekyll-paginate
+  specs:
+    jekyll-paginate (1.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -39,6 +44,7 @@ PLATFORMS
 
 DEPENDENCIES
   jekyll (= 3.2.1)
+  jekyll-paginate!
   minima
 
 RUBY VERSION
