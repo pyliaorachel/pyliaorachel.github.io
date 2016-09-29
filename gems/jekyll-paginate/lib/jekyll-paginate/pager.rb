@@ -2,7 +2,7 @@ module Jekyll
   module Paginate
     class Pager
       attr_reader :page, :per_page, :posts, :total_posts, :total_pages,
-        :previous_page, :previous_page_path, :next_page, :next_page_path
+        :previous_page, :previous_page_path, :next_page, :next_page_path, :paginate_type
 
       # Calculate the number of pages.
       #
@@ -114,6 +114,7 @@ module Jekyll
       # paginate_type - The type of pagination if pagination is customizable
       #             of pages calculated.
       def initialize(site, page, all_posts, num_pages = nil, paginate_type = nil )
+        @paginate_type = paginate_type
         @page = page
         @per_page = site.config['paginate'].to_i
         @total_pages = num_pages || Pager.calculate_pages(all_posts, @per_page)
@@ -146,7 +147,8 @@ module Jekyll
           'previous_page' => previous_page,
           'previous_page_path' => previous_page_path,
           'next_page' => next_page,
-          'next_page_path' => next_page_path
+          'next_page_path' => next_page_path,
+          'paginate_type' => paginate_type
         }
       end
 
