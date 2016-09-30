@@ -2,7 +2,7 @@ module Jekyll
   module Paginate
     class Pager
       attr_reader :page, :per_page, :posts, :total_posts, :total_pages,
-        :previous_page, :previous_page_path, :next_page, :next_page_path, :paginate_type, :first_page_path
+        :previous_page, :previous_page_path, :next_page, :next_page_path, :category, :first_page_path
 
       # Calculate the number of pages.
       #
@@ -31,7 +31,7 @@ module Jekyll
       # Returns true if pagination customization is enabled, false otherwise.
       def self.pagination_customization_enabled?(site)
          Pager.pagination_enabled?(site) &&
-        !site.config['paginate_customize'].nil?
+        !site.config['paginate_categories'].nil?
       end
 
       # Static: Determine if a page is a possible candidate to be a template page.
@@ -69,13 +69,13 @@ module Jekyll
       #
       # site          - the Jekyll::Site object
       # num_page      - the pagination page number
-      # paginate_type - The type of pagination if pagination is customizable
+      # category      - The category for pagination, nil if paginate_categories not true
       #
       # Returns the pagination path as a string
-      def self.paginate_path(site, num_page, paginate_type = nil)
+      def self.paginate_path(site, num_page, category = nil)
         return nil if num_page.nil?
-        return Pagination.first_page_url(site, paginate_type) if num_page <= 1
-        format = paginate_type ? site.config['paginate_paths'][paginate_type] : site.config['paginate_path']
+        return Pagination.first_page_url(site, category) if num_page <= 1
+        format = category ? site.config['paginate_paths'][category] : site.config['paginate_path']
         if format.include?(":num")
           format = format.sub(':num', num_page.to_s)
         else
@@ -111,14 +111,13 @@ module Jekyll
       # page          - The Integer page number.
       # all_posts     - The Array of all the site's Posts.
       # num_pages     - The Integer number of pages or nil if you'd like the number
-      # paginate_type - The type of pagination if pagination is customizable
-      #             of pages calculated.
-      def initialize(site, page, all_posts, num_pages = nil, paginate_type = nil )
-        @paginate_type = paginate_type
+      # category      - The category for pagination, nil if paginate_categories not true
+      def initialize(site, page, all_posts, num_pages = nil, category = nil )
+        @category = category
         @page = page
         @per_page = site.config['paginate'].to_i
         @total_pages = num_pages || Pager.calculate_pages(all_posts, @per_page)
-        @first_page_path = Pagination.first_page_url(site, paginate_type)
+        @first_page_path = Pagination.first_page_url(site, category)
 
         if @page > @total_pages
           raise RuntimeError, "page number can't be greater than total pages: #{@page} > #{@total_pages}"
@@ -130,9 +129,9 @@ module Jekyll
         @total_posts = all_posts.size
         @posts = all_posts[init..offset]
         @previous_page = @page != 1 ? @page - 1 : nil
-        @previous_page_path = Pager.paginate_path(site, @previous_page, paginate_type)
+        @previous_page_path = Pager.paginate_path(site, @previous_page, category)
         @next_page = @page != @total_pages ? @page + 1 : nil
-        @next_page_path = Pager.paginate_path(site, @next_page, paginate_type)
+        @next_page_path = Pager.paginate_path(site, @next_page, category)
       end
 
       # Convert this Pager's data to a Hash suitable for use by Liquid.
@@ -149,7 +148,7 @@ module Jekyll
           'previous_page_path' => previous_page_path,
           'next_page' => next_page,
           'next_page_path' => next_page_path,
-          'paginate_type' => paginate_type,
+          'category' => category,
           'first_page_path' => first_page_path
         }
       end

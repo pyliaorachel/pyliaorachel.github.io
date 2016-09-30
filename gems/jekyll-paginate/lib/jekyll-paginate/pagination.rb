@@ -14,9 +14,9 @@ module Jekyll
       # Returns nothing.
       def generate(site)
         if Pager.pagination_customization_enabled?(site)
-          site.config['paginate_paths'].each do | paginate_type, paginate_path |
+          site.config['paginate_paths'].each do | category, paginate_path |
             if template = self.class.template_page(site, paginate_path)
-              paginate(site, template, paginate_type)
+              paginate(site, template, category)
             else
               Jekyll.logger.warn "Pagination:", "Pagination is enabled, but I couldn't find " +
               "an index.html page to use as the pagination template. Skipping pagination."
@@ -38,7 +38,7 @@ module Jekyll
       #
       # site          - The Site.
       # page          - The index.html Page that requires pagination.
-      # paginate_type - The type of pagination if pagination is customizable
+      # category      - The category for pagination, nil if paginate_categories not true
       #
       # {"paginator" => { "page" => <Number>,
       #                   "per_page" => <Number>,
@@ -46,20 +46,23 @@ module Jekyll
       #                   "total_posts" => <Number>,
       #                   "total_pages" => <Number>,
       #                   "previous_page" => <Number>,
-      #                   "next_page" => <Number> }}
-      def paginate(site, page, paginate_type = nil)
-        if !paginate_type
+      #                   "next_page" => <Number>,
+      #                   "category" => <String>,
+      #                   "first_page_path" => <String>
+      #                  }}
+      def paginate(site, page, category = nil)
+        if !category
           all_posts = site.site_payload['site']['posts'].reject { |post| post['hidden'] }
         else
-          all_posts = site.site_payload['site']['categories'][paginate_type].reject { |post| post['hidden'] }
+          all_posts = site.site_payload['site']['categories'][category].reject { |post| post['hidden'] }
         end
         pages = Pager.calculate_pages(all_posts, site.config['paginate'].to_i)
         (1..pages).each do |num_page|
-          pager = Pager.new(site, num_page, all_posts, pages, paginate_type)
+          pager = Pager.new(site, num_page, all_posts, pages, category)
           if num_page > 1
             newpage = Page.new(site, site.source, page.dir, page.name)
             newpage.pager = pager
-            newpage.dir = Pager.paginate_path(site, num_page, paginate_type)
+            newpage.dir = Pager.paginate_path(site, num_page, category)
             site.pages << newpage
           else
             page.pager = pager
@@ -71,11 +74,11 @@ module Jekyll
       #         path to the first pager in the series.
       #
       # site          - the Jekyll::Site object
-      # paginate_type - The type of pagination if pagination is customizable
+      # category      - The category for pagination, nil if paginate_categories not true
       #
       # Returns the url of the template page
-      def self.first_page_url(site, paginate_type)
-        paginate_path = paginate_type ? site.config['paginate_paths'][paginate_type] : site.config['paginate_path']
+      def self.first_page_url(site, category)
+        paginate_path = category ? site.config['paginate_paths'][category] : site.config['paginate_path']
 
         if page = Pagination.template_page(site, paginate_path)
           page.url
