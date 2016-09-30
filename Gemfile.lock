@@ -1,5 +1,7 @@
-PATH
-  remote: ./gems/jekyll-paginate
+GIT
+  remote: git://github.com/pyliaorachel/jekyll-paginate.git
+  revision: 97939225f588d6fb06d694cd6c8297b11f75565f
+  branch: paginate_categories
   specs:
     jekyll-paginate (1.1.0)
 

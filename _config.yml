@@ -27,9 +27,10 @@ github_username:  pyliaorachel
 markdown: kramdown
 theme: minima
 
-permalink: /:categories/:title
+gems: [jekyll-paginate]
 
-paginate: 5
+paginate: 10
+# paginate_path: "/blog/page:num/"
 
 # if paginate_categories is true, then all posts MUST include categories
 paginate_categories: true
@@ -38,4 +39,3 @@ paginate_paths:
  Blog: "/blog/page:num/"
  Tutorial: "/tutorial/page:num/"
 
-gems: [jekyll-paginate]

@@ -20,7 +20,10 @@ gem "minima"
 
 # If you have any plugins, put them here!
 # group :jekyll_plugins do
-#   gem "jekyll-github-metadata", "~> 1.0"
+#   gem 'octopress-paginate'
 # end
 
-gem 'jekyll-paginate', :path => './gems/jekyll-paginate'
+# this is local gems, which is already removed
+#gem 'jekyll-paginate', :path => './gems/jekyll-paginate'
+gem 'jekyll-paginate', :git => 'git://github.com/pyliaorachel/jekyll-paginate.git', :branch => 'paginate_categories'
+#gem 'jekyll-paginate', :git => 'https://github.com/jekyll/jekyll-paginate.git'
