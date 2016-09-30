@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "life2"
-date:   2016-09-18 22:24:27 -0400
-categories: Blog Life Internship
+title:  "Tutorial6"
+date:   2016-09-20 22:23:27 -0400
+categories: Tutorial Web
 tags: jekyll github
 author: Jekyll
 excerpt_separator: <!--more-->

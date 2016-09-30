@@ -118,4 +118,70 @@ body .blog {
 			font-size: 20px;
 		}
 	}
+
+	.pagination-bar {
+		text-align: center;
+		margin: 180px auto 0;
+
+		.pagination-nav-link {
+			display: inline-block;
+			width: 60px;
+			height: 60px;
+			text-align: center;
+			vertical-align: middle;
+
+			span {
+				line-height: 60px;
+				font-size: 60px;
+
+				a {
+					color: $dark-green-color;
+					text-decoration: none;
+				}
+
+				&.disactived {
+					color: transparent;
+				}
+			}
+
+			&:first-child {
+				-ms-transform: rotate(180deg);
+				-webkit-transform: rotate(180deg);
+				transform: rotate(180deg);
+			}
+
+		}
+
+		ul {
+			display: inline-block;
+			list-style: none;
+			margin: 0 30px;
+			vertical-align: middle;
+
+			li {
+				display: inline-block;
+				a, p {
+					display: inline-block;
+					text-decoration: none;
+					line-height: 50px;
+					color: black;
+					font-size: 20px;
+					background-color: $light-green-color;
+					width: 50px;
+					height: 50px;
+					border-radius: 50%;
+					text-align: center;
+					margin: 0 5px;
+					cursor: pointer;
+				}
+
+				&.current-page-num {
+					a, p {
+						color: white;
+						background-color: $dark-green-color;
+					}
+				}
+			}
+		}
+	}
 }

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Hello World!"
+title:  "tech 2"
 date:   2016-09-18 22:24:27 -0400
 categories: Blog Tech App
 tags: jekyll github

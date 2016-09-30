@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Welcome to Jekyll!"
+title:  "life1"
 date:   2016-09-17 22:24:27 -0400
 categories: Blog Life ProjectDiary
 tags: jekyll github

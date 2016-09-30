@@ -11,7 +11,8 @@ class: blog
 	</h1>
 
 	<ul class="post-list">
-		{% for post in site.posts %}
+
+		{% for post in paginator.posts %}
 			{% if post.categories[0] == "Tutorial" %}
 				{% if page.subtitle and page.subtitle == post.categories[1] or page.subtitle == "" %} 
 					<li>
@@ -49,5 +50,44 @@ class: blog
 			{% endif %}
 		{% endfor %}
 	</ul>
+
+	<div class="pagination-bar">
+
+		<div class="pagination-nav-link">
+			{% if paginator.previous_page %}
+				<span>
+					<a href="{{ paginator.previous_page_path }}" class="previous">
+						&#10095;
+					</a>
+				</span>
+			{% else %}
+				<span class="previous disactived">&#10095;</span>
+			{% endif %}
+		</div>
+
+		<ul>
+			{% for page_num in (1..paginator.total_pages) %}
+				{% if page_num == paginator.page%}
+					<li class="current-page-num"><p>{{ page_num }}</p></li>
+				{% elsif page_num == 1%}
+					<li><a href="{{ paginator.first_page_path | prepend: site.baseurl | replace: '//', '/' }}">{{ page_num }}</a></li>
+				{% else %}
+					<li><a href="{{ site.paginate_paths[paginator.category] | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page_num }}">{{ page_num }}</a></li>
+				{% endif %}
+			{% endfor %}
+		</ul>
+
+		<div class="pagination-nav-link">
+			{% if paginator.next_page %}
+				<span>
+					<a href="{{ paginator.next_page_path }}" class="next">
+						&#10095;
+					</a>
+				</span>
+			{% else %}
+				<span class="next disactived">&#10095;</span>
+			{% endif %}
+		</div>
+	</div>
 
 </div>

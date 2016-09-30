@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Hello World!"
+title:  "notes 2"
 date:   2016-09-18 22:24:27 -0400
 categories: Blog Notes Algorithms
 tags: jekyll github
