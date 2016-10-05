@@ -27,12 +27,10 @@ github_username:  pyliaorachel
 markdown: kramdown
 theme: minima
 
-#gems: [jekyll-paginate]
-
 paginate: 10
 # paginate_path: "/blog/page:num/"
 
-# if paginate_categories is true, then all posts MUST include categories
+# if paginate_categories is true, then all posts MUST include categories to be included in pagination
 paginate_categories: true
 # {:category => :paginate_path}, category MUST be the same as specified in post.categories[0]
 paginate_paths: 
