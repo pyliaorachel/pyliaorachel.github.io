@@ -62,13 +62,14 @@
 
 /* Customize */
 
-$post-font: 'Catamaran', sans-serif;
+$post-font: 'Muli', sans-serif;
 
 article {
 	p {
 		font-family: $post-font;
 		font-size: 20px;
 		line-height: 40px;
+		margin-bottom: 30px;
 	}
 	a {
 		color: $light-green-color;

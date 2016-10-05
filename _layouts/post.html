@@ -13,9 +13,25 @@ class: post
 			</p>
 		</header>
 
+		{% if page.categories[0] == "Tutorial" %}
+			{% include widgets/prerequisite.html %}
+		{% endif %}
+
+		<span class="separator"> • • • </span>
+
 		<div class="post-content" itemprop="articleBody">
 			{{ content }}
 		</div>
+
+		<ul class="tag-list">
+			{% for tag in page.tags %}
+
+			<li class="tag">
+				{{ tag }}
+			</li>
+
+			{% endfor %}
+		</ul>
 
 	</article>
 </div>

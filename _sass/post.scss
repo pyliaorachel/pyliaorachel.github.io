@@ -7,27 +7,70 @@ $grey-color-dark:  darken($grey-color, 25%);
 $light-green-color: #91DC5A;
 $dark-green-color: #33691E;
 
-$big-title-font: 'Rock Salt', cursive;
-$small-title-font: 'Space Mono', monospace;
-$post-title-font: 'Rajdhani', sans-serif;
+//$big-title-font: 'Rock Salt', cursive;
+$prerequisite-font: 'Josefin Sans', sans-serif;
+$post-title-font: 'Rock Salt', cursive;
 $meta-font: 'Scope One', serif;
-$p-font: 'Source Code Pro', monospace;
+//$p-font: 'Source Code Pro', monospace;
 $chinese-font: 'Microsoft YaHei', '微软雅黑', sans-serif;
 
 .post {
 	padding: 150px 70px !important;
 
+	.separator {
+		margin: 20px 0 0;
+		display: block;
+		color: $grey-color-light;
+		font-size: 20px;
+	}
+
+	.tag-list, .prerequisites-list {
+		list-style: none;
+		margin: 0 0 5px;
+		.tag {
+			color: white;
+			background-color: rgba($dark-green-color, 0.8);
+			border-radius: 0 8px 8px 8px;
+			padding: 5px 15px;
+			margin-right: 5px;
+			display: inline-block;
+		}
+		.prerequisite {
+			color: rgba($dark-green-color, 0.8);
+			border-radius: 0 8px 8px 8px;
+			border: 2px solid rgba($dark-green-color, 0.8);
+			padding: 3px 13px;
+			margin-right: 5px;
+			display: inline-block;
+		}
+	}
+
+	h2 {
+		font-size: 20px;
+		font-family: $prerequisite-font;
+		color: rgba($dark-green-color, 0.8);
+		display: inline-block;
+		margin: 10px;
+	}
+	.prerequisites-list {
+		display: inline-block;
+		margin-left: 10px;
+	}
+
 	.post-article {
 		.post-header {
-			margin-bottom: 60px;
+			margin-bottom: 5px;
 			.post-title {
-				font-family: $big-title-font;
+				font-family: $post-title-font;
 				color: $dark-green-color;
 				margin-bottom: 30px;
 			}
 			.post-meta {
 				font-family: $meta-font;
 			}
+		}
+		.post-content {
+			margin-top: 40px;
 		}
 	}
 }

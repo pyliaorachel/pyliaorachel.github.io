@@ -34,7 +34,15 @@ class: blog
 							</span>
 						</h2>
 
-						{{ post.excerpt }}
+						<ul class="prerequisites-list">
+							{% for prerequisite in post.prerequisites %}
+
+							<li class="prerequisite">
+								{{ prerequisite }}
+							</li>
+
+							{% endfor %}
+						</ul>
 
 						<ul class="tag-list">
 							{% for tag in post.tags %}
@@ -45,6 +53,9 @@ class: blog
 
 							{% endfor %}
 						</ul>
+
+						{{ post.excerpt }}
+						
 					</li>
 				{% endif %}
 			{% endif %}
