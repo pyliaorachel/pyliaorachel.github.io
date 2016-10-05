@@ -20,7 +20,7 @@ gem "minima"
 
 # If you have any plugins, put them here!
 group :jekyll_plugins do
-  gem 'jekyll-paginate', :path => 'gems/jekyll-paginate'
+  gem 'jekyll-paginate', :git => 'git://github.com/pyliaorachel/jekyll-paginate.git', :branch => 'paginate_categories'
 end
 
 # local gem
