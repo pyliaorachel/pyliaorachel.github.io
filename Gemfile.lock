@@ -1,7 +1,6 @@
 GIT
   remote: git://github.com/pyliaorachel/jekyll-paginate.git
-  revision: 97939225f588d6fb06d694cd6c8297b11f75565f
-  branch: paginate_categories
+  revision: 3e9b3748bcd1f0132fb13045d5d233f3cf3c32ed
   specs:
     jekyll-paginate (1.1.0)
 
