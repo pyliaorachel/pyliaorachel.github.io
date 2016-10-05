@@ -19,6 +19,7 @@ gem "minima"
 # gem "github-pages", group: :jekyll_plugins
 
 # If you have any plugins, put them here!
+# For using personal gems, see http://stackoverflow.com/questions/28249255/how-do-i-configure-github-to-use-non-supported-jekyll-site-plugins/28252200#28252200
 group :jekyll_plugins do
   gem 'jekyll-paginate', :git => 'git://github.com/pyliaorachel/jekyll-paginate.git', :branch => 'paginate_categories'
 end
