@@ -21,12 +21,12 @@ gem "minima"
 # If you have any plugins, put them here!
 # For using personal gems, see http://stackoverflow.com/questions/28249255/how-do-i-configure-github-to-use-non-supported-jekyll-site-plugins/28252200#28252200
 group :jekyll_plugins do
-  gem 'jekyll-paginate', :git => 'git://github.com/pyliaorachel/jekyll-paginate.git', :branch => 'paginate_categories'
+  gem 'jekyll-paginate', :git => 'git://github.com/pyliaorachel/jekyll-paginate.git'
 end
 
 # local gem
 #gem 'jekyll-paginate', :path => 'gems/jekyll-paginate'
 # remote gem
-#gem 'jekyll-paginate', :git => 'git://github.com/pyliaorachel/jekyll-paginate.git', :branch => 'paginate_categories'
+#gem 'jekyll-paginate', :git => 'git://github.com/pyliaorachel/jekyll-paginate.git'
 # original gem
 #gem 'jekyll-paginate', :git => 'https://github.com/jekyll/jekyll-paginate.git'
