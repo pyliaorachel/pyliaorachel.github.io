@@ -34,4 +34,8 @@ class: post
 		</ul>
 
 	</article>
+
+	{% if page.comments %}
+		{% include widgets/disqus.html %}
+	{% endif %}
 </div>

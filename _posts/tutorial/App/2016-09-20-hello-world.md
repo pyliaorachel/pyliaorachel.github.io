@@ -5,6 +5,7 @@ date:   2016-09-19 22:24:27 -0400
 categories: Tutorial App
 tags: jekyll github
 author: Jekyll
+comments: true
 prerequisites: ["brain", "effort"]
 excerpt_separator: <!--more-->
 ---
