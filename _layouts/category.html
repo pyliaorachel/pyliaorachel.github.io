@@ -19,6 +19,14 @@ class: blog
 				</li>
 				<li class="excerpt">
 					<h2>
+						<span class="post-category"> 
+							{% if post.categories %}
+							  {{ post.categories | last }}
+							{% endif %}
+						</span>
+					</h2>
+					
+					<h2>
 						<a class="post-title" href="{{ post.url | prepend: site.baseurl }}">
 						{{ post.title | escape }}
 						</a>

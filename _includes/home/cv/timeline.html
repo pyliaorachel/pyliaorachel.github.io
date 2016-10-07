@@ -13,7 +13,7 @@
 		{% assign elements = elements | push: element %}
 	{% endfor %}
 
-	{% assign elements = elements | sort: 'start' | reverse %}
+	{% assign elements = elements | sort: 'end' | reverse %}
 
 	<!--{% assign startY = elements.first.start | slice: 0, 4 %}
 	{% assign startM = elements.first.start | slice: 4, 2 %}
@@ -25,7 +25,6 @@
 	{{ totalMonths}}-->
 
 	{% for element in elements %}
-
 		<div class="timeline-block row">
 			<div class="timeline-time col-md-3">
 				{% assign startY = element.start | slice: 0, 4 %}
@@ -46,8 +45,17 @@
 				<div class="timeline-line">
 				</div>
 			</div>
-
-			<div class="timeline-description col-md-7">
+			{% if element.type == "education" %}
+				<div class="timeline-description col-md-7 education-td">
+			{% elsif element.type == "work" %}
+				<div class="timeline-description col-md-7 work-td non-education-td">
+			{% elsif element.type == "competition" %}
+				<div class="timeline-description col-md-7 competition-td non-education-td">
+			{% elsif element.type == "voluntary" %}
+				<div class="timeline-description col-md-7 voluntary-td non-education-td">
+			{% elsif element.type == "extracurricular" %}
+				<div class="timeline-description col-md-7 extra-td non-education-td">
+			{% endif %}
 				<p class="title">
 					{{ element.school | append: element.position | append: element.title}}
 					<span class="grey-tag"> 

@@ -68,14 +68,23 @@ body .blog {
 	.post-list {
 		.excerpt, .ignore-excerpt {
 			margin: 50px 0;
+
 			h2 {
 				margin: 30px 0 10px;
+				display: inline-block;
 			}
-			.post-title {
+			.post-title, .post-category {
 				color: $dark-green-color;
 				text-decoration: none;
 				font-size: 36px;
 				font-family: $post-title-font;
+			}
+			.post-category {
+				padding: 0 15px 0 0;
+				margin-right: 15px;
+				color: $light-green-color;
+				background-color: white;
+				border-right: 2px solid $light-green-color;
 			}
 			.post-meta {
 				margin-left: 20px;

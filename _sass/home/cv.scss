@@ -133,6 +133,7 @@ $skill-title-font: 'Rock Salt', cursive;
 						line-height: 50px;
 					}
 				}
+
 				.timeline-description {
 					color: $dark-green-color;
 					min-height: 210px;
@@ -158,6 +159,25 @@ $skill-title-font: 'Rock Salt', cursive;
 							margin-bottom: 7px;
 							display: inline-block;
 						}
+					}
+
+					&.non-education-td {
+						background-color: #FAFAFA;
+						box-shadow: 1px 1px 3px #888888;
+						//border: 3px solid rgba($light-green-color, 0.5);
+
+						/*&.work-td {
+							border: 3px solid rgba(#0277BD, 0.5);
+						}
+						&.voluntary-td {
+							border: 3px solid rgba(#9C27B0, 0.5);
+						}
+						&.extra-td {
+							border: 3px solid rgba(#FFD600, 0.5);
+						}
+						&.competition-td {
+							border: 3px solid rgba(#EF6C00, 0.5);
+						}*/
 					}
 
 					.education-description, .non-education-description {
