@@ -109,18 +109,18 @@ footer {
 	}
 }
 
-// under_construction
-.under-construction {
-	.under-construction-emoji {
+// under_construction & no_post
+.under-construction, .no-post {
+	.alert-emoji {
 		font-size: 108px;
-		color: rgba($light-green-color, 20%);
+		color: $grey-color-light;
 		margin-bottom: 30px;
 		font-family: 'Scope One', serif;
 	}
 	.title-text {
 		font-size: 26px;
 		font-family: $big-title-font;
-		color: darken($light-green-color, 20%);
+		color: $grey-color-dark;
 		margin-bottom: 150px;
 		padding: 0px 40px;
 	}
