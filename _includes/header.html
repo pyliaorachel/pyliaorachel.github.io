@@ -39,7 +39,18 @@
 						{% assign categories = categories | split:'|' | uniq %}
 
 						{% for category in categories %}
-							<li class="category"><a href="/blog/{{ category | slugify }}">{{ category }}</a></li>
+							{% assign count = 0 %}
+							{% for post in site.posts %}
+								{% if post.categories[1] == category %}
+									{% assign count = count | plus: 1%}
+								{% endif %}
+							{% endfor %}
+							<li class="category">
+								<a href="/blog/{{ category | slugify }}">
+								{{ category }}
+								<span>{{ count }}</span>
+								</a>
+							</li>
 						{%endfor%}
 						<li><a href="/blog/tags">Tags</a></li>
 					</ul>
@@ -61,7 +72,17 @@
 						{% assign categories = categories | split:'|' | uniq %}
 
 						{% for category in categories %}
-							<li class="category"><a href="/tutorial/{{ category | slugify }}">{{ category }}</a></li>
+							{% assign count = 0 %}
+							{% for post in site.posts %}
+								{% if post.categories[1] == category %}
+									{% assign count = count | plus: 1%}
+								{% endif %}
+							{% endfor %}
+							<li class="category">
+								<a href="/tutorial/{{ category | slugify }}">
+								<span>{{ category }}</span>
+								<span>{{ count }}</span></a>
+							</li>
 						{%endfor%}
 						<li><a href="/tutorial/tags">Tags</a></li>
 					</ul>
