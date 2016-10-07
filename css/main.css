@@ -672,6 +672,21 @@ body .about-mycoon .highlight pre {
             margin-right: 5px;
             margin-bottom: 7px;
             display: inline-block; }
+        .cv .content .description .timeline .timeline-description.non-education-td {
+          background-color: #FAFAFA;
+          box-shadow: 1px 1px 3px #888888;
+          /*&.work-td {
+          	border: 3px solid rgba(#0277BD, 0.5);
+          }
+          &.voluntary-td {
+          	border: 3px solid rgba(#9C27B0, 0.5);
+          }
+          &.extra-td {
+          	border: 3px solid rgba(#FFD600, 0.5);
+          }
+          &.competition-td {
+          	border: 3px solid rgba(#EF6C00, 0.5);
+          }*/ }
         .cv .content .description .timeline .timeline-description .education-description, .cv .content .description .timeline .timeline-description .non-education-description {
           font-size: 16px;
           margin-top: 5px;
@@ -861,12 +876,19 @@ body .blog {
 .blog .post-list .excerpt, .blog .post-list .ignore-excerpt {
   margin: 50px 0; }
   .blog .post-list .excerpt h2, .blog .post-list .ignore-excerpt h2 {
-    margin: 30px 0 10px; }
-  .blog .post-list .excerpt .post-title, .blog .post-list .ignore-excerpt .post-title {
+    margin: 30px 0 10px;
+    display: inline-block; }
+  .blog .post-list .excerpt .post-title, .blog .post-list .excerpt .post-category, .blog .post-list .ignore-excerpt .post-title, .blog .post-list .ignore-excerpt .post-category {
     color: #33691E;
     text-decoration: none;
     font-size: 36px;
     font-family: "Rajdhani", sans-serif; }
+  .blog .post-list .excerpt .post-category, .blog .post-list .ignore-excerpt .post-category {
+    padding: 0 15px 0 0;
+    margin-right: 15px;
+    color: #91DC5A;
+    background-color: white;
+    border-right: 2px solid #91DC5A; }
   .blog .post-list .excerpt .post-meta, .blog .post-list .ignore-excerpt .post-meta {
     margin-left: 20px;
     margin-right: 50px;
