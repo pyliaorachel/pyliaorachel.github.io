@@ -31,16 +31,14 @@
 						<li role="separator" class="divider"></li>
 						<li><a href="/blog/categories">Categories</a></li>
 						{% assign categories = "" %}
-						{% for post in site.posts %}
-							{% if post.categories[0] == "Blog" %}
+							{% for post in site.categories["Blog"] %}
 								{% assign categories = categories | append:post.categories[1] | append:'|' %}
-							{% endif %}
-						{% endfor %}
+							{% endfor %}
 						{% assign categories = categories | split:'|' | uniq %}
 
 						{% for category in categories %}
 							{% assign count = 0 %}
-							{% for post in site.posts %}
+							{% for post in site.categories["Blog"] %}
 								{% if post.categories[1] == category %}
 									{% assign count = count | plus: 1%}
 								{% endif %}
@@ -64,16 +62,14 @@
 						<li role="separator" class="divider"></li>
 						<li><a href="/tutorial/categories">Categories</a></li>
 						{% assign categories = "" %}
-						{% for post in site.posts %}
-							{% if post.categories[0] == "Tutorial" %}
+							{% for post in site.categories["Tutorial"] %}
 								{% assign categories = categories | append:post.categories[1] | append:'|' %}
-							{% endif %}
-						{% endfor %}
+							{% endfor %}
 						{% assign categories = categories | split:'|' | uniq %}
 
 						{% for category in categories %}
 							{% assign count = 0 %}
-							{% for post in site.posts %}
+							{% for post in site.categories["Tutorial"] %}
 								{% if post.categories[1] == category %}
 									{% assign count = count | plus: 1%}
 								{% endif %}

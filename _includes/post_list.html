@@ -14,7 +14,7 @@
 	{% if page.paginate and page.paginate == true %}
 		{% assign posts = paginator.posts %}
 	{% else %}
-		{% assign posts = site.posts %}
+		{% assign posts = site.categories[page.type] %}
 	{% endif %}
 
 	<ul class="post-list">

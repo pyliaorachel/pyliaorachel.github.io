@@ -2,7 +2,6 @@
 layout: post
 title:  "react-native-listview-modal"
 date:   2016-09-19 22:24:27 -0400
-imageUrl: "http://www.pd4pic.com/images/background-black-abstract-dark-backdrop-web.jpg"
 link: "https://github.com/pyliaorachel/react-native-listview-modal"
 categories: Project App React-Native
 tags: jekyll github
