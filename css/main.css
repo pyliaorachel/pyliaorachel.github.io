@@ -871,7 +871,7 @@ body .blog {
   color: #91DC5A;
   margin-bottom: 80px;
   padding: 0px 40px; }
-.blog .blog-main-page .post-list, .blog .tutorial-main-page .post-list, .blog .category-main-page .post-list, .blog .project-main-page .post-list {
+.blog .blog-main-page .post-list, .blog .tutorial-main-page .post-list, .blog .category-main-page .post-list {
   padding: 0px 60px; }
 .blog .post-list .excerpt, .blog .post-list .ignore-excerpt {
   margin: 50px 0; }
@@ -916,7 +916,11 @@ body .blog {
       margin-right: 5px;
       display: inline-block; }
   .blog .post-list .excerpt p, .blog .post-list .ignore-excerpt p {
-    margin: 45px 0 0; }
+    margin: 45px 0 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-weight: 100;
+    font-size: 18px;
+    line-height: 40px; }
 .blog .post-list .ignore-excerpt .post-meta {
   margin: 20px 0;
   font-size: 14px; }
@@ -928,50 +932,6 @@ body .blog {
   margin-left: 5px;
   font-size: 16px;
   color: white; }
-.blog .pagination-bar {
-  text-align: center;
-  margin: 180px auto 0; }
-  .blog .pagination-bar .pagination-nav-link {
-    display: inline-block;
-    width: 60px;
-    height: 60px;
-    text-align: center;
-    vertical-align: middle; }
-    .blog .pagination-bar .pagination-nav-link span {
-      line-height: 60px;
-      font-size: 60px; }
-      .blog .pagination-bar .pagination-nav-link span a {
-        color: #33691E;
-        text-decoration: none; }
-      .blog .pagination-bar .pagination-nav-link span.disactived {
-        color: transparent; }
-    .blog .pagination-bar .pagination-nav-link:first-child {
-      -ms-transform: rotate(180deg);
-      -webkit-transform: rotate(180deg);
-      transform: rotate(180deg); }
-  .blog .pagination-bar ul {
-    display: inline-block;
-    list-style: none;
-    margin: 0 30px;
-    vertical-align: middle; }
-    .blog .pagination-bar ul li {
-      display: inline-block; }
-      .blog .pagination-bar ul li a, .blog .pagination-bar ul li p {
-        display: inline-block;
-        text-decoration: none;
-        line-height: 50px;
-        color: black;
-        font-size: 20px;
-        background-color: #91DC5A;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        text-align: center;
-        margin: 0 5px;
-        cursor: pointer; }
-      .blog .pagination-bar ul li.current-page-num a, .blog .pagination-bar ul li.current-page-num p {
-        color: white;
-        background-color: #33691E; }
 
 .post {
   padding: 150px 70px !important; }
@@ -1053,6 +1013,108 @@ body .blog .category-post-list .separator {
     margin: 0; }
   .category-post-list .category-post-title-list:nth-child(even) {
     background-color: rgba(145, 220, 90, 0.4); }
+
+body .project {
+  padding: 150px 0 70px; }
+
+@media screen and (max-width: 900px) {
+  body main.project {
+    padding: 120px 0 0; } }
+@media screen and (max-width: 600px) {
+  body main.project {
+    padding: 100px 0 0; } }
+.project .project-main-page .title-text {
+  font-size: 88px;
+  font-family: "Rock Salt", cursive;
+  color: #91DC5A;
+  margin-bottom: 80px;
+  padding: 0px 100px; }
+.project .project-main-page .project-list {
+  list-style: none;
+  margin: 0; }
+  .project .project-main-page .project-list .project-cell {
+    position: relative;
+    height: 400px; }
+    .project .project-main-page .project-list .project-cell .content {
+      position: absolute;
+      left: 0;
+      right: 0;
+      z-index: 0;
+      width: 100%;
+      min-height: 100%; }
+      .project .project-main-page .project-list .project-cell .content .text-panel {
+        padding: 30px 60px; }
+        .project .project-main-page .project-list .project-cell .content .text-panel h1 a {
+          text-decoration: none;
+          font-size: 44px;
+          font-family: "Rajdhani", sans-serif;
+          color: #33691E; }
+          .project .project-main-page .project-list .project-cell .content .text-panel h1 a span {
+            color: #91DC5A; }
+          .project .project-main-page .project-list .project-cell .content .text-panel h1 a .icon > img {
+            width: 35px;
+            height: 35px; }
+        .project .project-main-page .project-list .project-cell .content .text-panel p {
+          font-size: 18px;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+          line-height: 40px;
+          font-weight: 100; }
+    .project .project-main-page .project-list .project-cell .bg {
+      position: absolute;
+      left: 0;
+      right: 0;
+      display: block;
+      background: white url("/assets/img/default.jpg") no-repeat center center;
+      background-size: cover;
+      width: 100%;
+      height: 100%; }
+.project .project-main-page .pagination-bar {
+  margin: 70px auto 0; }
+
+.pagination-bar {
+  text-align: center;
+  margin: 180px auto 0; }
+  .pagination-bar .pagination-nav-link {
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+    vertical-align: middle; }
+    .pagination-bar .pagination-nav-link span {
+      line-height: 60px;
+      font-size: 60px; }
+      .pagination-bar .pagination-nav-link span a {
+        color: #33691E;
+        text-decoration: none; }
+      .pagination-bar .pagination-nav-link span.disactived {
+        color: transparent; }
+    .pagination-bar .pagination-nav-link:first-child {
+      -ms-transform: rotate(180deg);
+      -webkit-transform: rotate(180deg);
+      transform: rotate(180deg); }
+  .pagination-bar ul {
+    display: inline-block;
+    list-style: none;
+    margin: 0 30px;
+    vertical-align: middle; }
+    .pagination-bar ul li {
+      display: inline-block; }
+      .pagination-bar ul li a, .pagination-bar ul li p {
+        display: inline-block;
+        text-decoration: none;
+        line-height: 50px;
+        color: black;
+        font-size: 20px;
+        background-color: #91DC5A;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        text-align: center;
+        margin: 0 5px;
+        cursor: pointer; }
+      .pagination-bar ul li.current-page-num a, .pagination-bar ul li.current-page-num p {
+        color: white;
+        background-color: #33691E; }
 
 .highlight .hll {
   background-color: #ffffcc; }
@@ -1688,7 +1750,7 @@ footer {
   color: #e8e8e8;
   margin-bottom: 30px;
   font-family: 'Scope One', serif; }
-.under-construction .title-text, .no-post .title-text {
+.under-construction .msg, .no-post .msg {
   font-size: 26px;
   font-family: "Rock Salt", cursive;
   color: #424242;
