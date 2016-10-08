@@ -1,20 +1,3 @@
-$text-color:       #f8f8f8;
-
-$grey-color:       #828282;
-$grey-color-light: lighten($grey-color, 40%);
-$grey-color-dark:  darken($grey-color, 25%);
-
-$light-green-color: #91DC5A;
-$dark-green-color: #33691E;
-$non-excerpt-green-color: #64DD17;
-
-$big-title-font: 'Rock Salt', cursive;
-$small-title-font: 'Poiret One', cursive;
-$post-title-font: 'Rajdhani', sans-serif;
-$meta-font: 'Scope One', serif;
-$p-font: 'Source Code Pro', monospace;
-$chinese-font: 'Microsoft YaHei', '微软雅黑', sans-serif;
-
 @media screen and (max-width: 900px) {
 	body .non-excerpt-page {
 		.non-excerpt-post-list .non-excerpt-title {
@@ -47,7 +30,7 @@ body .blog .non-excerpt-post-list .separator {
 			text-align: center;
 			font-size: 56px;
 			color: $non-excerpt-green-color;
-			font-family: $small-title-font;
+			font-family: $non-excerpt-small-title-font;
 			a {
 				color: $non-excerpt-green-color;
 				text-decoration: none;

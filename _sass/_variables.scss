@@ -1,0 +1,61 @@
+/* Jekyll's variables */
+$base-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+$base-font-size:   16px;
+$base-font-weight: 400;
+$small-font-size:  $base-font-size * 0.875;
+$base-line-height: 1.5;
+
+$spacing-unit:     30px;
+
+$text-color:       #111;
+$background-color: #fdfdfd;
+$brand-color:      #2a7ae2;
+
+$grey-color:       #828282;
+$grey-color-light: lighten($grey-color, 40%);
+$grey-color-dark:  darken($grey-color, 25%);
+
+// Width of the content area
+$content-width:    900px;
+
+$on-palm:          600px;
+$on-laptop:        900px;
+
+/* My variables */
+$light-green-color: #91DC5A;
+$dark-green-color: #33691E;
+
+$chinese-font: 'Microsoft YaHei', '微软雅黑', sans-serif;
+$big-title-font: 'Rock Salt', cursive, $chinese-font;
+
+// home
+$thumbnail-title-font: 'Muli', sans-serif, $chinese-font;
+$small-title-font: 'Space Mono', monospace, $chinese-font;
+$cv-p-font: 'Hind', sans-serif, $chinese-font;
+
+$highlight-color: #FFC107;
+
+$skill-title-font: 'Rock Salt', cursive, $chinese-font;
+
+// blog
+$text-color:       #f8f8f8;
+
+$post-list-title-font: 'Rajdhani', sans-serif, $chinese-font;
+$meta-font: 'Scope One', serif, $chinese-font;
+$p-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", $chinese-font;
+
+// post
+$prerequisite-font: 'Josefin Sans', sans-serif, $chinese-font;
+$post-title-font: 'Rock Salt', cursive, $chinese-font;
+
+// non-excerpt
+$non-excerpt-green-color: #64DD17;
+
+$big-title-font: 'Rock Salt', cursive, $chinese-font;
+$non-excerpt-small-title-font: 'Poiret One', cursive, $chinese-font;
+
+// project
+$project-title-font: 'Muli', sans-serif;
+
+
+
