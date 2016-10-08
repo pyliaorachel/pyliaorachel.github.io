@@ -871,7 +871,7 @@ body .blog {
   color: #91DC5A;
   margin-bottom: 80px;
   padding: 0px 40px; }
-.blog .blog-main-page .post-list, .blog .tutorial-main-page .post-list {
+.blog .blog-main-page .post-list, .blog .tutorial-main-page .post-list, .blog .category-main-page .post-list, .blog .project-main-page .post-list {
   padding: 0px 60px; }
 .blog .post-list .excerpt, .blog .post-list .ignore-excerpt {
   margin: 50px 0; }
@@ -1016,6 +1016,8 @@ body .blog {
       font-family: "Scope One", serif; }
   .post .post-article .post-content {
     margin-top: 40px; }
+  .post #disqus_thread {
+    margin-top: 80px; }
 
 @media screen and (max-width: 900px) {
   body .category-page .category-post-list .category-title a {
@@ -1654,6 +1656,15 @@ body {
 .category a {
   color: #828282 !important;
   padding-left: 40px !important; }
+  .category a span:nth-child(2) {
+    color: white;
+    background-color: #b5b5b5;
+    display: inline-block;
+    float: right;
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+    text-align: center; }
 
 footer {
   padding: 30px 0;
@@ -1672,15 +1683,15 @@ footer {
   footer .footer-link, footer .footer-copy-right {
     text-align: center; }
 
-.under-construction .under-construction-emoji {
+.under-construction .alert-emoji, .no-post .alert-emoji {
   font-size: 108px;
-  color: #91dc5a;
+  color: #e8e8e8;
   margin-bottom: 30px;
   font-family: 'Scope One', serif; }
-.under-construction .title-text {
+.under-construction .title-text, .no-post .title-text {
   font-size: 26px;
   font-family: "Rock Salt", cursive;
-  color: #5eac24;
+  color: #424242;
   margin-bottom: 150px;
   padding: 0px 40px; }
 
