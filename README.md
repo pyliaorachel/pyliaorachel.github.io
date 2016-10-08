@@ -4,6 +4,7 @@
 
 ## Sample Blog
 
+```
 ---
 layout: post
 title:  "MyBlog"
@@ -29,9 +30,11 @@ code here.
 This is a link [MyLinkText][MyLink].
 
 [MyLink]: "url"
+```
 
 ## Sample Tutorial
 
+```
 ---
 layout: post
 title:  "MyTutorial"
@@ -43,10 +46,12 @@ comments: true
 prerequisites: ["css", "sass"]
 excerpt_separator: <!--more-->
 ---
+```
 
 
 ## Sample Project
 
+```
 ---
 layout: post
 title:  "MyProject"
@@ -59,4 +64,5 @@ comments: true
 prerequisites: ["javascript", "firebase"]
 excerpt_separator: <!--more-->
 ---
+```
 
