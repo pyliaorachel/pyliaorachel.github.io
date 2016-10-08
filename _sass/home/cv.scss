@@ -78,7 +78,6 @@
 			border-radius: 5px;
 			padding: 100px 80px;
 
-			// general
 			.icon>img {
 				width: 40px;
 				height: 40px;
@@ -123,7 +122,7 @@
 				.timeline-time {
 					height: 50px;
 					color: $dark-green-color;
-					background-color: rgba($light-green-color, 1);
+					background-color: $light-green-color;
 					border-radius: 5px;
 					margin-top: 90px;
 					text-align: center;
@@ -136,17 +135,85 @@
 				.timeline-description {
 					color: $dark-green-color;
 					min-height: 210px;
-					background-color: rgba($light-green-color, 0.5);
 					border-radius: 5px;
 					padding: 20px;
 					//margin-bottom: 15px;
 
+					.type{
+						color: white;
+						margin-left: 5px;
+						font-size: 22px;
+						vertical-align: middle;
+						font-family: $cv-p-font;
+						line-height: 30px;
+					}
+					.timeline-circle {
+						background-color: white;
+						border: 0px;
+						width: 30px;
+						height: 30px;
+						vertical-align: middle;
+						display: inline-block;
+						.icon>img {
+							width: 20px;
+							height: 20px;
+							margin: 5px auto;
+						}
+					}
+
+					&.isBack, div.isHidden {
+						transform: scaleY(-1);
+						transition-duration: 1s;
+					}
+					&.isFront, div.isShown {
+						transform: scaleY(1);
+						transition-duration: 1s;
+					}
+
+					&.isFront div.dummy {
+						display: inline-block;
+						height: 170px;
+						vertical-align: middle;
+						margin-left: -10px;
+					}
+
+					&.isBack div.dummy {
+						display: inline-block;
+						height: 170px;
+						vertical-align: bottom;
+						margin-left: -10px;
+					}
+
+					div.front-side {
+						vertical-align: middle;
+						display: inline-block;
+
+						p.title {
+							text-align: center;
+							//line-height: 170px;
+						}
+						span.meta {
+							background-color: white;
+							border-radius: 8px;
+							padding: 5px 10px;
+						}
+					}
+
+					div.back-side {
+						//height: 100%;
+						display: inline-block;
+						vertical-align: bottom;
+						transform: scaleY(-1);
+					}
+					div.isHidden {
+						display: none;
+					}
+
 					p.title {
 						font-size: 24px;
-						font-weight: 800;
-						margin: 0;
+						font-weight: 300;
+						margin: 0 5px 0 0;
 						span {
-							margin-left: 5px;
 							font-size: 16px;
 							font-weight: 300;
 						}
@@ -160,10 +227,42 @@
 						}
 					}
 
+					&.education-td {
+						&.isBack {
+							//background-color: rgba($light-green-color, 0.8);
+							border: 3px solid rgba(#FFC107, 0.8);
+						}
+						&.isFront {
+							background-color: rgba(#FFC107, 0.8);
+							text-align: center;
+							p.title {
+								color: white;
+								margin: 10px 0;
+							}
+							span.meta {
+								color: darken(#FFC107, 10);
+							}
+						}
+					}
+
 					&.non-education-td {
-						background-color: #FAFAFA;
-						box-shadow: 1px 1px 3px #888888;
-						//border: 3px solid rgba($light-green-color, 0.5);
+						&.isBack {
+							//background-color: #FAFAFA;
+							//box-shadow: 1px -1px 3px #888888;
+							border: 3px solid rgba($light-green-color, 0.6);
+						}
+						&.isFront {
+							background-color: rgba($light-green-color, 0.6);
+							text-align: center;
+
+							p.title {
+								color: white;
+								margin: 10px 0;
+							}
+							span.meta {
+								color: darken($light-green-color, 10);
+							}
+						}
 
 						/*&.work-td {
 							border: 3px solid rgba(#0277BD, 0.5);

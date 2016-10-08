@@ -26,6 +26,8 @@
 @import "widgets";
 @import "syntax_style";
 
+html, body {margin:0;padding:0;height:100%;}
+
 // body
 body {
 	background-color: $dark-green-color;

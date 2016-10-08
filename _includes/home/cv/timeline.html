@@ -56,58 +56,81 @@
 			{% elsif element.type == "extracurricular" %}
 				<div class="timeline-description col-md-7 extra-td non-education-td">
 			{% endif %}
-				<p class="title">
-					{{ element.school | append: element.position | append: element.title}}
-					<span class="grey-tag"> 
+				<div class="dummy"></div>
+				<div class="back-side">
+					<p class="title">
+						{{ element.school | append: element.position | append: element.title}}
+						<span class="grey-tag"> 
+							{% if element.company and element.company != "" %}
+								{{ element.company | append: ', ' | append: element.location}}
+							{% else %}
+								{{ element.location}}
+							{% endif %}
+						</span>
+					</p>
+					{% if element.type == "education" %}
+						<p class="education-description">
+							{% if element.program != "" %}
+								<span class="green-tag">{{ element.program }}</span><br>
+							{% endif %}
+							{% if element.grade != "" %}
+								<span class="green-tag">{{ element.grade }}</span><br>
+							{% endif %}
+
+							{% assign awards_size = element.awards | size%}
+							{% if awards_size > 1 %}
+								{% assign award_list = "" %}
+								{% for award in element.awards %}
+									{% assign award_elem = award | prepend: '<p>' | append: '</p>'%}
+									{% assign award_list = award_list | append: award_elem %}
+								{% endfor %}
+								<span class="orange-tag canHover"><a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-animation="true" title="Honors" data-content="{{award_list}}" data-html="true">
+									{{ awards_size }} Honors
+								</a></span>
+							{% else if awards_size == 1%}
+								<span class="orange-tag">{{ element.awards[0] }}</span>
+							{% endif %}
+						</p>
+					{% else %}
+						<p class="non-education-description">
+							<span class="green-tag">{{ element.description }}</span><br>
+
+							{% assign highlights_size = element.highlights | size%}
+							{% if highlights_size > 1 %}
+								{% assign highlight_list = "" %}
+								{% for highlight in element.highlights %}
+									{% assign highlight_elem = highlight | prepend: '<p>' | append: '</p>'%}
+									{% assign highlight_list = highlight_list | append: highlight_elem %}
+								{% endfor %}
+								<span class="orange-tag canHover"><a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-animation="true" title="Highlights" data-content="{{highlight_list}}" data-html="true">
+									{{ highlights_size }} Highlights
+								</a></span>
+							{% else if highlights_size == 1%}
+								<span class="orange-tag">{{ element.highlights[0] }}</span>
+							{% endif %}
+						</p>
+					{% endif %}
+				</div>
+				<div class="front-side">
+					<div class="timeline-circle {{element.type}}-circle">
+						<span class="icon icon-{{element.type}}">
+							<img src="/assets/svg/{{element.type}}-logo.svg" alt="{{element.type}} Logo">
+						</span>
+					</div>
+					<span class="type"> 
+						{{element.type | capitalize}}
+					</span>
+					<p class="title">
+						{{ element.school | append: element.position | append: element.title}}
+					</p>
+					<span class="meta"> 
 						{% if element.company and element.company != "" %}
 							{{ element.company | append: ', ' | append: element.location}}
 						{% else %}
 							{{ element.location}}
 						{% endif %}
 					</span>
-				</p>
-				{% if element.type == "education" %}
-					<p class="education-description">
-						{% if element.program != "" %}
-							<span class="green-tag">{{ element.program }}</span><br>
-						{% endif %}
-						{% if element.grade != "" %}
-							<span class="green-tag">{{ element.grade }}</span><br>
-						{% endif %}
-
-						{% assign awards_size = element.awards | size%}
-						{% if awards_size > 1 %}
-							{% assign award_list = "" %}
-							{% for award in element.awards %}
-								{% assign award_elem = award | prepend: '<p>' | append: '</p>'%}
-								{% assign award_list = award_list | append: award_elem %}
-							{% endfor %}
-							<span class="orange-tag canHover"><a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-animation="true" title="Honors" data-content="{{award_list}}" data-html="true">
-								{{ awards_size }} Honors
-							</a></span>
-						{% else if awards_size == 1%}
-							<span class="orange-tag">{{ element.awards[0] }}</span>
-						{% endif %}
-					</p>
-				{% else %}
-					<p class="non-education-description">
-						<span class="green-tag">{{ element.description }}</span><br>
-
-						{% assign highlights_size = element.highlights | size%}
-						{% if highlights_size > 1 %}
-							{% assign highlight_list = "" %}
-							{% for highlight in element.highlights %}
-								{% assign highlight_elem = highlight | prepend: '<p>' | append: '</p>'%}
-								{% assign highlight_list = highlight_list | append: highlight_elem %}
-							{% endfor %}
-							<span class="orange-tag canHover"><a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-animation="true" title="Highlights" data-content="{{highlight_list}}" data-html="true">
-								{{ highlights_size }} Highlights
-							</a></span>
-						{% else if highlights_size == 1%}
-							<span class="orange-tag">{{ element.highlights[0] }}</span>
-						{% endif %}
-					</p>
-				{% endif %}
+				</div>
 			</div>
 		</div>
 
