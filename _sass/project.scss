@@ -1,0 +1,90 @@
+$project-title-font: 'Muli', sans-serif;
+$p-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+$post-title-font: 'Rajdhani', sans-serif;
+
+body .project {
+	padding: 150px 0 70px;
+}
+
+@media screen and (max-width: 900px) {
+	body main.project {
+		padding: 120px 0 0;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	body main.project {
+		padding: 100px 0 0;
+	}
+}
+
+.project {
+	.project-main-page {
+		.title-text {
+			font-size: 88px;
+			font-family: $big-title-font;
+			color: $light-green-color;
+			margin-bottom: 80px;
+			padding: 0px 100px;
+		}
+		.project-list {
+			list-style: none;
+			margin: 0;
+
+			.project-cell {
+				position: relative;
+				height: 400px;
+
+				.content {
+					position: absolute;
+					left: 0;
+					right: 0;
+					z-index: 0;
+					width: 100%;
+					min-height: 100%;
+
+					.text-panel {
+						padding: 30px 60px;
+
+						h1 {
+							a {
+								text-decoration: none;
+								font-size: 44px;
+								font-family: $post-title-font;
+								color: $dark-green-color;
+
+								span {
+									color: $light-green-color;
+								}
+								.icon>img {
+									width: 35px;
+									height: 35px;
+								}
+							}
+						}
+						p {
+							font-size: 18px;
+							font-family: $p-font;
+							line-height: 40px;
+							font-weight: 100;
+						}					
+					}
+				}
+
+				.bg {
+					position: absolute;
+					left: 0;
+					right: 0;
+					display: block;
+					background: white url('/assets/img/default.jpg') no-repeat center center;
+					background-size: cover;
+					width: 100%;
+					height: 100%;
+				}
+			}
+		}
+		.pagination-bar {
+			margin: 70px auto 0;
+		}
+	}
+}

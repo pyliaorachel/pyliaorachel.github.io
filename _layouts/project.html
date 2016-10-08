@@ -1,10 +1,18 @@
 ---
 layout: page
-class: blog
+class: project
 category: Project
 ---
 <div class="project-main-page">
-
-	{% include under_construction.html %}
 	
+	<h1 class="title-text">
+		Project
+	</h1>
+
+	{% include project_list.html %}
+
+	{% if page.paginate %}
+		{% include widgets/pagination.html %}
+	{% endif %}
+
 </div>

@@ -47,6 +47,8 @@ $big-title-font: 'Rock Salt', cursive;
 @import "blog";
 @import "post";
 @import "categories";
+@import "project";
+@import "widgets";
 @import "syntax_style";
 
 // body
@@ -130,7 +132,7 @@ footer {
 		margin-bottom: 30px;
 		font-family: 'Scope One', serif;
 	}
-	.title-text {
+	.msg {
 		font-size: 26px;
 		font-family: $big-title-font;
 		color: $grey-color-dark;

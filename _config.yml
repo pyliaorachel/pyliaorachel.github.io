@@ -36,4 +36,5 @@ paginate_categories: true
 paginate_paths: 
  Blog: "/blog/page:num/"
  Tutorial: "/tutorial/page:num/"
+ Project: "/project/page:num/"
 

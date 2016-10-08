@@ -1,0 +1,47 @@
+{% if page.paginate and paginator.posts == nil %}
+
+	{% include no_post.html %}
+
+{% else %}
+	<ul class="project-list">
+
+		{% assign posts = nil %}
+		{% if page.paginate and page.paginate == true %}
+			{% assign posts = paginator.posts %}
+		{% else %}
+			{% assign posts = site.posts %}
+		{% endif %}
+
+		{% assign mapping_bg = site.data.mapping_bg %}
+		{% for project in posts %}
+			{% if project.categories[0] == "Project" %}
+				{% assign category = project.categories | last %}
+				{% assign imageUrl= mapping_bg[category] %}
+				{% if imageUrl == nil %}
+					{% assign imageUrl = mapping_bg['Default'] %}
+				{% endif %}
+				{% if project.imageUrl %}
+					{% assign imageUrl= project.imageUrl %}
+				{% endif %}
+				<li class="project-cell">
+					<div class="bg" style="background-image: url('{{imageUrl}}');"></div>
+					<div class="content">
+						<div class="text-panel">
+							<h1>
+								{% if project.link %}
+									<a href="{{link}}"  target="_blank">
+										<span class="icon icon-github">
+											<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+										</span>
+									</a>
+								{% endif %}
+								<a href="{{project.url}}" target="_blank">{{ project.title }}<span> | {{ project.date | date: "%b %-d, %Y" }}</span></a>
+							</h1>
+							<p>{{ project.excerpt }}</p>
+						</div>
+					</div>
+				</li>
+			{% endif %}
+		{% endfor %}
+	</ul>
+{% endif %}
