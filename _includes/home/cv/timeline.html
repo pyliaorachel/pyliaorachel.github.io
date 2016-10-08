@@ -57,6 +57,28 @@
 				<div class="timeline-description col-md-7 extra-td non-education-td">
 			{% endif %}
 				<div class="dummy"></div>
+
+				<div class="front-side">
+					<div class="timeline-circle {{element.type}}-circle">
+						<span class="icon icon-{{element.type}}">
+							<img src="/assets/svg/{{element.type}}-logo.svg" alt="{{element.type}} Logo">
+						</span>
+					</div>
+					<span class="type"> 
+						{{element.type | capitalize}}
+					</span>
+					<p class="title">
+						{{ element.school | append: element.position | append: element.title}}
+					</p>
+					<span class="meta"> 
+						{% if element.company and element.company != "" %}
+							{{ element.company | append: ', ' | append: element.location}}
+						{% else %}
+							{{ element.location}}
+						{% endif %}
+					</span>
+				</div>
+
 				<div class="back-side">
 					<p class="title">
 						{{ element.school | append: element.position | append: element.title}}
@@ -111,26 +133,7 @@
 						</p>
 					{% endif %}
 				</div>
-				<div class="front-side">
-					<div class="timeline-circle {{element.type}}-circle">
-						<span class="icon icon-{{element.type}}">
-							<img src="/assets/svg/{{element.type}}-logo.svg" alt="{{element.type}} Logo">
-						</span>
-					</div>
-					<span class="type"> 
-						{{element.type | capitalize}}
-					</span>
-					<p class="title">
-						{{ element.school | append: element.position | append: element.title}}
-					</p>
-					<span class="meta"> 
-						{% if element.company and element.company != "" %}
-							{{ element.company | append: ', ' | append: element.location}}
-						{% else %}
-							{{ element.location}}
-						{% endif %}
-					</span>
-				</div>
+
 			</div>
 		</div>
 
