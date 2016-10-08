@@ -1,0 +1,88 @@
+{% assign type = layout.type | downcase %}
+<div class="blog-wrapper">
+
+	<div class="non-excerpt-page">
+
+		{% assign collections = "" %}
+
+		{% if type == "categories" %}
+			{% for post in site.categories[page.type] %}
+				{% assign collections = collections | append:post.categories[1] | append:'|' %}
+			{% endfor %}
+
+		{% elsif type == "tags" %}
+			{% for post in site.categories[page.type] %}
+				{% for tag in post.tags %}
+					{% assign collections = collections | append:tag | append:'|' %}
+				{% endfor %}
+			{% endfor %}
+		{% endif %}
+
+		{% assign collections = collections | split:'|' | uniq %}
+
+		<h1 class="title-text">{{ page.subtitle }}</h1>
+		{% if collections.size == 0 %}
+			{% include no_post.html %}
+		{% else %}
+
+			<ul class="post-list non-excerpt-post-list row">
+				{% for item in collections %}
+					<div class="col-md-4 non-excerpt-post-title-list" id="{{item | slugify}}-non-excerpt">
+						<li class="non-excerpt-title">
+							{% if type == "categories" %}
+								<a href="/{{ page.type | downcase }}/{{item | slugify}}">
+									<span class="separator"> • • • </span>
+									{{ item }}
+									<span class="separator"> • • • </span>
+								</a>
+							{% elsif type == "tags" %}
+								<span class="separator"> • • • </span>
+									{{ item }}
+								<span class="separator"> • • • </span>
+							{% endif %}
+						</li>
+
+						{% assign posts = nil %}
+						{% if type == "tags" %}
+							{% assign posts = site.tags[item] %}
+						{% elsif type == "categories" %}
+							{% assign posts = site.categories[item] %}
+						{% endif %}
+
+						{% for post in posts %}
+
+							{% if post.categories[0] == page.type %}
+								<li class="ignore-excerpt">
+									<div>
+										<div class="post-title-container">
+											<h2>
+												<a class="post-title" href="{{ post.url | prepend: site.baseurl }}">
+													{{ post.title | escape }}
+												</a>
+											</h2>
+										</div>
+										<ul class="tag-list">
+											{% for tag in post.tags %}
+												<li class="tag">
+													{{ tag }}
+												</li>
+											{% endfor %}
+										</ul>
+									</div>
+									<div class="post-meta"> 
+										{{ post.date | date: "%b %-d, %Y" }}
+										{% if post.categories %}  •  {{ post.categories | last }}{% endif %}
+										{% if post.author %}  •  by {{ post.author }}{% endif %}
+									</div>
+								</li>
+							{% endif %}
+
+						{% endfor %}
+
+					</div><!-- /.non-excerpt-post-title-list -->
+				{% endfor %}
+			</ul><!-- /.row -->
+		{% endif %}
+	</div>
+
+</div>

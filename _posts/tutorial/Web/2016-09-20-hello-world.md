@@ -2,8 +2,8 @@
 layout: post
 title:  "Tutorial"
 date:   2016-09-19 22:24:27 -0400
-categories: Tutorial App
-tags: jekyll github 
+categories: Tutorial Web
+tags: jekyll github hello
 author: Jekyll
 comments: true
 prerequisites: ["brain", "effort"]
