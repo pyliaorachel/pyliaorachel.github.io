@@ -647,7 +647,7 @@ body .about-mycoon .highlight pre {
       .cv .content .description .timeline .timeline-time {
         height: 50px;
         color: #33691E;
-        background-color: #91dc5a;
+        background-color: #91DC5A;
         border-radius: 5px;
         margin-top: 90px;
         text-align: center; }
@@ -657,15 +657,62 @@ body .about-mycoon .highlight pre {
       .cv .content .description .timeline .timeline-description {
         color: #33691E;
         min-height: 210px;
-        background-color: rgba(145, 220, 90, 0.5);
         border-radius: 5px;
         padding: 20px; }
+        .cv .content .description .timeline .timeline-description .type {
+          color: white;
+          margin-left: 5px;
+          font-size: 22px;
+          vertical-align: middle;
+          font-family: "Hind", sans-serif, "Microsoft YaHei", "微软雅黑", sans-serif;
+          line-height: 30px; }
+        .cv .content .description .timeline .timeline-description .timeline-circle {
+          background-color: white;
+          border: 0px;
+          width: 30px;
+          height: 30px;
+          vertical-align: middle;
+          display: inline-block; }
+          .cv .content .description .timeline .timeline-description .timeline-circle .icon > img {
+            width: 20px;
+            height: 20px;
+            margin: 5px auto; }
+        .cv .content .description .timeline .timeline-description.isBack, .cv .content .description .timeline .timeline-description div.isHidden {
+          transform: scaleY(-1);
+          transition-duration: 1s; }
+        .cv .content .description .timeline .timeline-description.isFront, .cv .content .description .timeline .timeline-description div.isShown {
+          transform: scaleY(1);
+          transition-duration: 1s; }
+        .cv .content .description .timeline .timeline-description.isFront div.dummy {
+          display: inline-block;
+          height: 170px;
+          vertical-align: middle;
+          margin-left: -10px; }
+        .cv .content .description .timeline .timeline-description.isBack div.dummy {
+          display: inline-block;
+          height: 170px;
+          vertical-align: bottom;
+          margin-left: -10px; }
+        .cv .content .description .timeline .timeline-description div.front-side {
+          vertical-align: middle;
+          display: inline-block; }
+          .cv .content .description .timeline .timeline-description div.front-side p.title {
+            text-align: center; }
+          .cv .content .description .timeline .timeline-description div.front-side span.meta {
+            background-color: white;
+            border-radius: 8px;
+            padding: 5px 10px; }
+        .cv .content .description .timeline .timeline-description div.back-side {
+          display: inline-block;
+          vertical-align: bottom;
+          transform: scaleY(-1); }
+        .cv .content .description .timeline .timeline-description div.isHidden {
+          display: none; }
         .cv .content .description .timeline .timeline-description p.title {
           font-size: 24px;
-          font-weight: 800;
-          margin: 0; }
+          font-weight: 300;
+          margin: 0 5px 0 0; }
           .cv .content .description .timeline .timeline-description p.title span {
-            margin-left: 5px;
             font-size: 16px;
             font-weight: 300; }
           .cv .content .description .timeline .timeline-description p.title span.grey-tag {
@@ -675,9 +722,17 @@ body .about-mycoon .highlight pre {
             margin-right: 5px;
             margin-bottom: 7px;
             display: inline-block; }
+        .cv .content .description .timeline .timeline-description.education-td.isBack {
+          border: 3px solid rgba(255, 193, 7, 0.8); }
+        .cv .content .description .timeline .timeline-description.education-td.isFront {
+          background-color: rgba(255, 193, 7, 0.8);
+          text-align: center; }
+          .cv .content .description .timeline .timeline-description.education-td.isFront p.title {
+            color: white;
+            margin: 10px 0; }
+          .cv .content .description .timeline .timeline-description.education-td.isFront span.meta {
+            color: #d39e00; }
         .cv .content .description .timeline .timeline-description.non-education-td {
-          background-color: #FAFAFA;
-          box-shadow: 1px 1px 3px #888888;
           /*&.work-td {
           	border: 3px solid rgba(#0277BD, 0.5);
           }
@@ -690,6 +745,16 @@ body .about-mycoon .highlight pre {
           &.competition-td {
           	border: 3px solid rgba(#EF6C00, 0.5);
           }*/ }
+          .cv .content .description .timeline .timeline-description.non-education-td.isBack {
+            border: 3px solid rgba(145, 220, 90, 0.6); }
+          .cv .content .description .timeline .timeline-description.non-education-td.isFront {
+            background-color: rgba(145, 220, 90, 0.6);
+            text-align: center; }
+            .cv .content .description .timeline .timeline-description.non-education-td.isFront p.title {
+              color: white;
+              margin: 10px 0; }
+            .cv .content .description .timeline .timeline-description.non-education-td.isFront span.meta {
+              color: #75d330; }
         .cv .content .description .timeline .timeline-description .education-description, .cv .content .description .timeline .timeline-description .non-education-description {
           font-size: 16px;
           margin-top: 5px;
@@ -1698,6 +1763,11 @@ body .highlight pre {
   color: #009999; }
 
 /* Literal.Number.Integer.Long */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%; }
+
 body {
   background-color: #33691E; }
 
