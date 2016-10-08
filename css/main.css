@@ -1,4 +1,6 @@
 @charset "UTF-8";
+/* Jekyll's variables */
+/* My variables */
 /**
  * Reset some basic elements
  */
@@ -13,7 +15,7 @@ dl, dd, ol, ul, figure {
  */
 body {
   font: 400 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #111;
+  color: #f8f8f8;
   background-color: #fdfdfd;
   -webkit-text-size-adjust: 100%;
   -webkit-font-feature-settings: "kern" 1;
@@ -72,7 +74,7 @@ a {
   a:visited {
     color: #1756a9; }
   a:hover {
-    color: #111;
+    color: #f8f8f8;
     text-decoration: underline; }
 
 /**
@@ -168,7 +170,7 @@ pre {
   .site-nav .menu-icon {
     display: none; }
   .site-nav .page-link {
-    color: #111;
+    color: #f8f8f8;
     line-height: 1.5; }
     .site-nav .page-link:not(:last-child) {
       margin-right: 20px; }
@@ -483,7 +485,7 @@ body .home {
       text-align: center; }
       .thumbnail .content .title-text h1 {
         font-size: 88px;
-        font-family: "Muli", sans-serif;
+        font-family: "Muli", sans-serif, "Microsoft YaHei", "微软雅黑", sans-serif;
         color: #91DC5A; }
       .thumbnail .content .title-text p {
         font-size: 26px;
@@ -526,11 +528,11 @@ body .about-mycoon .highlight pre {
       line-height: 70px; }
       .about-mycoon .content .title-text span:first-child {
         color: #91DC5A;
-        font-family: "Space Mono", monospace;
+        font-family: "Space Mono", monospace, "Microsoft YaHei", "微软雅黑", sans-serif;
         font-size: 56px; }
       .about-mycoon .content .title-text span:nth-child(2) {
         color: #33691E;
-        font-family: "Space Mono", monospace;
+        font-family: "Space Mono", monospace, "Microsoft YaHei", "微软雅黑", sans-serif;
         font-size: 56px; }
       .about-mycoon .content .title-text span:nth-child(3) {
         color: #91DC5A;
@@ -540,7 +542,7 @@ body .about-mycoon .highlight pre {
       margin-top: 50px; }
       .about-mycoon .content .description p {
         color: rgba(0, 0, 0, 0.8);
-        font-family: "Hind", sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Microsoft YaHei", "微软雅黑", sans-serif;
         font-size: 26px; }
 
 @media screen and (max-width: 900px) {
@@ -556,7 +558,7 @@ body .about-mycoon .highlight pre {
     padding: 150px 30px; }
     .cv .content .title-text h1 {
       color: white;
-      font-family: "Space Mono", monospace;
+      font-family: "Space Mono", monospace, "Microsoft YaHei", "微软雅黑", sans-serif;
       font-size: 46px;
       text-align: center; }
     .cv .content .cv-circle {
@@ -584,7 +586,7 @@ body .about-mycoon .highlight pre {
       			}*/ }
       .cv .content .cv-circle h1 {
         display: none;
-        font-family: "Space Mono", monospace;
+        font-family: "Space Mono", monospace, "Microsoft YaHei", "微软雅黑", sans-serif;
         font-size: 40px;
         text-align: center;
         line-height: 200px;
@@ -619,20 +621,21 @@ body .about-mycoon .highlight pre {
         height: 40px; }
       .cv .content .description p {
         color: rgba(0, 0, 0, 0.8);
-        font-family: "Hind", sans-serif;
+        font-family: "Hind", sans-serif, "Microsoft YaHei", "微软雅黑", sans-serif;
         font-size: 26px; }
       .cv .content .description .info {
         margin: 50px 0 0; }
         .cv .content .description .info h2 {
           text-align: center;
-          font-family: "Muli", sans-serif;
-          font-size: 40px; }
+          font-family: "Rock Salt", cursive, "Microsoft YaHei", "微软雅黑", sans-serif;
+          font-size: 40px;
+          color: black; }
         .cv .content .description .info .contact {
           text-align: center;
           margin: 30px 0 80px; }
           .cv .content .description .info .contact .username {
             color: rgba(0, 0, 0, 0.8);
-            font-family: "Hind", sans-serif;
+            font-family: "Hind", sans-serif, "Microsoft YaHei", "微软雅黑", sans-serif;
             font-size: 24px;
             margin-left: 10px; }
           .cv .content .description .info .contact a {
@@ -751,9 +754,10 @@ body .about-mycoon .highlight pre {
         margin: 150px 0; }
         .cv .content .description .skill .skill-title h1 {
           text-align: center;
-          font-family: "Muli", sans-serif;
+          font-family: "Rock Salt", cursive, "Microsoft YaHei", "微软雅黑", sans-serif;
           font-size: 40px;
-          margin: 30px 0 70px; }
+          margin: 30px 0 70px;
+          color: black; }
         .cv .content .description .skill .technical-skill .t0 .skill-circle {
           background-color: #33691e; }
         .cv .content .description .skill .technical-skill .t1 .skill-circle {
@@ -777,7 +781,7 @@ body .about-mycoon .highlight pre {
         .cv .content .description .skill .technical-skill .t10 .skill-circle {
           background-color: #b4e4a2; }
         .cv .content .description .skill .language-skill {
-          margin: 150px 0; }
+          margin: 50px 0 100px; }
           .cv .content .description .skill .language-skill .l0.skill-circle {
             background-color: #ff6f00; }
           .cv .content .description .skill .language-skill .l1.skill-circle {
@@ -815,7 +819,7 @@ body .about-mycoon .highlight pre {
           color: white;
           margin: 10px;
           font-size: 18px;
-          font-family: "Hind", sans-serif; }
+          font-family: "Hind", sans-serif, "Microsoft YaHei", "微软雅黑", sans-serif; }
 
 @media screen and (max-width: 900px) {
   body main.home .cv .content .description .timeline .timeline-block .timeline-description {
@@ -867,7 +871,7 @@ body .blog {
   font-size: 20px; }
 .blog .title-text {
   font-size: 88px;
-  font-family: "Rock Salt", cursive;
+  font-family: "Rock Salt", cursive, "Microsoft YaHei", "微软雅黑", sans-serif;
   color: #91DC5A;
   margin-bottom: 80px;
   padding: 0px 40px; }
@@ -882,7 +886,7 @@ body .blog {
     color: #33691E;
     text-decoration: none;
     font-size: 36px;
-    font-family: "Rajdhani", sans-serif; }
+    font-family: "Rajdhani", sans-serif, "Microsoft YaHei", "微软雅黑", sans-serif; }
   .blog .post-list .excerpt .post-category, .blog .post-list .ignore-excerpt .post-category {
     padding: 0 15px 0 0;
     margin-right: 15px;
@@ -893,7 +897,7 @@ body .blog {
     margin-left: 20px;
     margin-right: 50px;
     font-size: 20px;
-    font-family: "Scope One", serif;
+    font-family: "Scope One", serif, "Microsoft YaHei", "微软雅黑", sans-serif;
     color: #828282; }
     .blog .post-list .excerpt .post-meta a, .blog .post-list .ignore-excerpt .post-meta a {
       color: #424242; }
@@ -917,10 +921,11 @@ body .blog {
       display: inline-block; }
   .blog .post-list .excerpt p, .blog .post-list .ignore-excerpt p {
     margin: 45px 0 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Microsoft YaHei", "微软雅黑", sans-serif;
     font-weight: 100;
     font-size: 18px;
-    line-height: 40px; }
+    line-height: 40px;
+    color: black; }
 .blog .post-list .ignore-excerpt .post-meta {
   margin: 20px 0;
   font-size: 14px; }
@@ -959,7 +964,7 @@ body .blog {
       display: inline-block; }
   .post h2 {
     font-size: 20px;
-    font-family: "Josefin Sans", sans-serif;
+    font-family: "Josefin Sans", sans-serif, "Microsoft YaHei", "微软雅黑", sans-serif;
     color: rgba(51, 105, 30, 0.8);
     display: inline-block;
     margin: 10px; }
@@ -969,52 +974,55 @@ body .blog {
   .post .post-article .post-header {
     margin-bottom: 5px; }
     .post .post-article .post-header .post-title {
-      font-family: "Rock Salt", cursive;
+      font-family: "Rock Salt", cursive, "Microsoft YaHei", "微软雅黑", sans-serif;
       color: #33691E;
       margin-bottom: 30px; }
     .post .post-article .post-header .post-meta {
-      font-family: "Scope One", serif; }
+      font-family: "Scope One", serif, "Microsoft YaHei", "微软雅黑", sans-serif; }
   .post .post-article .post-content {
     margin-top: 40px; }
   .post #disqus_thread {
     margin-top: 80px; }
 
 @media screen and (max-width: 900px) {
-  body .category-page .category-post-list .category-title a {
+  body .non-excerpt-page .non-excerpt-post-list .non-excerpt-title a {
     font-size: 46px; }
-  body .category-page .title-text {
+  body .non-excerpt-page .title-text {
     padding: 0; } }
 @media screen and (max-width: 600px) {
-  body .category-post-list .category-title a {
+  body .non-excerpt-post-list .non-excerpt-title a {
     font-size: 46px; } }
-body .blog .category-post-list .separator {
+body .blog .non-excerpt-post-list .separator {
   color: #64DD17; }
 
-.category-post-list .category-post-title-list {
+.non-excerpt-post-list .non-excerpt-post-title-list {
   padding: 30px 40px; }
-  .category-post-list .category-post-title-list .category-title {
-    text-align: center; }
-    .category-post-list .category-post-title-list .category-title a {
-      font-size: 56px;
+  .non-excerpt-post-list .non-excerpt-post-title-list .non-excerpt-title {
+    text-align: center;
+    font-size: 56px;
+    color: #64DD17;
+    font-family: "Poiret One", cursive, "Microsoft YaHei", "微软雅黑", sans-serif; }
+    .non-excerpt-post-list .non-excerpt-post-title-list .non-excerpt-title a {
       color: #64DD17;
-      font-family: "Poiret One", cursive;
       text-decoration: none; }
-  .category-post-list .category-post-title-list .ignore-excerpt .post-meta {
+    .non-excerpt-post-list .non-excerpt-post-title-list .non-excerpt-title a:hover {
+      color: #33691E; }
+  .non-excerpt-post-list .non-excerpt-post-title-list .ignore-excerpt .post-meta {
     margin: 5px; }
-  .category-post-list .category-post-title-list .ignore-excerpt .tag-list, .category-post-list .category-post-title-list .ignore-excerpt .post-title-container {
+  .non-excerpt-post-list .non-excerpt-post-title-list .ignore-excerpt .tag-list, .non-excerpt-post-list .non-excerpt-post-title-list .ignore-excerpt .post-title-container {
     display: inline-block; }
-    .category-post-list .category-post-title-list .ignore-excerpt .tag-list .tag, .category-post-list .category-post-title-list .ignore-excerpt .post-title-container .tag {
+    .non-excerpt-post-list .non-excerpt-post-title-list .ignore-excerpt .tag-list .tag, .non-excerpt-post-list .non-excerpt-post-title-list .ignore-excerpt .post-title-container .tag {
       margin: 0;
       padding: 3px 9px;
       font-size: 14px; }
-  .category-post-list .category-post-title-list .ignore-excerpt div:first-child {
+  .non-excerpt-post-list .non-excerpt-post-title-list .ignore-excerpt div:first-child {
     vertical-align: middle; }
-  .category-post-list .category-post-title-list .ignore-excerpt .post-title-container h2 {
+  .non-excerpt-post-list .non-excerpt-post-title-list .ignore-excerpt .post-title-container h2 {
     margin: 0; }
-  .category-post-list .category-post-title-list:nth-child(even) {
+  .non-excerpt-post-list .non-excerpt-post-title-list:nth-child(even) {
     background-color: rgba(145, 220, 90, 0.4); }
 
-body .project {
+pbody .project {
   padding: 150px 0 70px; }
 
 @media screen and (max-width: 900px) {
@@ -1025,7 +1033,7 @@ body .project {
     padding: 100px 0 0; } }
 .project .project-main-page .title-text {
   font-size: 88px;
-  font-family: "Rock Salt", cursive;
+  font-family: "Rock Salt", cursive, "Microsoft YaHei", "微软雅黑", sans-serif;
   color: #91DC5A;
   margin-bottom: 80px;
   padding: 0px 100px; }
@@ -1047,7 +1055,7 @@ body .project {
         .project .project-main-page .project-list .project-cell .content .text-panel h1 a {
           text-decoration: none;
           font-size: 44px;
-          font-family: "Rajdhani", sans-serif;
+          font-family: "Rajdhani", sans-serif, "Microsoft YaHei", "微软雅黑", sans-serif;
           color: #33691E; }
           .project .project-main-page .project-list .project-cell .content .text-panel h1 a span {
             color: #91DC5A; }
@@ -1056,9 +1064,10 @@ body .project {
             height: 35px; }
         .project .project-main-page .project-list .project-cell .content .text-panel p {
           font-size: 18px;
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Microsoft YaHei", "微软雅黑", sans-serif;
           line-height: 40px;
-          font-weight: 100; }
+          font-weight: 100;
+          color: black; }
     .project .project-main-page .project-list .project-cell .bg {
       position: absolute;
       left: 0;
@@ -1389,7 +1398,8 @@ article p {
   font-family: "Muli", sans-serif;
   font-size: 20px;
   line-height: 40px;
-  margin-bottom: 30px; }
+  margin-bottom: 30px;
+  color: black; }
 article a {
   color: #91DC5A; }
   article a:hover {
@@ -1752,7 +1762,7 @@ footer {
   font-family: 'Scope One', serif; }
 .under-construction .msg, .no-post .msg {
   font-size: 26px;
-  font-family: "Rock Salt", cursive;
+  font-family: "Rock Salt", cursive, "Microsoft YaHei", "微软雅黑", sans-serif;
   color: #424242;
   margin-bottom: 150px;
   padding: 0px 40px; }
