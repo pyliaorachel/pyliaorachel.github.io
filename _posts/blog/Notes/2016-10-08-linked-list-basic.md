@@ -2,7 +2,7 @@
 layout: post
 title:  "Linked List Basic"
 categories: Blog Notes DataStructure
-tags: "data structure"
+tags: ["data structure"]
 author: pyliaorachel
 comments: true
 prerequisites: ["C"]
