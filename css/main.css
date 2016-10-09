@@ -1034,7 +1034,8 @@ body .blog {
     font-family: "Josefin Sans", sans-serif, "Microsoft YaHei", "微软雅黑", sans-serif;
     color: rgba(51, 105, 30, 0.8);
     display: inline-block;
-    margin: 10px; }
+    margin: 10px;
+    border: 0; }
   .post .prerequisites-list {
     display: inline-block;
     margin-left: 10px; }

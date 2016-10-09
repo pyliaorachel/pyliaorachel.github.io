@@ -278,6 +278,7 @@
 
 .markdown-body blockquote {
   margin: 0;
+  font-style: normal;
 }
 
 .markdown-body ul,
@@ -303,9 +304,15 @@
   margin-left: 0;
 }
 
+/* customize*/
 .markdown-body code {
   font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  font-size: 12px;
+  font-size: 85%;
+  padding: 0.2em 0;
+  margin: 0;
+  background-color: rgba(0, 0, 0, 0.04);
+  border-radius: 3px;
+  color: black;
 }
 
 .markdown-body pre {
@@ -544,6 +551,7 @@
   background-color: #fff;
 }
 
+/* customize*/
 .markdown-body code {
   padding: 0;
   padding-top: 0.2em;
@@ -552,6 +560,7 @@
   font-size: 85%;
   background-color: rgba(0,0,0,0.04);
   border-radius: 3px;
+  border: 0;
 }
 
 .markdown-body code::before,
@@ -581,6 +590,11 @@
 .markdown-body .highlight pre {
   margin-bottom: 0;
   word-break: normal;
+}
+
+/* customize*/
+.markdown-body .highlight pre code span {
+  font-style: normal !important;
 }
 
 .markdown-body .highlight pre,
