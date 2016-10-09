@@ -55,7 +55,7 @@ body .blog {
 
 			h2 {
 				margin: 30px 0 10px;
-				display: inline-block;
+				display: block;
 			}
 			.post-title, .post-category {
 				color: $dark-green-color;
@@ -65,13 +65,12 @@ body .blog {
 			}
 			.post-category {
 				padding: 0 15px 0 0;
-				margin-right: 15px;
+				margin-right: 30px;
 				color: $light-green-color;
 				background-color: white;
 				border-right: 2px solid $light-green-color;
 			}
 			.post-meta {
-				margin-left: 20px;
 				margin-right: 50px;
 				font-size: 20px;
 				font-family: $meta-font;
@@ -101,6 +100,9 @@ body .blog {
 					margin-right: 5px;
 					display: inline-block;
 				}
+			}
+			.excerpt-content {
+				margin-top: 50px;
 			}
 			p {
 				margin: 45px 0 0;

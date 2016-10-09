@@ -32,34 +32,48 @@
 							  {{ post.categories | last }}
 							{% endif %}
 						</span>
-					</h2>
-					<h2>
 						<a class="post-title" href="{{ post.url | prepend: site.baseurl }}">
 						{{ post.title | escape }}
 						</a>
-						<span class="post-meta"> 
-							{{ post.date | date: "%b %-d, %Y" }}
-							{% if post.categories %}
-							  •  <a href="/{{ page.title | downcase }}/{{ post.categories[1] | slugify }}">{{ post.categories[1] }}</a>
-							{% endif %}
-							{% if post.author %}
-							  •  by {{ post.author }}
-							{% endif %}
-							  •  <span class="disqus-comment-count" data-disqus-identifier="{{post.url}}">Comment Count</span>
-						</span>
 					</h2>
+					<span class="post-meta"> 
+						{{ post.date | date: "%b %-d, %Y" }}
+						{% if post.categories %}
+						  •  <a href="/{{ page.title | downcase }}/{{ post.categories[1] | slugify }}">{{ post.categories[1] }}</a>
+						{% endif %}
+						{% if post.author %}
+						  •  by {{ post.author }}
+						{% endif %}
+						  •  <span class="disqus-comment-count" data-disqus-identifier="{{post.url}}">Comment Count</span>
+					</span>
 
-					<ul class="tag-list">
-						{% for tag in post.tags %}
+					{% if post.prerequisites %}
+						<ul class="prerequisites-list">
+							{% for prerequisite in post.prerequisites %}
 
-						<li class="tag">
-							{{ tag }}
-						</li>
+							<li class="prerequisite">
+								{{ prerequisite }}
+							</li>
 
-						{% endfor %}
-					</ul>
+							{% endfor %}
+						</ul>
+					{% endif %}
 
-					{{ post.excerpt }}
+					{% if post.tags %}
+						<ul class="tag-list">
+							{% for tag in post.tags %}
+
+							<li class="tag">
+								{{ tag }}
+							</li>
+
+							{% endfor %}
+						</ul>
+					{% endif %}
+
+					<div class="excerpt-content">
+						{{ post.excerpt }}
+					</div>
 
 				</li>
 			{% endif %}

@@ -13,8 +13,17 @@ class: post
 			</p>
 		</header>
 
-		{% if page.categories[0] == "Tutorial" %}
-			{% include widgets/prerequisite.html %}
+		{% if page.prerequisites %}
+			<h2>Prerequisites</h2>
+			<ul class="prerequisites-list">
+				{% for prerequisite in page.prerequisites %}
+
+				<li class="prerequisite">
+					{{ prerequisite }}
+				</li>
+
+				{% endfor %}
+			</ul>
 		{% endif %}
 
 		<span class="separator"> • • • </span>
