@@ -24,7 +24,10 @@ url: "" # the base hostname & protocol for your site
 github_username:  pyliaorachel
 
 # Build settings
-markdown: kramdown
+#markdown: kramdown
+markdown: redcarpet
+redcarpet:
+  extensions: ["no_intra_emphasis", "fenced_code_blocks", "tables"]
 theme: minima
 
 paginate: 10

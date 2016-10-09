@@ -10,4 +10,7 @@ $(document).ready(function(){
 		$('#nav-links>li.active').removeClass('active');
 		$(this).addClass('active');
 	});
+
+	$('article').addClass('markdown-body');
+	$('.excerpt-content').addClass('markdown-body');
 });

@@ -62,15 +62,20 @@
 
 /* Customize */
 
-article, .excerpt-content {
-	p, li, h1, h2, h3, h4, h5, h6 {
+main article, .excerpt-content {
+	p, li, h1, h2, h3, h4, h5, h6, table {
 		font-family: $post-font;
 	}
-	p {
+	h1, h2, h3, h4, h5, h6 {
+		color: $dark-green-color;
+		margin: 30px 5px;
+	}
+	p, table {
 		font-size: 20px;
 		line-height: 40px;
 		margin: 10px;
-		color: black;
+		font-weight: 300;
+		color: rgba(0, 0, 0, 0.7);
 	}
 	a {
 		color: $light-green-color;
@@ -81,29 +86,31 @@ article, .excerpt-content {
 			color: $dark-green-color;
 		}
 	}
+	strong {
+		font-weight: 400;
+		font-style: italic;
+		color: black;
+	}
 }
-code.highlighter-rouge {
-	background-color: rgba($light-green-color, 0.4);
-	border: 0;
-	border-radius: 0;
-	color: $dark-green-color;
-}
-body .highlight pre {
 
+body .highlight pre, .highlighter-rouge, .highlighter-rouge .highlight, code {
 	padding: 15px;
 	background-color: rgba($light-green-color, 0.4);
 	border: 0;
 	border-radius: 0;
-
-	code, kbd, pre, samp {
-		font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-		white-space: pre;
-	}
+}
+code {
+	padding: 5px;
+	vertical-align: middle;
+	color: $dark-green-color;
 }
 blockquote {
 	font-style: normal;
 }
-
+code, kbd, pre, samp {
+	font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+	white-space: pre;
+}
 
 .highlight .hll { background-color: #ffffcc }
 .highlight .c { color: #999988; font-style: italic } /* Comment */

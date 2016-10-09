@@ -30,3 +30,5 @@ end
 #gem 'jekyll-paginate', :git => 'git://github.com/pyliaorachel/jekyll-paginate.git'
 # original gem
 #gem 'jekyll-paginate', :git => 'https://github.com/jekyll/jekyll-paginate.git'
+
+gem "redcarpet"
