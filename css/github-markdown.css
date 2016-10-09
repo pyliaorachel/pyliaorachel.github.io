@@ -391,6 +391,11 @@
   border-left: 0.25em solid #ddd;
 }
 
+/* customize */
+.markdown-body blockquote code {
+  color: #777;
+}
+
 .markdown-body blockquote>:first-child {
   margin-top: 0;
 }

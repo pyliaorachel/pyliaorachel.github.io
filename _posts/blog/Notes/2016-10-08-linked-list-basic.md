@@ -87,7 +87,7 @@ typedef struct SinglyLinkedList SinglyLinkedList;
 
 Then we're ready to use these structs and build a linked list.
 
-# Basic examples (in C)
+# Basic Examples (in C)
 
 ### Initialization
 
