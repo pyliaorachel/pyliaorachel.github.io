@@ -62,14 +62,14 @@
 
 /* Customize */
 
-$post-font: 'Muli', sans-serif;
-
-article {
-	p {
+article, .excerpt-content {
+	p, li, h1, h2, h3, h4, h5, h6 {
 		font-family: $post-font;
+	}
+	p {
 		font-size: 20px;
 		line-height: 40px;
-		margin-bottom: 30px;
+		margin: 10px;
 		color: black;
 	}
 	a {
@@ -99,6 +99,9 @@ body .highlight pre {
 		font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
 		white-space: pre;
 	}
+}
+blockquote {
+	font-style: normal;
 }
 
 

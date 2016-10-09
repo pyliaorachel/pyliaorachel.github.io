@@ -11,6 +11,9 @@
 	.tag-list, .prerequisites-list {
 		list-style: none;
 		margin: 0 0 5px;
+		li {
+			//font-family: $post-font;
+		}
 		.tag {
 			color: white;
 			background-color: rgba($dark-green-color, 0.8);

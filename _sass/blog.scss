@@ -83,6 +83,9 @@ body .blog {
 				display: inline-block;
 				list-style: none;
 				margin: 0 0 5px;
+				li {
+					font-family: $post-font;
+				}
 				.tag {
 					color: white;
 					background-color: rgba($dark-green-color, 0.8);
@@ -102,10 +105,9 @@ body .blog {
 				}
 			}
 			.excerpt-content {
-				margin-top: 50px;
+				margin-top: 20px;
 			}
 			p {
-				margin: 45px 0 0;
 				font-family: $p-font;
 				font-weight: 100;
 				font-size: 18px;
