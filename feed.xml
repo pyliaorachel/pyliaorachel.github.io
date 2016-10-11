@@ -6,9 +6,516 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 09 Oct 2016 11:16:49 -0400</pubDate>
-    <lastBuildDate>Sun, 09 Oct 2016 11:16:49 -0400</lastBuildDate>
+    <pubDate>Mon, 10 Oct 2016 22:21:07 -0400</pubDate>
+    <lastBuildDate>Mon, 10 Oct 2016 22:21:07 -0400</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Greedy Algorithm Notes</title>
+        <description>&lt;blockquote&gt;
+&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Minimum Spanning Tree&lt;/li&gt;
+&lt;li&gt;Huffman Encoding&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;!--more--&gt;
+
+&lt;h1&gt;Greedy Algorithms&lt;/h1&gt;
+
+&lt;h3&gt;What is greedy?&lt;/h3&gt;
+
+&lt;p&gt;Take the best move at the moment without worrying about future outcomes.&lt;/p&gt;
+
+&lt;h2&gt;Minimum Spanning Tree&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A graph, connecting all nodes with edges that cost the least in total.&lt;/li&gt;
+&lt;li&gt;No cycle&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+&lt;h1&gt;Definition&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Input&lt;/em&gt;: An undirected graph G = (V, E); edge weights we&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Output&lt;/em&gt;: A tree T = (V,E&amp;#39;), with E&amp;#39; ⊆ E, that minimizes weight(T) = Σ(e ⊆ E&amp;#39;)we&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;!-- --&gt;
+
+&lt;blockquote&gt;
+&lt;h3&gt;Trees&lt;/h3&gt;
+
+&lt;p&gt;Undirected graph, connected &amp;amp; acyclic  &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Removing a cycle edge cannot disconnect a graph&lt;/li&gt;
+&lt;li&gt;A tree with &lt;code&gt;n&lt;/code&gt; nodes has &lt;code&gt;n-1&lt;/code&gt; edges&lt;/li&gt;
+&lt;li&gt;Any connected, undirected graph with &lt;code&gt;|E| = |V| - 1&lt;/code&gt; is a tree.&lt;/li&gt;
+&lt;li&gt;An undirected graph is a tree &amp;lt;-&amp;gt; there&amp;#39;s a unique path between any pair of nodes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;h3&gt;Kruskal&amp;#39;s MST Algorithm&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Start with empty graph&lt;/li&gt;
+&lt;li&gt;Add the next lightest edge that doesn&amp;#39;t produce a cycle&lt;/li&gt;
+&lt;li&gt;Do until all nodes connected&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;
+&lt;h2&gt;The Cut Property&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Cut: any partition of vertices into 2 groups &lt;code&gt;S&lt;/code&gt; &amp;amp; &lt;code&gt;V-S&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Let &lt;code&gt;X&lt;/code&gt; be subset of MST not crossing between &lt;code&gt;S&lt;/code&gt; &amp;amp; &lt;code&gt;V-S&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Pick &lt;code&gt;e&lt;/code&gt; to be the lightest edge connecting &lt;code&gt;S&lt;/code&gt; &amp;amp; &lt;code&gt;V-S&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;X ∪ {e}&lt;/code&gt; is MST&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;!-- --&gt;
+
+&lt;blockquote&gt;
+&lt;h2&gt;Implementation&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  Kruskal(G, w):
+  # Input: A connected undirected graph G = (V, E) with edge weights we 
+  # Output: A minimum spanning tree defined by the edges X
+
+      for all u ∈ V : # =&amp;gt; O(|V|)
+          makeset(u) # create a singleton set containing just u
+
+      X = {}
+      Sort the edges E by weight # =&amp;gt; O(|E|log|V|) where log|E| ~ log|V|
+      for all edges {u, v} ∈ E, in increasing order of weight: # =&amp;gt; O(|E|log|V|)
+          # find sets to which u &amp;amp; v belong
+          if find(u) != find(v):
+              add edge {u, v} to X 
+              union(u, v) # merging sets
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+
+&lt;!-- --&gt;
+
+&lt;blockquote&gt;
+&lt;h2&gt;Data Structure for Disjoin Sets&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Directed tree&lt;/li&gt;
+&lt;li&gt;Root element as identifier&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  # π = parent pointer
+  # rank = height of subtree hanging from that node
+
+  makeset(x): # =&amp;gt; O(1)
+      π(x) = x
+      rank(x) = 0
+
+  find (x): # =&amp;gt; O(logn)
+      while x != π(x): 
+          x = π(x) 
+      return x
+
+  union(x, y)  # =&amp;gt; O(logn)
+      rx = find(x)
+      ry = find(y)
+      if rx = ry: 
+          return 
+      if rank(rx) &amp;gt; rank(ry):
+          π(ry) = rx  # make root of y-tree point to root of x-tree
+      else:
+          π(rx) = ry
+          if rank(rx)=rank(ry): 
+              rank(ry)=rank(ry)+1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Any root node of rank &lt;code&gt;k&lt;/code&gt; has at least &lt;code&gt;2^k&lt;/code&gt; nodes in its tree&lt;/li&gt;
+&lt;li&gt;So if &lt;code&gt;n&lt;/code&gt; elements overall, at most &lt;code&gt;n/(2^k)&lt;/code&gt; of rank &lt;code&gt;k&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;=&amp;gt; max rank = &lt;code&gt;log(n)&lt;/code&gt; (upper bound of &lt;code&gt;find&lt;/code&gt; &amp;amp; &lt;code&gt;union&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;!-- --&gt;
+
+&lt;blockquote&gt;
+&lt;h2&gt;Optimization - Path Compressin&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  find(x):
+      if x != π(x): 
+          π(x) = find(π(x)) 
+      return π(x)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+
+&lt;h3&gt;Prim&amp;#39;s Algorithm&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Start with empty graph&lt;/li&gt;
+&lt;li&gt;Add any vertex to &lt;code&gt;S&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Add a min-weight edge from &lt;code&gt;S&lt;/code&gt; to &lt;code&gt;V-S&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Repeat until done&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;
+&lt;h2&gt;Pseudocode&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  X = { } (edges picked so far) 
+  repeat until |X| = |V| − 1:
+      pick a set S ⊂ V for which X has no edges between S and V−S
+      let e ∈ E be the minimum-weight edge between S and V − S
+      # cost(v) = min(u ∈ S) w(u, v)
+      X = X ∪ {e}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+
+&lt;!-- --&gt;
+
+&lt;blockquote&gt;
+&lt;h2&gt;Implementation&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  Prim(G, w):
+  # Input: A connected undirected graph G = (V, E) with edge weights we 
+  # Output: A minimum spanning tree defined by the array prev
+      for all u ∈ V: 
+          cost(u) = ∞
+          prev(u) = nil
+      Pick any initial node u0 
+      cost(u0) = 0
+
+      H = makequeue (V) # priority queue, using cost-values as keys 
+      while H is not empty:
+          v = deletemin(H) 
+          for each {v, z} ∈ E:
+              if cost(z) &amp;gt; w(v, z): 
+                  cost(z) = w(v, z) 
+                  prev(z) = v 
+                  decreasekey(H, z)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;
+
+&lt;!-- --&gt;
+
+&lt;blockquote&gt;
+&lt;h2&gt;Difference with Dijkstra&amp;#39;s Algorithm&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Key by with priority queue is ordered
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Prim&amp;#39;s&lt;/strong&gt;: lightest incoming edge from set S&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Dijkstra&amp;#39;s&lt;/strong&gt;: length of path from start to that node&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;Huffman Encoding&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Encode a string of length T over alphabet Γ&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+&lt;h2&gt;Prefix-free Encoding&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;No codeword can be a prefix of another&lt;/li&gt;
+&lt;li&gt;Can be represented by a &lt;em&gt;full&lt;/em&gt; binary tree&lt;/li&gt;
+&lt;li&gt;Leaves: symbols&lt;/li&gt;
+&lt;li&gt;Path from root to leaf: codeword, left = 0, right = 1&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;!-- --&gt;
+
+&lt;blockquote&gt;
+&lt;h2&gt;Optimal Coding Tree&lt;/h2&gt;
+
+&lt;p&gt;A tree whose leaves each correspond to a symbol&lt;br&gt;
+Min overall length of encoding&lt;br&gt;
+&lt;code&gt;cost of tree = Σ(i=1, n) fi * di&lt;/code&gt;&lt;br&gt;
+Or, combine freq of 2 decendants into freq of parent:&lt;br&gt;
+&lt;code&gt;cost of tree = Σ(leaves) fi + Σ(internal nodes) fi&lt;/code&gt; &lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;!-- --&gt;
+
+&lt;blockquote&gt;
+&lt;h2&gt;Construction&lt;/h2&gt;
+
+&lt;p&gt;Implication: nodes with smallest freq @ bottom of tree&lt;br&gt;
+Greedy construction:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Find 2 smallest freq nodes&lt;/li&gt;
+&lt;li&gt;Combine into new node, &lt;code&gt;f = f1 + f2&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Replace 2 nodes with new node&lt;/li&gt;
+&lt;li&gt;Repeat&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;Implementation&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  Huffman(f):
+  # Input: An array f [1 · · · n] of frequencies 
+  # Output: An encoding tree with n leaves
+
+      let H be a priority queue of integers, ordered by f 
+      for i = 1 to n: 
+          insert(H,i)
+      for k = n + 1 to 2n − 1:
+          i = deletemin(H), j = deletemin(H)
+          create a node numbered k with children i, j 
+          f[k] = f[i] + f[j]
+          insert(H, k)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;=&amp;gt; Binary heap: &lt;code&gt;O(nlogn)&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;!-- --&gt;
+
+&lt;blockquote&gt;
+&lt;h4&gt;References&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Dasguptap, S., Papadimitriou, C.H., &amp;amp; Vazirani, U.V. Algorithms. Chapter 5.1-5.2.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+</description>
+        <pubDate>Mon, 10 Oct 2016 00:00:00 -0400</pubDate>
+        <link>/blog/notes/algorithm/2016/10/10/greedy-algorithm-notes.html</link>
+        <guid isPermaLink="true">/blog/notes/algorithm/2016/10/10/greedy-algorithm-notes.html</guid>
+        
+        <category>greedy</category>
+        
+        <category>algorithm</category>
+        
+        <category>CSC384</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Algorithm</category>
+        
+      </item>
+    
+      <item>
+        <title>Graph Algorithm Notes</title>
+        <description>&lt;blockquote&gt;
+&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Dijkstra&amp;#39;s Algorithm&lt;/li&gt;
+&lt;li&gt;Shortest Paths with Negative Edges&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2&gt;Dijkstra&amp;#39;s Algorithm&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Shortest path problem&lt;/li&gt;
+&lt;li&gt;Adapted from BFS with edge lengths positive&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+&lt;h2&gt;Tricks&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Replace edges with len &amp;gt; 1 with multiple edges of len 1 &amp;amp; dummy nodes&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;Then run BFS&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;Not efficient with more nodes!&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;!-- --&gt;
+
+&lt;blockquote&gt;
+&lt;h2&gt;Implementation&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  Dijkstra(G, l, s):
+  # Input: Graph G = (V, E), directed or undirected;
+           positive edge lengths {le : e ∈ E}; vertex s ∈ V
+  # Output: For all vertices u reachable from s, dist(u) is set to the distance from s to u
+
+      for all u ∈ V : 
+          dist(u) = ∞
+          prev(u) = nil 
+      dist(s) = 0
+
+      H = makequeue(V) # using dist-values as keys 
+      while H is not empty:
+          u = deletemin(H) # =&amp;gt; |V| times
+          for all edges (u, v) ∈ E:
+              if dist(v) &amp;gt; dist(u) + l(u, v): 
+                  dist(v) = dist(u) + l(u, v) 
+                  prev(v) = u 
+                  decreasekey(H, v) # =&amp;gt; |V| + |E| times
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  # Alternative
+
+  Initialize dist(s) to 0, other dist(·) values to ∞ 
+  R = { } # the &quot;known region&quot;
+  while R != V:
+      Pick the node v !∈ R with smallest dist(·) 
+      Add v to R
+      for all edges (v, z) ∈ E:
+          if dist(z) &amp;gt; dist(v) + l(v, z): 
+              dist(z) = dist(v) + l(v, z)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;=&amp;gt; Binary heap: &lt;code&gt;O((|V| + |E|)log|V|)&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;!-- --&gt;
+
+&lt;blockquote&gt;
+&lt;h2&gt;Update Operation&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;dist(v) = min{dist(v), dist(u) + l(u, v)}&lt;/code&gt; &lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Correct distance to v where u is second-last in shortest path &amp;amp; dist(u) is correct&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;Never make dist(v) too small (i.e. never underestimate) =&amp;gt; safe&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;!-- --&gt;
+
+&lt;blockquote&gt;
+&lt;h2&gt;Analysis - Heaps &amp;amp; Array&lt;/h2&gt;
+&lt;/blockquote&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;Implementation&lt;/th&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;deletemin&lt;/th&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;insert/decreasekey&lt;/th&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;&amp;#124;V&amp;#124;xdeletemin + (&amp;#124;V&amp;#124;+&amp;#124;E&amp;#124;)xinsert&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Array&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;O(&amp;#124;V&amp;#124;)&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;O(1)&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;O(&amp;#124;V&amp;#124;^2)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Binary heap&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;O(log&amp;#124;V&amp;#124;)&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;O(log&amp;#124;V&amp;#124;)&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;O((&amp;#124;V&amp;#124; + &amp;#124;E&amp;#124;)log&amp;#124;V&amp;#124;)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;d-ary heap&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;O(dlog&amp;#124;V&amp;#124;/log d)&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;O(log&amp;#124;V&amp;#124;/log d)&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;O(&amp;#124;V&amp;#124;*d + &amp;#124;E&amp;#124;log&amp;#124;V&amp;#124;/logd)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Fibonacci heap&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;O(log&amp;#124;V&amp;#124;)&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;O(1) (amortizes)&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;O(&amp;#124;V&amp;#124;log&amp;#124;V&amp;#124; + &amp;#124;E&amp;#124;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;If G sparse -&amp;gt; heap (|E| ~ |V|)&lt;br&gt;
+If G dense -&amp;gt; array (|E| ~ |V|^2)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;!-- --&gt;
+
+&lt;blockquote&gt;
+&lt;h3&gt;Priority Queue Implementations&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Array
+insert/decreasekey: &lt;code&gt;O(1)&lt;/code&gt;&lt;br&gt;
+deletemin: &lt;code&gt;O(n)&lt;/code&gt;&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;Binary Heap
+
+&lt;ul&gt;
+&lt;li&gt;complete binary tree (filled in from left to right, full)&lt;/li&gt;
+&lt;li&gt;key value &amp;lt;= childrens&amp;#39;
+insert/decreasekey: &lt;code&gt;O(log n)&lt;/code&gt;&lt;br&gt;
+deletemin: &lt;code&gt;O(log n)&lt;/code&gt;&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;array representation: parent @ &lt;code&gt;floor(j/2)&lt;/code&gt;, children @ &lt;code&gt;2j&lt;/code&gt; &amp;amp; &lt;code&gt;2j+1&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;d-ary heap
+
+&lt;ul&gt;
+&lt;li&gt;nodes have d children&lt;/li&gt;
+&lt;li&gt;h(T) = &lt;code&gt;Θ(log d n)&lt;/code&gt; = &lt;code&gt;Θ((log n)/(log d))&lt;/code&gt;
+insert: &lt;code&gt;Θ((log n)/(log d))&lt;/code&gt;
+deletemin: &lt;code&gt;Θ(d * log d n)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;array representation: parent @ &lt;code&gt;(j-1)/d&lt;/code&gt;, children @ &lt;code&gt;{(j-1)d+2, ..., min{n, (j-1)d+d+1}}&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;Shortest Paths with Negative Edges&lt;/h2&gt;
+
+&lt;h3&gt;Bellman-Ford Algorithm&lt;/h3&gt;
+
+&lt;p&gt;Update &lt;em&gt;all&lt;/em&gt; edges &lt;code&gt;|V|-1&lt;/code&gt; times!&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;h2&gt;Implementation&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  Shortest-paths(G, l, s):
+  # Input: Directed graph G = (V, E);
+           edge lengths {le : e ∈ E} with no negative cycles; 
+           vertex s ∈ V
+  # Output: For all vertices u reachable from s, dist(u) is set to the distance from s to u
+      for all u ∈ V : 
+          dist(u) = ∞
+          prev(u) = nil
+
+      dist(s) = 0
+      repeat |V | − 1 times:
+          for all e ∈ E: 
+              update(e)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;=&amp;gt; &lt;code&gt;O(|V|*|E|)&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;!-- --&gt;
+
+&lt;blockquote&gt;
+&lt;h2&gt;Termination&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;No update occurred (assume no &lt;strong&gt;negative cycles&lt;/strong&gt;)&lt;/li&gt;
+&lt;li&gt;After &lt;code&gt;|V|-1&lt;/code&gt; times of iterations, apply 1 extra round. If some &lt;code&gt;dist&lt;/code&gt; reduced &amp;lt;-&amp;gt; negative cycle&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;!-- --&gt;
+
+&lt;blockquote&gt;
+&lt;h4&gt;References&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Dasguptap, S., Papadimitriou, C.H., &amp;amp; Vazirani, U.V. Algorithms. Chapter 4.1-4.6.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+</description>
+        <pubDate>Mon, 10 Oct 2016 00:00:00 -0400</pubDate>
+        <link>/blog/notes/algorithm/2016/10/10/graph-algorithm-notes.html</link>
+        <guid isPermaLink="true">/blog/notes/algorithm/2016/10/10/graph-algorithm-notes.html</guid>
+        
+        <category>graph</category>
+        
+        <category>data structure</category>
+        
+        <category>algorithm</category>
+        
+        <category>CSC384</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Algorithm</category>
+        
+      </item>
     
       <item>
         <title>Linked List Basic</title>
@@ -307,7 +814,7 @@ You pass in the size of memory you want to allocate, so for a &lt;code&gt;Singly
 &lt;p&gt;Source code can be found at &lt;a href=&quot;https://github.com/pyliaorachel/data-structure-and-algorithm/blob/master/DataStructures/LinkedList/Implementations/linked-list.c&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
 
 &lt;blockquote&gt;
-&lt;h4&gt;References &lt;br&gt;&lt;/h4&gt;
+&lt;h4&gt;References&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;http://www.geeksforgeeks.org/linked-list-vs-array/&quot;&gt;GeeksforGeeks - Linked List vs Array&lt;/a&gt;&lt;/li&gt;
