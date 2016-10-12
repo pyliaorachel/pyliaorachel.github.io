@@ -101,16 +101,16 @@
 		<span class="separator"> • • • </span>
 
 		<div class="post-content" itemprop="articleBody">
-			<blockquote>
-<h2>Content</h2>
+			<h2>Content</h2>
 
 <ol>
 <li>Dijkstra&#39;s Algorithm</li>
 <li>Shortest Paths with Negative Edges</li>
 </ol>
-</blockquote>
 
 <!--more-->
+
+<hr>
 
 <h2>Dijkstra&#39;s Algorithm</h2>
 
@@ -119,70 +119,56 @@
 <li>Adapted from BFS with edge lengths positive</li>
 </ul>
 
-<blockquote>
-<h2>Tricks</h2>
+<h4>Tricks</h4>
 
 <ul>
-<li>Replace edges with len &gt; 1 with multiple edges of len 1 &amp; dummy nodes<br></li>
+<li>Replace edges with len  1 with multiple edges of len 1 &amp; dummy nodes<br></li>
 <li>Then run BFS<br></li>
 <li>Not efficient with more nodes!<br></li>
 </ul>
-</blockquote>
 
-<!-- -->
+<h4>Implementation</h4>
+<div class="highlight"><pre><code class="language-" data-lang="">Dijkstra(G, l, s):
+# Input: Graph G = (V, E), directed or undirected;
+         positive edge lengths {le : e ∈ E}; vertex s ∈ V
+# Output: For all vertices u reachable from s, dist(u) is set to the distance from s to u
 
-<blockquote>
-<h2>Implementation</h2>
-<div class="highlight"><pre><code class="language-" data-lang="">  Dijkstra(G, l, s):
-  # Input: Graph G = (V, E), directed or undirected;
-           positive edge lengths {le : e ∈ E}; vertex s ∈ V
-  # Output: For all vertices u reachable from s, dist(u) is set to the distance from s to u
+    for all u ∈ V : 
+        dist(u) = ∞
+        prev(u) = nil 
+    dist(s) = 0
 
-      for all u ∈ V : 
-          dist(u) = ∞
-          prev(u) = nil 
-      dist(s) = 0
+    H = makequeue(V) # using dist-values as keys 
+    while H is not empty:
+        u = deletemin(H) # = |V| times
+        for all edges (u, v) ∈ E:
+            if dist(v)  dist(u) + l(u, v): 
+                dist(v) = dist(u) + l(u, v) 
+                prev(v) = u 
+                decreasekey(H, v) # = |V| + |E| times
+</code></pre></div><div class="highlight"><pre><code class="language-" data-lang=""># Alternative
 
-      H = makequeue(V) # using dist-values as keys 
-      while H is not empty:
-          u = deletemin(H) # =&gt; |V| times
-          for all edges (u, v) ∈ E:
-              if dist(v) &gt; dist(u) + l(u, v): 
-                  dist(v) = dist(u) + l(u, v) 
-                  prev(v) = u 
-                  decreasekey(H, v) # =&gt; |V| + |E| times
-</code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">  # Alternative
-
-  Initialize dist(s) to 0, other dist(·) values to ∞ 
-  R = { } # the "known region"
-  while R != V:
-      Pick the node v !∈ R with smallest dist(·) 
-      Add v to R
-      for all edges (v, z) ∈ E:
-          if dist(z) &gt; dist(v) + l(v, z): 
-              dist(z) = dist(v) + l(v, z)
+Initialize dist(s) to 0, other dist(·) values to ∞ 
+R = { } # the "known region"
+while R != V:
+    Pick the node v !∈ R with smallest dist(·) 
+    Add v to R
+    for all edges (v, z) ∈ E:
+        if dist(z)  dist(v) + l(v, z): 
+            dist(z) = dist(v) + l(v, z)
 </code></pre></div>
 <p>=&gt; Binary heap: <code>O((|V| + |E|)log|V|)</code></p>
-</blockquote>
 
-<!-- -->
-
-<blockquote>
-<h2>Update Operation</h2>
+<h4>Update Operation</h4>
 
 <p><code>dist(v) = min{dist(v), dist(u) + l(u, v)}</code> </p>
 
 <ol>
 <li>Correct distance to v where u is second-last in shortest path &amp; dist(u) is correct<br></li>
-<li>Never make dist(v) too small (i.e. never underestimate) =&gt; safe</li>
+<li>Never make dist(v) too small (i.e. never underestimate) = safe</li>
 </ol>
-</blockquote>
 
-<!-- -->
-
-<blockquote>
-<h2>Analysis - Heaps &amp; Array</h2>
-</blockquote>
+<h4>Analysis - Heaps &amp; Array</h4>
 
 <table><thead>
 <tr>
@@ -218,27 +204,30 @@
 </tr>
 </tbody></table>
 
-<blockquote>
-<p>If G sparse -&gt; heap (|E| ~ |V|)<br>
-If G dense -&gt; array (|E| ~ |V|^2)</p>
-</blockquote>
+<ul>
+<li>If G sparse - heap (|E| ~ |V|)<br></li>
+<li>If G dense - array (|E| ~ |V|^2)</li>
+</ul>
 
-<!-- -->
-
-<blockquote>
-<h3>Priority Queue Implementations</h3>
+<h4>Priority Queue Implementations</h4>
 
 <ol>
-<li>Array
-insert/decreasekey: <code>O(1)</code><br>
-deletemin: <code>O(n)</code><br></li>
+<li>Array<br>
+
+<ul>
+<li>insert/decreasekey: <code>O(1)</code><br></li>
+<li>deletemin: <code>O(n)</code><br></li>
+</ul></li>
 <li>Binary Heap
 
 <ul>
 <li>complete binary tree (filled in from left to right, full)</li>
 <li>key value &lt;= childrens&#39;
-insert/decreasekey: <code>O(log n)</code><br>
-deletemin: <code>O(log n)</code><br></li>
+
+<ul>
+<li>insert/decreasekey: <code>O(log n)</code><br></li>
+<li>deletemin: <code>O(log n)</code><br></li>
+</ul></li>
 <li>array representation: parent @ <code>floor(j/2)</code>, children @ <code>2j</code> &amp; <code>2j+1</code></li>
 </ul></li>
 <li>d-ary heap
@@ -246,58 +235,50 @@ deletemin: <code>O(log n)</code><br></li>
 <ul>
 <li>nodes have d children</li>
 <li>h(T) = <code>Θ(log d n)</code> = <code>Θ((log n)/(log d))</code>
-insert: <code>Θ((log n)/(log d))</code>
-deletemin: <code>Θ(d * log d n)</code></li>
+
+<ul>
+<li>insert: <code>Θ((log n)/(log d))</code></li>
+<li>deletemin: <code>Θ(d * log d n)</code></li>
+</ul></li>
 <li>array representation: parent @ <code>(j-1)/d</code>, children @ <code>{(j-1)d+2, ..., min{n, (j-1)d+d+1}}</code></li>
 </ul></li>
 </ol>
-</blockquote>
 
 <h2>Shortest Paths with Negative Edges</h2>
 
-<h3>Bellman-Ford Algorithm</h3>
+<h3><em>Bellman-Ford Algorithm</em></h3>
 
 <p>Update <em>all</em> edges <code>|V|-1</code> times!</p>
 
-<blockquote>
-<h2>Implementation</h2>
-<div class="highlight"><pre><code class="language-" data-lang="">  Shortest-paths(G, l, s):
-  # Input: Directed graph G = (V, E);
-           edge lengths {le : e ∈ E} with no negative cycles; 
-           vertex s ∈ V
-  # Output: For all vertices u reachable from s, dist(u) is set to the distance from s to u
-      for all u ∈ V : 
-          dist(u) = ∞
-          prev(u) = nil
+<h4>Implementation</h4>
+<div class="highlight"><pre><code class="language-" data-lang="">Shortest-paths(G, l, s):
+# Input: Directed graph G = (V, E);
+         edge lengths {le : e ∈ E} with no negative cycles; 
+         vertex s ∈ V
+# Output: For all vertices u reachable from s, dist(u) is set to the distance from s to u
+    for all u ∈ V : 
+        dist(u) = ∞
+        prev(u) = nil
 
-      dist(s) = 0
-      repeat |V | − 1 times:
-          for all e ∈ E: 
-              update(e)
+    dist(s) = 0
+    repeat |V | − 1 times:
+        for all e ∈ E: 
+            update(e)
 </code></pre></div>
 <p>=&gt; <code>O(|V|*|E|)</code></p>
-</blockquote>
 
-<!-- -->
-
-<blockquote>
-<h2>Termination</h2>
+<h4>Termination</h4>
 
 <ol>
 <li>No update occurred (assume no <strong>negative cycles</strong>)</li>
-<li>After <code>|V|-1</code> times of iterations, apply 1 extra round. If some <code>dist</code> reduced &lt;-&gt; negative cycle</li>
+<li>After <code>|V|-1</code> times of iterations, apply 1 extra round. If some <code>dist</code> reduced &lt;- negative cycle</li>
 </ol>
-</blockquote>
 
-<!-- -->
-
-<blockquote>
-<h4>References</h4>
+<h2>References</h2>
 
 <ul>
 <li>Dasguptap, S., Papadimitriou, C.H., &amp; Vazirani, U.V. Algorithms. Chapter 4.1-4.6.</li>
 </ul>
-</blockquote>
 
 		</div>
 

@@ -101,16 +101,17 @@
 		<span class="separator"> • • • </span>
 
 		<div class="post-content" itemprop="articleBody">
-			<blockquote>
-<h2>Content</h2>
+			<h2>Content</h2>
 
 <ol>
 <li>Minimum Spanning Tree</li>
 <li>Huffman Encoding</li>
+<li>Interval Scheduling</li>
 </ol>
-</blockquote>
 
 <!--more-->
+
+<hr>
 
 <h1>Greedy Algorithms</h1>
 
@@ -125,19 +126,14 @@
 <li>No cycle</li>
 </ul>
 
-<blockquote>
-<h1>Definition</h1>
+<h4>Definition</h4>
 
 <ul>
 <li><em>Input</em>: An undirected graph G = (V, E); edge weights we<br></li>
 <li><em>Output</em>: A tree T = (V,E&#39;), with E&#39; ⊆ E, that minimizes weight(T) = Σ(e ⊆ E&#39;)we</li>
 </ul>
-</blockquote>
 
-<!-- -->
-
-<blockquote>
-<h3>Trees</h3>
+<h4>Trees</h4>
 
 <p>Undirected graph, connected &amp; acyclic  </p>
 
@@ -145,11 +141,10 @@
 <li>Removing a cycle edge cannot disconnect a graph</li>
 <li>A tree with <code>n</code> nodes has <code>n-1</code> edges</li>
 <li>Any connected, undirected graph with <code>|E| = |V| - 1</code> is a tree.</li>
-<li>An undirected graph is a tree &lt;-&gt; there&#39;s a unique path between any pair of nodes</li>
+<li>An undirected graph is a tree &lt;- there&#39;s a unique path between any pair of nodes</li>
 </ul>
-</blockquote>
 
-<h3>Kruskal&#39;s MST Algorithm</h3>
+<h3><em>Kruskal&#39;s MST Algorithm</em></h3>
 
 <ol>
 <li>Start with empty graph</li>
@@ -157,8 +152,7 @@
 <li>Do until all nodes connected</li>
 </ol>
 
-<blockquote>
-<h2>The Cut Property</h2>
+<h4>The Cut Property</h4>
 
 <ul>
 <li>Cut: any partition of vertices into 2 groups <code>S</code> &amp; <code>V-S</code></li>
@@ -166,79 +160,66 @@
 <li>Pick <code>e</code> to be the lightest edge connecting <code>S</code> &amp; <code>V-S</code></li>
 <li><code>X ∪ {e}</code> is MST</li>
 </ul>
-</blockquote>
 
-<!-- -->
+<h4>Implementation</h4>
+<div class="highlight"><pre><code class="language-" data-lang="">Kruskal(G, w):
+# Input: A connected undirected graph G = (V, E) with edge weights we 
+# Output: A minimum spanning tree defined by the edges X
 
-<blockquote>
-<h2>Implementation</h2>
-<div class="highlight"><pre><code class="language-" data-lang="">  Kruskal(G, w):
-  # Input: A connected undirected graph G = (V, E) with edge weights we 
-  # Output: A minimum spanning tree defined by the edges X
+    for all u ∈ V : # = O(|V|)
+        makeset(u) # create a singleton set containing just u
 
-      for all u ∈ V : # =&gt; O(|V|)
-          makeset(u) # create a singleton set containing just u
-
-      X = {}
-      Sort the edges E by weight # =&gt; O(|E|log|V|) where log|E| ~ log|V|
-      for all edges {u, v} ∈ E, in increasing order of weight: # =&gt; O(|E|log|V|)
-          # find sets to which u &amp; v belong
-          if find(u) != find(v):
-              add edge {u, v} to X 
-              union(u, v) # merging sets
-</code></pre></div></blockquote>
-
-<!-- -->
-
-<blockquote>
-<h2>Data Structure for Disjoin Sets</h2>
+    X = {}
+    Sort the edges E by weight # = O(|E|log|V|) where log|E| ~ log|V|
+    for all edges {u, v} ∈ E, in increasing order of weight: # = O(|E|log|V|)
+        # find sets to which u &amp; v belong
+        if find(u) != find(v):
+            add edge {u, v} to X 
+            union(u, v) # merging sets
+</code></pre></div>
+<h4>Data Structure for Disjoin Sets</h4>
 
 <ul>
 <li>Directed tree</li>
 <li>Root element as identifier</li>
 </ul>
-<div class="highlight"><pre><code class="language-" data-lang="">  # π = parent pointer
-  # rank = height of subtree hanging from that node
+<div class="highlight"><pre><code class="language-" data-lang=""># π = parent pointer
+# rank = height of subtree hanging from that node
 
-  makeset(x): # =&gt; O(1)
-      π(x) = x
-      rank(x) = 0
+makeset(x): # = O(1)
+    π(x) = x
+    rank(x) = 0
 
-  find (x): # =&gt; O(logn)
-      while x != π(x): 
-          x = π(x) 
-      return x
+find (x): # = O(logn)
+    while x != π(x): 
+        x = π(x) 
+    return x
 
-  union(x, y)  # =&gt; O(logn)
-      rx = find(x)
-      ry = find(y)
-      if rx = ry: 
-          return 
-      if rank(rx) &gt; rank(ry):
-          π(ry) = rx  # make root of y-tree point to root of x-tree
-      else:
-          π(rx) = ry
-          if rank(rx)=rank(ry): 
-              rank(ry)=rank(ry)+1
+union(x, y)  # = O(logn)
+    rx = find(x)
+    ry = find(y)
+    if rx = ry: 
+        return 
+    if rank(rx)  rank(ry):
+        π(ry) = rx  # make root of y-tree point to root of x-tree
+    else:
+        π(rx) = ry
+        if rank(rx)=rank(ry): 
+            rank(ry)=rank(ry)+1
 </code></pre></div>
 <ul>
 <li>Any root node of rank <code>k</code> has at least <code>2^k</code> nodes in its tree</li>
 <li>So if <code>n</code> elements overall, at most <code>n/(2^k)</code> of rank <code>k</code></li>
 <li>=&gt; max rank = <code>log(n)</code> (upper bound of <code>find</code> &amp; <code>union</code>)</li>
 </ul>
-</blockquote>
 
-<!-- -->
-
-<blockquote>
-<h2>Optimization - Path Compressin</h2>
-<div class="highlight"><pre><code class="language-" data-lang="">  find(x):
-      if x != π(x): 
-          π(x) = find(π(x)) 
-      return π(x)
-</code></pre></div></blockquote>
-
-<h3>Prim&#39;s Algorithm</h3>
+<h4>Optimization - Path Compression</h4>
+<div class="highlight"><pre><code class="language-" data-lang="">find(x):
+    if x != π(x): 
+        π(x) = find(π(x)) 
+    return π(x)
+</code></pre></div>
+<h3><em>Prim&#39;s Algorithm</em></h3>
 
 <ol>
 <li>Start with empty graph</li>
@@ -247,43 +228,34 @@
 <li>Repeat until done</li>
 </ol>
 
-<blockquote>
-<h2>Pseudocode</h2>
-<div class="highlight"><pre><code class="language-" data-lang="">  X = { } (edges picked so far) 
-  repeat until |X| = |V| − 1:
-      pick a set S ⊂ V for which X has no edges between S and V−S
-      let e ∈ E be the minimum-weight edge between S and V − S
-      # cost(v) = min(u ∈ S) w(u, v)
-      X = X ∪ {e}
-</code></pre></div></blockquote>
+<h4>Pseudocode</h4>
+<div class="highlight"><pre><code class="language-" data-lang="">X = { } (edges picked so far) 
+repeat until |X| = |V| − 1:
+    pick a set S ⊂ V for which X has no edges between S and V−S
+    let e ∈ E be the minimum-weight edge between S and V − S
+    # cost(v) = min(u ∈ S) w(u, v)
+    X = X ∪ {e}
+</code></pre></div>
+<h4>Implementation</h4>
+<div class="highlight"><pre><code class="language-" data-lang="">Prim(G, w):
+# Input: A connected undirected graph G = (V, E) with edge weights we 
+# Output: A minimum spanning tree defined by the array prev
+    for all u ∈ V: 
+        cost(u) = ∞
+        prev(u) = nil
+    Pick any initial node u0 
+    cost(u0) = 0
 
-<!-- -->
-
-<blockquote>
-<h2>Implementation</h2>
-<div class="highlight"><pre><code class="language-" data-lang="">  Prim(G, w):
-  # Input: A connected undirected graph G = (V, E) with edge weights we 
-  # Output: A minimum spanning tree defined by the array prev
-      for all u ∈ V: 
-          cost(u) = ∞
-          prev(u) = nil
-      Pick any initial node u0 
-      cost(u0) = 0
-
-      H = makequeue (V) # priority queue, using cost-values as keys 
-      while H is not empty:
-          v = deletemin(H) 
-          for each {v, z} ∈ E:
-              if cost(z) &gt; w(v, z): 
-                  cost(z) = w(v, z) 
-                  prev(z) = v 
-                  decreasekey(H, z)
-</code></pre></div></blockquote>
-
-<!-- -->
-
-<blockquote>
-<h2>Difference with Dijkstra&#39;s Algorithm</h2>
+    H = makequeue (V) # priority queue, using cost-values as keys 
+    while H is not empty:
+        v = deletemin(H) 
+        for each {v, z} ∈ E:
+            if cost(z)  w(v, z): 
+                cost(z) = w(v, z) 
+                prev(z) = v 
+                decreasekey(H, z)
+</code></pre></div>
+<h4>Difference with Dijkstra&#39;s Algorithm</h4>
 
 <ul>
 <li>Key by with priority queue is ordered
@@ -293,16 +265,12 @@
 <li><strong>Dijkstra&#39;s</strong>: length of path from start to that node</li>
 </ul></li>
 </ul>
-</blockquote>
 
 <h2>Huffman Encoding</h2>
 
-<ul>
-<li>Encode a string of length T over alphabet Γ</li>
-</ul>
+<p>Encode a string of length T over alphabet Γ</p>
 
-<blockquote>
-<h2>Prefix-free Encoding</h2>
+<h4>Prefix-free Encoding</h4>
 
 <ul>
 <li>No codeword can be a prefix of another</li>
@@ -310,61 +278,251 @@
 <li>Leaves: symbols</li>
 <li>Path from root to leaf: codeword, left = 0, right = 1</li>
 </ul>
-</blockquote>
 
-<!-- -->
+<h4>Optimal Coding Tree</h4>
 
-<blockquote>
-<h2>Optimal Coding Tree</h2>
+<ul>
+<li>A tree whose leaves each correspond to a symbol<br></li>
+<li>Min overall length of encoding<br>
+<code>cost of tree = Σ(i=1, n) fi * di</code><br></li>
+<li>Or, combine freq of 2 decendants into freq of parent:<br>
+<code>cost of tree = Σ(leaves) fi + Σ(internal nodes) fi</code> </li>
+</ul>
 
-<p>A tree whose leaves each correspond to a symbol<br>
-Min overall length of encoding<br>
-<code>cost of tree = Σ(i=1, n) fi * di</code><br>
-Or, combine freq of 2 decendants into freq of parent:<br>
-<code>cost of tree = Σ(leaves) fi + Σ(internal nodes) fi</code> </p>
-</blockquote>
+<h4>Construction</h4>
 
-<!-- -->
-
-<blockquote>
-<h2>Construction</h2>
-
-<p>Implication: nodes with smallest freq @ bottom of tree<br>
-Greedy construction:</p>
+<ul>
+<li>Implication: nodes with smallest freq @ bottom of tree<br></li>
+<li>Greedy construction:
 
 <ol>
 <li>Find 2 smallest freq nodes</li>
 <li>Combine into new node, <code>f = f1 + f2</code></li>
 <li>Replace 2 nodes with new node</li>
 <li>Repeat</li>
-</ol>
+</ol></li>
+</ul>
 
-<h2>Implementation</h2>
-<div class="highlight"><pre><code class="language-" data-lang="">  Huffman(f):
-  # Input: An array f [1 · · · n] of frequencies 
-  # Output: An encoding tree with n leaves
+<h4>Implementation</h4>
+<div class="highlight"><pre><code class="language-" data-lang="">Huffman(f):
+# Input: An array f [1 · · · n] of frequencies 
+# Output: An encoding tree with n leaves
 
-      let H be a priority queue of integers, ordered by f 
-      for i = 1 to n: 
-          insert(H,i)
-      for k = n + 1 to 2n − 1:
-          i = deletemin(H), j = deletemin(H)
-          create a node numbered k with children i, j 
-          f[k] = f[i] + f[j]
-          insert(H, k)
+    let H be a priority queue of integers, ordered by f 
+    for i = 1 to n: 
+        insert(H,i)
+    for k = n + 1 to 2n − 1:
+        i = deletemin(H), j = deletemin(H)
+        create a node numbered k with children i, j 
+        f[k] = f[i] + f[j]
+        insert(H, k)
 </code></pre></div>
 <p>=&gt; Binary heap: <code>O(nlogn)</code></p>
-</blockquote>
 
-<!-- -->
+<h2>Interval Scheduling</h2>
 
-<blockquote>
-<h4>References</h4>
+<h3><em>Max Compatible Interval Scheduling</em></h3>
+
+<p>A set of requests {1, 2, ..., n}; the ith request starts at s(i) and ends at f(i). Schedule the most intervals.</p>
+
+<h4>Attempts</h4>
+
+<ol>
+<li><p>Earliest starting time</p>
+
+<ul>
+<li>Earliest request takes long?</li>
+</ul></li>
+<li><p>Smallest interval</p>
+<div class="highlight"><pre><code class="language-" data-lang="">|-------------|    |--------------|
+            |----------|
+</code></pre></div></li>
+<li><p>Fewest conflicts</p>
+<div class="highlight"><pre><code class="language-" data-lang="">|------|  |-------|  |-------|  |-------|
+    |-------|   |-------|  |-------|
+    |-------|              |-------|
+    |-------|              |-------|
+</code></pre></div></li>
+</ol>
+
+<h4>Solution</h4>
+
+<p>Base on earliest finish time.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">
+# Initially let R be the set of all requests, and let A be empty 
+
+While R is not yet empty
+    Choose a request i ∈ R that has the smallest finishing time
+    Add request i to A
+    Delete all requests from R that are not compatible with request i
+EndWhile
+Return the set A as the set of accepted requests
+
+</code></pre></div>
+<h4>Proof</h4>
+
+<ol>
+<li><p>Let <code>O</code> be an optimal set of compatible intervals. Prove that <code>A</code> contains the same # of intervals as <code>O</code>.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">Let A = {i1, ..., ik}, O = {j1, ..., jm}. Prove k = m.
+
+From our algo: f(i1) &lt;= f(j1) # we 'stay ahead'
+Now prove for each r = 1, f(ir) &lt;= f(jr)
+</code></pre></div></li>
+<li><p>For all indices r &lt;= k, we have <code>f(ir) &lt;= f(jr)</code></p>
+<div class="highlight"><pre><code class="language-" data-lang="">Prove by induction.
+
+For r = 1, true.
+Let r  1. Assume f(i_r-1) &lt;= f(j_r-1).
+We know f(j_r-1) &lt;= s(jr), since O has compatible intervals.
+= f(i_r-1) &lt;= f(j_r-1) &lt;= s(jr)
+Thus jr is in set R of available intervals when our algorithm selects ir, hence f(ir) &lt;= f(jr) so that we didn't choose it.
+</code></pre></div>
+<p>=&gt; for each r, the rth interval we select finishes at least as soon as the rth interval in O.</p></li>
+<li><p><code>A</code> is optimal.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">Prove by contradiction.
+
+Assume A not optimal, then m  k. # O schedules more than A
+By 2., there is request j_k+1 in O.
+This request starts after request jk ends &amp; hence after ik ends.
+So R still contains j_k+1, which is valid to be put into A.
+- Contradiction -
+</code></pre></div></li>
+</ol>
+
+<h4>Running Time</h4>
+
+<p><code>O(nlogn)</code></p>
+
+<h4>Extension</h4>
+
+<p>Consider cost of rejecting an interval = <strong>Weighted Interval Scheduling Problem</strong></p>
+
+<h3>Schduling All Intervals</h3>
+
+<p>Partition all intervals across multiple resources = <strong>Interval Partitioning/ Coloring Problem</strong></p>
+
+<h4>Lowerbound</h4>
+
+<p>In any instance of interval partitioning, <code># of resources needed = depth of set of intervals</code>.</p>
+
+<h4>Pseudocode</h4>
+<div class="highlight"><pre><code class="language-" data-lang=""># Sort the intervals by their start times, breaking ties arbitrarily 
+
+Let I1, I2, . . . , In denote the intervals in this order
+For j=1,2,3,...,n
+    For each interval Ii that precedes Ij in sorted order and overlaps it 
+        Exclude the label of Ii from consideration for Ij
+    Endfor
+    If there is any label from {1, 2, . . . , d} that has not been excluded then
+        Assign a nonexcluded label to Ij 
+    Else
+        Leave Ij unlabeled 
+    Endif
+Endfor
+</code></pre></div>
+<h4>Proof</h4>
+
+<ol>
+<li><p>Every interval will be assigned a label. No 2 overlapping intervals receive the same label</p>
+<div class="highlight"><pre><code class="language-" data-lang="">1. No interval unlabeled.
+
+Consider Ij, suppose t intervals precedes it and overlap it.
+These t intervals + Ij = t+1 intervals all passes over s(Ij), so 
+    t+1 &lt;= d
+    t &lt;= d-1
+Hence there will be a label to assign to Ij.
+
+2. No 2 overlapping intervals assigned the same label.
+
+I precedes I', and when I' is considered, we will not assign the label of I to I' from our algorithm.
+</code></pre></div></li>
+<li><p>You will hence never reach a point where all labels are currently in use, which matches the lower bound and is optimal.</p></li>
+</ol>
+
+<h3><em>Minumum Maximum Lateness</em></h3>
+
+<p>A set of n requests, resource available from time s, requiring t to finish, and deadline d. Schedule all requests while minimizing lateness.</p>
+
+<h4>Attempts</h4>
+
+<ol>
+<li><p>In order of increasing length ti</p>
+
+<ul>
+<li>t1 = 2, d1 = 100; t2 = 10, d2 = 10?</li>
+</ul></li>
+<li><p>In order of increasing <em>slack</em> time <code>di - ti</code></p>
+
+<ul>
+<li>t1 = 1, d1 = 2; t2 = 10, d2 = 10?</li>
+</ul></li>
+</ol>
+
+<h4>Solution</h4>
+
+<p>Base on earlier deadlines.</p>
+<div class="highlight"><pre><code class="language-" data-lang=""># Order the jobs in order of their deadlines
+# Assume for simplicity of notation that d1 ≤ ... ≤ dn 
+
+Initially, f = s
+Consider the jobs i = 1, ..., n in this order
+    Assign job i to the time interval from s(i) = f to f(i) = f + ti 
+    Let f = f + ti
+End
+Return the set of scheduled intervals [s(i), f (i)] for i = 1, . . . , n
+</code></pre></div>
+<h4>Proof</h4>
+
+<ol>
+<li>Schedule has no <strong>gaps</strong>, i.e. no idle time.</li>
+<li><p>There is an optimal schedule with no idle time.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">Prove by exchange argument.
+
+Suppose schedule A' has an inversion if job i with di scheduled before job j with dj, but dj &lt; di. Our algorithm has no inversions.
+</code></pre></div></li>
+<li><p>All schedules with no inversions &amp; no idle time have the same max lateness.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">2 schedules with these properties can only differ in the order in which jobs with the same deadlines are scheduled.
+
+Let such deadline be d. There are some jobs with deadline d and scheduled consecutively. Among them, the latest scheduled one has the greatest lateness. This lateness does not depend on the order of the jobs!
+</code></pre></div></li>
+<li><p>There is an optimal schedule with no inversions and no idle time.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">a. If O has an inversion, there is a pair of jobs i &amp; j s.t. j is schedules immediately after i, but dj &lt; di.
+b. Swapping i, j, we get a schedule with one less inversion.
+c. The new max lateness &lt;= original lateness.
+
+    Assume each request r is scheduled [sr, fr] with lateness lr. Let L = max_r(lr).
+
+    Let O' be the swapped schedule.
+
+    = fi = sj, f'j = s'i
+
+    All other jobs remain finishing at the same time after the swap, since t(i)+t(j) is the same.
+
+    Job j will not have lateness increased, since it is put forward.
+
+    For job i:
+        If i not delayed, we're done.
+        If i delayed:
+            l'i = f'i - di = fj - di. Since di  dj:
+                l'i = fj - di &lt; fj - dj = lj
+
+    Since L = lj  l'i, the swap doesn't increase max lateness.
+</code></pre></div></li>
+<li><p>An optimal schedule with no inversions exists. And all such schedules have the same max lateness. Hence algorithm optimal.</p></li>
+</ol>
+
+<h4>Extension</h4>
+
+<ul>
+<li>Includes release time?</li>
+</ul>
+
+<h2>References</h2>
 
 <ul>
 <li>Dasguptap, S., Papadimitriou, C.H., &amp; Vazirani, U.V. Algorithms. Chapter 5.1-5.2.</li>
+<li>Kleinberg, J., Tardos, E. Algorithm Design. Chapter 4.1-4.2.</li>
 </ul>
-</blockquote>
 
 		</div>
 
