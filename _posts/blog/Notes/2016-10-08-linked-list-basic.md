@@ -9,14 +9,15 @@ prerequisites: ["C"]
 excerpt_separator: <!--more-->
 ---
 
->## Content
->1. What is Linked List?
->2. Linked List v.s. Array
->3. Visualizing Linked List
->4. Basic examples (in C)
+## Content
+
+1. What is Linked List?
+2. Linked List v.s. Array
+3. Visualizing Linked List
+4. Basic examples (in C)
 
 <!--more-->
-
+---
 # What is Linked List?
 
 *Linked lists* use __dynamically allocated memories__ as data storage, and associate these storages with __pointers__. 
