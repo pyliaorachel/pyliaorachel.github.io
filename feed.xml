@@ -6,9 +6,235 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 11 Oct 2016 22:57:04 -0400</pubDate>
-    <lastBuildDate>Tue, 11 Oct 2016 22:57:04 -0400</lastBuildDate>
+    <pubDate>Wed, 12 Oct 2016 17:42:17 -0400</pubDate>
+    <lastBuildDate>Wed, 12 Oct 2016 17:42:17 -0400</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Divide and Conquer Notes</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Convex Hull&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Convex Hull&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Graham&amp;#39;s scan: &lt;code&gt;O(nlogn)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;em&gt;Divide and Conquer Convex Hull&lt;/em&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Generalization of &lt;strong&gt;MergeSort&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Pseudocode&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Presort points by x coordinate =&amp;gt; O(nlogn)
+# Assume linked list of hull vertices
+
+MergeHull(HA, HB):
+    Compute upper &amp;amp; lower tangents for HA &amp;amp; HB
+    Discard all points lying between 2 tangents
+    return MergedH
+
+Hull(S):
+    If |S| &amp;lt;= 3:
+        Compute convex hull by brute force # =&amp;gt; O(1)
+        return H
+    Else:
+        Partition S into A (lowest x) &amp;amp; B (highest x) # =&amp;gt; O(n)
+        HA = Hull(A)
+        HB = Hull(B)
+        H = MergeHull(HA, HB) # =&amp;gt; O(n)
+        return H
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;=&amp;gt;  &lt;code&gt;
+    T(n) = 1           if n &amp;lt;= 3
+           n + 2T(n/2) otherwise
+&lt;/code&gt;
+=&amp;gt; &lt;code&gt;O(nlogn)&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4&gt;Computing Tangents&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Walking procedure
+
+LowerTangent(HA, HB):
+    Init a = rightmost point of HA
+    Init b = leftmost point of HB
+
+    # Orientation test of a, b, and neighboring vertices 
+    While ab not a lower tangent for HA &amp;amp; HB:
+        While ab not a lower tangent for HA:
+            a = a - 1 # move clockwise
+        While ab not a lower tangent for HB:
+            b = b - 1 # move counterclockwise
+    Return ab
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;=&amp;gt; &lt;code&gt;O(|HA| + |HB|) &amp;lt;= O(|A| + |B|) = O(n)&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3&gt;&lt;em&gt;Quickhull&lt;/em&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Generalization of &lt;strong&gt;QuickSort&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;O(nlogn)&lt;/code&gt; ~ &lt;code&gt;O(n^2)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;No obvious way to convert it into randomized algorithm with &lt;code&gt;O(nlogn)&lt;/code&gt; expected running time; but still performs well&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Idea&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Discard points not on the hull as quickly as possible&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Steps&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Find max &amp;amp; min x, y coordinates&lt;/li&gt;
+&lt;li&gt;Draw a bounding rectangle -&amp;gt; those lying within discarded =&amp;gt; &lt;code&gt;O(n)&lt;/code&gt; by now&lt;/li&gt;
+&lt;li&gt;Classify remaining points into 4 corners -&amp;gt; if no remaining, then done&lt;/li&gt;
+&lt;li&gt;For each corner, find a point &lt;code&gt;c&lt;/code&gt; that lies on the hull. May choose &lt;code&gt;c&lt;/code&gt; by the most perpendicular distance.&lt;/li&gt;
+&lt;li&gt;Discard those in the triangle, and split remaining points into 2 subsets (classify them by 2 orientation tests).&lt;/li&gt;
+&lt;li&gt;Add the 2 corners in buckets, and recurse.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;Running Time&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Depends on how evenly the points are split&lt;br&gt;
+=&amp;gt;  &lt;code&gt;
+T(n) = 1             if n = 1
+       T(n1) + T(n2) where n1 + n2 &amp;lt;= n
+&lt;/code&gt;&lt;br&gt;
+=&amp;gt; &lt;code&gt;O(nlogn)&lt;/code&gt; if evenly distributed (&lt;code&gt;n1 ~= n2&lt;/code&gt;; &lt;code&gt;max(n1, n2) &amp;lt;= a * n&lt;/code&gt; for some constant &lt;code&gt;a &amp;lt; 1&lt;/code&gt;)&lt;br&gt;
+=&amp;gt; &lt;code&gt;O(n^2)&lt;/code&gt; otherwise&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;em&gt;Gift Wrapping and Jarvis&amp;#39;s March&lt;/em&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Variation of &lt;strong&gt;SelectionSort&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;O(n^2)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Steps&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Find any point on convex hull, e.g. lowest point&lt;/li&gt;
+&lt;li&gt;Say start with &lt;code&gt;p(0) = (Inf, 0)&lt;/code&gt;, &lt;code&gt;p(1) = lowest point&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Assume &lt;code&gt;p(k)&lt;/code&gt; &amp;amp; &lt;code&gt;p(k-1)&lt;/code&gt; were the last 2 points added, find the next one &lt;code&gt;q&lt;/code&gt; s.t. &lt;code&gt;angle[p(k-1), p(k), q]&lt;/code&gt; is maximized =&amp;gt; &lt;code&gt;O(n)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Repeat &lt;code&gt;h&lt;/code&gt; times, return back to starting point&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;Running Time&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;O(nh)&lt;/code&gt;, where n is the input size, h is the output size&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If h = o(logn), then faster than Graham&amp;#39;s!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;em&gt;Chan&amp;#39;s Algorithm&lt;/em&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Combination of &lt;strong&gt;Graham&amp;#39;s scan&lt;/strong&gt; &amp;amp; &lt;strong&gt;Jarvis&amp;#39;s march&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Aims to be &lt;code&gt;O(nlogh)&lt;/code&gt; (lower bound)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Steps&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Partition points into groups of equal size &lt;code&gt;m&lt;/code&gt; points, total &lt;code&gt;r&lt;/code&gt; groups&lt;/li&gt;
+&lt;li&gt;For each group, compute its hull using &lt;strong&gt;Graham&amp;#39;s scan&lt;/strong&gt; =&amp;gt; total &lt;code&gt;O(rmlogm)&lt;/code&gt; = &lt;code&gt;O(nlogm)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Run &lt;strong&gt;Jarvis&amp;#39;s march&lt;/strong&gt; on the groups. Computing tangent between a point &amp;amp; a convex &lt;code&gt;m&lt;/code&gt; takes &lt;code&gt;O(logm)&lt;/code&gt; time (binary search)&lt;br&gt;
+=&amp;gt; total &lt;code&gt;O(rlogm)&lt;/code&gt; for &lt;code&gt;r&lt;/code&gt; groups&lt;br&gt;
+=&amp;gt; &lt;code&gt;h&lt;/code&gt; steps of Jarvis&amp;#39;s march, total &lt;code&gt;O(hrlogm)&lt;/code&gt; time&lt;/li&gt;
+&lt;li&gt;Combining, we get &lt;code&gt;O((n + hn/m) logm)&lt;/code&gt; time&lt;/li&gt;
+&lt;li&gt;If set &lt;code&gt;m = h&lt;/code&gt;, running time &lt;code&gt;O(nlogh)&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;Tricks&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;How do we know what &lt;code&gt;m&lt;/code&gt; is if we don&amp;#39;t know &lt;code&gt;h&lt;/code&gt; in advance?
+
+&lt;ul&gt;
+&lt;li&gt;Guess the value: try &lt;code&gt;m = 1, 2, ...&lt;/code&gt;, until &lt;code&gt;m &amp;gt;= h&lt;/code&gt; =&amp;gt; too long!&lt;/li&gt;
+&lt;li&gt;Binary search =&amp;gt; but if &lt;code&gt;m = n/2&lt;/code&gt;, stuck to &lt;code&gt;O(nlogn)&lt;/code&gt; time&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Doubling search&lt;/strong&gt;:
+Start with small &lt;code&gt;m&lt;/code&gt; and increase it rapidly (say, squaring it) =&amp;gt; &lt;code&gt;O(nlogh)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Pseudocode&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;PartialHull(P, m):
+
+    Let r = ceil(n/m)
+    Partition P into disjoint subsets P(1),P(2),... P(r), each of size at most m
+
+    For i = 1 to r do:
+        Compute Hull(P(i)) using Graham's scan
+        Store the vertices in an ordered array
+
+    Let p0 = (-Inf, 0)
+    Let p1 be the bottommost point of P
+
+    For k = 1 to m do: # =&amp;gt; O(hrlogm) where we assume h = m
+        For i = 1 to r do: # =&amp;gt; O(rlogm)
+            Compute point q in P(i) that maximizes the angle[p(k-1), p(k), q] # =&amp;gt; O(logm)
+        Let p(k+1) be the point q in q(1),q(2),...q(r) that maximizes the angle[p(k-1), p(k), q]
+        If p(k+1) = p(1):
+            Return {p(1), p(2), ... p(k)}
+
+    Return &quot;m was too small, try again.&quot;
+
+Hull(P):
+
+    For t = 1.. do: # stop when 2^2^t &amp;gt;= h, or t = ceil(lglgh)
+        Let m = min(2^(2^t), n)
+        Let L = PartialHull(P, m)
+        If L != &quot;try again&quot;:
+            Return L
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Running Time&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;The t-th iteration takes O(nlog2^2^t) = O(n*2^t) time
+Sum(t = 1..lglgh) n*2^t =
+    n * Sum(t = 1..lglgh) 2^t &amp;lt;= 
+    n * 2^(1+lglgh) = 
+    2nlgh = 
+    O(nlogh)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;References&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.cs.wustl.edu/%7Epless/506/l3.html&quot;&gt;http://www.cs.wustl.edu/~pless/506/l3.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Wed, 12 Oct 2016 00:00:00 -0400</pubDate>
+        <link>/blog/notes/algorithm/2016/10/12/divide-and-conquer-notes.html</link>
+        <guid isPermaLink="true">/blog/notes/algorithm/2016/10/12/divide-and-conquer-notes.html</guid>
+        
+        <category>convex hull</category>
+        
+        <category>divide and conquer</category>
+        
+        <category>algorithm</category>
+        
+        <category>CSC384</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Algorithm</category>
+        
+      </item>
     
       <item>
         <title>Greedy Algorithm Notes</title>

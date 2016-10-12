@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Divide and Conquer Notes</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="/css/main.css" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
+		<link rel="stylesheet" href="/css/github-markdown.css">
+
+		<!-- Place jquery before bootstrap -->
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">MyCoon</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+
+			<form class="navbar-form navbar-left">
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Search">
+				</div>
+				<button type="submit" class="btn btn-default">Submit</button>
+			</form>
+
+			<ul class="nav navbar-nav navbar-right" id="nav-links">
+				<li class="nav-home"><a href="/">Home</a></li>
+				<li class="dropdown nav-blog">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Blog<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/blog">MyCoon Blog</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/blog/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/blog/notes">
+									<span>Notes</span>
+									<span>4</span>
+								</a>
+							</li>
+						
+						<li><a href="/blog/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li class="dropdown nav-tutorial">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Tutorials<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/tutorial">MyCoon Tutorial</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/tutorial/categories">Categories</a></li>
+						
+							
+						
+
+						
+						<li><a href="/tutorial/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li  class="nav-project"><a href="/project">Projects</a></li>
+				<li class="nav-special" id="special"><a href="#">?</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+		<main class="page-content post" aria-label="Content">
+	<div class="post-wrapper">
+		<div class="wrapper">
+	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
+
+		<header class="post-header">
+			<h1 class="post-title" itemprop="name headline">Divide and Conquer Notes</h1>
+			<p class="post-meta">Oct 12, 2016
+				 • Notes
+				 • pyliaorachel
+			</p>
+		</header>
+
+		
+
+		<span class="separator"> • • • </span>
+
+		<div class="post-content" itemprop="articleBody">
+			<h2>Content</h2>
+
+<ol>
+<li>Convex Hull</li>
+</ol>
+
+<!--more-->
+
+<hr>
+
+<h2>Convex Hull</h2>
+
+<ul>
+<li>Graham&#39;s scan: <code>O(nlogn)</code></li>
+</ul>
+
+<h3><em>Divide and Conquer Convex Hull</em></h3>
+
+<ul>
+<li>Generalization of <strong>MergeSort</strong></li>
+</ul>
+
+<h4>Pseudocode</h4>
+<div class="highlight"><pre><code class="language-" data-lang=""># Presort points by x coordinate =&gt; O(nlogn)
+# Assume linked list of hull vertices
+
+MergeHull(HA, HB):
+    Compute upper &amp; lower tangents for HA &amp; HB
+    Discard all points lying between 2 tangents
+    return MergedH
+
+Hull(S):
+    If |S| &lt;= 3:
+        Compute convex hull by brute force # =&gt; O(1)
+        return H
+    Else:
+        Partition S into A (lowest x) &amp; B (highest x) # =&gt; O(n)
+        HA = Hull(A)
+        HB = Hull(B)
+        H = MergeHull(HA, HB) # =&gt; O(n)
+        return H
+</code></pre></div>
+<p>=&gt;  <code>
+    T(n) = 1           if n &lt;= 3
+           n + 2T(n/2) otherwise
+</code>
+=&gt; <code>O(nlogn)</code></p>
+
+<h4>Computing Tangents</h4>
+<div class="highlight"><pre><code class="language-" data-lang=""># Walking procedure
+
+LowerTangent(HA, HB):
+    Init a = rightmost point of HA
+    Init b = leftmost point of HB
+
+    # Orientation test of a, b, and neighboring vertices 
+    While ab not a lower tangent for HA &amp; HB:
+        While ab not a lower tangent for HA:
+            a = a - 1 # move clockwise
+        While ab not a lower tangent for HB:
+            b = b - 1 # move counterclockwise
+    Return ab
+</code></pre></div>
+<p>=&gt; <code>O(|HA| + |HB|) &lt;= O(|A| + |B|) = O(n)</code></p>
+
+<h3><em>Quickhull</em></h3>
+
+<ul>
+<li>Generalization of <strong>QuickSort</strong></li>
+<li><code>O(nlogn)</code> ~ <code>O(n^2)</code></li>
+<li>No obvious way to convert it into randomized algorithm with <code>O(nlogn)</code> expected running time; but still performs well</li>
+</ul>
+
+<h4>Idea</h4>
+
+<ul>
+<li>Discard points not on the hull as quickly as possible</li>
+</ul>
+
+<h4>Steps</h4>
+
+<ol>
+<li>Find max &amp; min x, y coordinates</li>
+<li>Draw a bounding rectangle -&gt; those lying within discarded =&gt; <code>O(n)</code> by now</li>
+<li>Classify remaining points into 4 corners -&gt; if no remaining, then done</li>
+<li>For each corner, find a point <code>c</code> that lies on the hull. May choose <code>c</code> by the most perpendicular distance.</li>
+<li>Discard those in the triangle, and split remaining points into 2 subsets (classify them by 2 orientation tests).</li>
+<li>Add the 2 corners in buckets, and recurse.</li>
+</ol>
+
+<h4>Running Time</h4>
+
+<ul>
+<li>Depends on how evenly the points are split<br>
+=&gt;  <code>
+T(n) = 1             if n = 1
+       T(n1) + T(n2) where n1 + n2 &lt;= n
+</code><br>
+=&gt; <code>O(nlogn)</code> if evenly distributed (<code>n1 ~= n2</code>; <code>max(n1, n2) &lt;= a * n</code> for some constant <code>a &lt; 1</code>)<br>
+=&gt; <code>O(n^2)</code> otherwise</li>
+</ul>
+
+<h3><em>Gift Wrapping and Jarvis&#39;s March</em></h3>
+
+<ul>
+<li>Variation of <strong>SelectionSort</strong></li>
+<li><code>O(n^2)</code></li>
+</ul>
+
+<h4>Steps</h4>
+
+<ol>
+<li>Find any point on convex hull, e.g. lowest point</li>
+<li>Say start with <code>p(0) = (Inf, 0)</code>, <code>p(1) = lowest point</code></li>
+<li>Assume <code>p(k)</code> &amp; <code>p(k-1)</code> were the last 2 points added, find the next one <code>q</code> s.t. <code>angle[p(k-1), p(k), q]</code> is maximized =&gt; <code>O(n)</code></li>
+<li>Repeat <code>h</code> times, return back to starting point</li>
+</ol>
+
+<h4>Running Time</h4>
+
+<p><code>O(nh)</code>, where n is the input size, h is the output size</p>
+
+<ul>
+<li>If h = o(logn), then faster than Graham&#39;s!</li>
+</ul>
+
+<h3><em>Chan&#39;s Algorithm</em></h3>
+
+<ul>
+<li>Combination of <strong>Graham&#39;s scan</strong> &amp; <strong>Jarvis&#39;s march</strong></li>
+<li>Aims to be <code>O(nlogh)</code> (lower bound)</li>
+</ul>
+
+<h4>Steps</h4>
+
+<ol>
+<li>Partition points into groups of equal size <code>m</code> points, total <code>r</code> groups</li>
+<li>For each group, compute its hull using <strong>Graham&#39;s scan</strong> =&gt; total <code>O(rmlogm)</code> = <code>O(nlogm)</code></li>
+<li>Run <strong>Jarvis&#39;s march</strong> on the groups. Computing tangent between a point &amp; a convex <code>m</code> takes <code>O(logm)</code> time (binary search)<br>
+=&gt; total <code>O(rlogm)</code> for <code>r</code> groups<br>
+=&gt; <code>h</code> steps of Jarvis&#39;s march, total <code>O(hrlogm)</code> time</li>
+<li>Combining, we get <code>O((n + hn/m) logm)</code> time</li>
+<li>If set <code>m = h</code>, running time <code>O(nlogh)</code></li>
+</ol>
+
+<h4>Tricks</h4>
+
+<ul>
+<li>How do we know what <code>m</code> is if we don&#39;t know <code>h</code> in advance?
+
+<ul>
+<li>Guess the value: try <code>m = 1, 2, ...</code>, until <code>m &gt;= h</code> =&gt; too long!</li>
+<li>Binary search =&gt; but if <code>m = n/2</code>, stuck to <code>O(nlogn)</code> time</li>
+<li><strong>Doubling search</strong>:
+Start with small <code>m</code> and increase it rapidly (say, squaring it) =&gt; <code>O(nlogh)</code></li>
+</ul></li>
+</ul>
+
+<h4>Pseudocode</h4>
+<div class="highlight"><pre><code class="language-" data-lang="">PartialHull(P, m):
+
+    Let r = ceil(n/m)
+    Partition P into disjoint subsets P(1),P(2),... P(r), each of size at most m
+
+    For i = 1 to r do:
+        Compute Hull(P(i)) using Graham's scan
+        Store the vertices in an ordered array
+
+    Let p0 = (-Inf, 0)
+    Let p1 be the bottommost point of P
+
+    For k = 1 to m do: # =&gt; O(hrlogm) where we assume h = m
+        For i = 1 to r do: # =&gt; O(rlogm)
+            Compute point q in P(i) that maximizes the angle[p(k-1), p(k), q] # =&gt; O(logm)
+        Let p(k+1) be the point q in q(1),q(2),...q(r) that maximizes the angle[p(k-1), p(k), q]
+        If p(k+1) = p(1):
+            Return {p(1), p(2), ... p(k)}
+
+    Return "m was too small, try again."
+
+Hull(P):
+
+    For t = 1.. do: # stop when 2^2^t &gt;= h, or t = ceil(lglgh)
+        Let m = min(2^(2^t), n)
+        Let L = PartialHull(P, m)
+        If L != "try again":
+            Return L
+
+</code></pre></div>
+<h4>Running Time</h4>
+<div class="highlight"><pre><code class="language-" data-lang="">The t-th iteration takes O(nlog2^2^t) = O(n*2^t) time
+Sum(t = 1..lglgh) n*2^t =
+    n * Sum(t = 1..lglgh) 2^t &lt;= 
+    n * 2^(1+lglgh) = 
+    2nlgh = 
+    O(nlogh)
+</code></pre></div>
+<h2>References</h2>
+
+<ul>
+<li><a href="http://www.cs.wustl.edu/%7Epless/506/l3.html">http://www.cs.wustl.edu/~pless/506/l3.html</a></li>
+</ul>
+
+		</div>
+
+		<ul class="tag-list">
+			
+
+			<li class="tag">
+				convex hull
+			</li>
+
+			
+
+			<li class="tag">
+				divide and conquer
+			</li>
+
+			
+
+			<li class="tag">
+				algorithm
+			</li>
+
+			
+
+			<li class="tag">
+				CSC384
+			</li>
+
+			
+		</ul>
+
+	</article>
+
+	
+		<div id="disqus_thread"></div>
+<script>
+	var disqus_config = function () {
+	    this.page.url = "https://pyliaorachel.github.io";
+	    this.page.identifier = "/blog/notes/algorithm/2016/10/12/divide-and-conquer-notes.html";
+	};
+	(function() {
+	    var d = document, s = d.createElement('script');
+	    s.src = '//pyliaorachel.disqus.com/embed.js';
+	    s.setAttribute('data-timestamp', +new Date());
+	    (d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	
+</div>
+	</div>
+</main>
+		<footer>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4 footer-link">
+				<a href="mailto:rachel5566kk@gmail.com">
+					<span class="icon icon-email">
+						<img src="/assets/svg/email-logo.svg" alt="Email Logo">
+					</span>
+					<span class="username">rachel5566kk@gmail.com</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://github.com/pyliaorachel"  target="_blank">
+					<span class="icon icon-github">
+						<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+					</span>
+					<span class="username">pyliaorachel</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://tw.linkedin.com/in/peiyu-liao" target="_blank">
+					<span class="icon icon-linkedin">
+						<img src="/assets/svg/linkedin-logo.svg" alt="LinkedIn Logo">
+					</span>
+					<span class="username">Peiyu Liao</span>
+				</a>
+			</div>
+		</div><!-- /.row -->
+		<div class="row">
+			<div class="footer-copy-right">
+				<p>2016	&copy; Liao Peiyu</p>
+			</div >
+		</div><!-- /.row -->
+	</div><!-- /.container-fluid -->
+</footer>
+		<script type="text/javascript" src="/js/main.js"></script>
+		<script type="text/javascript" src="/js/home.js"></script>
+		<script id="dsq-count-scr" src="//pyliaorachel.disqus.com/count.js" async></script>
+	</body>
+</html>
