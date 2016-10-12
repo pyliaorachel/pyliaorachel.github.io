@@ -27,7 +27,7 @@ github_username:  pyliaorachel
 #markdown: kramdown
 markdown: redcarpet
 redcarpet:
-  extensions: ["no_intra_emphasis", "fenced_code_blocks", "tables"]
+  extensions: ["no_intra_emphasis", "fenced_code_blocks", "tables", "autolink"]
 theme: minima
 
 paginate: 10
