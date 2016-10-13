@@ -955,7 +955,8 @@ body .blog {
     color: #33691E;
     text-decoration: none;
     font-size: 36px;
-    font-family: "Rajdhani", sans-serif, "Microsoft YaHei", "微软雅黑", sans-serif; }
+    font-family: "Rajdhani", sans-serif, "Microsoft YaHei", "微软雅黑", sans-serif;
+    margin-right: 50px; }
   .blog .post-list .excerpt .post-category, .blog .post-list .ignore-excerpt .post-category {
     padding: 0 15px 0 0;
     margin-right: 30px;
@@ -969,26 +970,6 @@ body .blog {
     color: #828282; }
     .blog .post-list .excerpt .post-meta a, .blog .post-list .ignore-excerpt .post-meta a {
       color: #424242; }
-  .blog .post-list .excerpt .tag-list, .blog .post-list .excerpt .prerequisites-list, .blog .post-list .ignore-excerpt .tag-list, .blog .post-list .ignore-excerpt .prerequisites-list {
-    display: inline-block;
-    list-style: none;
-    margin: 0 0 5px; }
-    .blog .post-list .excerpt .tag-list li, .blog .post-list .excerpt .prerequisites-list li, .blog .post-list .ignore-excerpt .tag-list li, .blog .post-list .ignore-excerpt .prerequisites-list li {
-      font-family: "Muli", sans-serif, "Microsoft YaHei", "微软雅黑", sans-serif; }
-    .blog .post-list .excerpt .tag-list .tag, .blog .post-list .excerpt .prerequisites-list .tag, .blog .post-list .ignore-excerpt .tag-list .tag, .blog .post-list .ignore-excerpt .prerequisites-list .tag {
-      color: white;
-      background-color: rgba(51, 105, 30, 0.8);
-      border-radius: 0 8px 8px 8px;
-      padding: 5px 15px;
-      margin-right: 5px;
-      display: inline-block; }
-    .blog .post-list .excerpt .tag-list .prerequisite, .blog .post-list .excerpt .prerequisites-list .prerequisite, .blog .post-list .ignore-excerpt .tag-list .prerequisite, .blog .post-list .ignore-excerpt .prerequisites-list .prerequisite {
-      color: rgba(51, 105, 30, 0.8);
-      border-radius: 0 8px 8px 8px;
-      border: 2px solid rgba(51, 105, 30, 0.8);
-      padding: 3px 13px;
-      margin-right: 5px;
-      display: inline-block; }
   .blog .post-list .excerpt .excerpt-content, .blog .post-list .ignore-excerpt .excerpt-content {
     margin-top: 20px; }
   .blog .post-list .excerpt p, .blog .post-list .ignore-excerpt p {
@@ -1000,14 +981,27 @@ body .blog {
 .blog .post-list .ignore-excerpt .post-meta {
   margin: 20px 0;
   font-size: 14px; }
-.blog .post-list .ignore-excerpt .tag, .blog .post-list .ignore-excerpt .prerequisite {
-  padding: 5px 15px;
-  background-color: rgba(51, 105, 30, 0.9);
-  border-radius: 2px;
+.blog .tag-list, .blog .prerequisites-list {
   display: inline-block;
-  margin-left: 5px;
-  font-size: 16px;
-  color: white; }
+  list-style: none;
+  margin: 0 0 5px; }
+  .blog .tag-list li, .blog .prerequisites-list li {
+    font-family: "Muli", sans-serif, "Microsoft YaHei", "微软雅黑", sans-serif;
+    font-size: 14px; }
+  .blog .tag-list .tag, .blog .prerequisites-list .tag {
+    color: white;
+    background-color: rgba(51, 105, 30, 0.8);
+    border-radius: 0 8px 8px 8px;
+    margin: 3px 5px 3px 0;
+    display: inline-block;
+    padding: 3px 9px; }
+  .blog .tag-list .prerequisite, .blog .prerequisites-list .prerequisite {
+    color: rgba(51, 105, 30, 0.8);
+    border-radius: 0 8px 8px 8px;
+    border: 2px solid rgba(51, 105, 30, 0.8);
+    padding: 3px 9px;
+    margin: 3px 5px 3px 0;
+    display: inline-block; }
 
 .post {
   padding: 150px 70px !important; }
@@ -1067,6 +1061,12 @@ body .blog {
 body .blog .non-excerpt-post-list .separator {
   color: #64DD17; }
 
+.tag-pins .tag-pin a {
+  text-decoration: none;
+  color: white; }
+  .tag-pins .tag-pin a:hover {
+    color: #91DC5A; }
+
 .non-excerpt-post-list .non-excerpt-post-title-list {
   padding: 30px 40px; }
   .non-excerpt-post-list .non-excerpt-post-title-list .non-excerpt-title {
@@ -1083,10 +1083,6 @@ body .blog .non-excerpt-post-list .separator {
     margin: 5px; }
   .non-excerpt-post-list .non-excerpt-post-title-list .ignore-excerpt .tag-list, .non-excerpt-post-list .non-excerpt-post-title-list .ignore-excerpt .post-title-container {
     display: inline-block; }
-    .non-excerpt-post-list .non-excerpt-post-title-list .ignore-excerpt .tag-list .tag, .non-excerpt-post-list .non-excerpt-post-title-list .ignore-excerpt .post-title-container .tag {
-      margin: 0;
-      padding: 3px 9px;
-      font-size: 14px; }
   .non-excerpt-post-list .non-excerpt-post-title-list .ignore-excerpt div:first-child {
     vertical-align: middle; }
   .non-excerpt-post-list .non-excerpt-post-title-list .ignore-excerpt .post-title-container h2 {
