@@ -5,7 +5,6 @@ then
 else
 	msg=$1
 
-	echo "${msg}"
 	jekyll build
 	git add -A
 	git commit -m "${msg}"

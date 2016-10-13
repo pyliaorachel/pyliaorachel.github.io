@@ -784,16 +784,6 @@ body .about-mycoon .highlight pre {
                 color: rgba(255, 193, 7, 0.8); }
             .cv .content .description .timeline .timeline-description .education-description span.orange-tag.canHover:hover, .cv .content .description .timeline .timeline-description .non-education-description span.orange-tag.canHover:hover {
               background-color: white; }
-            .cv .content .description .timeline .timeline-description .education-description span.orange-tag .popover-title, .cv .content .description .timeline .timeline-description .non-education-description span.orange-tag .popover-title {
-              text-align: center;
-              font-size: 16px;
-              background-color: rgba(255, 193, 7, 0.8); }
-            .cv .content .description .timeline .timeline-description .education-description span.orange-tag .popover-content p, .cv .content .description .timeline .timeline-description .non-education-description span.orange-tag .popover-content p {
-              font-size: 16px;
-              margin: 8px; }
-              .cv .content .description .timeline .timeline-description .education-description span.orange-tag .popover-content p:not(:last-child), .cv .content .description .timeline .timeline-description .non-education-description span.orange-tag .popover-content p:not(:last-child) {
-                border-bottom: 1px solid #e8e8e8;
-                padding-bottom: 5px; }
       .cv .content .description .timeline .timeline-circle {
         width: 50px;
         height: 50px;
@@ -916,6 +906,20 @@ body .about-mycoon .highlight pre {
         height: 100px;
         line-height: 100px;
         margin: 5px; } }
+body .popover {
+  color: black;
+  font-family: "Hind", sans-serif, "Microsoft YaHei", "微软雅黑", sans-serif; }
+body .popover-title {
+  text-align: center;
+  font-size: 16px;
+  background-color: rgba(255, 193, 7, 0.8); }
+body .popover-content p {
+  font-size: 16px;
+  margin: 8px; }
+  body .popover-content p:not(:last-child) {
+    border-bottom: 1px solid #e8e8e8;
+    padding-bottom: 5px; }
+
 @media screen and (max-width: 900px) {
   body main.blog {
     padding: 120px 60px; }
