@@ -23,6 +23,16 @@ body .blog .non-excerpt-post-list .separator {
 	color: $non-excerpt-green-color;
 }
 
+.tag-pins {
+	.tag-pin a{
+		text-decoration: none;
+		color: white;
+		&:hover {
+			color: $light-green-color;
+		}
+	}
+}
+
 .non-excerpt-post-list {
 	.non-excerpt-post-title-list {
 		padding: 30px 40px;
@@ -46,11 +56,6 @@ body .blog .non-excerpt-post-list .separator {
 			.tag-list, .post-title-container {
 				//height: 45px;
 				display: inline-block;
-				.tag {
-					margin: 0;
-					padding: 3px 9px;
-					font-size: 14px;
-				}
 			}
 			div:first-child {
 				vertical-align: middle;

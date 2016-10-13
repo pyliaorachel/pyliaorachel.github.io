@@ -25,9 +25,17 @@
 			{% include no_post.html %}
 		{% else %}
 
-			<ul class="post-list non-excerpt-post-list row">
+			{% if layout.type == "Tags"%}
+				<ul class="tag-pins tag-list">
+					{% for item in collections %}
+						<li class="tag-pin tag"><a href="#{{item | slugify}}-non-excerpt">{{item}}</a></li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+
+			<ul class="post-list non-excerpt-post-list">
 				{% for item in collections %}
-					<div class="col-md-4 non-excerpt-post-title-list" id="{{item | slugify}}-non-excerpt">
+					<div class="non-excerpt-post-title-list" id="{{item | slugify}}-non-excerpt">
 						<li class="non-excerpt-title">
 							{% if type == "categories" %}
 								<a href="/{{ page.type | downcase }}/{{item | slugify}}">
@@ -61,13 +69,27 @@
 												</a>
 											</h2>
 										</div>
-										<ul class="tag-list">
-											{% for tag in post.tags %}
-												<li class="tag">
-													{{ tag }}
+										{% if post.prerequisites %}
+											<ul class="prerequisites-list">
+												{% for prerequisite in post.prerequisites %}
+
+												<li class="prerequisite">
+													{{ prerequisite }}
 												</li>
-											{% endfor %}
-										</ul>
+
+												{% endfor %}
+											</ul>
+										{% endif %}
+
+										{% if post.tags %}
+											<ul class="tag-list">
+												{% for tag in post.tags %}
+													<li class="tag">
+														{{ tag }}
+													</li>
+												{% endfor %}
+											</ul>
+										{% endif %}
 									</div>
 									<div class="post-meta"> 
 										{{ post.date | date: "%b %-d, %Y" }}
