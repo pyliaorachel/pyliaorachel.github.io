@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Divide and Conquer Notes"
+title:  "Divide and Conquer"
 categories: Blog Notes Algorithm
 tags: ["convex hull", "divide and conquer", "algorithm", "CSC384"]
 author: pyliaorachel
@@ -10,10 +10,72 @@ excerpt_separator: <!--more-->
 
 ## Content
 
-1. Convex Hull
+1. Multiplication
+2. Convex Hull
 
 <!--more-->
 ---
+# Divide & Conquer
+1. Breaking problems into subproblems
+2. Recursively solving these subproblems
+3. Combining the answers
+
+```
+a subproblems of size n/b, combining the answers in O(n^d) time.
+
+The k-th level of tree has a^k subproblems, each of size n/(b^k).
+=> a^k * O(n/(b^k)^d) = O(n^d) * (a/(b^d))^k
+
+=> T(n) = aT(⌈n/b⌉) + O(nd)
+		= O(n^d) 		  if a/(b^d) < 1
+		= O((n^d)logn) 	  if a/(b^d) = 1
+		= O(n^(log_b(a))) if a/(b^d) > 1
+```
+
+## Multiplication
+
+Multiply 2 n-bit integers `x`, `y` where `n` is a power of 2.
+
+#### Steps
+1. Split `x`, `y` into halves.
+
+	`x = 2^(n/2)xl + xr`  
+	`y = 2^(n/2)yl + yr`
+
+2. Multiplication becomes:
+
+	`xy = (2^(n/2)xl + xr) * (2^(n/2)yl + yr) = (2^n)xlyl + 2^(n/2)(xlyr + xryl) + xryr`
+
+3. Consider:
+
+	`xlyr + xryl = (xl + xr)(yl + yr) - xlyl - xryr`
+
+4. Multiplication becomes 3 multiplication subproblems.
+
+#### Running Time
+- At depth k, there are `3^k` subproblems, each of size `n/(2^k)`
+- `3^k * O(n/(2^k)) = (3/2)^k * O(n)` at depth k
+- `T(n) = 3T(n/2) + O(n) = O(n^1.59)` in total
+
+#### Pseudocode
+
+```
+Multiply(x, y):
+	# Input: Positive integers x and y, in binary 
+	# Output: Their product
+
+	n = max(size of x, size of y) 
+	if n = 1: 
+		return xy
+
+	xL, xR = leftmost⌈n/2⌉, rightmost⌊n/2⌋ bits of x yL, yR = leftmost⌈n/2⌉, rightmost⌊n/2⌋ bits of y
+	
+	P1 = Multiply(xL, yL)
+	P2 = Multiply(xR, yR)
+	P3 = Multiply(xL + xR, yL + yR)
+	return P1 × 2^n + (P3 − P1 −P2) × 2^(n/2) + P2
+```
+
 ## Convex Hull
 - Graham's scan: `O(nlogn)`
 

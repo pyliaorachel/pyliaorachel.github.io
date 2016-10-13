@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "Greedy Algorithm Notes"
+title:  "Greedy Algorithm"
 categories: Blog Notes Algorithm
-tags: ["greedy", "algorithm", "CSC384"]
+tags: ["minimum spanning tree", "huffman encoding", "interval scheduling", "greedy", "algorithm", "CSC384"]
 author: pyliaorachel
 comments: true
 excerpt_separator: <!--more-->

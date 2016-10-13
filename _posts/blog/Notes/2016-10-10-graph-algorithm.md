@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "Graph Algorithm Notes"
+title:  "Graph Algorithm"
 categories: Blog Notes Algorithm
-tags: ["graph", "data structure", "algorithm", "CSC384"]
+tags: ["dijkstra's", "bellman-ford", "graph", "data structure", "algorithm", "CSC384"]
 author: pyliaorachel
 comments: true
 excerpt_separator: <!--more-->
