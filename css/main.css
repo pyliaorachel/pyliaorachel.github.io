@@ -1002,6 +1002,11 @@ body .blog {
     padding: 3px 9px;
     margin: 3px 5px 3px 0;
     display: inline-block; }
+.blog .tag-pins .tag-pin a, .blog .tag-list .tag-pin a {
+  text-decoration: none;
+  color: white; }
+  .blog .tag-pins .tag-pin a:hover, .blog .tag-list .tag-pin a:hover {
+    color: #91DC5A; }
 
 .post {
   padding: 150px 70px !important; }
@@ -1011,21 +1016,25 @@ body .blog {
     color: #e8e8e8;
     font-size: 20px; }
   .post .tag-list, .post .prerequisites-list {
+    display: inline-block;
     list-style: none;
     margin: 0 0 5px; }
+    .post .tag-list li, .post .prerequisites-list li {
+      font-family: "Muli", sans-serif, "Microsoft YaHei", "微软雅黑", sans-serif;
+      font-size: 14px; }
     .post .tag-list .tag, .post .prerequisites-list .tag {
       color: white;
       background-color: rgba(51, 105, 30, 0.8);
       border-radius: 0 8px 8px 8px;
-      padding: 5px 15px;
-      margin-right: 5px;
-      display: inline-block; }
+      margin: 3px 5px 3px 0;
+      display: inline-block;
+      padding: 3px 9px; }
     .post .tag-list .prerequisite, .post .prerequisites-list .prerequisite {
       color: rgba(51, 105, 30, 0.8);
       border-radius: 0 8px 8px 8px;
       border: 2px solid rgba(51, 105, 30, 0.8);
-      padding: 3px 13px;
-      margin-right: 5px;
+      padding: 3px 9px;
+      margin: 3px 5px 3px 0;
       display: inline-block; }
   .post h2.prerequisites-title {
     font-size: 20px;
@@ -1060,12 +1069,6 @@ body .blog {
     font-size: 46px; } }
 body .blog .non-excerpt-post-list .separator {
   color: #64DD17; }
-
-.tag-pins .tag-pin a {
-  text-decoration: none;
-  color: white; }
-  .tag-pins .tag-pin a:hover {
-    color: #91DC5A; }
 
 .non-excerpt-post-list .non-excerpt-post-title-list {
   padding: 30px 40px; }

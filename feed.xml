@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 12 Oct 2016 22:21:03 -0400</pubDate>
-    <lastBuildDate>Wed, 12 Oct 2016 22:21:03 -0400</lastBuildDate>
+    <pubDate>Wed, 12 Oct 2016 22:32:34 -0400</pubDate>
+    <lastBuildDate>Wed, 12 Oct 2016 22:32:34 -0400</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -1250,13 +1250,11 @@ You pass in the size of memory you want to allocate, so for a &lt;code&gt;Singly
 
 &lt;p&gt;Source code can be found at &lt;a href=&quot;https://github.com/pyliaorachel/data-structure-and-algorithm/blob/master/DataStructures/LinkedList/Implementations/linked-list.c&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
 
-&lt;blockquote&gt;
-&lt;h4&gt;References&lt;/h4&gt;
+&lt;h2&gt;References&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;http://www.geeksforgeeks.org/linked-list-vs-array/&quot;&gt;GeeksforGeeks - Linked List vs Array&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/blockquote&gt;
 </description>
         <pubDate>Sat, 08 Oct 2016 00:00:00 -0400</pubDate>
         <link>/blog/notes/datastructure/2016/10/08/linked-list-basic.html</link>
