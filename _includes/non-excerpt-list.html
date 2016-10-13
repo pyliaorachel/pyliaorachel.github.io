@@ -84,8 +84,8 @@
 										{% if post.tags %}
 											<ul class="tag-list">
 												{% for tag in post.tags %}
-													<li class="tag">
-														{{ tag }}
+													<li class="tag-pin tag">
+														<a href="/{{ page.type | downcase }}/tags/#{{tag | slugify}}-non-excerpt">{{tag}}</a>
 													</li>
 												{% endfor %}
 											</ul>

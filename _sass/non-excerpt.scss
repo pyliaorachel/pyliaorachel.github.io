@@ -23,16 +23,6 @@ body .blog .non-excerpt-post-list .separator {
 	color: $non-excerpt-green-color;
 }
 
-.tag-pins {
-	.tag-pin a{
-		text-decoration: none;
-		color: white;
-		&:hover {
-			color: $light-green-color;
-		}
-	}
-}
-
 .non-excerpt-post-list {
 	.non-excerpt-post-title-list {
 		padding: 30px 40px;

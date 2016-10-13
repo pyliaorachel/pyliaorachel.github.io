@@ -123,5 +123,14 @@ body .blog {
 			display: inline-block;
 		}
 	}
+	.tag-pins, .tag-list {
+		.tag-pin a{
+			text-decoration: none;
+			color: white;
+			&:hover {
+				color: $light-green-color;
+			}
+		}
+	}
 
 }

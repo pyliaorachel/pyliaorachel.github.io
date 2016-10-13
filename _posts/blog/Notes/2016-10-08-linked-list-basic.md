@@ -295,5 +295,5 @@ __Linked lists__ are the most basic data structure to know and deal with, and it
 
 Source code can be found at [GitHub](https://github.com/pyliaorachel/data-structure-and-algorithm/blob/master/DataStructures/LinkedList/Implementations/linked-list.c).
 
->#### References
->* [GeeksforGeeks - Linked List vs Array](http://www.geeksforgeeks.org/linked-list-vs-array/)
+## References
+* [GeeksforGeeks - Linked List vs Array](http://www.geeksforgeeks.org/linked-list-vs-array/)
