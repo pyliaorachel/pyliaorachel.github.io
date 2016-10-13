@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Divide and Conquer Notes</title>
+		<title>Divide and Conquer</title>
 		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
 		<link rel="stylesheet" href="/css/main.css" type="text/css">
 		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
@@ -89,7 +89,7 @@
 	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
 
 		<header class="post-header">
-			<h1 class="post-title" itemprop="name headline">Divide and Conquer Notes</h1>
+			<h1 class="post-title" itemprop="name headline">Divide and Conquer</h1>
 			<p class="post-meta">Oct 12, 2016
 				 • Notes
 				 • pyliaorachel
@@ -104,6 +104,7 @@
 			<h2>Content</h2>
 
 <ol>
+<li>Multiplication</li>
 <li>Convex Hull</li>
 </ol>
 
@@ -111,6 +112,67 @@
 
 <hr>
 
+<h1>Divide &amp; Conquer</h1>
+
+<ol>
+<li>Breaking problems into subproblems</li>
+<li>Recursively solving these subproblems</li>
+<li>Combining the answers</li>
+</ol>
+<div class="highlight"><pre><code class="language-" data-lang="">a subproblems of size n/b, combining the answers in O(n^d) time.
+
+The k-th level of tree has a^k subproblems, each of size n/(b^k).
+=&gt; a^k * O(n/(b^k)^d) = O(n^d) * (a/(b^d))^k
+
+=&gt; T(n) = aT(⌈n/b⌉) + O(nd)
+        = O(n^d)          if a/(b^d) &lt; 1
+        = O((n^d)logn)    if a/(b^d) = 1
+        = O(n^(log_b(a))) if a/(b^d) &gt; 1
+</code></pre></div>
+<h2>Multiplication</h2>
+
+<p>Multiply 2 n-bit integers <code>x</code>, <code>y</code> where <code>n</code> is a power of 2.</p>
+
+<h4>Steps</h4>
+
+<ol>
+<li><p>Split <code>x</code>, <code>y</code> into halves.</p>
+
+<p><code>x = 2^(n/2)xl + xr</code><br>
+<code>y = 2^(n/2)yl + yr</code></p></li>
+<li><p>Multiplication becomes:</p>
+
+<p><code>xy = (2^(n/2)xl + xr) * (2^(n/2)yl + yr) = (2^n)xlyl + 2^(n/2)(xlyr + xryl) + xryr</code></p></li>
+<li><p>Consider:</p>
+
+<p><code>xlyr + xryl = (xl + xr)(yl + yr) - xlyl - xryr</code></p></li>
+<li><p>Multiplication becomes 3 multiplication subproblems.</p></li>
+</ol>
+
+<h4>Running Time</h4>
+
+<ul>
+<li>At depth k, there are <code>3^k</code> subproblems, each of size <code>n/(2^k)</code></li>
+<li><code>3^k * O(n/(2^k)) = (3/2)^k * O(n)</code> at depth k</li>
+<li><code>T(n) = 3T(n/2) + O(n) = O(n^1.59)</code> in total</li>
+</ul>
+
+<h4>Pseudocode</h4>
+<div class="highlight"><pre><code class="language-" data-lang="">Multiply(x, y):
+    # Input: Positive integers x and y, in binary 
+    # Output: Their product
+
+    n = max(size of x, size of y) 
+    if n = 1: 
+        return xy
+
+    xL, xR = leftmost⌈n/2⌉, rightmost⌊n/2⌋ bits of x yL, yR = leftmost⌈n/2⌉, rightmost⌊n/2⌋ bits of y
+
+    P1 = Multiply(xL, yL)
+    P2 = Multiply(xR, yR)
+    P3 = Multiply(xL + xR, yL + yR)
+    return P1 × 2^n + (P3 − P1 −P2) × 2^(n/2) + P2
+</code></pre></div>
 <h2>Convex Hull</h2>
 
 <ul>
@@ -341,7 +403,7 @@ Sum(t = 1..lglgh) n*2^t =
 <script>
 	var disqus_config = function () {
 	    this.page.url = "https://pyliaorachel.github.io";
-	    this.page.identifier = "/blog/notes/algorithm/2016/10/12/divide-and-conquer-notes.html";
+	    this.page.identifier = "/blog/notes/algorithm/2016/10/12/divide-and-conquer.html";
 	};
 	(function() {
 	    var d = document, s = d.createElement('script');

@@ -6,15 +6,16 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 12 Oct 2016 20:23:43 -0400</pubDate>
-    <lastBuildDate>Wed, 12 Oct 2016 20:23:43 -0400</lastBuildDate>
+    <pubDate>Wed, 12 Oct 2016 21:49:50 -0400</pubDate>
+    <lastBuildDate>Wed, 12 Oct 2016 21:49:50 -0400</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
-        <title>Divide and Conquer Notes</title>
+        <title>Divide and Conquer</title>
         <description>&lt;h2&gt;Content&lt;/h2&gt;
 
 &lt;ol&gt;
+&lt;li&gt;Multiplication&lt;/li&gt;
 &lt;li&gt;Convex Hull&lt;/li&gt;
 &lt;/ol&gt;
 
@@ -22,6 +23,67 @@
 
 &lt;hr&gt;
 
+&lt;h1&gt;Divide &amp;amp; Conquer&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Breaking problems into subproblems&lt;/li&gt;
+&lt;li&gt;Recursively solving these subproblems&lt;/li&gt;
+&lt;li&gt;Combining the answers&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;a subproblems of size n/b, combining the answers in O(n^d) time.
+
+The k-th level of tree has a^k subproblems, each of size n/(b^k).
+=&amp;gt; a^k * O(n/(b^k)^d) = O(n^d) * (a/(b^d))^k
+
+=&amp;gt; T(n) = aT(⌈n/b⌉) + O(nd)
+        = O(n^d)          if a/(b^d) &amp;lt; 1
+        = O((n^d)logn)    if a/(b^d) = 1
+        = O(n^(log_b(a))) if a/(b^d) &amp;gt; 1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Multiplication&lt;/h2&gt;
+
+&lt;p&gt;Multiply 2 n-bit integers &lt;code&gt;x&lt;/code&gt;, &lt;code&gt;y&lt;/code&gt; where &lt;code&gt;n&lt;/code&gt; is a power of 2.&lt;/p&gt;
+
+&lt;h4&gt;Steps&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Split &lt;code&gt;x&lt;/code&gt;, &lt;code&gt;y&lt;/code&gt; into halves.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;x = 2^(n/2)xl + xr&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;y = 2^(n/2)yl + yr&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Multiplication becomes:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;xy = (2^(n/2)xl + xr) * (2^(n/2)yl + yr) = (2^n)xlyl + 2^(n/2)(xlyr + xryl) + xryr&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Consider:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;xlyr + xryl = (xl + xr)(yl + yr) - xlyl - xryr&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Multiplication becomes 3 multiplication subproblems.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;Running Time&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;At depth k, there are &lt;code&gt;3^k&lt;/code&gt; subproblems, each of size &lt;code&gt;n/(2^k)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;3^k * O(n/(2^k)) = (3/2)^k * O(n)&lt;/code&gt; at depth k&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;T(n) = 3T(n/2) + O(n) = O(n^1.59)&lt;/code&gt; in total&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Pseudocode&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Multiply(x, y):
+    # Input: Positive integers x and y, in binary 
+    # Output: Their product
+
+    n = max(size of x, size of y) 
+    if n = 1: 
+        return xy
+
+    xL, xR = leftmost⌈n/2⌉, rightmost⌊n/2⌋ bits of x yL, yR = leftmost⌈n/2⌉, rightmost⌊n/2⌋ bits of y
+
+    P1 = Multiply(xL, yL)
+    P2 = Multiply(xR, yR)
+    P3 = Multiply(xL + xR, yL + yR)
+    return P1 × 2^n + (P3 − P1 −P2) × 2^(n/2) + P2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2&gt;Convex Hull&lt;/h2&gt;
 
 &lt;ul&gt;
@@ -216,8 +278,8 @@ Sum(t = 1..lglgh) n*2^t =
 &lt;/ul&gt;
 </description>
         <pubDate>Wed, 12 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/algorithm/2016/10/12/divide-and-conquer-notes.html</link>
-        <guid isPermaLink="true">/blog/notes/algorithm/2016/10/12/divide-and-conquer-notes.html</guid>
+        <link>/blog/notes/algorithm/2016/10/12/divide-and-conquer.html</link>
+        <guid isPermaLink="true">/blog/notes/algorithm/2016/10/12/divide-and-conquer.html</guid>
         
         <category>convex hull</category>
         
@@ -237,7 +299,7 @@ Sum(t = 1..lglgh) n*2^t =
       </item>
     
       <item>
-        <title>Greedy Algorithm Notes</title>
+        <title>Greedy Algorithm</title>
         <description>&lt;h2&gt;Content&lt;/h2&gt;
 
 &lt;ol&gt;
@@ -662,8 +724,14 @@ c. The new max lateness &amp;lt;= original lateness.
 &lt;/ul&gt;
 </description>
         <pubDate>Mon, 10 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/algorithm/2016/10/10/greedy-algorithm-notes.html</link>
-        <guid isPermaLink="true">/blog/notes/algorithm/2016/10/10/greedy-algorithm-notes.html</guid>
+        <link>/blog/notes/algorithm/2016/10/10/greedy-algorithm.html</link>
+        <guid isPermaLink="true">/blog/notes/algorithm/2016/10/10/greedy-algorithm.html</guid>
+        
+        <category>minimum spanning tree</category>
+        
+        <category>huffman encoding</category>
+        
+        <category>interval scheduling</category>
         
         <category>greedy</category>
         
@@ -681,7 +749,7 @@ c. The new max lateness &amp;lt;= original lateness.
       </item>
     
       <item>
-        <title>Graph Algorithm Notes</title>
+        <title>Graph Algorithm</title>
         <description>&lt;h2&gt;Content&lt;/h2&gt;
 
 &lt;ol&gt;
@@ -862,8 +930,12 @@ while R != V:
 &lt;/ul&gt;
 </description>
         <pubDate>Mon, 10 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/algorithm/2016/10/10/graph-algorithm-notes.html</link>
-        <guid isPermaLink="true">/blog/notes/algorithm/2016/10/10/graph-algorithm-notes.html</guid>
+        <link>/blog/notes/algorithm/2016/10/10/graph-algorithm.html</link>
+        <guid isPermaLink="true">/blog/notes/algorithm/2016/10/10/graph-algorithm.html</guid>
+        
+        <category>dijkstra's</category>
+        
+        <category>bellman-ford</category>
         
         <category>graph</category>
         
