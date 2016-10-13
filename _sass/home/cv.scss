@@ -310,19 +310,6 @@
 								&.canHover:hover {
 									background-color: white;
 								}
-								.popover-title {
-									text-align: center;
-									font-size: 16px;
-									background-color: rgba($highlight-color, 0.8);
-								}
-								.popover-content p{
-									font-size: 16px;
-									margin: 8px;
-									&:not(:last-child) {
-										border-bottom: 1px solid $grey-color-light;
-										padding-bottom: 5px;
-									}
-								}
 							}
 						}
 
@@ -485,6 +472,26 @@
 					margin: 5px;
 				}
 			}
+		}
+	}
+}
+
+body {
+	.popover {
+		color: black;
+		font-family: $cv-p-font;
+	}
+	.popover-title {
+		text-align: center;
+		font-size: 16px;
+		background-color: rgba($highlight-color, 0.8);
+	}
+	.popover-content p{
+		font-size: 16px;
+		margin: 8px;
+		&:not(:last-child) {
+			border-bottom: 1px solid $grey-color-light;
+			padding-bottom: 5px;
 		}
 	}
 }

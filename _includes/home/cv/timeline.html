@@ -106,7 +106,7 @@
 									{% assign award_elem = award | prepend: '<p>' | append: '</p>'%}
 									{% assign award_list = award_list | append: award_elem %}
 								{% endfor %}
-								<span class="orange-tag canHover"><a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-animation="true" title="Honors" data-content="{{award_list}}" data-html="true">
+								<span class="orange-tag canHover"><a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-animation="true" title="Honors" data-content="{{award_list}}" data-html="true"  data-container="body">
 									{{ awards_size }} Honors
 								</a></span>
 							{% else if awards_size == 1%}
@@ -124,7 +124,7 @@
 									{% assign highlight_elem = highlight | prepend: '<p>' | append: '</p>'%}
 									{% assign highlight_list = highlight_list | append: highlight_elem %}
 								{% endfor %}
-								<span class="orange-tag canHover"><a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-animation="true" title="Highlights" data-content="{{highlight_list}}" data-html="true">
+								<span class="orange-tag canHover"><a tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-animation="true" title="Highlights" data-content="{{highlight_list}}" data-html="true" data-container="body">
 									{{ highlights_size }} Highlights
 								</a></span>
 							{% else if highlights_size == 1%}
