@@ -124,7 +124,7 @@ LowerTangent(HA, HB):
 		While ab not a lower tangent for HA:
 			a = a - 1 # move clockwise
 		While ab not a lower tangent for HB:
-			b = b - 1 # move counterclockwise
+			b = b + 1 # move counterclockwise
 	Return ab
 ```
 => `O(|HA| + |HB|) <= O(|A| + |B|) = O(n)`
