@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 12 Oct 2016 22:32:34 -0400</pubDate>
-    <lastBuildDate>Wed, 12 Oct 2016 22:32:34 -0400</lastBuildDate>
+    <pubDate>Thu, 13 Oct 2016 21:07:18 -0400</pubDate>
+    <lastBuildDate>Thu, 13 Oct 2016 21:07:18 -0400</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -134,7 +134,7 @@ LowerTangent(HA, HB):
         While ab not a lower tangent for HA:
             a = a - 1 # move clockwise
         While ab not a lower tangent for HB:
-            b = b - 1 # move counterclockwise
+            b = b + 1 # move counterclockwise
     Return ab
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;=&amp;gt; &lt;code&gt;O(|HA| + |HB|) &amp;lt;= O(|A| + |B|) = O(n)&lt;/code&gt;&lt;/p&gt;
