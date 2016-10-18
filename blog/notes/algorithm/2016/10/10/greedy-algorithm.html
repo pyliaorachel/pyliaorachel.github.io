@@ -166,17 +166,21 @@
 # Input: A connected undirected graph G = (V, E) with edge weights we 
 # Output: A minimum spanning tree defined by the edges X
 
-    for all u ∈ V : # = O(|V|)
+    for all u ∈ V : # =&gt; O(|V|)
         makeset(u) # create a singleton set containing just u
 
     X = {}
-    Sort the edges E by weight # = O(|E|log|V|) where log|E| ~ log|V|
+    Sort the edges E by weight # =&gt; O(|E|log|V|) where log|E| ~ log|V|
     for all edges {u, v} ∈ E, in increasing order of weight: # = O(|E|log|V|)
         # find sets to which u &amp; v belong
         if find(u) != find(v):
             add edge {u, v} to X 
             union(u, v) # merging sets
 </code></pre></div>
+<h4>Running Time</h4>
+
+<p><code>O(|E|log|V|)</code></p>
+
 <h4>Data Structure for Disjoin Sets</h4>
 
 <ul>
@@ -233,7 +237,7 @@ union(x, y)  # = O(logn)
 repeat until |X| = |V| − 1:
     pick a set S ⊂ V for which X has no edges between S and V−S
     let e ∈ E be the minimum-weight edge between S and V − S
-    # cost(v) = min(u ∈ S) w(u, v)
+    # cost(v) = min(u ∈ S)(w(u, v))
     X = X ∪ {e}
 </code></pre></div>
 <h4>Implementation</h4>
@@ -250,11 +254,15 @@ repeat until |X| = |V| − 1:
     while H is not empty:
         v = deletemin(H) 
         for each {v, z} ∈ E:
-            if cost(z)  w(v, z): 
+            if cost(z) &gt; w(v, z): 
                 cost(z) = w(v, z) 
                 prev(z) = v 
                 decreasekey(H, z)
 </code></pre></div>
+<h4>Running Time</h4>
+
+<p><code>O(|E|log|V|)</code></p>
+
 <h4>Difference with Dijkstra&#39;s Algorithm</h4>
 
 <ul>

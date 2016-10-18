@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 13 Oct 2016 21:07:18 -0400</pubDate>
-    <lastBuildDate>Thu, 13 Oct 2016 21:07:18 -0400</lastBuildDate>
+    <pubDate>Tue, 18 Oct 2016 10:56:12 -0400</pubDate>
+    <lastBuildDate>Tue, 18 Oct 2016 10:56:12 -0400</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -365,17 +365,21 @@ Sum(t = 1..lglgh) n*2^t =
 # Input: A connected undirected graph G = (V, E) with edge weights we 
 # Output: A minimum spanning tree defined by the edges X
 
-    for all u ∈ V : # = O(|V|)
+    for all u ∈ V : # =&amp;gt; O(|V|)
         makeset(u) # create a singleton set containing just u
 
     X = {}
-    Sort the edges E by weight # = O(|E|log|V|) where log|E| ~ log|V|
+    Sort the edges E by weight # =&amp;gt; O(|E|log|V|) where log|E| ~ log|V|
     for all edges {u, v} ∈ E, in increasing order of weight: # = O(|E|log|V|)
         # find sets to which u &amp;amp; v belong
         if find(u) != find(v):
             add edge {u, v} to X 
             union(u, v) # merging sets
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Running Time&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;O(|E|log|V|)&lt;/code&gt;&lt;/p&gt;
+
 &lt;h4&gt;Data Structure for Disjoin Sets&lt;/h4&gt;
 
 &lt;ul&gt;
@@ -432,7 +436,7 @@ union(x, y)  # = O(logn)
 repeat until |X| = |V| − 1:
     pick a set S ⊂ V for which X has no edges between S and V−S
     let e ∈ E be the minimum-weight edge between S and V − S
-    # cost(v) = min(u ∈ S) w(u, v)
+    # cost(v) = min(u ∈ S)(w(u, v))
     X = X ∪ {e}
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h4&gt;Implementation&lt;/h4&gt;
@@ -449,11 +453,15 @@ repeat until |X| = |V| − 1:
     while H is not empty:
         v = deletemin(H) 
         for each {v, z} ∈ E:
-            if cost(z)  w(v, z): 
+            if cost(z) &amp;gt; w(v, z): 
                 cost(z) = w(v, z) 
                 prev(z) = v 
                 decreasekey(H, z)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Running Time&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;O(|E|log|V|)&lt;/code&gt;&lt;/p&gt;
+
 &lt;h4&gt;Difference with Dijkstra&amp;#39;s Algorithm&lt;/h4&gt;
 
 &lt;ul&gt;
