@@ -61,17 +61,21 @@ Kruskal(G, w):
 # Input: A connected undirected graph G = (V, E) with edge weights we 
 # Output: A minimum spanning tree defined by the edges X
 
-	for all u ∈ V : # = O(|V|)
+	for all u ∈ V : # => O(|V|)
 		makeset(u) # create a singleton set containing just u
 
 	X = {}
-	Sort the edges E by weight # = O(|E|log|V|) where log|E| ~ log|V|
+	Sort the edges E by weight # => O(|E|log|V|) where log|E| ~ log|V|
 	for all edges {u, v} ∈ E, in increasing order of weight: # = O(|E|log|V|)
 		# find sets to which u & v belong
 		if find(u) != find(v):
 			add edge {u, v} to X 
 			union(u, v) # merging sets
 ```
+
+#### Running Time
+
+`O(|E|log|V|)`
 
 #### Data Structure for Disjoin Sets
 
@@ -131,7 +135,7 @@ X = { } (edges picked so far)
 repeat until |X| = |V| − 1:
 	pick a set S ⊂ V for which X has no edges between S and V−S
 	let e ∈ E be the minimum-weight edge between S and V − S
-	# cost(v) = min(u ∈ S) w(u, v)
+	# cost(v) = min(u ∈ S)(w(u, v))
 	X = X ∪ {e}
 ```
 
@@ -151,11 +155,15 @@ Prim(G, w):
 	while H is not empty:
 		v = deletemin(H) 
 		for each {v, z} ∈ E:
-			if cost(z)  w(v, z): 
+			if cost(z) > w(v, z): 
 				cost(z) = w(v, z) 
 				prev(z) = v 
 				decreasekey(H, z)
 ```
+
+#### Running Time
+
+`O(|E|log|V|)`
 
 #### Difference with Dijkstra's Algorithm
 
