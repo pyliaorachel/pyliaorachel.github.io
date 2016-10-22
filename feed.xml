@@ -6,12 +6,22 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 21 Oct 2016 22:14:44 -0400</pubDate>
-    <lastBuildDate>Fri, 21 Oct 2016 22:14:44 -0400</lastBuildDate>
+    <pubDate>Fri, 21 Oct 2016 22:17:34 -0400</pubDate>
+    <lastBuildDate>Fri, 21 Oct 2016 22:17:34 -0400</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
-        <title>Operating System Basics</title>
+        <title>Operating System Threads</title>
+        <description></description>
+        <pubDate>Fri, 21 Oct 2016 00:00:00 -0400</pubDate>
+        <link>/2016/10/21/operating-system-threads.html</link>
+        <guid isPermaLink="true">/2016/10/21/operating-system-threads.html</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Operating System - Basics</title>
         <description>&lt;h2&gt;Content&lt;/h2&gt;
 
 &lt;ol&gt;
@@ -64,13 +74,13 @@
 &lt;li&gt;Isolates itself from apps
 
 &lt;ul&gt;
-&lt;li&gt;&lt;em&gt;If NOT, then OS has to compromise for apps; apps may corrupt OS and no isolations provided to them&lt;/em&gt;
-ma
-## OS Design&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;If NOT, then OS has to compromise for apps; apps may corrupt OS and no isolations provided to them&lt;/em&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;h2&gt;OS Design&lt;/h2&gt;
 
 &lt;h3&gt;Key Ideas&lt;/h3&gt;
 
