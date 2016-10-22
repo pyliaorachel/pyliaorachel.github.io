@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Operating System Basics"
+title:  "Operating System - Basics"
 categories: Blog Notes OS
 tags: ["OS", "ECE344"]
 author: pyliaorachel
@@ -36,7 +36,7 @@ excerpt_separator: <!--more-->
 			- _If NOT, then memory corruption a problem_
 		- Isolates itself from apps
 			- _If NOT, then OS has to compromise for apps; apps may corrupt OS and no isolations provided to them_
-ma
+
 ## OS Design
 
 ### Key Ideas
