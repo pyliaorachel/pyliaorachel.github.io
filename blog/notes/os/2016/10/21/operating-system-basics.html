@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Operating System Basics</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="/css/main.css" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
+		<link rel="stylesheet" href="/css/github-markdown.css">
+
+		<!-- Place jquery before bootstrap -->
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">MyCoon</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+
+			<form class="navbar-form navbar-left">
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Search">
+				</div>
+				<button type="submit" class="btn btn-default">Submit</button>
+			</form>
+
+			<ul class="nav navbar-nav navbar-right" id="nav-links">
+				<li class="nav-home"><a href="/">Home</a></li>
+				<li class="dropdown nav-blog">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Blog<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/blog">MyCoon Blog</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/blog/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/blog/notes">
+									<span>Notes</span>
+									<span>5</span>
+								</a>
+							</li>
+						
+						<li><a href="/blog/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li class="dropdown nav-tutorial">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Tutorials<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/tutorial">MyCoon Tutorial</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/tutorial/categories">Categories</a></li>
+						
+							
+						
+
+						
+						<li><a href="/tutorial/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li  class="nav-project"><a href="/project">Projects</a></li>
+				<li class="nav-special" id="special"><a href="#">?</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+		<main class="page-content post" aria-label="Content">
+	<div class="post-wrapper">
+		<div class="wrapper">
+	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
+
+		<header class="post-header">
+			<h1 class="post-title" itemprop="name headline">Operating System Basics</h1>
+			<p class="post-meta">Oct 21, 2016
+				 • Notes
+				 • pyliaorachel
+			</p>
+		</header>
+
+		
+
+		<span class="separator"> • • • </span>
+
+		<div class="post-content" itemprop="articleBody">
+			<h2>Content</h2>
+
+<ol>
+<li>Basics of OS</li>
+<li>OS Design</li>
+<li>Hardware</li>
+</ol>
+
+<!--more-->
+
+<hr>
+
+<h2>Basics of OS</h2>
+
+<ul>
+<li>Layer of <code>software</code> between <code>hardware &amp; applications</code>
+
+<ul>
+<li>Application dedicated to a single task; OS serves all applications</li>
+<li>Also called <code>systems software</code></li>
+</ul></li>
+</ul>
+
+<h3><strong>What OS does</strong></h3>
+
+<ul>
+<li>Manage H/W resources
+
+<ul>
+<li>Allows programs to interact with H/W
+
+<ul>
+<li>CPU, memory, disk, graphics card, co-processors, ...</li>
+<li>Simpler interface to devices
+
+<ul>
+<li>e.g. access disk as files</li>
+<li><em>If NOT, apps have to be written to specific H/W devices directly -&gt; deal with all the specific H/W stuffs -&gt; not compatible to another manufacturer&#39;s device</em></li>
+</ul></li>
+</ul></li>
+<li>Allows running many programs at the same time
+
+<ul>
+<li>Programs share CPU, memory</li>
+<li>Isolates apps from each other
+
+<ul>
+<li><em>If NOT, then memory corruption a problem</em></li>
+</ul></li>
+<li>Isolates itself from apps
+
+<ul>
+<li><em>If NOT, then OS has to compromise for apps; apps may corrupt OS and no isolations provided to them</em>
+ma
+## OS Design</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h3>Key Ideas</h3>
+
+<ul>
+<li>How does OS allow running many programs?
+
+<ul>
+<li><code>Virtualization</code> - programs share resources securely</li>
+</ul></li>
+<li>How does OS allow programs to interact with H/W?
+
+<ul>
+<li><code>Abstraction</code> for H/W</li>
+<li>Implemented via <code>System calls</code></li>
+</ul></li>
+</ul>
+
+<h3><strong>Virtualization</strong></h3>
+
+<ul>
+<li>Programs think:
+
+<ul>
+<li>They are running on their own machine (but only one physical machine!)</li>
+<li>They have full access to CPU, memory, disk</li>
+</ul></li>
+<li>Benefits
+
+<ul>
+<li><code>Resource isolation</code> (an ideal virtual machine)
+
+<ul>
+<li>Program cannot accidentally overwrite others&#39; memory or files</li>
+<li>Ideally, if a program uses too much memory, only its performance degrades</li>
+</ul></li>
+<li>Improves <strong>portablity</strong> of programs</li>
+</ul></li>
+<li>An ideal virtual machine ~ physical machine, i.e. programs won&#39;t affect each other</li>
+<li>Implementation
+
+<ul>
+<li><strong>Processor -&gt; Threads</strong></li>
+<li><strong>Memory -&gt; Virtual Memory</strong>
+
+<ul>
+<li>Contiguous &amp; private memory</li>
+<li>Illusion of access to large amount of memory</li>
+</ul></li>
+<li><strong>Disk -&gt; Files</strong></li>
+<li><strong>Network -&gt; Sockets</strong>
+
+<ul>
+<li>Hides details of network protocols &amp; layers</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h3><strong>Abstraction</strong></h3>
+
+<ul>
+<li>Eases programming, improves <strong>portability</strong></li>
+</ul>
+
+<h4>Concurrency</h4>
+
+<ul>
+<li><code>Thread abstraction</code> allows program to concurrently perform several tasks
+
+<ul>
+<li><em>Race condition?</em></li>
+</ul></li>
+</ul>
+
+<h4>System Calls</h4>
+
+<ul>
+<li>Program request H/W access via <code>system calls</code></li>
+<li><code>OS API</code>: a set of system calls</li>
+<li>Requires control transfer from <code>user space</code> to <code>kernel space</code> via <code>interrupts</code> or <code>traps</code></li>
+<li>e.g.
+
+<ul>
+<li>Create/destroy process (<em>process-related system calls</em>)</li>
+<li>Allocate/deallocate memory from system (<em>memory-related system calls</em>)</li>
+<li>Read/write a file</li>
+</ul></li>
+<li><p>Ex.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">    Program | Library
+    -----------------
+        OS Kernel                           # program read() 
+    -----------------                       # -&gt; library generates trap 
+           H/W                              # -&gt; trap invokes kernel 
+                                            # -&gt; kernel accesses disk 
+    Program (read) -&gt; library               # -&gt; kernel returns results to program
+    ------------------(trap)--^----                 
+        OS Kernel        |    |
+    ---------------------v-(result)
+                H/W             
+</code></pre></div></li>
+</ul>
+
+<h4>OS Interface</h4>
+
+<ul>
+<li><code>OS interface</code> to H/W = set of <strong>system calls</strong></li>
+<li><code>VM interface</code> to H/W = subset of physical machine interface + OS interface</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">    * Application Layer
+
+    * OS Interface 
+(system calls: thread_create(), read(), write(), thread_join(), ...)
+
+    (when program needs access to devices)
+------------virtual machine interface--------
+    * OS Kernel                             |
+(thread scheduler, memory mgmt,             |
+device mgmt, file sys, network comm,        |
+protection, process mgmt, security, ...)    |   (when program runs most instructions)
+                                            |
+-----------physical machine interface---------virtual/physical machine interface-------
+    * H/W Layer
+(network, CPU, memory, printer, video card, monitor, disk, ...)
+</code></pre></div>
+<h2>Hardware</h2>
+
+<h3><strong>Processor (CPU)</strong></h3>
+
+<ul>
+<li><p>CPU executes a set of instructions</p>
+
+<ul>
+<li><code>Fetch</code> - <code>Decode</code> - <code>Execute</code></li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">PC = &lt;start address&gt;;
+while (halt flag not set) {
+    IR = memory[PC];
+    PC++;
+    execute(IR);
+}
+</code></pre></div></li>
+<li><p>Anatomy of a CPU:</p>
+
+<ul>
+<li><code>Program Counter (PC)</code></li>
+<li><code>Instruction Register (IR)</code></li>
+<li><code>General Registers</code></li>
+<li><code>Stack Pointer (SP)</code></li>
+<li><code>Status Register (SR)</code> or <code>Processor Status Word</code></li>
+</ul></li>
+</ul>
+
+<h3><strong>Memory</strong></h3>
+
+<ul>
+<li>Memory (DRAM) provides storage for <code>code</code> &amp; <code>data</code></li>
+<li>Abstraction
+
+<ul>
+<li><code>Write(addr, val)</code></li>
+<li><code>val = Read(addr)</code></li>
+</ul></li>
+<li>Anatomy of memory
+
+<ul>
+<li><code>Data sections</code>: global vars</li>
+<li><code>Stack</code>: local vars, parameters, return values</li>
+<li><code>Heap</code>: dynamic vars</li>
+</ul></li>
+</ul>
+
+<h3><strong>I/O Devices</strong></h3>
+
+<ul>
+<li>Runs <strong>concurrently</strong> with <code>CPU</code></li>
+<li>Connected to <strong>device-specific controllers</strong></li>
+<li><code>Buses</code> connect <code>CPU</code> to <code>memory</code> &amp; <code>controllers</code>
+
+<ul>
+<li>Each <code>controller</code> owns a range of <code>bus addresses</code></li>
+<li><code>CPU</code> sends messgage to address using:
+
+<ul>
+<li><code>Special I/O instructions</code></li>
+<li><code>Memory-mapped I/O</code>: 
+
+<ul>
+<li>Memory locations mapped to device registers</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>Communication model
+
+<ul>
+<li><code>Send(addr, val)</code></li>
+<li><code>val = Receive(addr)</code>
+
+<ul>
+<li><code>CPU</code> polling the addr for val &amp; read the data with another address</li>
+</ul></li>
+<li>Similar to memory abstraction?
+
+<ul>
+<li>But data may <em>never arrive</em>, <em>get corrupted</em>, or <em>arrive out-of-order</em></li>
+</ul></li>
+<li><code>Polling</code> frequency?
+
+<ul>
+<li>Too high -&gt; waste CPU</li>
+<li>Too low -&gt; data loss or delay</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h3><strong>Interrupts</strong></h3>
+
+<ul>
+<li><code>Polling</code> not efficient -&gt; let devices send <code>interrupts</code>
+
+<ul>
+<li><code>CPU</code> has <code>interrupt request flag</code> to be set by devices</li>
+</ul></li>
+<li>Requires support from H/W &amp; S/W</li>
+<li><p>Processor execution with <code>interrupts</code>:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">1. (H/W) When interrupt flag set:
+    H/W saves PC
+    Set PC to predetermined address
+    The address contains 'interrupt handler'
+2. (S/W) When H/W executes next instruction:
+    Save CPU registers
+    Run interrupt handler
+    Restore CPU registers
+3. (S/W) Handler runs 'return from interrupt' instruction:
+    Set PC to original next instruction
+</code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">PC = &lt;start address&gt;;
+while (halt flag not set) {
+    IR = memory[PC];
+    PC++;
+    execute(IR);
+    if (InterruptRequest) {
+        H/W save PC, SP, SR in stack; // not all states, only those necessary to be returned from handler
+        PC = memory[0]; // where interrupt handler resides
+    }
+}
+Interrupt_handler(){
+    save_processor_state(); // gets to choose essential states to save
+    handle_interrupt();
+    restore_processor_state();
+    return;
+}
+</code></pre></div></li>
+</ul>
+
+		</div>
+
+		<ul class="tag-list">
+			
+
+			<li class="tag">
+				OS
+			</li>
+
+			
+
+			<li class="tag">
+				ECE344
+			</li>
+
+			
+		</ul>
+
+	</article>
+
+	
+		<div id="disqus_thread"></div>
+<script>
+	var disqus_config = function () {
+	    this.page.url = "https://pyliaorachel.github.io";
+	    this.page.identifier = "/blog/notes/os/2016/10/21/operating-system-basics.html";
+	};
+	(function() {
+	    var d = document, s = d.createElement('script');
+	    s.src = '//pyliaorachel.disqus.com/embed.js';
+	    s.setAttribute('data-timestamp', +new Date());
+	    (d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	
+</div>
+	</div>
+</main>
+		<footer>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4 footer-link">
+				<a href="mailto:rachel5566kk@gmail.com">
+					<span class="icon icon-email">
+						<img src="/assets/svg/email-logo.svg" alt="Email Logo">
+					</span>
+					<span class="username">rachel5566kk@gmail.com</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://github.com/pyliaorachel"  target="_blank">
+					<span class="icon icon-github">
+						<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+					</span>
+					<span class="username">pyliaorachel</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://tw.linkedin.com/in/peiyu-liao" target="_blank">
+					<span class="icon icon-linkedin">
+						<img src="/assets/svg/linkedin-logo.svg" alt="LinkedIn Logo">
+					</span>
+					<span class="username">Peiyu Liao</span>
+				</a>
+			</div>
+		</div><!-- /.row -->
+		<div class="row">
+			<div class="footer-copy-right">
+				<p>2016	&copy; Liao Peiyu</p>
+			</div >
+		</div><!-- /.row -->
+	</div><!-- /.container-fluid -->
+</footer>
+		<script type="text/javascript" src="/js/main.js"></script>
+		<script type="text/javascript" src="/js/home.js"></script>
+		<script id="dsq-count-scr" src="//pyliaorachel.disqus.com/count.js" async></script>
+	</body>
+</html>

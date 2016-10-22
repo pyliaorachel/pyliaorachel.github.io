@@ -6,9 +6,339 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 18 Oct 2016 10:56:12 -0400</pubDate>
-    <lastBuildDate>Tue, 18 Oct 2016 10:56:12 -0400</lastBuildDate>
+    <pubDate>Fri, 21 Oct 2016 22:14:44 -0400</pubDate>
+    <lastBuildDate>Fri, 21 Oct 2016 22:14:44 -0400</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Operating System Basics</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Basics of OS&lt;/li&gt;
+&lt;li&gt;OS Design&lt;/li&gt;
+&lt;li&gt;Hardware&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Basics of OS&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Layer of &lt;code&gt;software&lt;/code&gt; between &lt;code&gt;hardware &amp;amp; applications&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Application dedicated to a single task; OS serves all applications&lt;/li&gt;
+&lt;li&gt;Also called &lt;code&gt;systems software&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;What OS does&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Manage H/W resources
+
+&lt;ul&gt;
+&lt;li&gt;Allows programs to interact with H/W
+
+&lt;ul&gt;
+&lt;li&gt;CPU, memory, disk, graphics card, co-processors, ...&lt;/li&gt;
+&lt;li&gt;Simpler interface to devices
+
+&lt;ul&gt;
+&lt;li&gt;e.g. access disk as files&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;If NOT, apps have to be written to specific H/W devices directly -&amp;gt; deal with all the specific H/W stuffs -&amp;gt; not compatible to another manufacturer&amp;#39;s device&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Allows running many programs at the same time
+
+&lt;ul&gt;
+&lt;li&gt;Programs share CPU, memory&lt;/li&gt;
+&lt;li&gt;Isolates apps from each other
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;If NOT, then memory corruption a problem&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Isolates itself from apps
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;If NOT, then OS has to compromise for apps; apps may corrupt OS and no isolations provided to them&lt;/em&gt;
+ma
+## OS Design&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Key Ideas&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;How does OS allow running many programs?
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Virtualization&lt;/code&gt; - programs share resources securely&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;How does OS allow programs to interact with H/W?
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Abstraction&lt;/code&gt; for H/W&lt;/li&gt;
+&lt;li&gt;Implemented via &lt;code&gt;System calls&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Virtualization&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Programs think:
+
+&lt;ul&gt;
+&lt;li&gt;They are running on their own machine (but only one physical machine!)&lt;/li&gt;
+&lt;li&gt;They have full access to CPU, memory, disk&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Benefits
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Resource isolation&lt;/code&gt; (an ideal virtual machine)
+
+&lt;ul&gt;
+&lt;li&gt;Program cannot accidentally overwrite others&amp;#39; memory or files&lt;/li&gt;
+&lt;li&gt;Ideally, if a program uses too much memory, only its performance degrades&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Improves &lt;strong&gt;portablity&lt;/strong&gt; of programs&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;An ideal virtual machine ~ physical machine, i.e. programs won&amp;#39;t affect each other&lt;/li&gt;
+&lt;li&gt;Implementation
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Processor -&amp;gt; Threads&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Memory -&amp;gt; Virtual Memory&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Contiguous &amp;amp; private memory&lt;/li&gt;
+&lt;li&gt;Illusion of access to large amount of memory&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Disk -&amp;gt; Files&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Network -&amp;gt; Sockets&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Hides details of network protocols &amp;amp; layers&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Abstraction&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Eases programming, improves &lt;strong&gt;portability&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Concurrency&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Thread abstraction&lt;/code&gt; allows program to concurrently perform several tasks
+
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Race condition?&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;System Calls&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Program request H/W access via &lt;code&gt;system calls&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;OS API&lt;/code&gt;: a set of system calls&lt;/li&gt;
+&lt;li&gt;Requires control transfer from &lt;code&gt;user space&lt;/code&gt; to &lt;code&gt;kernel space&lt;/code&gt; via &lt;code&gt;interrupts&lt;/code&gt; or &lt;code&gt;traps&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;e.g.
+
+&lt;ul&gt;
+&lt;li&gt;Create/destroy process (&lt;em&gt;process-related system calls&lt;/em&gt;)&lt;/li&gt;
+&lt;li&gt;Allocate/deallocate memory from system (&lt;em&gt;memory-related system calls&lt;/em&gt;)&lt;/li&gt;
+&lt;li&gt;Read/write a file&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Ex.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;    Program | Library
+    -----------------
+        OS Kernel                           # program read() 
+    -----------------                       # -&amp;gt; library generates trap 
+           H/W                              # -&amp;gt; trap invokes kernel 
+                                            # -&amp;gt; kernel accesses disk 
+    Program (read) -&amp;gt; library               # -&amp;gt; kernel returns results to program
+    ------------------(trap)--^----                 
+        OS Kernel        |    |
+    ---------------------v-(result)
+                H/W             
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;OS Interface&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;OS interface&lt;/code&gt; to H/W = set of &lt;strong&gt;system calls&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;VM interface&lt;/code&gt; to H/W = subset of physical machine interface + OS interface&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;    * Application Layer
+
+    * OS Interface 
+(system calls: thread_create(), read(), write(), thread_join(), ...)
+
+    (when program needs access to devices)
+------------virtual machine interface--------
+    * OS Kernel                             |
+(thread scheduler, memory mgmt,             |
+device mgmt, file sys, network comm,        |
+protection, process mgmt, security, ...)    |   (when program runs most instructions)
+                                            |
+-----------physical machine interface---------virtual/physical machine interface-------
+    * H/W Layer
+(network, CPU, memory, printer, video card, monitor, disk, ...)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Hardware&lt;/h2&gt;
+
+&lt;h3&gt;&lt;strong&gt;Processor (CPU)&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;CPU executes a set of instructions&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Fetch&lt;/code&gt; - &lt;code&gt;Decode&lt;/code&gt; - &lt;code&gt;Execute&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;PC = &amp;lt;start address&amp;gt;;
+while (halt flag not set) {
+    IR = memory[PC];
+    PC++;
+    execute(IR);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Anatomy of a CPU:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Program Counter (PC)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Instruction Register (IR)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;General Registers&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Stack Pointer (SP)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Status Register (SR)&lt;/code&gt; or &lt;code&gt;Processor Status Word&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Memory&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Memory (DRAM) provides storage for &lt;code&gt;code&lt;/code&gt; &amp;amp; &lt;code&gt;data&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Abstraction
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Write(addr, val)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;val = Read(addr)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Anatomy of memory
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Data sections&lt;/code&gt;: global vars&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Stack&lt;/code&gt;: local vars, parameters, return values&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Heap&lt;/code&gt;: dynamic vars&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;I/O Devices&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Runs &lt;strong&gt;concurrently&lt;/strong&gt; with &lt;code&gt;CPU&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Connected to &lt;strong&gt;device-specific controllers&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Buses&lt;/code&gt; connect &lt;code&gt;CPU&lt;/code&gt; to &lt;code&gt;memory&lt;/code&gt; &amp;amp; &lt;code&gt;controllers&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Each &lt;code&gt;controller&lt;/code&gt; owns a range of &lt;code&gt;bus addresses&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;CPU&lt;/code&gt; sends messgage to address using:
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Special I/O instructions&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Memory-mapped I/O&lt;/code&gt;: 
+
+&lt;ul&gt;
+&lt;li&gt;Memory locations mapped to device registers&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Communication model
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Send(addr, val)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;val = Receive(addr)&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;CPU&lt;/code&gt; polling the addr for val &amp;amp; read the data with another address&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Similar to memory abstraction?
+
+&lt;ul&gt;
+&lt;li&gt;But data may &lt;em&gt;never arrive&lt;/em&gt;, &lt;em&gt;get corrupted&lt;/em&gt;, or &lt;em&gt;arrive out-of-order&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Polling&lt;/code&gt; frequency?
+
+&lt;ul&gt;
+&lt;li&gt;Too high -&amp;gt; waste CPU&lt;/li&gt;
+&lt;li&gt;Too low -&amp;gt; data loss or delay&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Interrupts&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Polling&lt;/code&gt; not efficient -&amp;gt; let devices send &lt;code&gt;interrupts&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;CPU&lt;/code&gt; has &lt;code&gt;interrupt request flag&lt;/code&gt; to be set by devices&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Requires support from H/W &amp;amp; S/W&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Processor execution with &lt;code&gt;interrupts&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;1. (H/W) When interrupt flag set:
+    H/W saves PC
+    Set PC to predetermined address
+    The address contains 'interrupt handler'
+2. (S/W) When H/W executes next instruction:
+    Save CPU registers
+    Run interrupt handler
+    Restore CPU registers
+3. (S/W) Handler runs 'return from interrupt' instruction:
+    Set PC to original next instruction
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;PC = &amp;lt;start address&amp;gt;;
+while (halt flag not set) {
+    IR = memory[PC];
+    PC++;
+    execute(IR);
+    if (InterruptRequest) {
+        H/W save PC, SP, SR in stack; // not all states, only those necessary to be returned from handler
+        PC = memory[0]; // where interrupt handler resides
+    }
+}
+Interrupt_handler(){
+    save_processor_state(); // gets to choose essential states to save
+    handle_interrupt();
+    restore_processor_state();
+    return;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 21 Oct 2016 00:00:00 -0400</pubDate>
+        <link>/blog/notes/os/2016/10/21/operating-system-basics.html</link>
+        <guid isPermaLink="true">/blog/notes/os/2016/10/21/operating-system-basics.html</guid>
+        
+        <category>OS</category>
+        
+        <category>ECE344</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>OS</category>
+        
+      </item>
     
       <item>
         <title>Divide and Conquer</title>
