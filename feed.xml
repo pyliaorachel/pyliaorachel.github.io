@@ -6,17 +6,45 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 21 Oct 2016 22:17:34 -0400</pubDate>
-    <lastBuildDate>Fri, 21 Oct 2016 22:17:34 -0400</lastBuildDate>
+    <pubDate>Fri, 21 Oct 2016 23:43:51 -0400</pubDate>
+    <lastBuildDate>Fri, 21 Oct 2016 23:43:51 -0400</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
-        <title>Operating System Threads</title>
-        <description></description>
+        <title>Operating System - Threads</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Threads and Processes&lt;/li&gt;
+&lt;li&gt;Thread Scheduling&lt;/li&gt;
+&lt;li&gt;Mutex Lock&lt;/li&gt;
+&lt;li&gt;Synchronization&lt;/li&gt;
+&lt;li&gt;UNIX&lt;/li&gt;
+&lt;li&gt;Memory Management&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Threads and Processes&lt;/h2&gt;
+</description>
         <pubDate>Fri, 21 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/2016/10/21/operating-system-threads.html</link>
-        <guid isPermaLink="true">/2016/10/21/operating-system-threads.html</guid>
+        <link>/blog/notes/os/2016/10/21/operating-system-threads.html</link>
+        <guid isPermaLink="true">/blog/notes/os/2016/10/21/operating-system-threads.html</guid>
         
+        <category>OS</category>
+        
+        <category>ECE344</category>
+        
+        <category>threads</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>OS</category>
         
       </item>
     
@@ -28,6 +56,7 @@
 &lt;li&gt;Basics of OS&lt;/li&gt;
 &lt;li&gt;OS Design&lt;/li&gt;
 &lt;li&gt;Hardware&lt;/li&gt;
+&lt;li&gt;OS-Related Hardware&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;!--more--&gt;
@@ -201,6 +230,7 @@ device mgmt, file sys, network comm,        |
 protection, process mgmt, security, ...)    |   (when program runs most instructions)
                                             |
 -----------physical machine interface---------virtual/physical machine interface-------
+                                                    (user mode interface)
     * H/W Layer
 (network, CPU, memory, printer, video card, monitor, disk, ...)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -332,6 +362,267 @@ Interrupt_handler(){
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;h2&gt;OS-Related Hardware&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;OS is S/W, when other apps are running, it is not. How does OS manage resources?
+
+&lt;ul&gt;
+&lt;li&gt;Requires H/W support to implement virtualization &amp;amp; abstraction &lt;strong&gt;efficiently&lt;/strong&gt; &amp;amp; &lt;strong&gt;securely&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Efficient&lt;/strong&gt; because no need to provide interpreter for every single instruction that provides H/W &lt;code&gt;abstraction&lt;/code&gt; &amp;amp; &lt;code&gt;virtualization&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Secure&lt;/strong&gt; because &lt;code&gt;CPU modes&lt;/code&gt;, &lt;code&gt;MMU&lt;/code&gt;, &amp;amp; &lt;code&gt;traps&lt;/code&gt; ensure no corruption between programs&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;CPU Modes&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;2 CPU Modes:
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Kernel mode&lt;/code&gt; - OS
+
+&lt;ul&gt;
+&lt;li&gt;Every instruction can be executed&lt;br&gt;
+e.g. access disk &amp;amp; timer, controll interrupts, setting CPU mode&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;User mode&lt;/code&gt; - Programs
+
+&lt;ul&gt;
+&lt;li&gt;A subset of instructions can be executed&lt;br&gt;
+e.g. &lt;code&gt;add&lt;/code&gt;, &lt;code&gt;sub&lt;/code&gt;, &lt;code&gt;push&lt;/code&gt;, &lt;code&gt;pop&lt;/code&gt;, etc.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Current mode kept in &lt;code&gt;status register&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Devices mapped to kernel memory&lt;/li&gt;
+&lt;li&gt;OS is priviledged &amp;amp; trusted program; correct system operation depend on correct OS design &amp;amp; implementation instead of user programs&lt;/li&gt;
+&lt;li&gt;Enables &lt;code&gt;memory isolation&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Memories &amp;amp; registers can only be changed in &lt;code&gt;privileged mode&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Memory Management&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Memory Management Unit (MMU)&lt;/code&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Programs use &lt;code&gt;virtual memory addresses&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;CPU&lt;/code&gt; sends &lt;code&gt;virtual addresses&lt;/code&gt; to &lt;code&gt;MMU&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;MMU&lt;/code&gt; translates them to &lt;code&gt;physical addresses&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;MMU&lt;/code&gt; accesses &lt;code&gt;physical addresses&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Anatomy of a simple MMU
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Base register&lt;/code&gt;
+&lt;code&gt;Phys addr = Virt addr + Base reg&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Limit register&lt;/code&gt;
+&lt;code&gt;Virt addr &amp;lt; Limit reg&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Enables &lt;code&gt;memory virtualization&lt;/code&gt; &amp;amp; &lt;code&gt;memory isolation&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Memory virtualization&lt;/code&gt;: Each program has access to a large amount of contiguous, private memory, starting at address 0&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Memory isolation&lt;/code&gt;: Ensures OS &amp;amp; other programs are located in different physical memory, and they cannot step on each other&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Trap&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;For programs to switch to &lt;code&gt;kernel mode&lt;/code&gt; and run &lt;code&gt;OS code&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Programs cannot call &lt;code&gt;OS code&lt;/code&gt; directly because &lt;code&gt;MMU&lt;/code&gt; isolates &lt;code&gt;OS code&lt;/code&gt; &amp;amp; program not in &lt;code&gt;kernel mode&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Provides a secure way to enter the kernel&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Similar to handling &lt;code&gt;interrupts&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# (H/W) On trap:
+    Switch to kernel mode
+    Run OS handler code at well-defined location
+# (S/W) OS handler code:
+    Save processor state
+    Runs kernel functions to access H/W
+    Restore processor state
+    Return to user code, switch to user mode
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;=&amp;gt; &lt;strong&gt;atomic&lt;/strong&gt; to avoid &lt;code&gt;user code&lt;/code&gt; running in &lt;code&gt;kernal mode&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Unix system calls&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Process related&lt;br&gt;
+e.g. fork, exec, wait, exit, kill, signal&lt;/li&gt;
+&lt;li&gt;File related&lt;br&gt;
+e.g. open, read, write, close, link, unlink, chdir&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Invoking system call&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;read(file, buff, n) { // library code
+    ...
+    lw v0, SYS_read // load syscall number into v0 reg
+
+    syscall // trap
+    ...
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;Traps&lt;/code&gt;, &lt;code&gt;interrupts&lt;/code&gt;, &lt;code&gt;exceptions&lt;/code&gt;&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;Interrupt&lt;/th&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;Trap&lt;/th&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;Exception&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Cause&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;H/W external to CPU&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Explicit intruction&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Instruction failure&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Effect&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Program unaware of interrupt handling (async)&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Similar to program invoked function, function returns data (sync)&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Abnormal control flow&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Timeliness&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Needs to respond quickly&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Program suspended, OS can take time&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;OS can take time&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr&gt;
+
+&lt;h3&gt;&lt;strong&gt;Quick Questions&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;How does OS manage H/W?
+
+&lt;ul&gt;
+&lt;li&gt;Abstraction &amp;amp; virtualization&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;OS is software, when other applications are running, it is not running, so how can it do its work?
+
+&lt;ul&gt;
+&lt;li&gt;H/W support e.g. CPU modes, MMU, traps&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Why can’t applications corrupt other applications or the OS?
+
+&lt;ul&gt;
+&lt;li&gt;MMU helps&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Why can’t applications directly access h/w?
+
+&lt;ul&gt;
+&lt;li&gt;I/O devices are mapped to kernel memory, so no access allowed by MMU; or, I/O intructions are priviledged&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Why is the OS not a normal program?
+
+&lt;ul&gt;
+&lt;li&gt;Entered from different locations (system calls and interrupts) in response to external events&lt;/li&gt;
+&lt;li&gt;It does not have a single thread of control, it can be invoked simultaneously by two different events (e.g. system call &amp;amp; interrupt)&lt;/li&gt;
+&lt;li&gt;It is not supposed to terminate&lt;/li&gt;
+&lt;li&gt;Can execute any instruction in the machine&lt;/li&gt;
+&lt;li&gt;Has access to the entire memory on the machine&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;What if a program tries to cheat?
+
+&lt;ol&gt;
+&lt;li&gt;What happens if it issues a privileged instruction directly? 
+
+&lt;ul&gt;
+&lt;li&gt;Attempting execution of privileged instruction in user mode causes trap, so kernel gets control. Normally, kernel will kill program.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;What if a running thread doesn’t make a system call to the OS and hence hogs the CPU?
+
+&lt;ul&gt;
+&lt;li&gt;OS must register a future timer interrupt before it hands control of the CPU over to a thread; when the timer interrupt goes off, the OS gets control&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;What stops the running program from disabling an interrupt?
+
+&lt;ul&gt;
+&lt;li&gt;It is a priviledges instruction&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;What stops a program from modifying the OS so that the OS runs user code?
+
+&lt;ul&gt;
+&lt;li&gt;Program cannot even see OS code due to memory virtualization&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;What stops a program from changing the MMU registers?
+
+&lt;ul&gt;
+&lt;li&gt;It is a priviledges instruction&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;How does the OS solve these problems:
+
+&lt;ol&gt;
+&lt;li&gt;Time sharing the CPU among programs?
+
+&lt;ul&gt;
+&lt;li&gt;Timer interrupts&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Space sharing memory among programs?
+
+&lt;ul&gt;
+&lt;li&gt;MMU&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Protection of programs from each other?
+
+&lt;ul&gt;
+&lt;li&gt;1. &amp;amp; 2.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Protection of hardware/devices?
+
+&lt;ul&gt;
+&lt;li&gt;I/O devices are mapped to kernel memory, so no access allowed by MMU; or, I/O intructions are priviledged&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Protection of the OS itself?
+
+&lt;ul&gt;
+&lt;li&gt;MMU isolates OS code&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Does library code (executing in user mode) provide isolation and abstraction?
+
+&lt;ul&gt;
+&lt;li&gt;Provides abstraction but not isolation. Programs can jump to any instruction in library code, overwrite library code/data, thus bypassing any isolation that library code may try to provide.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Does a virtual machine monitor (VMM) such as VMware provide isolation and abstraction?
+
+&lt;ul&gt;
+&lt;li&gt;A VMM is a system program, similar to an OS, that allows multiple OSs to run simultaneously on a single physical machine&lt;/li&gt;
+&lt;li&gt;It provides isolation, but the same abstraction as a physical machine (each OS thinks it is running on physical hardware), thus providing no additional abstraction than the physical machine.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Why can’t user code execute some arbitrary code of its choosing in kernel mode?
+
+&lt;ul&gt;
+&lt;li&gt;User code wants to execute some code in kernel mode, so what can it do?
+
+&lt;ol&gt;
+&lt;li&gt;Write instructions into kernel image - can’t do that due to memory protection.&lt;/li&gt;
+&lt;li&gt;Transfer control to arbitrary places in kernel image to skip checks - can’t do this due to memory protection, and control can only be transferred via TRAP to well known kernel entry locations.&lt;/li&gt;
+&lt;li&gt;Execute privileged instructions - can’t do this in user mode.&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;What is the minimum number of privileged instructions that h/w must implement so that the OS can work correctly?
+
+&lt;ul&gt;
+&lt;li&gt;With memory mapped IO, you can hide all device accesses with memory protection. So programming the MMU (i.e., modify MMU registers) should be privileged. &lt;/li&gt;
+&lt;li&gt;Also, returning from a trap (e.g., iret instruction) should ensure that we cannot switch from user to kernel mode and run arbitrary kernel code. For example, on x86, a return from trap is guaranteed to execute code with the same or lower privilege level.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
 </description>
         <pubDate>Fri, 21 Oct 2016 00:00:00 -0400</pubDate>
         <link>/blog/notes/os/2016/10/21/operating-system-basics.html</link>
