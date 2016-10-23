@@ -38,6 +38,7 @@ excerpt_separator: <!--more-->
 		- Isolates itself from apps
 			- _If NOT, then OS has to compromise for apps; apps may corrupt OS and no isolations provided to them_
 
+---
 ## OS Design
 
 ### Key Ideas
@@ -126,6 +127,7 @@ protection, process mgmt, security, ...)	|	(when program runs most instructions)
 (network, CPU, memory, printer, video card, monitor, disk, ...)
 ```
 
+---
 ## Hardware
 
 ### __Processor (CPU)__
@@ -218,6 +220,7 @@ protection, process mgmt, security, ...)	|	(when program runs most instructions)
 	}
 	```
 
+---
 ## OS-Related Hardware
 
 - OS is S/W, when other apps are running, it is not. How does OS manage resources?
@@ -300,7 +303,7 @@ protection, process mgmt, security, ...)	|	(when program runs most instructions)
 	|Timeliness | Needs to respond quickly | Program suspended, OS can take time | OS can take time |
 
 ---
-### __Quick Questions__
+## __Quick Questions__
 1. How does OS manage H/W?
 	- Abstraction & virtualization
 2. OS is software, when other applications are running, it is not running, so how can it do its work?
