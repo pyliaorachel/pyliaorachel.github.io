@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 21 Oct 2016 23:43:51 -0400</pubDate>
-    <lastBuildDate>Fri, 21 Oct 2016 23:43:51 -0400</lastBuildDate>
+    <pubDate>Sun, 23 Oct 2016 16:20:10 -0400</pubDate>
+    <lastBuildDate>Sun, 23 Oct 2016 16:20:10 -0400</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -17,10 +17,6 @@
 &lt;ol&gt;
 &lt;li&gt;Threads and Processes&lt;/li&gt;
 &lt;li&gt;Thread Scheduling&lt;/li&gt;
-&lt;li&gt;Mutex Lock&lt;/li&gt;
-&lt;li&gt;Synchronization&lt;/li&gt;
-&lt;li&gt;UNIX&lt;/li&gt;
-&lt;li&gt;Memory Management&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;!--more--&gt;
@@ -28,10 +24,480 @@
 &lt;hr&gt;
 
 &lt;h2&gt;Threads and Processes&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;When a &lt;strong&gt;program&lt;/strong&gt; runs, it is called a &lt;code&gt;process&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;OS maintains states for each abstraction:
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Thread(CPU) state&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Registers, PC, SP, ...&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Address Space (memory) state&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Program instructions, static &amp;amp; dynamic data, ...&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Device &amp;amp; other state&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Open files, network connection state, ...&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Threads&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Abstraction of &lt;strong&gt;virtualizing CPU&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Each &lt;code&gt;thread&lt;/code&gt; thinks it has its own set of &lt;code&gt;CPU registers&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;# of &lt;code&gt;threads&lt;/code&gt; arbitrary; # of &lt;code&gt;CPUs&lt;/code&gt; fixed&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Enables &lt;strong&gt;concurrency&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Running multiple programs concurrently&lt;/li&gt;
+&lt;li&gt;Running multiple tasks concurrently
+
+&lt;ul&gt;
+&lt;li&gt;Hiding I/O latency
+
+&lt;ul&gt;
+&lt;li&gt;Can use &lt;code&gt;non-blocking file I/O&lt;/code&gt; (&lt;code&gt;event-driven&lt;/code&gt;), but harder to get right because need to build a state machine&lt;/li&gt;
+&lt;li&gt;~ &lt;code&gt;interrupts&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Run truly in parallel with multiple &lt;code&gt;CPUs&lt;/code&gt; via &lt;code&gt;multiplexing&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Threads v.s. Functions&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;Threads&lt;/th&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;Functions&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Independent streams of execution, one thread no need to run to the end before switching&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;LIFO policy, functions runs untill the end&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Thread scheduler multiplexes the threads on CPU&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;One function calls another function&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Each thread has its own stack, calling its own set of functions&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Running on a single stack&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Runs in parallel with multiprocessors&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Cannot run in parallel with multiprocessors because functions stack together&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Address Space&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Abstraction of &lt;strong&gt;virtualizing memory&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A set of &lt;em&gt;virtual memory regions&lt;/em&gt; accessible to a program
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Text&lt;/code&gt;: program code&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Data&lt;/code&gt;, &lt;code&gt;Heap&lt;/code&gt;: static, dynamic variables&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Stack&lt;/code&gt;: for function &amp;amp; system calls&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Provides &lt;strong&gt;memory protection&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Address space (order may vary with different H/W &amp;amp; compiler environment)&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;        +++++++++++++++ ----
+        |    param    |  |
+        +++++++++++++++  |
+        |   ret val   |  |
+        +++++++++++++++  |
+        |   ret addr  |  |  activation frame
+        +++++++++++++++  |  for current function
+  fp -&amp;gt; |   prev fp   |  |
+        +++++++++++++++  |
+        |  other regs |  |
+        +++++++++++++++  |
+  sp -&amp;gt; |  local var  |  |      # function call:
+        +++++++++++++++ ----    # push %rbp; save old fp
+        |      ↓      |         # mov %rbp %rsp; init sp to fp
+        |             |         # retq; call *sp
+        |      ↑      |
+        +++++++++++++++         # return:
+        |    data     |         # add $24 %rsp; pop off stack
+        +++++++++++++++         # pop %rbp; fp=*sp (or *fp), sp++
+        |    text     |         # retq; call *sp
+        +++++++++++++++
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Processes&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A running program consistes of &amp;gt;= 1 processes
+
+&lt;ul&gt;
+&lt;li&gt;Traditionally:
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;process = addr space + thread&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Threads&lt;/code&gt; communicate using &lt;code&gt;system calls&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Today:
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;process = addr space + &amp;gt;= 1 threads&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Threads&lt;/code&gt; share &lt;code&gt;addr space&lt;/code&gt; (but not &lt;code&gt;stack&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Threads&lt;/code&gt; communicate with &lt;code&gt;reading/writing memory&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Speed up cases analysis:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Vector operation
+for (k = 0; k &amp;lt; n; k++)
+    a[k] = b[k]*c[k] + d[k]*e[k];
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Multiple processes?
+
+&lt;ul&gt;
+&lt;li&gt;Communicate with &lt;code&gt;system call&lt;/code&gt;...&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Multiple threads?
+
+&lt;ul&gt;
+&lt;li&gt;Must make it global to share data&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;On single processor?
+
+&lt;ul&gt;
+&lt;li&gt;Threads go one after another&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;On multiprocessor?
+
+&lt;ul&gt;
+&lt;li&gt;O&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Web server
+Loop:
+    1. get network message from client -&amp;gt; I/O
+    2. get URL data form disk, cache in memory -&amp;gt; I/O
+    3. compose response
+    4. send response -&amp;gt; I/O
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Multiple processes?
+
+&lt;ul&gt;
+&lt;li&gt;Cannot share the cache (stored in global resource area of that process)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Multiple threads?
+
+&lt;ul&gt;
+&lt;li&gt;O&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;On single processor?
+
+&lt;ul&gt;
+&lt;li&gt;O&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;On multiprocessor?
+
+&lt;ul&gt;
+&lt;li&gt;O&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Threads v.s. Processes&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;&lt;/th&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;Threads&lt;/th&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;Processes&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Memory needed&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Shared, less&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Not shared, more&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Communication &amp;amp; Synchronization&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Via &lt;strong&gt;shared vars&lt;/strong&gt;, faster&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Via &lt;strong&gt;system calls&lt;/strong&gt;, slower&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Switching&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Save &amp;amp; restore regs, faster&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Change MMU&amp;#39;s regs (e.g. base &amp;amp; limit), slower&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Robustness&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Memory sharing -&amp;gt; bugs&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Communication explicit -&amp;gt; robust&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Program v.s. Process&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Program&lt;/strong&gt;: a set of instructions &amp;amp; data&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Process&lt;/strong&gt;: a program loaded in memory and executing&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;OS-Level Process State&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;OS keeps state for each process: &lt;code&gt;process state&lt;/code&gt;, &lt;code&gt;process control block (PCB)&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Thread state&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Processor regs&lt;/code&gt; for resuming/suspending thread&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Thread id&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Various &lt;code&gt;parameters&lt;/code&gt; e.g. scheduling parameters&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Address space state&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Location of &lt;code&gt;text&lt;/code&gt;, &lt;code&gt;data&lt;/code&gt;, &lt;code&gt;stack&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;MMU virtual memory state&lt;/code&gt; i.e. virtual -&amp;gt; physical mapping&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Device related state&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Open files, network connections&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Other states&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Terminal state, pending signals, timers, swap, ...&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Thread Scheduling&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Thread&lt;/code&gt;: an independent stream of instructions
+
+&lt;ul&gt;
+&lt;li&gt;Which to choose?&lt;/li&gt;
+&lt;li&gt;When to switch?&lt;/li&gt;
+&lt;li&gt;How to switch?&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Thread scheduling&lt;/code&gt;: running threads in some order
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Thread state&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Running&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Ready&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Blocked&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Exited&lt;/code&gt; (not yet destroyed)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Scheduling policies&lt;/code&gt; to change states&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Thread scheduling functions&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;thread_yield&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Running -&amp;gt; Ready&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;thread_sleep&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Running -&amp;gt; Blocked&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;thread_wakeup&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Blocked -&amp;gt; Ready&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Preemptive scheduling&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Scheduler&lt;/code&gt; uses &lt;code&gt;timer interrupt&lt;/code&gt; to control threads&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Interrupt handler&lt;/code&gt; calls yield on behalf of running thread
+
+&lt;ul&gt;
+&lt;li&gt;Normally &lt;code&gt;interrupt handler&lt;/code&gt; returns to original call; here, it calls &lt;code&gt;thread_yield()&lt;/code&gt; instead&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Scheduler implementation
+
+&lt;ul&gt;
+&lt;li&gt;Thread structures maintained in &lt;code&gt;queues&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Ready queue&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Generally 1 per CPU&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Wait queue&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Separate &lt;code&gt;wait queues&lt;/code&gt; for each type of event e.g. disk, console, timer, network, ...&lt;/li&gt;
+&lt;li&gt;Generally shared by CPUs&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Exited queue&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Generally shared by CPUs&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Scheduling functions&lt;/code&gt; move &lt;code&gt;threads&lt;/code&gt; between &lt;code&gt;queues&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Thread &amp;amp; Context Switch&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;context switch&lt;/code&gt; (&lt;code&gt;process switch&lt;/code&gt;) = &lt;code&gt;thread switch&lt;/code&gt; + &lt;code&gt;address space switch&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Address space switch&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Updating &lt;code&gt;MMU&amp;#39;s&lt;/code&gt; registers&lt;/li&gt;
+&lt;li&gt;More expensive than &lt;code&gt;thread switch&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Context switch&lt;/code&gt; v.s. &lt;code&gt;Mode switch&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Unrelated; the former switch threads, the latter switch CPU modes&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Functions&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;thread_yield&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;thread_yield() {
+    enqueue_ready_queue(current)
+    next = choose_next_thread()
+    thread_switch(current, next)
+}
+thread_switch(current, next) {
+    save_processor_state(current-&amp;gt;cpu_regs)
+    ...
+    restore_processor_state(next-&amp;gt;cpu_regs)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;thread_init&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Create the first (main) thread&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;thread_create&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Allocate thread struct, stack memory, init PC, SP&lt;/li&gt;
+&lt;li&gt;Add to ready queue&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Thread Creation &amp;amp; Termination&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Functions
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;thread_exit&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Does not destroy itself; switch to another thread and it will destroy this thread&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;thread_destroy&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Actually destroy thread structure &amp;amp; stack of exited threads&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Kernel Threads v.s. User Threads&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;&lt;/th&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;Kernel Threads&lt;/th&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;User Threads&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Implementation scope&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Implemented in kernel&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Implemented in user program&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Virtualization&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Virtualize CPU&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Virtualize kernel thread&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Switching cost&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Must run kernel code, expensive&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;~procedure calls, less expensive&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Scheduling policy&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Fixed&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Custom definition&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Blocking system calls&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Switch to another kernel thread&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;All threads (associated with the same kernel thread) block -&amp;gt; overlap of I/O &amp;amp; computations impossible&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Multiprocessors&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Threads use multiple CPUs concurrently&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Cannot use multiple CPUs consurrently&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Kernel level scheduler&lt;/code&gt; doesn&amp;#39;t know about &lt;code&gt;user threads&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;&lt;strong&gt;Quick Questions&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Is the OS code run in a separate process? A separate thread? Does it need a process structure?
+
+&lt;ul&gt;
+&lt;li&gt;OS code runs when a process makes a system call or when an interrupt occurs. In either case, the OS generally runs in the thread and address space context of the user process, and hence it does not require its own process or thread state.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;What is the address space of an OS?
+
+&lt;ul&gt;
+&lt;li&gt;The entire physical memory&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
 </description>
-        <pubDate>Fri, 21 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/os/2016/10/21/operating-system-threads.html</link>
-        <guid isPermaLink="true">/blog/notes/os/2016/10/21/operating-system-threads.html</guid>
+        <pubDate>Sun, 23 Oct 2016 00:00:00 -0400</pubDate>
+        <link>/blog/notes/os/2016/10/23/operating-system-threads.html</link>
+        <guid isPermaLink="true">/blog/notes/os/2016/10/23/operating-system-threads.html</guid>
         
         <category>OS</category>
         
@@ -108,6 +574,8 @@
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;hr&gt;
 
 &lt;h2&gt;OS Design&lt;/h2&gt;
 
@@ -234,6 +702,8 @@ protection, process mgmt, security, ...)    |   (when program runs most instruct
     * H/W Layer
 (network, CPU, memory, printer, video card, monitor, disk, ...)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;hr&gt;
+
 &lt;h2&gt;Hardware&lt;/h2&gt;
 
 &lt;h3&gt;&lt;strong&gt;Processor (CPU)&lt;/strong&gt;&lt;/h3&gt;
@@ -362,6 +832,8 @@ Interrupt_handler(){
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;hr&gt;
 
 &lt;h2&gt;OS-Related Hardware&lt;/h2&gt;
 
@@ -504,7 +976,7 @@ e.g. open, read, write, close, link, unlink, chdir&lt;/li&gt;
 
 &lt;hr&gt;
 
-&lt;h3&gt;&lt;strong&gt;Quick Questions&lt;/strong&gt;&lt;/h3&gt;
+&lt;h2&gt;&lt;strong&gt;Quick Questions&lt;/strong&gt;&lt;/h2&gt;
 
 &lt;ol&gt;
 &lt;li&gt;How does OS manage H/W?
