@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Operating System - Concurrent Programming</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="/css/main.css" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
+		<link rel="stylesheet" href="/css/github-markdown.css">
+
+		<!-- Place jquery before bootstrap -->
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">MyCoon</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+
+			<form class="navbar-form navbar-left">
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Search">
+				</div>
+				<button type="submit" class="btn btn-default">Submit</button>
+			</form>
+
+			<ul class="nav navbar-nav navbar-right" id="nav-links">
+				<li class="nav-home"><a href="/">Home</a></li>
+				<li class="dropdown nav-blog">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Blog<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/blog">MyCoon Blog</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/blog/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/blog/notes">
+									<span>Notes</span>
+									<span>7</span>
+								</a>
+							</li>
+						
+						<li><a href="/blog/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li class="dropdown nav-tutorial">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Tutorials<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/tutorial">MyCoon Tutorial</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/tutorial/categories">Categories</a></li>
+						
+							
+						
+
+						
+						<li><a href="/tutorial/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li  class="nav-project"><a href="/project">Projects</a></li>
+				<li class="nav-special" id="special"><a href="#">?</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+		<main class="page-content post" aria-label="Content">
+	<div class="post-wrapper">
+		<div class="wrapper">
+	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
+
+		<header class="post-header">
+			<h1 class="post-title" itemprop="name headline">Operating System - Concurrent Programming</h1>
+			<p class="post-meta">Oct 23, 2016
+				 • Notes
+				 • pyliaorachel
+			</p>
+		</header>
+
+		
+
+		<span class="separator"> • • • </span>
+
+		<div class="post-content" itemprop="articleBody">
+			<h2>Content</h2>
+
+<ol>
+<li>Concurrent Programming</li>
+<li>Mutual Exclusion</li>
+<li>Synchronization</li>
+</ol>
+
+<!--more-->
+
+<hr>
+
+<h2>Concurrent Programming</h2>
+
+<ul>
+<li><code>Threads</code> cooperate to perform a common task by sharing data (global vars &amp; heap data)</li>
+<li>Problems
+
+<ul>
+<li><strong>Race conditions</strong>
+
+<ul>
+<li><code>Thread interleaving</code> cause incorrect results</li>
+<li>Access to shared variable must be exclusive</li>
+</ul></li>
+<li><strong>Synchronization</strong>
+
+<ul>
+<li>Ordering between threads must be enforced</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Mutual Exclusion</h2>
+
+<ul>
+<li><code>Atomic operation</code>
+
+<ul>
+<li>Operation appears <em>indivisible</em>; rest of the system either doesn&#39;t observe any of the effects, or all of them</li>
+<li>Other threads may still run, but they should not observe any intermediate states of the operation</li>
+</ul></li>
+<li><code>Mutual exclusion</code>
+
+<ul>
+<li>Only one thread can read/update shared variables at a time</li>
+</ul></li>
+<li><code>Critical section</code>
+
+<ul>
+<li>The code region where <code>mutual exclusion</code> is enforced</li>
+</ul></li>
+</ul>
+
+<h3><strong>Mutex Lock</strong></h3>
+
+<ul>
+<li><code>Critical sections</code> accessed in between <code>lock</code>, <code>unlock</code></li>
+<li>Functions
+
+<ul>
+<li><code>mutex = lock_create()</code></li>
+<li><code>lock_destroy(mutex)</code></li>
+<li><code>lock(mutex)</code>
+
+<ul>
+<li>If lock free: acquire lock</li>
+<li>Else: wait/sleep until lock free</li>
+</ul></li>
+<li><code>unlock(mutex)</code>
+
+<ul>
+<li>Release lock</li>
+<li>Wake up one of the waiting threads</li>
+</ul></li>
+</ul></li>
+<li><code>Mutual exclusion</code> conditions
+
+<ul>
+<li>NO 2 threads in <code>critical section</code> at the same time</li>
+<li>NO assumption on speed of thread execution</li>
+<li>Thread running outside <code>critical section</code> CANNOT block another thread</li>
+<li>NO thread must wait forever to enter its <code>critical section</code></li>
+</ul></li>
+</ul>
+
+<h3><strong>Mutex Implementation</strong></h3>
+
+<ol>
+<li><p>Variable tracking</p>
+<div class="highlight"><pre><code class="language-" data-lang="">lock(l) {
+    while (l == TRUE)
+        ;
+    l = TRUE;
+}
+unlock(l) {
+    l = FALSE;
+}
+</code></pre></div>
+<ul>
+<li><code>l</code> is also a shared variable, so <code>lock</code> &amp; <code>unlock</code> should be <code>atomic</code></li>
+</ul></li>
+<li><p>Make <code>lock</code> atomic</p>
+<div class="highlight"><pre><code class="language-" data-lang="">lock(l) {
+    disable_interupts;
+    while (l == TRUE)
+        ;
+    l = TRUE;
+}
+unlock(l) {
+    l = FALSE;
+    enable_interupts;
+}
+</code></pre></div>
+<ul>
+<li>Works only on <em>single core</em></li>
+</ul>
+
+<blockquote>
+<h4>Multiprocessor H/W provides <code>atomic instructions</code></h4>
+
+<ul>
+<li><code>Test-and-set</code> lock, <code>compare-and-swap</code> lock</li>
+<li>Operate on a memory word, perform 2 operations <strong>indivisibly</strong> by CPU requesting the lock controller to lock out the memory location</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">      int tset(int *lock) { // atomic in H/W
+          int old = *lock;
+          *lock = 1;  ___&gt; atomic
+          return old; _|
+      }
+</code></pre></div></blockquote></li>
+<li><p><code>Spin locks</code></p>
+
+<ul>
+<li>Uses <code>tset</code> in a loop</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">// *l init to 0
+lock(int *l) {
+    while (tset(1))
+        ;
+}
+unlock(int *l) {
+    *l = FALSE;
+}
+</code></pre></div>
+<ul>
+<li>Efficient only if <code>critical sections</code> are short</li>
+<li>But <code>CPU</code> performs no useful working waiting in the loop -&gt; <strong>waste CPU</strong></li>
+</ul></li>
+<li><p><code>Yielding locks</code></p>
+<div class="highlight"><pre><code class="language-" data-lang="">// *l init to 0
+lock(int *l) {
+    while (tset(1))
+        thread_yield();
+}
+unlock(int *l) {
+    *l = FALSE;
+}
+</code></pre></div>
+<ul>
+<li>But scheduler determines when it returns back -&gt; <strong>delay lock acquire</strong></li>
+</ul></li>
+<li><p><code>Blocking locks</code></p>
+
+<ul>
+<li>Unlike 3., 4. polling for locks, now <code>unlock</code> will wakeup threads sleeping in <code>lock</code></li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">// *l init to 0
+lock(int *l) {
+    while (tset(1))
+        thread_sleep();
+}
+unlock(int *l) {
+    *l = FALSE;
+    thread_wakeup();
+}
+</code></pre></div>
+<ul>
+<li>Access shared <code>ready queue</code>, i.e. we need locking while implementing blocking</li>
+</ul></li>
+</ol>
+
+<ul>
+<li><p>Locking solutions</p>
+
+<ul>
+<li><p>Multiprocessor</p>
+<div class="highlight"><pre><code class="language-" data-lang="">                blocking lock    # manipulate queues
+                      ↓
+                  spin lock      # loop on atomic instruction
+                      ↓
+              atomic instruction # single instruction
+</code></pre></div></li>
+<li><p>Uniprocessor</p>
+<div class="highlight"><pre><code class="language-" data-lang="">                blocking lock
+                      ↓
+              interrupt disabling
+</code></pre></div></li>
+</ul></li>
+<li><p>Which lock to use?</p></li>
+</ul>
+
+<table><thead>
+<tr>
+<th style="text-align: left">Lock</th>
+<th style="text-align: left">When to use?</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: left">Atomic instruction</td>
+<td style="text-align: left">Most efficient, use when available</td>
+</tr>
+<tr>
+<td style="text-align: left">Interrupt disabling, spin locks</td>
+<td style="text-align: left">Critical sections short &amp; will not block</td>
+</tr>
+<tr>
+<td style="text-align: left">Blocking locks</td>
+<td style="text-align: left">Critical sections long &amp; may block (<strong>for synchronization</strong>); overhead for context switch</td>
+</tr>
+</tbody></table>
+
+<ul>
+<li>How many locks to create?
+
+<ul>
+<li>1 per individual data structure</li>
+<li>More locks -&gt; more parallelism BUT more bugs</li>
+</ul></li>
+</ul>
+
+<h3><strong>Deadlocks, Starvation, Livelock</strong></h3>
+
+<ul>
+<li><code>Deadlock</code>: a set of threads each waiting for a resource held by another thread
+
+<ul>
+<li>Conditions
+
+<ul>
+<li><strong>Mutual exclusion</strong></li>
+<li><strong>Hold &amp; wait</strong></li>
+<li><strong>No premption</strong></li>
+<li><strong>Circular wait</strong></li>
+</ul></li>
+<li>Prevention
+
+<ul>
+<li>Release previously acquired locks? (hold &amp; wait)
+
+<ul>
+<li>But modifications to data might have already happened</li>
+<li>Or <code>livelock</code> when keep trying to acquire locks</li>
+</ul></li>
+<li>Number each resources, need to acquire lower numbered resources before higher ones? (circular wait)
+
+<ul>
+<li>Difficult to number a whole bunch, and some of them are from third-party</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><code>Starvation</code>: a set of threads waiting for resources constantly used by others</li>
+<li><code>Livelock</code>: a set of threads continue to num but make no progress
+
+<ul>
+<li>e.g. <code>interrupt livelock</code>: interrupts queueing up and suspend the running threads
+=&gt; Can turn to <code>polling</code>, with intervals not too long</li>
+<li>Need to ensure a thread runs for a while before switching</li>
+</ul></li>
+</ul>
+
+<hr>
+
+<h2>Synchronization</h2>
+
+<ul>
+<li><code>Threads</code> wait on some conditions before proceeding</li>
+</ul>
+
+<h3><strong>Motivation: Producer-Consumer Problem</strong></h3>
+
+<ul>
+<li><p>Single producer &amp; consumer</p>
+<div class="highlight"><pre><code class="language-" data-lang="">char buf[8];
+int in;
+int out;
+
+void send(char msg) {
+    while ((in-out+n) % n == n-1)
+        ; // full
+    buf[in] = msg;
+    in = (in+1) % n;
+}
+
+char receive() {
+    while (in == out)
+        ; // empty
+    msg = buf[out];
+    out = (out+1) % n;
+    return msg;
+}
+</code></pre></div></li>
+<li><p>Multiple producers &amp; consumers</p>
+<div class="highlight"><pre><code class="language-" data-lang=""># deadlock
+
+void send(char msg) {
+    lock(l);
+    while ((in-out+n) % n == n-1)
+        ; // full
+    buf[in] = msg;
+    in = (in+1) % n;
+    unlock(l);
+}
+
+char receive() {
+    lock(l);
+    while (in == out)
+        ; // empty
+    msg = buf[out];
+    out = (out+1) % n;
+    return msg;
+    unlock(l);
+}
+</code></pre></div><div class="highlight"><pre><code class="language-" data-lang=""># release locks before spinning - too tight
+
+void send(char msg) {
+    lock(l);
+    while ((in-out+n) % n == n-1) {
+        unlock(l);
+        lock(l);
+    }
+    buf[in] = msg;
+    in = (in+1) % n;
+    unlock(l);
+}
+
+char receive() {
+    lock(l);
+    while (in == out) {
+        unlock(l);
+        lock(l);
+    }
+    msg = buf[out];
+    out = (out+1) % n;
+    return msg;
+    unlock(l);
+}
+</code></pre></div><div class="highlight"><pre><code class="language-" data-lang=""># sleep after unlocking
+
+void send(char msg) {
+    lock(l);
+    while ((in-out+n) % n == n-1) {
+        unlock(l);          ____&gt; atomic! Or else lost wakeup
+        thread_sleep(full); __|
+        lock(l);
+    }
+    buf[in] = msg;
+    if (in == out)
+        thread_wakeup(empty);
+    in = (in+1) % n;
+    unlock(l);
+}
+
+char receive() {
+    lock(l);
+    while (in == out) {
+        unlock(l);
+        thread_sleep(empty);
+        lock(l);
+    }
+    msg = buf[out];
+    if ((in-out+n) % n == n-1)
+        thread_wakeup(full);
+    out = (out+1) % n;
+    unlock(l);
+    return msg;
+}
+</code></pre></div></li>
+<li><p>Challenges</p>
+
+<ul>
+<li>Can&#39;t spin or sleep while holding lock
+
+<ul>
+<li><code>Deadlock</code></li>
+</ul></li>
+<li>Can&#39;t release lock and then sleep
+
+<ul>
+<li><code>Lost wakeup</code></li>
+</ul></li>
+<li>Need to <strong>unlock &amp; sleep atomically</strong></li>
+</ul></li>
+</ul>
+
+<h3><strong>Monitors</strong></h3>
+
+<ul>
+<li><code>Condition variable</code>
+
+<ul>
+<li>Used within <code>monitor methods</code></li>
+<li>Functions
+
+<ul>
+<li><code>cv = cv_create()</code></li>
+<li><code>cv_destroy(cv)</code></li>
+<li><code>cv_wait(cv, lock)</code>
+
+<ul>
+<li>Lock released <code>atomically</code> while waiting</li>
+<li>Lock reacquired after wait returns</li>
+</ul></li>
+<li><code>cv_signal(cv, lock)</code>
+
+<ul>
+<li>Wakeup one thread waiting on the condition</li>
+<li><code>Lost signal</code>: signal occurs before a wait</li>
+</ul></li>
+<li><code>cv_broadcast(cv, lock)</code>
+
+<ul>
+<li>Wakeup all threads waiting on the condition</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><p>Basis</p>
+<div class="highlight"><pre><code class="language-" data-lang="">F() {
+    int disabled = disaple_interrupt;
+    do_work();
+    enable_interrupt(disabled);
+}
+do_work(){
+    int disabled = disaple_interrupt; // already disabled!
+    ...
+    enable_interrupt(disabled); // stay disabled
+}
+</code></pre></div></li>
+<li><p><code>Producer-consumer</code> with <code>monitors</code></p>
+<div class="highlight"><pre><code class="language-" data-lang="">buf[n], in, out;
+lock l = 0;
+cv full;
+cv empty;
+
+void send(char msg) {
+    lock(l);
+    while ((in-out+n) % n == n-1) {
+        // put thread into wait queue for 'full' condition
+        wait(full, l); // unlock + sleep + lock
+    }
+    buf[in] = msg;
+    if (in == out)
+        signal(empty, l);
+    in = (in+1) % n;
+    unlock(l);
+}
+
+char receive() {
+    lock(l);
+    while (in == out) {
+        wait(empty, l);
+    }
+    msg = buf[out];
+    if ((in-out+n) % n == n-1)
+        signal(full, l);
+    out = (out+1) % n;
+    unlock(l);
+    return msg;
+}
+</code></pre></div></li>
+<li><p><code>Variable initialization</code> with <code>monitors</code></p>
+<div class="highlight"><pre><code class="language-" data-lang="">Method1() {
+    lock(l);
+    V = malloc(...);
+    signal(cv, l); // condition = V is null
+    ...
+    unlock(l);
+}
+Method2() {
+    lock(l);
+    if (V == NULL)
+        wait(cv, l); // condition = V is null
+    assert(V);
+    unlock(l);
+}
+</code></pre></div>
+<ul>
+<li><code>Lock</code> is for avoiding <code>lost wakeup</code> because <code>signal</code> CANNOT come before <code>wait</code></li>
+</ul></li>
+</ul>
+
+<h3><strong>Semaphores</strong></h3>
+
+<ul>
+<li><p>Tracks number of available resources using <code>down</code> &amp; <code>up</code></p>
+<div class="highlight"><pre><code class="language-" data-lang=""># spinning (example with race condition on s)
+
+down() {
+    while (s &lt;= 0)
+        ;
+    s--;
+}
+up() {
+    s++;
+}
+</code></pre></div><div class="highlight"><pre><code class="language-" data-lang=""># blocked
+
+down() {
+    disable_interrupts;
+    while (s &lt;= 0)
+        thread_sleep(s);
+    s--;
+    enable_interrupts;
+}
+up() {
+    disable_interrupts;
+    s++;
+    thread_wakeup(s);
+    enable_interrupts;
+}
+</code></pre></div>
+<ul>
+<li>If <code>s</code> init to <code>1</code>, then behaves like <code>lock</code> &amp; <code>unlock</code></li>
+</ul></li>
+<li><p>Difference with <code>lock</code></p>
+
+<ul>
+<li><strong>Different</strong> threads call <code>down</code> &amp; <code>up</code></li>
+<li><code>up</code> can happen <strong>before</strong> <code>down</code> to bank resource</li>
+</ul></li>
+<li><p><code>Producer-consumer</code> with <code>semaphores</code></p>
+<div class="highlight"><pre><code class="language-" data-lang="">buf[n], in, out;
+lock l;
+sem full = 0;
+sem empty = n;
+
+void send(char msg) {
+    down(empty);
+    lock(l);
+    buf[in] = msg;
+    in = (in+1) % n;
+    unlock(l);
+    up(full);
+}
+
+char receive() {
+    down(full);
+    lock(l); // this lock for buf, not for avoiding lost signal
+    msg = buf[out];
+    out = (out+1) % n;
+    unlock(l);
+    up(empty);
+    return msg;
+}
+</code></pre></div></li>
+</ul>
+
+<hr>
+
+<h2><strong>Quick Questions</strong></h2>
+
+<ol>
+<li>What is the difference between mutual exclusion and synchronization?
+
+<ul>
+<li>Mutex: used to ensure that only one thread accesses a critical section at a time, ensuring that operations are run atomically.</li>
+<li>Synchronization: used to ensure threads wait on some condition.</li>
+</ul></li>
+<li>Why are locks, by themselves, not sufficient for solving synchronization problems?
+
+<ul>
+<li><code>Lock</code> &amp; <code>unlock</code> are used together and in that order. Synchronization problems require a more general primitive: conditional <code>sleep</code> and <code>wakeup</code>.</li>
+</ul></li>
+<li>What are the differences between a monitor and a semaphore?
+
+<ul>
+<li><code>Monitor</code> requires locks to avoid lost signal. <code>Down/Up</code> &amp; <code>wait/signal</code> are also different.</li>
+</ul></li>
+<li>What are the differences between <code>wait()</code> and <code>down()</code>?
+
+<ul>
+<li><code>Wait</code> is stateless, it always waits. <code>Wait</code> also releases a lock, waits, and then reacquires a lock. </li>
+<li><code>Down</code> has state embedded with a notion of available resources, and will only wait if resources are not available. <code>Down</code> doesn’t have any notion of an associated lock.</li>
+</ul></li>
+<li>What are the differences between <code>signal()</code> and <code>up()</code>?
+
+<ul>
+<li><code>Signal</code> can be lost if no one is waiting, hence the need to use locks with condition variables, so that there is no race with <code>wait</code>. </li>
+<li><code>Up</code> will always increase the resource available, so a future down can acquire the resource. </li>
+</ul></li>
+<li>Why might you prefer one over the other?
+
+<ul>
+<li><code>Semaphore</code>: resource counting problem</li>
+<li><code>Monitor</code>: other problems, ensures mutual exclusion</li>
+</ul></li>
+</ol>
+
+		</div>
+
+		<ul class="tag-list">
+			
+
+			<li class="tag">
+				OS
+			</li>
+
+			
+
+			<li class="tag">
+				ECE344
+			</li>
+
+			
+
+			<li class="tag">
+				mutex
+			</li>
+
+			
+
+			<li class="tag">
+				synchronization
+			</li>
+
+			
+		</ul>
+
+	</article>
+
+	
+		<div id="disqus_thread"></div>
+<script>
+	var disqus_config = function () {
+	    this.page.url = "https://pyliaorachel.github.io";
+	    this.page.identifier = "/blog/notes/os/2016/10/23/operating-system-concurrent-programming.html";
+	};
+	(function() {
+	    var d = document, s = d.createElement('script');
+	    s.src = '//pyliaorachel.disqus.com/embed.js';
+	    s.setAttribute('data-timestamp', +new Date());
+	    (d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	
+</div>
+	</div>
+</main>
+		<footer>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4 footer-link">
+				<a href="mailto:rachel5566kk@gmail.com">
+					<span class="icon icon-email">
+						<img src="/assets/svg/email-logo.svg" alt="Email Logo">
+					</span>
+					<span class="username">rachel5566kk@gmail.com</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://github.com/pyliaorachel"  target="_blank">
+					<span class="icon icon-github">
+						<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+					</span>
+					<span class="username">pyliaorachel</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://tw.linkedin.com/in/peiyu-liao" target="_blank">
+					<span class="icon icon-linkedin">
+						<img src="/assets/svg/linkedin-logo.svg" alt="LinkedIn Logo">
+					</span>
+					<span class="username">Peiyu Liao</span>
+				</a>
+			</div>
+		</div><!-- /.row -->
+		<div class="row">
+			<div class="footer-copy-right">
+				<p>2016	&copy; Liao Peiyu</p>
+			</div >
+		</div><!-- /.row -->
+	</div><!-- /.container-fluid -->
+</footer>
+		<script type="text/javascript" src="/js/main.js"></script>
+		<script type="text/javascript" src="/js/home.js"></script>
+		<script id="dsq-count-scr" src="//pyliaorachel.disqus.com/count.js" async></script>
+	</body>
+</html>
