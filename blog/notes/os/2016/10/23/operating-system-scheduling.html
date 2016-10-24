@@ -54,7 +54,7 @@
 							<li class="category">
 								<a href="/blog/notes">
 									<span>Notes</span>
-									<span>9</span>
+									<span>10</span>
 								</a>
 							</li>
 						
@@ -104,485 +104,226 @@
 			<h2>Content</h2>
 
 <ol>
-<li>Threads and Processes</li>
-<li>Thread Scheduling</li>
+<li>Scheduling Overview</li>
+<li>Scheduling Policies</li>
+<li>Multiprocessor Scheduling</li>
 </ol>
 
 <!--more-->
 
 <hr>
 
-<h2>Threads and Processes</h2>
+<h2>Scheduling Overview</h2>
 
 <ul>
-<li>When a <strong>program</strong> runs, it is called a <code>process</code></li>
-<li>OS maintains states for each abstraction:
+<li>Prevent <code>thread starvation</code>, BUT <code>context switching</code> is expensive</li>
+<li>Runs another program when I/O performed</li>
+<li>Goals
 
 <ul>
-<li><strong>Thread(CPU) state</strong>
+<li><strong>Batch systems</strong>: Long running, no interactive users, no time constraints
 
 <ul>
-<li>Registers, PC, SP, ...</li>
+<li><code>CPU utilization</code>
+
+<ul>
+<li>% of time CPU is busy</li>
 </ul></li>
-<li><strong>Address Space (memory) state</strong>
+<li><code>Throughput</code>
 
 <ul>
-<li>Program instructions, static &amp; dynamic data, ...</li>
+<li># of programs complete per unit time</li>
 </ul></li>
-<li><strong>Device &amp; other state</strong>
+<li><code>Turnaround time</code>
 
 <ul>
-<li>Open files, network connection state, ...</li>
-</ul></li>
-</ul></li>
-</ul>
-
-<h3><strong>Threads</strong></h3>
-
-<ul>
-<li>Abstraction of <strong>virtualizing CPU</strong>
-
-<ul>
-<li>Each <code>thread</code> thinks it has its own set of <code>CPU registers</code></li>
-</ul></li>
-<li># of <code>threads</code> arbitrary; # of <code>CPUs</code> fixed</li>
-<li><p>Enables <strong>concurrency</strong></p>
-
-<ul>
-<li>Running multiple programs concurrently</li>
-<li>Running multiple tasks concurrently
-
-<ul>
-<li>Hiding I/O latency
-
-<ul>
-<li>Can use <code>non-blocking file I/O</code> (<code>event-driven</code>), but harder to get right because need to build a state machine</li>
-<li>~ <code>interrupts</code></li>
-</ul></li>
-<li>Run truly in parallel with multiple <code>CPUs</code> via <code>multiplexing</code></li>
+<li>Total time to finish a program</li>
+<li><code>turnaround = processing + waiting</code></li>
 </ul></li>
 </ul></li>
-<li><p><strong>Threads v.s. Functions</strong></p>
-
-<table><thead>
-<tr>
-<th style="text-align: left">Threads</th>
-<th style="text-align: left">Functions</th>
-</tr>
-</thead><tbody>
-<tr>
-<td style="text-align: left">Independent streams of execution, one thread no need to run to the end before switching</td>
-<td style="text-align: left">LIFO policy, functions runs untill the end</td>
-</tr>
-<tr>
-<td style="text-align: left">Thread scheduler multiplexes the threads on CPU</td>
-<td style="text-align: left">One function calls another function</td>
-</tr>
-<tr>
-<td style="text-align: left">Each thread has its own stack, calling its own set of functions</td>
-<td style="text-align: left">Running on a single stack</td>
-</tr>
-<tr>
-<td style="text-align: left">Runs in parallel with multiprocessors</td>
-<td style="text-align: left">Cannot run in parallel with multiprocessors because functions stack together</td>
-</tr>
-</tbody></table></li>
-</ul>
-
-<h3><strong>Address Space</strong></h3>
+<li><strong>Interactive (general-purpose) systems</strong>: Short running, interactive suers, weak time constraints
 
 <ul>
-<li>Abstraction of <strong>virtualizing memory</strong>
+<li><code>Response time</code>
 
 <ul>
-<li>A set of <em>virtual memory regions</em> accessible to a program
-
-<ul>
-<li><code>Text</code>: program code</li>
-<li><code>Data</code>, <code>Heap</code>: static, dynamic variables</li>
-<li><code>Stack</code>: for function &amp; system calls</li>
+<li>Time between <em>receiving request</em> &amp; starting to <em>produce output</em></li>
 </ul></li>
-</ul></li>
-<li>Provides <strong>memory protection</strong></li>
-<li><p>Address space (order may vary with different H/W &amp; compiler environment)</p>
-<div class="highlight"><pre><code class="language-" data-lang="">        +++++++++++++++ ----
-        |    param    |  |
-        +++++++++++++++  |
-        |   ret val   |  |
-        +++++++++++++++  |
-        |   ret addr  |  |  activation frame
-        +++++++++++++++  |  for current function
-  fp -&gt; |   prev fp   |  |
-        +++++++++++++++  |
-        |  other regs |  |
-        +++++++++++++++  |
-  sp -&gt; |  local var  |  |      # function call:
-        +++++++++++++++ ----    # push %rbp; save old fp
-        |      ↓      |         # mov %rbp %rsp; init sp to fp
-        |             |         # retq; call *sp
-        |      ↑      |
-        +++++++++++++++         # return:
-        |    data     |         # add $24 %rsp; pop off stack
-        +++++++++++++++         # pop %rbp; fp=*sp (or *fp), sp++
-        |    text     |         # retq; call *sp
-        +++++++++++++++
-</code></pre></div></li>
-</ul>
-
-<h3><strong>Processes</strong></h3>
-
-<ul>
-<li>A running program consistes of &gt;= 1 processes
-
-<ul>
-<li>Traditionally:
-
-<ul>
-<li><code>process = addr space + thread</code></li>
-<li><code>Threads</code> communicate using <code>system calls</code></li>
-</ul></li>
-<li>Today:
-
-<ul>
-<li><code>process = addr space + &gt;= 1 threads</code></li>
-<li><code>Threads</code> share <code>addr space</code> (but not <code>stack</code>)</li>
-<li><code>Threads</code> communicate with <code>reading/writing memory</code></li>
-</ul></li>
-</ul></li>
-<li><p>Speed up cases analysis:</p>
-<div class="highlight"><pre><code class="language-" data-lang=""># Vector operation
-for (k = 0; k &lt; n; k++)
-    a[k] = b[k]*c[k] + d[k]*e[k];
-</code></pre></div>
-<ul>
-<li>Multiple processes?
-
-<ul>
-<li>Communicate with <code>system call</code>...</li>
-</ul></li>
-<li>Multiple threads?
-
-<ul>
-<li>Must make it global to share data</li>
-</ul></li>
-<li>On single processor?
-
-<ul>
-<li>Threads go one after another</li>
-</ul></li>
-<li>On multiprocessor?
-
-<ul>
-<li>O</li>
-</ul></li>
-</ul>
-<div class="highlight"><pre><code class="language-" data-lang=""># Web server
-Loop:
-    1. get network message from client -&gt; I/O
-    2. get URL data form disk, cache in memory -&gt; I/O
-    3. compose response
-    4. send response -&gt; I/O
-</code></pre></div>
-<ul>
-<li>Multiple processes?
-
-<ul>
-<li>Cannot share the cache (stored in global resource area of that process)</li>
-</ul></li>
-<li>Multiple threads?
-
-<ul>
-<li>O</li>
-</ul></li>
-<li>On single processor?
-
-<ul>
-<li>O</li>
-</ul></li>
-<li>On multiprocessor?
-
-<ul>
-<li>O</li>
-</ul></li>
-</ul></li>
-<li><p><strong>Threads v.s. Processes</strong></p>
-
-<table><thead>
-<tr>
-<th style="text-align: left"></th>
-<th style="text-align: left">Threads</th>
-<th style="text-align: left">Processes</th>
-</tr>
-</thead><tbody>
-<tr>
-<td style="text-align: left">Memory needed</td>
-<td style="text-align: left">Shared, less</td>
-<td style="text-align: left">Not shared, more</td>
-</tr>
-<tr>
-<td style="text-align: left">Communication &amp; Synchronization</td>
-<td style="text-align: left">Via <strong>shared vars</strong>, faster</td>
-<td style="text-align: left">Via <strong>system calls</strong>, slower</td>
-</tr>
-<tr>
-<td style="text-align: left">Switching</td>
-<td style="text-align: left">Save &amp; restore regs, faster</td>
-<td style="text-align: left">Change MMU&#39;s regs (e.g. base &amp; limit), slower</td>
-</tr>
-<tr>
-<td style="text-align: left">Robustness</td>
-<td style="text-align: left">Memory sharing -&gt; bugs</td>
-<td style="text-align: left">Communication explicit -&gt; robust</td>
-</tr>
-</tbody></table></li>
-<li><p><strong>Program v.s. Process</strong></p>
-
-<ul>
-<li><strong>Program</strong>: a set of instructions &amp; data</li>
-<li><strong>Process</strong>: a program loaded in memory and executing</li>
-</ul></li>
-</ul>
-
-<h3><strong>OS-Level Process State</strong></h3>
-
-<ul>
-<li>OS keeps state for each process: <code>process state</code>, <code>process control block (PCB)</code>
-
-<ul>
-<li><strong>Thread state</strong>
-
-<ul>
-<li><code>Processor regs</code> for resuming/suspending thread</li>
-<li><code>Thread id</code></li>
-<li>Various <code>parameters</code> e.g. scheduling parameters</li>
-</ul></li>
-<li><strong>Address space state</strong>
-
-<ul>
-<li>Location of <code>text</code>, <code>data</code>, <code>stack</code></li>
-<li><code>MMU virtual memory state</code> i.e. virtual -&gt; physical mapping</li>
-</ul></li>
-<li><strong>Device related state</strong>
-
-<ul>
-<li>Open files, network connections</li>
-</ul></li>
-<li><strong>Other states</strong>
-
-<ul>
-<li>Terminal state, pending signals, timers, swap, ...</li>
 </ul></li>
 </ul></li>
 </ul>
 
-<hr>
-
-<h2>Thread Scheduling</h2>
+<h2>Scheduling Policies</h2>
 
 <ul>
-<li><code>Thread</code>: an independent stream of instructions
+<li><strong>Batch systems</strong>
 
 <ul>
-<li>Which to choose?</li>
-<li>When to switch?</li>
-<li>How to switch?</li>
+<li>Policies
+
+<ul>
+<li><code>FIFO</code> (non-preemptive)
+
+<ul>
+<li>In order of arrival time</li>
+<li>Run thread until completion</li>
 </ul></li>
-<li><code>Thread scheduling</code>: running threads in some order
+<li><code>Shortest job first</code> (non-preemptive)
 
 <ul>
-<li><code>Thread state</code>
-
-<ul>
-<li><code>Running</code></li>
-<li><code>Ready</code></li>
-<li><code>Blocked</code></li>
-<li><code>Exited</code> (not yet destroyed)</li>
+<li>In order of shortest running time</li>
+<li>Run thread until completion</li>
+<li>Starving long jobs</li>
 </ul></li>
-<li><code>Scheduling policies</code> to change states</li>
-</ul></li>
-<li><code>Thread scheduling functions</code>
+<li><code>Shortest remaining time</code> (preemptive)
 
 <ul>
-<li><code>thread_yield</code>
-
-<ul>
-<li><code>Running -&gt; Ready</code></li>
-</ul></li>
-<li><code>thread_sleep</code>
-
-<ul>
-<li><code>Running -&gt; Blocked</code></li>
-</ul></li>
-<li><code>thread_wakeup</code>
-
-<ul>
-<li><code>Blocked -&gt; Ready</code></li>
+<li>In order of shortest remaining time</li>
+<li>Run thread until completion OR another thread arrives</li>
+<li>Preemptive version of <code>shortest job first</code></li>
+<li>Starving long jobs</li>
+<li>Optimal w.r.t. avg waiting time</li>
 </ul></li>
 </ul></li>
-<li><code>Preemptive scheduling</code>
+<li>Properties
 
 <ul>
-<li><code>Scheduler</code> uses <code>timer interrupt</code> to control threads</li>
-<li><code>Interrupt handler</code> calls yield on behalf of running thread
-
-<ul>
-<li>Normally <code>interrupt handler</code> returns to original call; here, it calls <code>thread_yield()</code> instead</li>
+<li>Some require estimate of preocessing time</li>
+<li>May starve long running threads</li>
+<li>Long response time</li>
 </ul></li>
 </ul></li>
-<li>Scheduler implementation
+<li><strong>Interactive systems</strong>
 
 <ul>
-<li>Thread structures maintained in <code>queues</code>
+<li>Policies
 
 <ul>
-<li><code>Ready queue</code>
+<li><code>Round-Robin</code>
 
 <ul>
-<li>Generally 1 per CPU</li>
+<li>Preemptive version of <code>FIFO</code></li>
+<li><code>Time slice</code>
+
+<ul>
+<li>Upper time bound each process runs </li>
+<li><code>time slice &gt;&gt; context switch time</code></li>
+<li><code>cs overhead = cs/(ts+cs)</code></li>
 </ul></li>
-<li><code>Wait queue</code>
+<li>Run thread until <code>time slice</code> interrupt OR thread blocks</li>
+<li>Effectiveness:
 
 <ul>
-<li>Separate <code>wait queues</code> for each type of event e.g. disk, console, timer, network, ...</li>
-<li>Generally shared by CPUs</li>
+<li># of threads</li>
+<li>Size of <code>time slice</code><br>
+<strong>Long</strong> -&gt; slow response<br>
+<strong>Short</strong> -&gt; high overhead</li>
 </ul></li>
-<li><code>Exited queue</code>
-
-<ul>
-<li>Generally shared by CPUs</li>
+<li>Does not require estimation of job processing time; no starvation; enables interactivity by limiting the amount of time each thread can run</li>
 </ul></li>
+<li><code>Static priority</code>
+
+<ul>
+<li>In order of priority assigned</li>
+<li>Starving low prioriy threads</li>
+<li><em>Priiority inversion</em>: low priority threads holding locks that high priority threads want</li>
 </ul></li>
-<li><code>Scheduling functions</code> move <code>threads</code> between <code>queues</code></li>
+<li><code>Multi-level queue</code>
+
+<ul>
+<li>High, medium, &amp; low PQs</li>
+<li>Choose from high-priority PQ first (e.g. I/O threads)</li>
+<li>For each queue, <code>round-robin</code> scheduling</li>
 </ul></li>
-</ul>
-
-<h3><strong>Thread &amp; Context Switch</strong></h3>
+<li><code>Dynamic priority (feedback)</code>
 
 <ul>
-<li><p><code>context switch</code> (<code>process switch</code>) = <code>thread switch</code> + <code>address space switch</code></p>
-
-<ul>
-<li><code>Address space switch</code>
-
-<ul>
-<li>Updating <code>MMU&#39;s</code> registers</li>
-<li>More expensive than <code>thread switch</code></li>
-</ul></li>
-<li><code>Context switch</code> v.s. <code>Mode switch</code>
-
-<ul>
-<li>Unrelated; the former switch threads, the latter switch CPU modes</li>
-</ul></li>
-</ul></li>
-<li><p>Functions</p>
-
-<ul>
-<li><p><code>thread_yield</code></p>
-<div class="highlight"><pre><code class="language-" data-lang="">thread_yield() {
-    enqueue_ready_queue(current)
-    next = choose_next_thread()
-    thread_switch(current, next)
-}
-thread_switch(current, next) {
-    save_processor_state(current-&gt;cpu_regs)
-    ...
-    restore_processor_state(next-&gt;cpu_regs)
-}
-</code></pre></div></li>
-<li><p><code>thread_init</code></p>
-
-<ul>
-<li>Create the first (main) thread</li>
-</ul></li>
-<li><p><code>thread_create</code></p>
-
-<ul>
-<li>Allocate thread struct, stack memory, init PC, SP</li>
-<li>Add to ready queue</li>
+<li>Priority changed based on thread behavior; CPU-bound threads have priority reduced</li>
 </ul></li>
 </ul></li>
-</ul>
-
-<h3><strong>Thread Creation &amp; Termination</strong></h3>
-
-<ul>
-<li>Functions
-
-<ul>
-<li><code>thread_exit</code>
-
-<ul>
-<li>Does not destroy itself; switch to another thread and it will destroy this thread</li>
 </ul></li>
-<li><code>thread_destroy</code>
+<li><code>Feedback scheduling</code>
 
 <ul>
-<li>Actually destroy thread structure &amp; stack of exited threads</li>
-</ul></li>
-</ul></li>
-</ul>
-
-<h3><strong>Kernel Threads v.s. User Threads</strong></h3>
-
-<table><thead>
-<tr>
-<th style="text-align: left"></th>
-<th style="text-align: left">Kernel Threads</th>
-<th style="text-align: left">User Threads</th>
-</tr>
-</thead><tbody>
-<tr>
-<td style="text-align: left">Implementation scope</td>
-<td style="text-align: left">Implemented in kernel</td>
-<td style="text-align: left">Implemented in user program</td>
-</tr>
-<tr>
-<td style="text-align: left">Virtualization</td>
-<td style="text-align: left">Virtualize CPU</td>
-<td style="text-align: left">Virtualize kernel thread</td>
-</tr>
-<tr>
-<td style="text-align: left">Switching cost</td>
-<td style="text-align: left">Must run kernel code, expensive</td>
-<td style="text-align: left">~procedure calls, less expensive</td>
-</tr>
-<tr>
-<td style="text-align: left">Scheduling policy</td>
-<td style="text-align: left">Fixed</td>
-<td style="text-align: left">Custom definition</td>
-</tr>
-<tr>
-<td style="text-align: left">Blocking system calls</td>
-<td style="text-align: left">Switch to another kernel thread</td>
-<td style="text-align: left">All threads (associated with the same kernel thread) block -&gt; overlap of I/O &amp; computations impossible</td>
-</tr>
-<tr>
-<td style="text-align: left">Multiprocessors</td>
-<td style="text-align: left">Threads use multiple CPUs concurrently</td>
-<td style="text-align: left">Cannot use multiple CPUs consurrently</td>
-</tr>
-</tbody></table>
+<li>Goals
 
 <ul>
-<li><code>Kernel level scheduler</code> doesn&#39;t know about <code>user threads</code></li>
-</ul>
+<li>Allocate CPU fairly</li>
+<li>I/O-bound threads receive higher priority</li>
+</ul></li>
+<li>Each thread:
 
-<hr>
-
-<h2><strong>Quick Questions</strong></h2>
+<ul>
+<li>CPU usage (C)</li>
+<li>Current priority (Pi)</li>
+<li>Initial priority (P0)</li>
+<li>Nice value (N)</li>
+</ul></li>
+<li>Steps
 
 <ol>
-<li>Is the OS code run in a separate process? A separate thread? Does it need a process structure?
+<li>Scheduler chooses thread with the <strong>smallest</strong> Pi</li>
+<li>On timer interrupt, update CPU C of running thread <code>C = C + 1</code></li>
+<li>Every time slice, update Pi <code>Pi = Pi-1/2 + C + N</code></li>
+<li>Reset C for all threads</li>
+</ol></li>
+<li><code>Time slice</code>
 
 <ul>
-<li>OS code runs when a process makes a system call or when an interrupt occurs. In either case, the OS generally runs in the thread and address space context of the user process, and hence it does not require its own process or thread state.</li>
-</ul></li>
-<li>What is the address space of an OS?
+<li>Many interrupts in between <code>time slice</code> to avoid excessive <code>context switches</code></li>
+<li>A <code>thread</code> runs for a full <code>time slice</code> unless:
 
 <ul>
-<li>The entire physical memory</li>
+<li>The <code>thread</code> blocks</li>
+<li>Some blocked <code>thread</code> wakesup</li>
 </ul></li>
-</ol>
+<li>Longer <code>time slice</code> improves throughput</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Multiprocessor Scheduling</h2>
+
+<ul>
+<li>Asymetric multiprocessing
+
+<ul>
+<li>1 processor runs all OS code, I/O processing code, etc.</li>
+<li>Others run user code</li>
+<li>Simple implementation</li>
+</ul></li>
+<li>Symmetric multiprocessing (SMP)
+
+<ul>
+<li>All processors fun OS &amp; user code</li>
+<li>Efficient</li>
+<li>Difficult implementation</li>
+<li>Scheduling issues
+
+<ul>
+<li><strong>Processor affinity</strong>
+
+<ul>
+<li>Cache issue, want to ensure <code>threads</code> run on the same <code>thread</code> before</li>
+<li><code>Hard affinity</code>: a <code>thread</code> specifies which processor it wants to use</li>
+</ul></li>
+<li><strong>Load balancing</strong>
+
+<ul>
+<li>Single ready queue: easy BUT tends to bottleneck because each processor needs a spinlock for ready queue</li>
+<li>1 ready queue per processor: scalable BUT <em>task migration</em> &amp; <em>load balancing</em> tricky<br>
+
+<ul>
+<li><em>task migration</em>  -<br>
+Deadlock?</li>
+<li><em>load balancing</em>  -<br>
+<code>Push migration</code>: thread find less-busy processors<br>
+<code>Pull migration</code>: idle processor find thread on busy processors</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
 
 		</div>
 

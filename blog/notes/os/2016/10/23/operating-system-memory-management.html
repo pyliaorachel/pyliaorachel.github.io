@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Blog - Life</title>
+		<title>Operating System - Memory Management</title>
 		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
 		<link rel="stylesheet" href="/css/main.css" type="text/css">
 		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
@@ -83,59 +83,178 @@
 		</div><!-- /.navbar-collapse -->
 	</div><!-- /.container-fluid -->
 </nav>
-		<main class="page-content blog" aria-label="Content">
-	<div class="blog-wrapper">
-		<div class="category-main-page">
+		<main class="page-content post" aria-label="Content">
+	<div class="post-wrapper">
+		<div class="wrapper">
+	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
 
-	<h1 class="title-text">
-	Life
+		<header class="post-header">
+			<h1 class="post-title" itemprop="name headline">Operating System - Memory Management</h1>
+			<p class="post-meta">Oct 23, 2016
+				 • Notes
+				 • pyliaorachel
+			</p>
+		</header>
+
+		
+
+		<span class="separator"> • • • </span>
+
+		<div class="post-content" itemprop="articleBody">
+			<h2>Content</h2>
+
+<ol>
+<li>Introduction to Memory Management</li>
+<li>Managing Memory with Bitmaps &amp; Lists</li>
+<li>Simple Memory Management &amp; Fragmentation</li>
+</ol>
+
+<!--more-->
+
+<hr>
+
+<h2>Introduction to Memory Management</h2>
+
+<ul>
+<li>Requirements
+
+<ul>
+<li><strong>Isolation</strong></li>
+<li><strong>Abstraction</strong></li>
+<li><strong>Sharing</strong></li>
+</ul></li>
+<li>Goals
+
+<ul>
+<li>Low memory overhead</li>
+<li>Low performance overhead</li>
+</ul></li>
+<li>Supports
+
+<ul>
+<li><strong>Compiler</strong>
+
+<ul>
+<li>Source file to object file</li>
+<li>Generates <em>relocatable</em> <code>virtual memeory addresses</code></li>
+</ul></li>
+<li><strong>Linker</strong>
+
+<ul>
+<li>Links multiple object files to single program on disk</li>
+<li>Generates <em>absolute</em> <code>virtual memeory addresses</code></li>
+</ul></li>
+<li><strong>OS</strong>
+
+<ul>
+<li>Loads program into <code>physical memory</code></li>
+<li>Sets up <code>virtual memory H/W</code></li>
+</ul></li>
+<li><strong>H/W</strong>
+
+<ul>
+<li>Translates <code>virtual memory</code> to <code>physical memory</code></li>
+<li>S/W too slow for address translation</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Managing Memory with Bitmaps &amp; Lists</h2>
+
+<ul>
+<li><p>After <code>boot loader</code> loads OS code &amp; dage in low memory, <code>OS</code> keeps track of <code>allocated</code> &amp; <code>free</code> memory</p></li>
+<li><p>Bitmap</p>
+
+<ul>
+<li>1 bit per chunk of memory; in use or not</li>
+<li>Larger chunk size, lower overhead BUT more <strong>internal fragmentation</strong></li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">|--OS code data--| bit map | chunk1 | chunk2 | ... |
+                  01101...
+</code></pre></div></li>
+<li><p>Linked Lists</p>
+
+<ul>
+<li>A list of elements for each allocated or free region of memory</li>
+<li>Allocated bit + starting address + length + pointer</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">| A |   f   |  B  | C | f |    D    | E | f | ... |
+
+| a | 0 | 5 | [] | --&gt; | f | 5 | 3 | [] | --&gt; ...
+</code></pre></div>
+<ul>
+<li>Searching
+
+<ul>
+<li><strong>First fit</strong></li>
+<li><strong>Best fit</strong></li>
+<li><strong>Quick fit</strong></li>
+</ul></li>
+</ul></li>
+<li><p>Under which conditions is each approach preferable?</p></li>
+</ul>
+
+<h2>Simple Memory Management &amp; Fragmentation</h2>
+
+<ul>
+<li><strong>Internal fragmentation</strong>
+
+<ul>
+<li>Program doesn&#39;t use entire region -&gt; paddings</li>
+</ul></li>
+<li><strong>External fragmentation</strong>
+
+<ul>
+<li>A large region cannot be allocated even enough memory exists
+
+<ul>
+<li><em>Compaction</em>: move processes around, but expensive</li>
+</ul></li>
+</ul></li>
+</ul>
+
+		</div>
+
+		<ul class="tag-list">
+			
+
+			<li class="tag">
+				OS
+			</li>
+
+			
+
+			<li class="tag">
+				ECE344
+			</li>
+
+			
+
+			<li class="tag">
+				memory management
+			</li>
+
+			
+		</ul>
+
+	</article>
+
 	
-</h1>
-
-
-
+		<div id="disqus_thread"></div>
+<script>
+	var disqus_config = function () {
+	    this.page.url = "https://pyliaorachel.github.io";
+	    this.page.identifier = "/blog/notes/os/2016/10/23/operating-system-memory-management.html";
+	};
+	(function() {
+	    var d = document, s = d.createElement('script');
+	    s.src = '//pyliaorachel.disqus.com/embed.js';
+	    s.setAttribute('data-timestamp', +new Date());
+	    (d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 	
-	
-
-	<ul class="post-list">
-
-		
-
-			
-		
-
-			
-		
-
-			
-		
-
-			
-		
-
-			
-		
-
-			
-		
-
-			
-		
-
-			
-		
-
-			
-		
-
-			
-		
-	</ul>
-
-	
-
-
-
 </div>
 	</div>
 </main>
