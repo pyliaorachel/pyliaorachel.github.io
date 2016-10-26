@@ -257,7 +257,7 @@ protection, process mgmt, security, ...)	|	(when program runs most instructions)
 		`Virt addr < Limit reg`
 - Enables `memory virtualization` & `memory isolation`
 	- `Memory virtualization`: Each program has access to a large amount of contiguous, private memory, starting at address 0
-	- `Memory isolation`: Ensures OS & other programs are located in different physical memory, and they cannot step on each other
+	- `Memory isolation`: Ensures OS & other programs are located in different physical memory, and they cannot step on each other (memory access permission check)
 
 ### __Trap__
 
@@ -353,8 +353,19 @@ protection, process mgmt, security, ...)	|	(when program runs most instructions)
 11. What is the minimum number of privileged instructions that h/w must implement so that the OS can work correctly?
 	- With memory mapped IO, you can hide all device accesses with memory protection. So programming the MMU (i.e., modify MMU registers) should be privileged. 
 	- Also, returning from a trap (e.g., iret instruction) should ensure that we cannot switch from user to kernel mode and run arbitrary kernel code. For example, on x86, a return from trap is guaranteed to execute code with the same or lower privilege level.
-
-
+12. Similarities & differences between `OS` & `web browsers`?
+	- Similarities
+		- Both run multiple applications (processes & web applications)
+		- Both need to isolate/protect different applications
+		- Both need to ensure their own code is safe from application code
+	- Differences
+		- OS uses H/W protection to protect OS and application code; browsers normally use S/W/language-level protection
+		- OS has direct access to H/W; browsers need to use OS to access
+		- OS usually runs local code; the main function of browsers is to run remote code and display remote data
+13. Why can't OS code be shared like library codes do?
+	- Some OS code needs to execute privileged instructions and hence will not run in user mode.
+	- The OS code may manipulate data that can be globally shared across programs (e.g., the scheduler run queue). Since libraries share code but not data, the library code would not be able to access this shared data.
+	- If the OS code is run in user mode, and it could be modified then the security guarantees provided by the OS could be compromised.
 
 
 

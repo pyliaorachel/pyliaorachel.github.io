@@ -68,11 +68,12 @@ excerpt_separator: <!--more-->
 				- Size of `time slice`  
 					__Long__ -> slow response  
 					__Short__ -> high overhead
-			- Does not require estimation of job processing time; no starvation; enables interactivity by limiting the amount of time each thread can run
+			- Does not require estimation of job processing time; no `starvation`; enables `interactivity` by limiting the amount of time each thread can run
+			- Reduces `throughtput` due to frequent `context switching`
 		- `Static priority`
 			- In order of priority assigned
 			- Starving low prioriy threads
-			- _Priiority inversion_: low priority threads holding locks that high priority threads want
+			- _Priority inversion_: low priority threads holding locks that high priority threads want
 		- `Multi-level queue`
 			- High, medium, & low PQs
 			- Choose from high-priority PQ first (e.g. I/O threads)

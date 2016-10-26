@@ -175,6 +175,10 @@ excerpt_separator: <!--more-->
 	- 1 per individual data structure
 	- More locks -> more parallelism BUT more bugs
 
+- Why do we need `spin lock` when implementing `blocking lock`?
+	- Avoid `lost wakeup` between checking availability of lock & sleep
+	- Need another locking method to protect the shared ready queue
+
 ### __Deadlocks, Starvation, Livelock__
 
 - `Deadlock`: a set of threads each waiting for a resource held by another thread

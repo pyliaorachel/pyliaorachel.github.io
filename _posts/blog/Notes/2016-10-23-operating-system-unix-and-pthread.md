@@ -166,6 +166,8 @@ excerpt_separator: <!--more-->
 		sem_post(&sem);
 		```
 
+## Related Articles
+* [Processes - Process Creation and States.](http://www.cs.rutgers.edu/~pxk/416/notes/04-processes.html)
 
 
 
