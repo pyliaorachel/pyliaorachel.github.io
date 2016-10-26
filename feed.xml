@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 24 Oct 2016 00:59:12 -0400</pubDate>
-    <lastBuildDate>Mon, 24 Oct 2016 00:59:12 -0400</lastBuildDate>
+    <pubDate>Wed, 26 Oct 2016 00:08:40 -0400</pubDate>
+    <lastBuildDate>Wed, 26 Oct 2016 00:08:40 -0400</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -224,6 +224,12 @@ sem_wait(&amp;amp;sem_name);
 sem_post(&amp;amp;sem);
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Related Articles&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.cs.rutgers.edu/%7Epxk/416/notes/04-processes.html&quot;&gt;Processes - Process Creation and States.&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Sun, 23 Oct 2016 00:00:00 -0400</pubDate>
@@ -731,6 +737,12 @@ thread_switch(current, next) {
 &lt;li&gt;The entire physical memory&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ol&gt;
+
+&lt;h2&gt;Related Articles&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.quora.com/How-does-thread-switching-differ-from-process-switching&quot;&gt;Thread Switching v.s. Process Switching&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
         <pubDate>Sun, 23 Oct 2016 00:00:00 -0400</pubDate>
         <link>/blog/notes/os/2016/10/23/operating-system-threads.html</link>
@@ -871,14 +883,15 @@ thread_switch(current, next) {
 &lt;strong&gt;Long&lt;/strong&gt; -&amp;gt; slow response&lt;br&gt;
 &lt;strong&gt;Short&lt;/strong&gt; -&amp;gt; high overhead&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Does not require estimation of job processing time; no starvation; enables interactivity by limiting the amount of time each thread can run&lt;/li&gt;
+&lt;li&gt;Does not require estimation of job processing time; no &lt;code&gt;starvation&lt;/code&gt;; enables &lt;code&gt;interactivity&lt;/code&gt; by limiting the amount of time each thread can run&lt;/li&gt;
+&lt;li&gt;Reduces &lt;code&gt;throughtput&lt;/code&gt; due to frequent &lt;code&gt;context switching&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;Static priority&lt;/code&gt;
 
 &lt;ul&gt;
 &lt;li&gt;In order of priority assigned&lt;/li&gt;
 &lt;li&gt;Starving low prioriy threads&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Priiority inversion&lt;/em&gt;: low priority threads holding locks that high priority threads want&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Priority inversion&lt;/em&gt;: low priority threads holding locks that high priority threads want&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;Multi-level queue&lt;/code&gt;
 
@@ -1354,11 +1367,17 @@ unlock(int *l) {
 &lt;/tbody&gt;&lt;/table&gt;
 
 &lt;ul&gt;
-&lt;li&gt;How many locks to create?
+&lt;li&gt;&lt;p&gt;How many locks to create?&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;1 per individual data structure&lt;/li&gt;
 &lt;li&gt;More locks -&amp;gt; more parallelism BUT more bugs&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Why do we need &lt;code&gt;spin lock&lt;/code&gt; when implementing &lt;code&gt;blocking lock&lt;/code&gt;?&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Avoid &lt;code&gt;lost wakeup&lt;/code&gt; between checking availability of lock &amp;amp; sleep&lt;/li&gt;
+&lt;li&gt;Need another locking method to protect the shared ready queue&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -2138,7 +2157,7 @@ e.g. &lt;code&gt;add&lt;/code&gt;, &lt;code&gt;sub&lt;/code&gt;, &lt;code&gt;pus
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;Memory virtualization&lt;/code&gt;: Each program has access to a large amount of contiguous, private memory, starting at address 0&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Memory isolation&lt;/code&gt;: Ensures OS &amp;amp; other programs are located in different physical memory, and they cannot step on each other&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Memory isolation&lt;/code&gt;: Ensures OS &amp;amp; other programs are located in different physical memory, and they cannot step on each other (memory access permission check)&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -2329,6 +2348,31 @@ e.g. open, read, write, close, link, unlink, chdir&lt;/li&gt;
 &lt;ul&gt;
 &lt;li&gt;With memory mapped IO, you can hide all device accesses with memory protection. So programming the MMU (i.e., modify MMU registers) should be privileged. &lt;/li&gt;
 &lt;li&gt;Also, returning from a trap (e.g., iret instruction) should ensure that we cannot switch from user to kernel mode and run arbitrary kernel code. For example, on x86, a return from trap is guaranteed to execute code with the same or lower privilege level.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Similarities &amp;amp; differences between &lt;code&gt;OS&lt;/code&gt; &amp;amp; &lt;code&gt;web browsers&lt;/code&gt;?
+
+&lt;ul&gt;
+&lt;li&gt;Similarities
+
+&lt;ul&gt;
+&lt;li&gt;Both run multiple applications (processes &amp;amp; web applications)&lt;/li&gt;
+&lt;li&gt;Both need to isolate/protect different applications&lt;/li&gt;
+&lt;li&gt;Both need to ensure their own code is safe from application code&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Differences
+
+&lt;ul&gt;
+&lt;li&gt;OS uses H/W protection to protect OS and application code; browsers normally use S/W/language-level protection&lt;/li&gt;
+&lt;li&gt;OS has direct access to H/W; browsers need to use OS to access&lt;/li&gt;
+&lt;li&gt;OS usually runs local code; the main function of browsers is to run remote code and display remote data&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Why can&amp;#39;t OS code be shared like library codes do?
+
+&lt;ul&gt;
+&lt;li&gt;Some OS code needs to execute privileged instructions and hence will not run in user mode.&lt;/li&gt;
+&lt;li&gt;The OS code may manipulate data that can be globally shared across programs (e.g., the scheduler run queue). Since libraries share code but not data, the library code would not be able to access this shared data.&lt;/li&gt;
+&lt;li&gt;If the OS code is run in user mode, and it could be modified then the security guarantees provided by the OS could be compromised.&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ol&gt;
 </description>

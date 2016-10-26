@@ -324,11 +324,17 @@ unlock(int *l) {
 </tbody></table>
 
 <ul>
-<li>How many locks to create?
+<li><p>How many locks to create?</p>
 
 <ul>
 <li>1 per individual data structure</li>
 <li>More locks -&gt; more parallelism BUT more bugs</li>
+</ul></li>
+<li><p>Why do we need <code>spin lock</code> when implementing <code>blocking lock</code>?</p>
+
+<ul>
+<li>Avoid <code>lost wakeup</code> between checking availability of lock &amp; sleep</li>
+<li>Need another locking method to protect the shared ready queue</li>
 </ul></li>
 </ul>
 

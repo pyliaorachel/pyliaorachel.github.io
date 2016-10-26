@@ -219,14 +219,15 @@
 <strong>Long</strong> -&gt; slow response<br>
 <strong>Short</strong> -&gt; high overhead</li>
 </ul></li>
-<li>Does not require estimation of job processing time; no starvation; enables interactivity by limiting the amount of time each thread can run</li>
+<li>Does not require estimation of job processing time; no <code>starvation</code>; enables <code>interactivity</code> by limiting the amount of time each thread can run</li>
+<li>Reduces <code>throughtput</code> due to frequent <code>context switching</code></li>
 </ul></li>
 <li><code>Static priority</code>
 
 <ul>
 <li>In order of priority assigned</li>
 <li>Starving low prioriy threads</li>
-<li><em>Priiority inversion</em>: low priority threads holding locks that high priority threads want</li>
+<li><em>Priority inversion</em>: low priority threads holding locks that high priority threads want</li>
 </ul></li>
 <li><code>Multi-level queue</code>
 
