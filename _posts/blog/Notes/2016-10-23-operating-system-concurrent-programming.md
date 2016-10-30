@@ -477,7 +477,10 @@ excerpt_separator: <!--more-->
 2. Why are locks, by themselves, not sufficient for solving synchronization problems?
 	- `Lock` & `unlock` are used together and in that order. Synchronization problems require a more general primitive: conditional `sleep` and `wakeup`.
 3. What are the differences between a monitor and a semaphore?
-	- `Monitor` requires locks to avoid lost signal. `Down/Up` & `wait/signal` are also different.
+	- `Monitor` requires locks to avoid lost signal. 
+	- `Monitor` is associated with a lock; `semaphore` only use locks to protect the shared resource.
+	- No lost wakeups for `semaphore` because the wakeups (`up()`) will not be dedicated to a specific thread but instead used for future entries.
+	- `Down/Up` & `wait/signal` are also different.
 4. What are the differences between `wait()` and `down()`?
 	- `Wait` is stateless, it always waits. `Wait` also releases a lock, waits, and then reacquires a lock. 
 	- `Down` has state embedded with a notion of available resources, and will only wait if resources are not available. `Down` doesn’t have any notion of an associated lock.
