@@ -2,7 +2,7 @@
 layout: post
 title:  "Divide and Conquer"
 categories: Blog Notes Algorithm
-tags: ["convex hull", "divide and conquer", "algorithm", "CSC384"]
+tags: ["convex hull", "divide and conquer", "algorithm", "CSC373"]
 author: pyliaorachel
 comments: true
 excerpt_separator: <!--more-->
