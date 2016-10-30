@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Linked List Basic"
-categories: Blog Notes DataStructure
+categories: Blog Tech DataStructure
 tags: ["data structure"]
 author: pyliaorachel
 comments: true
