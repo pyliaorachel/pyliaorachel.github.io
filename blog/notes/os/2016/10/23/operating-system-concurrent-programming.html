@@ -54,7 +54,7 @@
 							<li class="category">
 								<a href="/blog/notes">
 									<span>Notes</span>
-									<span>10</span>
+									<span>13</span>
 								</a>
 							</li>
 						
@@ -683,7 +683,10 @@ char receive() {
 <li>What are the differences between a monitor and a semaphore?
 
 <ul>
-<li><code>Monitor</code> requires locks to avoid lost signal. <code>Down/Up</code> &amp; <code>wait/signal</code> are also different.</li>
+<li><code>Monitor</code> requires locks to avoid lost signal. </li>
+<li><code>Monitor</code> is associated with a lock; <code>semaphore</code> only use locks to protect the shared resource.</li>
+<li>No lost wakeups for <code>semaphore</code> because the wakeups (<code>up()</code>) will not be dedicated to a specific thread but instead used for future entries.</li>
+<li><code>Down/Up</code> &amp; <code>wait/signal</code> are also different.</li>
 </ul></li>
 <li>What are the differences between <code>wait()</code> and <code>down()</code>?
 

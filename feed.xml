@@ -6,9 +6,750 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 26 Oct 2016 00:08:40 -0400</pubDate>
-    <lastBuildDate>Wed, 26 Oct 2016 00:08:40 -0400</lastBuildDate>
+    <pubDate>Sun, 30 Oct 2016 12:14:31 -0400</pubDate>
+    <lastBuildDate>Sun, 30 Oct 2016 12:14:31 -0400</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>CSP</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Constraint Satisfaction Problems (Backtracking Search) Overview
+
+&lt;ol&gt;
+&lt;li&gt;CSP v.s Traditional Search Problems&lt;/li&gt;
+&lt;li&gt;Feature Vectors&lt;/li&gt;
+&lt;li&gt;Constraint Graph&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Solving CSPs
+
+&lt;ol&gt;
+&lt;li&gt;Viewing CSP as Search Problem&lt;/li&gt;
+&lt;li&gt;Backtracking Search Algorithm&lt;/li&gt;
+&lt;li&gt;Constraint Propagation
+
+&lt;ol&gt;
+&lt;li&gt;Forward Checking&lt;/li&gt;
+&lt;li&gt;Generalizaed Arc Consistency&lt;/li&gt;
+&lt;li&gt;Heuristics&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Constraint Satisfaction Problems (Backtracking Search) Overview&lt;/h2&gt;
+
+&lt;h3&gt;CSP v.s Traditional Search Problems&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;CSP does not care about the &lt;em&gt;sequence of moves&lt;/em&gt; to reach goal state&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Feature Vectors&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Represent states as &lt;strong&gt;vectors of feature values&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Formalization
+
+&lt;ul&gt;
+&lt;li&gt;A set of &lt;strong&gt;features/variables&lt;/strong&gt; &lt;code&gt;V1, ... Vn&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Domain&lt;/strong&gt; for each variable &lt;code&gt;Dom[Vi]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;A set of &lt;strong&gt;constraints&lt;/strong&gt; &lt;code&gt;C1, ..., Cm&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Scope&lt;/strong&gt;: a set of variables it operates over&lt;/li&gt;
+&lt;li&gt;Unary, binary, higher-order constraints&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;State&lt;/strong&gt;: assignment of value for each variable&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Partial state&lt;/strong&gt;: assignment of value for some variables&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Goal state&lt;/strong&gt;: a state satisfying all &lt;strong&gt;constraints&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Constraint Graph&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Nodes: &lt;strong&gt;variables&lt;/strong&gt;; arcs: &lt;strong&gt;constraints&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Solving CSPs&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Search through the space of partial assignments&lt;/li&gt;
+&lt;li&gt;Order of assignments does not matter&lt;/li&gt;
+&lt;li&gt;If we falsify a constraint, we immediately reject the current partial assignment&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Viewing CSP as Search Problem&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Initial state&lt;/strong&gt;: empty assignment&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Successor function&lt;/strong&gt;: a value assigned to any unassigned variable s.t. no constraints return false&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Goal test&lt;/strong&gt;: complete assignment&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Backtracking Search Algorithm&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Similar to DFS&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;BT(Level):
+    If all variables assigned:
+        PRINT Value of each Variable
+        RETURN
+
+    V := PickUnassignedVariable()
+    Assigned[V] := TRUE
+    for d := each member of Domain(V):
+        Value[V] := d
+        ConstraintsOK = TRUE
+        for each constraint C such that
+            a) V is a variable of C and
+            b) all other variables of C are assigned: 
+            If C is not satisfied by the set of current assignments:
+                ConstraintsOK = FALSE
+                break
+        If ConstraintsOk == TRUE:
+            BT(Level+1)
+    Assigned[V] := FALSE //UNDO as we have tried all of V’s values return
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Constraint Propagation&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Look ahead&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Forward Checking&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;When instantiating a variable, check all constrants with &lt;strong&gt;only one ininstantiated variable&lt;/strong&gt; remaining&lt;/li&gt;
+&lt;li&gt;Prune values of that variable that violate the constraint&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Algorithm&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;FCCheck(C,x):
+    // C is a constraint with all its variables already assigned, except for variable x
+
+    for d := each member of CurDom[x]:
+        If making x = d together with previous assignments
+    to variables in scope C falsifies C:
+            remove d from CurDom[x]
+
+    If CurDom[x] = {}:
+        return DWO (Domain Wipe Out)
+    Else:
+        return ok
+
+FC(Level):
+    If all variables assigned:
+        PRINT Value of each Variable
+        RETURN
+
+    V := PickAnUnassignedVariable()
+    Assigned[V] := TRUE
+    for d := each member of CurDom(V):
+        Value[V] := d
+        DWOoccured:= False
+        for each constraint C over V such that
+            a) C has only one unassigned variable X in its scope:
+            If (FCCheck(C,X) == DWO):
+                DWOoccurred:= True
+                break
+        If(not DWOoccured)
+            FC(Level+1)
+        RestoreAllValuesPrunedByFCCheck()
+    Assigned[V] := FALSE
+    return;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Generalizaed Arc Consistency&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C(V1, ..., Vn)&lt;/code&gt; is GAC with regard to &lt;code&gt;Vi&lt;/code&gt; iff for every value of &lt;code&gt;Vi&lt;/code&gt;, there exist values of &lt;code&gt;V1, ..., Vn&lt;/code&gt; that satisfy C&lt;/li&gt;
+&lt;li&gt;If for &lt;code&gt;Vi = d&lt;/code&gt; is not consistent wrt the constraint, &lt;code&gt;d&lt;/code&gt; is &lt;strong&gt;arc inconsistent&lt;/strong&gt; and can be removed from domain of &lt;code&gt;Vi&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;A constraint that is GAC may become non-GAC due to pruning of domain values during search&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Algorithm&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;GAC_Enforce():
+// GAC-Queue contains all constraints one of whose variables has had its domain reduced
+
+while GACQueue not empty:
+    C = GACQueue.extract()
+    for V := each member of scope(C):
+        for d := CurDom[V]:
+            Find an assignment A for all other variables in scope(C) such that C(A ∪ V=d) = True
+            if A not found:
+                CurDom[V] = CurDom[V] – d 
+            if CurDom[V] = ∅:
+                empty GACQueue
+                return DWO
+            else:
+                push all constraints C’ s.t. V ∈ scope(C’) and C’ !∈ GACQueue on to GACQueue
+return TRUE
+
+GAC(Level):
+    If all variables are assigned:
+        PRINT Value of each Variable
+        RETURN
+
+    V := PickAnUnassignedVariable()
+    Assigned[V] := TRUE
+    for d := each member of CurDom(V):
+        Value[V] := d
+        Prune all values of V != d from CurDom[V]
+        for each constraint C whose scope contains V:
+            Put C on GACQueue
+        if(GAC_Enforce() != DWO):
+            GAC(Level+1)
+        RestoreAllValuesPrunedFromCurDoms()
+
+    Assigned[V] := FALSE
+    return;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;May keep track of &lt;strong&gt;supports&lt;/strong&gt; to avoid having to search through all possible assignments and check satisfication&lt;/li&gt;
+&lt;li&gt;Check if current support still valie, i.e. all values it assigns still lie in the variables&amp;#39; current domains&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Heuristics&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Ordering of variables
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Minimum Remaining Values (MRV)&lt;/strong&gt;: returns the variable with the most constrained current domain&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Degree Heuristic (DH)&lt;/strong&gt;: returns variable imposing the most constraints on remaining unassigned variables&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Ordering of values
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Least Constraining Value (LCV)&lt;/strong&gt;: the best value is the one ruling out the fewest domain values in other variables that share at least one constraint with var&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Sun, 30 Oct 2016 00:00:00 -0400</pubDate>
+        <link>/blog/notes/ai/2016/10/30/csp.html</link>
+        <guid isPermaLink="true">/blog/notes/ai/2016/10/30/csp.html</guid>
+        
+        <category>AI</category>
+        
+        <category>CSC384</category>
+        
+        <category>CSP</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>AI</category>
+        
+      </item>
+    
+      <item>
+        <title>Search</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Search Overview
+
+&lt;ol&gt;
+&lt;li&gt;Formalism of Search&lt;/li&gt;
+&lt;li&gt;Searching Template&lt;/li&gt;
+&lt;li&gt;Critical Properties of Search&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Uninformed Search
+
+&lt;ol&gt;
+&lt;li&gt;BFS&lt;/li&gt;
+&lt;li&gt;DFS&lt;/li&gt;
+&lt;li&gt;Depth Limited Search&lt;/li&gt;
+&lt;li&gt;Iterative Deepening Search&lt;/li&gt;
+&lt;li&gt;Uniform-Cost Search&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Informed/Heuristic Search
+
+&lt;ol&gt;
+&lt;li&gt;Best First Search&lt;/li&gt;
+&lt;li&gt;A*&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Search Overview&lt;/h2&gt;
+
+&lt;h3&gt;Formalism of Search&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;State space&lt;/li&gt;
+&lt;li&gt;Initial state &amp;amp; goal state&lt;/li&gt;
+&lt;li&gt;Actions/successor functions/state space transitions &lt;code&gt;S(x)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Costs &lt;code&gt;C(x, a, y)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Heuristics to guide search&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+&lt;h4&gt;Complex situations&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Actions lead to multiple states&lt;/li&gt;
+&lt;li&gt;Unsure of a given state&lt;/li&gt;
+&lt;li&gt;=&amp;gt; &lt;strong&gt;Probabilistic models&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;h3&gt;Searching Template&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;State annotation
+
+&lt;ul&gt;
+&lt;li&gt;State + action, parent state, cost, ...&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Frontier&lt;/strong&gt;: states haven&amp;#39;t explored or expanded but want to explore&lt;/li&gt;
+&lt;li&gt;Order of frontiers (selection rules) implies the type of search, e.g. &lt;code&gt;BFS&lt;/code&gt;, &lt;code&gt;DFS&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;TreeSearch(Frontier, Successors, Goal):
+    If Frontier empty:
+        return failure
+
+    Curr = select state from Frontier
+    If (Goal(Curr)):
+        return Curr
+    Frontier' = (Frontier - {Curr}) ∪ Successors(Curr)
+    return TreeSearch(Frontier', Successors, Goal)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Critical Properties of Search&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Completeness&lt;/li&gt;
+&lt;li&gt;Optimality&lt;/li&gt;
+&lt;li&gt;Time complexity&lt;/li&gt;
+&lt;li&gt;Space complexity&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Uninformed Search&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Fixed rule for selecting next state&lt;/li&gt;
+&lt;li&gt;Do not consider any &lt;strong&gt;domain specific information&lt;/strong&gt; about the particular search problem&lt;/li&gt;
+&lt;li&gt;e.g. BFS, Uniform-Cost, DFS, Depth-Limited, Iterative-Deepening&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Path &amp;amp; Cycle Checking&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Path checking
+
+&lt;ul&gt;
+&lt;li&gt;Ensure expanded state &lt;code&gt;c&lt;/code&gt; not equal to state reached by any ancestor of &lt;code&gt;c&lt;/code&gt; along this path&lt;/li&gt;
+&lt;li&gt;Path checked in isolation&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Cycle checking/ Multiple path checking
+
+&lt;ul&gt;
+&lt;li&gt;Ensure &lt;code&gt;c&lt;/code&gt; not equal to any previously expanded state&lt;/li&gt;
+&lt;li&gt;Space complexity of DFS goes &lt;code&gt;exponential&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Non-uniform costs have additional issues&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;BFS&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;O(b^(d+1))&lt;/code&gt; space: explored nodes + nodes expanded at goal level before reaching goal&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;O(b^(d+1))&lt;/code&gt; time
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;1 + b + b^2 +...+ b^d + b(b^d-1)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Optimal&lt;/li&gt;
+&lt;li&gt;Complete&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;DFS&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;O(bm)&lt;/code&gt; space (one path at a time)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;O(b^m)&lt;/code&gt; time, &lt;code&gt;m&lt;/code&gt; = length of longest path in state space&lt;/li&gt;
+&lt;li&gt;Complete for acyclic graph or cycles pruned&lt;/li&gt;
+&lt;li&gt;Not optimal&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Depth Limited Search&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;DLS(Frontier, Successors, Goal):
+    While Frontier not empty:
+        n = first node from Frontier
+        Curr = terminal state of n
+        If (Goal(Curr)):
+            return n
+
+        If Depth &amp;lt; D: // limit Frontiers to depth D
+            Frontier = (Frontier - {n}) ∪ Successors(Curr)
+        Else:
+            Frontier = Frontier - {n}
+            CutOffOccured = TRUE
+    return FAIL
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Iterative Deepening Search&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Iteratively increase depth limit and perform DLS&lt;/li&gt;
+&lt;li&gt;Stop if solution found OR DLS failed without cutting off any nodes&lt;/li&gt;
+&lt;li&gt;Not good if many cycles&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;O(bd)&lt;/code&gt; space&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;O(b^d)&lt;/code&gt; time
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;(d+1)b^0 + db + ... + b^d&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Complete&lt;/li&gt;
+&lt;li&gt;Optimal if costs uniform
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Cost bound&lt;/strong&gt; for non-uniform costs&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Uniform-Cost Search&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Frontier&lt;/code&gt; ordered by &lt;strong&gt;increasing cost of path&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Nodes rejected or replaced on Frontier guaranteed to have more costly paths&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;O(b^(C*/ε))&lt;/code&gt; time &amp;amp; space, &lt;code&gt;C*&lt;/code&gt; = cost of optimal solution&lt;/li&gt;
+&lt;li&gt;Complete if positive, nonzero transition costs&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Optimal&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Given: each transition has costs &amp;gt;= ε &amp;gt; 0
+
+Lemma 1: If n2 is expanded immediately after n1, then c(n1) &amp;lt;= c(n2)
+Lemma 2: When node n is expanded, every path in the search space with cost &amp;lt; c(n) has already been expanded
+Lemma 3: The first time USC expandes a node n terminating at state S, it has found the minimal cost path to S
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Informed/Heuristic Search&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;h(n1) &amp;lt; h(n2)&lt;/code&gt; if we guess it&amp;#39;s cheaper to get to goal from n1 than from n2&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;h(n) = 0&lt;/code&gt; for goal nodes n&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Best First Search&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Only use &lt;code&gt;h(n)&lt;/code&gt; to guide the search&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;A*&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;f(n) = g(n) + h(n)&lt;/code&gt;, &lt;code&gt;g(n)&lt;/code&gt; = cost of path to n&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Adimissible h(n)&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Let &lt;code&gt;h*(n)&lt;/code&gt; be the cost of an optimal path from n to goal node, then &lt;strong&gt;admissible heuristic&lt;/strong&gt; satisfies:&lt;br&gt;
+&lt;code&gt;h(n) &amp;lt;= h*(n)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Never &lt;strong&gt;over-estimates&lt;/strong&gt; the cost to reach goal, won&amp;#39;t miss any promising paths&lt;/li&gt;
+&lt;li&gt;Implies &lt;strong&gt;optimality&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Monotonic/Consistent h(n)&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Local admissibility&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;h(n1) &amp;lt;= c(n1, a, n2) + h(n2)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Consistency -&amp;gt; Adimissibility&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Assume h(n1) &amp;lt;= c(n1, a, n2) + h(n2)
+Prove h(n) &amp;lt;= h*(n)
+
+If not path from n to goal, then h*(n) = inf
+Else
+    Let n-&amp;gt;n1-&amp;gt;...-&amp;gt;n* be an optimal path from n to goal
+    (Cost: h*(n); cost of sub-path: h*(ni))
+
+    Base case: n = n*, h(n) = 0 &amp;lt;= h*(n) = 0
+    Induction: h(n1) &amp;lt;= h*(n1)
+        h(n) &amp;lt;= c(n, a1, n1) + h(n1) &amp;lt;= c(n, a1, n1) + h*(n1) = h*(n)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;f(n)&lt;/code&gt; non-decreasing&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;f(n1) = g(n1) + h(n1) &amp;lt;= g(n1) + c(n1, a, n2) + h(n2) = f(n2)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;f(n1) &amp;lt;= f(n2)&lt;/code&gt; if n2 expanded after n1&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If n has been expanded, every path with lower f-value has already been expanded&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The first time A* expands a node, it has found the min cost path to that node&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Admissible &amp;amp; monotonic h(n)&lt;/strong&gt; =&amp;gt; Optimal&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Same time &amp;amp; space bounds as UCS
+
+&lt;ul&gt;
+&lt;li&gt;# of nodes expanded no larger than UCS&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Complete
+
+&lt;ul&gt;
+&lt;li&gt;Finite # of paths having &lt;code&gt;f-value &amp;lt; c(SolutionPath)&lt;/code&gt;, since each action has &lt;code&gt;costs &amp;gt;= ε &amp;gt; 0&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Optimal&lt;/li&gt;
+&lt;li&gt;Cycle checking: keep only the first path to a state, rejecting all subsequent paths&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Admissibility without monotonicity&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Optimal
+
+&lt;ul&gt;
+&lt;li&gt;But ordering of nodes not guaranteed optimal when put in queue&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Cycle checking: keep revisited nodes with cost less than before&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Expand less state space, but still constrained by speed or memory&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;IDA*: reduce memory requirements
+
+&lt;ul&gt;
+&lt;li&gt;Cutoff: &lt;code&gt;f-value&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;curBound&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;smallestNotExplored&lt;/code&gt;: smallest &lt;code&gt;f-value&lt;/code&gt; of discarded nodes in a round
+
+&lt;ul&gt;
+&lt;li&gt;Expand all nodes with &lt;code&gt;f-value&lt;/code&gt; equal to &lt;code&gt;f-limit&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Weighted A*
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;f(n) = (1-ε) * g(n) + ε * h(n)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Anytime A*
+
+&lt;ul&gt;
+&lt;li&gt;Find the best path for a given ε&lt;/li&gt;
+&lt;li&gt;Reduce ε and replan&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Sat, 29 Oct 2016 00:00:00 -0400</pubDate>
+        <link>/blog/notes/ai/2016/10/29/search.html</link>
+        <guid isPermaLink="true">/blog/notes/ai/2016/10/29/search.html</guid>
+        
+        <category>AI</category>
+        
+        <category>CSC384</category>
+        
+        <category>search</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>AI</category>
+        
+      </item>
+    
+      <item>
+        <title>Game Tree Search</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Game Overview
+
+&lt;ol&gt;
+&lt;li&gt;Game Properties&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Two-Player Zero-Sum Game
+
+&lt;ol&gt;
+&lt;li&gt;Definition&lt;/li&gt;
+&lt;li&gt;Intuition&lt;/li&gt;
+&lt;li&gt;MiniMax Strategy&lt;/li&gt;
+&lt;li&gt;Real-Time/Online search&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Game Overview&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Generalization of Search Problems
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Game tree&lt;/strong&gt;: actions of &amp;gt;= 1 players/agents&lt;/li&gt;
+&lt;li&gt;Agents acting to &lt;strong&gt;maximize their profits&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Others&amp;#39; profits might not have positive effect on yours&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Key Features of Game
+
+&lt;ul&gt;
+&lt;li&gt;Each player has different goal&lt;/li&gt;
+&lt;li&gt;Different paths/states assigned different costs&lt;/li&gt;
+&lt;li&gt;Each player tries to alter the world to best benefit itself&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Game Properties&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Two-player&lt;/li&gt;
+&lt;li&gt;Discrete: game states or decision can be mapped on discrete values&lt;/li&gt;
+&lt;li&gt;Finite: a finite # of states/decisions can be made&lt;/li&gt;
+&lt;li&gt;Zero-sum (Fully Competitive): A gains = B loses
+
+&lt;ul&gt;
+&lt;li&gt;Strategic/normal form game: one shot e.g. rock-paper-scissors&lt;/li&gt;
+&lt;li&gt;Extensive form game: turn-taking, multiple moves&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Deterministic: no chance involved&lt;/li&gt;
+&lt;li&gt;Perfect Information: all aspects of the state are fully observable&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Two-Player Zero-Sum Game&lt;/h2&gt;
+
+&lt;h3&gt;Definition&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;2 players: &lt;code&gt;A&lt;/code&gt;(Max), &lt;code&gt;B&lt;/code&gt;(Min)&lt;/li&gt;
+&lt;li&gt;States &lt;code&gt;S&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Initial state &lt;code&gt;I&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Terminal positions &lt;code&gt;T&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Successor functions
+
+&lt;ul&gt;
+&lt;li&gt;Input: a state&lt;/li&gt;
+&lt;li&gt;Return: a set of possible next states&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Utility/Payoff function &lt;code&gt;V: T -&amp;gt; R&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Mapping showing how good each terminal state is for A/how bad for B&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Intuition&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Game ends when terminal &lt;code&gt;t ∊ T&lt;/code&gt; reached&lt;/li&gt;
+&lt;li&gt;Game state: state-player pair&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;A&lt;/code&gt; gets &lt;code&gt;V(t)&lt;/code&gt;, &lt;code&gt;B&lt;/code&gt; gets &lt;code&gt;-V(t)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;MiniMax Strategy&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Build full game tree
+
+&lt;ul&gt;
+&lt;li&gt;Root: start state&lt;/li&gt;
+&lt;li&gt;Edges: possible moves&lt;/li&gt;
+&lt;li&gt;Leaves: terminals (utilities U(t) labeled)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Back balues up the tree
+
+&lt;ul&gt;
+&lt;li&gt;`U(n) = min{ U(c): c is a child of n if n is Min node }&lt;/li&gt;
+&lt;li&gt;`U(n) = max{ U(c): c is a child of n if n is Max node }&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;O(b^d)&lt;/code&gt; space&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Depth-First Implementation&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;To avoid expanding the tree exponentially in size&lt;/li&gt;
+&lt;li&gt;Need &lt;strong&gt;finite depth&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;DFMiniMax(n, Player): //return Utility of state n given that Player is MIN or MAX
+
+    If n is TERMINAL:
+        Return V(n) //Return terminal states utility (V is specified as part of game)
+
+    //Apply Player s moves to get successor states. 
+    ChildList = n.Successors(Player)
+
+    If Player == MIN:
+        return minimum of DFMiniMax(c, MAX) over c ∈ ChildList
+    Else: //Player is MAX
+        return maximum of DFMiniMax(c, MIN) over c ∈ ChildList
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Pruning&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;α-cuts(max node) &amp;amp; β-cuts(min node)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;AlphaBeta(n,Player,alpha,beta): //return Utility of state 
+
+    If n is TERMINAL:
+        return V(n) //Return terminal states utility 
+
+    ChildList = n.Successors(Player)
+
+    If Player == MAX:
+        for c in ChildList:
+            alpha = max(alpha, AlphaBeta(c,MIN,alpha,beta)) 
+            If beta &amp;lt;= alpha:
+                break 
+    return alpha
+
+    Else: //Player == MIN 
+        for c in ChildList:
+            beta = min(beta, AlphaBeta(c,MAX,alpha,beta)) 
+            If beta &amp;lt;= alpha:
+                break 
+    return beta
+
+// Initial call: AlphaBeta(START_NODE, PLAYER, -infinity, infinity)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;O(b^d)&lt;/code&gt; space if no pruning, &lt;code&gt;O(b^(d/2))&lt;/code&gt; if optimal pruning
+
+&lt;ul&gt;
+&lt;li&gt;Branching factor of 1st layer: B; 2nd: 1; 3rd: B; ...&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;In practice, must make &lt;strong&gt;heuristic estimates&lt;/strong&gt; of the terminal nodes -&amp;gt; &lt;strong&gt;evaluation function&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Real-Time/Online search&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Run A* until out of memory&lt;/li&gt;
+&lt;li&gt;Use &lt;strong&gt;evaluation function&lt;/strong&gt; to decide which path looks best&lt;/li&gt;
+&lt;li&gt;Make the move&lt;/li&gt;
+&lt;li&gt;Restart search at the node reached (can be cached)&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        <pubDate>Sat, 29 Oct 2016 00:00:00 -0400</pubDate>
+        <link>/blog/notes/ai/2016/10/29/game-tree-search.html</link>
+        <guid isPermaLink="true">/blog/notes/ai/2016/10/29/game-tree-search.html</guid>
+        
+        <category>AI</category>
+        
+        <category>CSC384</category>
+        
+        <category>search</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>AI</category>
+        
+      </item>
     
       <item>
         <title>Operating System - Unix &amp; Pthread</title>
@@ -1726,7 +2467,10 @@ char receive() {
 &lt;li&gt;What are the differences between a monitor and a semaphore?
 
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Monitor&lt;/code&gt; requires locks to avoid lost signal. &lt;code&gt;Down/Up&lt;/code&gt; &amp;amp; &lt;code&gt;wait/signal&lt;/code&gt; are also different.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Monitor&lt;/code&gt; requires locks to avoid lost signal. &lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Monitor&lt;/code&gt; is associated with a lock; &lt;code&gt;semaphore&lt;/code&gt; only use locks to protect the shared resource.&lt;/li&gt;
+&lt;li&gt;No lost wakeups for &lt;code&gt;semaphore&lt;/code&gt; because the wakeups (&lt;code&gt;up()&lt;/code&gt;) will not be dedicated to a specific thread but instead used for future entries.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Down/Up&lt;/code&gt; &amp;amp; &lt;code&gt;wait/signal&lt;/code&gt; are also different.&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;What are the differences between &lt;code&gt;wait()&lt;/code&gt; and &lt;code&gt;down()&lt;/code&gt;?
 
@@ -2678,987 +3422,6 @@ Sum(t = 1..lglgh) n*2^t =
         <category>Notes</category>
         
         <category>Algorithm</category>
-        
-      </item>
-    
-      <item>
-        <title>Greedy Algorithm</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Minimum Spanning Tree&lt;/li&gt;
-&lt;li&gt;Huffman Encoding&lt;/li&gt;
-&lt;li&gt;Interval Scheduling&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h1&gt;Greedy Algorithms&lt;/h1&gt;
-
-&lt;h3&gt;What is greedy?&lt;/h3&gt;
-
-&lt;p&gt;Take the best move at the moment without worrying about future outcomes.&lt;/p&gt;
-
-&lt;h2&gt;Minimum Spanning Tree&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;A graph, connecting all nodes with edges that cost the least in total.&lt;/li&gt;
-&lt;li&gt;No cycle&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Definition&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Input&lt;/em&gt;: An undirected graph G = (V, E); edge weights we&lt;br&gt;&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Output&lt;/em&gt;: A tree T = (V,E&amp;#39;), with E&amp;#39; ⊆ E, that minimizes weight(T) = Σ(e ⊆ E&amp;#39;)we&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Trees&lt;/h4&gt;
-
-&lt;p&gt;Undirected graph, connected &amp;amp; acyclic  &lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Removing a cycle edge cannot disconnect a graph&lt;/li&gt;
-&lt;li&gt;A tree with &lt;code&gt;n&lt;/code&gt; nodes has &lt;code&gt;n-1&lt;/code&gt; edges&lt;/li&gt;
-&lt;li&gt;Any connected, undirected graph with &lt;code&gt;|E| = |V| - 1&lt;/code&gt; is a tree.&lt;/li&gt;
-&lt;li&gt;An undirected graph is a tree &amp;lt;- there&amp;#39;s a unique path between any pair of nodes&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;em&gt;Kruskal&amp;#39;s MST Algorithm&lt;/em&gt;&lt;/h3&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Start with empty graph&lt;/li&gt;
-&lt;li&gt;Add the next lightest edge that doesn&amp;#39;t produce a cycle&lt;/li&gt;
-&lt;li&gt;Do until all nodes connected&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;The Cut Property&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Cut: any partition of vertices into 2 groups &lt;code&gt;S&lt;/code&gt; &amp;amp; &lt;code&gt;V-S&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Let &lt;code&gt;X&lt;/code&gt; be subset of MST not crossing between &lt;code&gt;S&lt;/code&gt; &amp;amp; &lt;code&gt;V-S&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Pick &lt;code&gt;e&lt;/code&gt; to be the lightest edge connecting &lt;code&gt;S&lt;/code&gt; &amp;amp; &lt;code&gt;V-S&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;X ∪ {e}&lt;/code&gt; is MST&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Implementation&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Kruskal(G, w):
-# Input: A connected undirected graph G = (V, E) with edge weights we 
-# Output: A minimum spanning tree defined by the edges X
-
-    for all u ∈ V : # =&amp;gt; O(|V|)
-        makeset(u) # create a singleton set containing just u
-
-    X = {}
-    Sort the edges E by weight # =&amp;gt; O(|E|log|V|) where log|E| ~ log|V|
-    for all edges {u, v} ∈ E, in increasing order of weight: # = O(|E|log|V|)
-        # find sets to which u &amp;amp; v belong
-        if find(u) != find(v):
-            add edge {u, v} to X 
-            union(u, v) # merging sets
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4&gt;Running Time&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;O(|E|log|V|)&lt;/code&gt;&lt;/p&gt;
-
-&lt;h4&gt;Data Structure for Disjoin Sets&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Directed tree&lt;/li&gt;
-&lt;li&gt;Root element as identifier&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# π = parent pointer
-# rank = height of subtree hanging from that node
-
-makeset(x): # = O(1)
-    π(x) = x
-    rank(x) = 0
-
-find (x): # = O(logn)
-    while x != π(x): 
-        x = π(x) 
-    return x
-
-union(x, y)  # = O(logn)
-    rx = find(x)
-    ry = find(y)
-    if rx = ry: 
-        return 
-    if rank(rx)  rank(ry):
-        π(ry) = rx  # make root of y-tree point to root of x-tree
-    else:
-        π(rx) = ry
-        if rank(rx)=rank(ry): 
-            rank(ry)=rank(ry)+1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;Any root node of rank &lt;code&gt;k&lt;/code&gt; has at least &lt;code&gt;2^k&lt;/code&gt; nodes in its tree&lt;/li&gt;
-&lt;li&gt;So if &lt;code&gt;n&lt;/code&gt; elements overall, at most &lt;code&gt;n/(2^k)&lt;/code&gt; of rank &lt;code&gt;k&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;=&amp;gt; max rank = &lt;code&gt;log(n)&lt;/code&gt; (upper bound of &lt;code&gt;find&lt;/code&gt; &amp;amp; &lt;code&gt;union&lt;/code&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Optimization - Path Compression&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;find(x):
-    if x != π(x): 
-        π(x) = find(π(x)) 
-    return π(x)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3&gt;&lt;em&gt;Prim&amp;#39;s Algorithm&lt;/em&gt;&lt;/h3&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Start with empty graph&lt;/li&gt;
-&lt;li&gt;Add any vertex to &lt;code&gt;S&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Add a min-weight edge from &lt;code&gt;S&lt;/code&gt; to &lt;code&gt;V-S&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Repeat until done&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;Pseudocode&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;X = { } (edges picked so far) 
-repeat until |X| = |V| − 1:
-    pick a set S ⊂ V for which X has no edges between S and V−S
-    let e ∈ E be the minimum-weight edge between S and V − S
-    # cost(v) = min(u ∈ S)(w(u, v))
-    X = X ∪ {e}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4&gt;Implementation&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Prim(G, w):
-# Input: A connected undirected graph G = (V, E) with edge weights we 
-# Output: A minimum spanning tree defined by the array prev
-    for all u ∈ V: 
-        cost(u) = ∞
-        prev(u) = nil
-    Pick any initial node u0 
-    cost(u0) = 0
-
-    H = makequeue (V) # priority queue, using cost-values as keys 
-    while H is not empty:
-        v = deletemin(H) 
-        for each {v, z} ∈ E:
-            if cost(z) &amp;gt; w(v, z): 
-                cost(z) = w(v, z) 
-                prev(z) = v 
-                decreasekey(H, z)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4&gt;Running Time&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;O(|E|log|V|)&lt;/code&gt;&lt;/p&gt;
-
-&lt;h4&gt;Difference with Dijkstra&amp;#39;s Algorithm&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Key by with priority queue is ordered
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Prim&amp;#39;s&lt;/strong&gt;: lightest incoming edge from set S&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Dijkstra&amp;#39;s&lt;/strong&gt;: length of path from start to that node&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Huffman Encoding&lt;/h2&gt;
-
-&lt;p&gt;Encode a string of length T over alphabet Γ&lt;/p&gt;
-
-&lt;h4&gt;Prefix-free Encoding&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;No codeword can be a prefix of another&lt;/li&gt;
-&lt;li&gt;Can be represented by a &lt;em&gt;full&lt;/em&gt; binary tree&lt;/li&gt;
-&lt;li&gt;Leaves: symbols&lt;/li&gt;
-&lt;li&gt;Path from root to leaf: codeword, left = 0, right = 1&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Optimal Coding Tree&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;A tree whose leaves each correspond to a symbol&lt;br&gt;&lt;/li&gt;
-&lt;li&gt;Min overall length of encoding&lt;br&gt;
-&lt;code&gt;cost of tree = Σ(i=1, n) fi * di&lt;/code&gt;&lt;br&gt;&lt;/li&gt;
-&lt;li&gt;Or, combine freq of 2 decendants into freq of parent:&lt;br&gt;
-&lt;code&gt;cost of tree = Σ(leaves) fi + Σ(internal nodes) fi&lt;/code&gt; &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Construction&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Implication: nodes with smallest freq @ bottom of tree&lt;br&gt;&lt;/li&gt;
-&lt;li&gt;Greedy construction:
-
-&lt;ol&gt;
-&lt;li&gt;Find 2 smallest freq nodes&lt;/li&gt;
-&lt;li&gt;Combine into new node, &lt;code&gt;f = f1 + f2&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Replace 2 nodes with new node&lt;/li&gt;
-&lt;li&gt;Repeat&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Implementation&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Huffman(f):
-# Input: An array f [1 · · · n] of frequencies 
-# Output: An encoding tree with n leaves
-
-    let H be a priority queue of integers, ordered by f 
-    for i = 1 to n: 
-        insert(H,i)
-    for k = n + 1 to 2n − 1:
-        i = deletemin(H), j = deletemin(H)
-        create a node numbered k with children i, j 
-        f[k] = f[i] + f[j]
-        insert(H, k)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;=&amp;gt; Binary heap: &lt;code&gt;O(nlogn)&lt;/code&gt;&lt;/p&gt;
-
-&lt;h2&gt;Interval Scheduling&lt;/h2&gt;
-
-&lt;h3&gt;&lt;em&gt;Max Compatible Interval Scheduling&lt;/em&gt;&lt;/h3&gt;
-
-&lt;p&gt;A set of requests {1, 2, ..., n}; the ith request starts at s(i) and ends at f(i). Schedule the most intervals.&lt;/p&gt;
-
-&lt;h4&gt;Attempts&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Earliest starting time&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Earliest request takes long?&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Smallest interval&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|-------------|    |--------------|
-            |----------|
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Fewest conflicts&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|------|  |-------|  |-------|  |-------|
-    |-------|   |-------|  |-------|
-    |-------|              |-------|
-    |-------|              |-------|
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;Solution&lt;/h4&gt;
-
-&lt;p&gt;Base on earliest finish time.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;
-# Initially let R be the set of all requests, and let A be empty 
-
-While R is not yet empty
-    Choose a request i ∈ R that has the smallest finishing time
-    Add request i to A
-    Delete all requests from R that are not compatible with request i
-EndWhile
-Return the set A as the set of accepted requests
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4&gt;Proof&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Let &lt;code&gt;O&lt;/code&gt; be an optimal set of compatible intervals. Prove that &lt;code&gt;A&lt;/code&gt; contains the same # of intervals as &lt;code&gt;O&lt;/code&gt;.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Let A = {i1, ..., ik}, O = {j1, ..., jm}. Prove k = m.
-
-From our algo: f(i1) &amp;lt;= f(j1) # we 'stay ahead'
-Now prove for each r = 1, f(ir) &amp;lt;= f(jr)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;For all indices r &amp;lt;= k, we have &lt;code&gt;f(ir) &amp;lt;= f(jr)&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Prove by induction.
-
-For r = 1, true.
-Let r  1. Assume f(i_r-1) &amp;lt;= f(j_r-1).
-We know f(j_r-1) &amp;lt;= s(jr), since O has compatible intervals.
-= f(i_r-1) &amp;lt;= f(j_r-1) &amp;lt;= s(jr)
-Thus jr is in set R of available intervals when our algorithm selects ir, hence f(ir) &amp;lt;= f(jr) so that we didn't choose it.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;=&amp;gt; for each r, the rth interval we select finishes at least as soon as the rth interval in O.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;A&lt;/code&gt; is optimal.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Prove by contradiction.
-
-Assume A not optimal, then m  k. # O schedules more than A
-By 2., there is request j_k+1 in O.
-This request starts after request jk ends &amp;amp; hence after ik ends.
-So R still contains j_k+1, which is valid to be put into A.
-- Contradiction -
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;Running Time&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;O(nlogn)&lt;/code&gt;&lt;/p&gt;
-
-&lt;h4&gt;Extension&lt;/h4&gt;
-
-&lt;p&gt;Consider cost of rejecting an interval = &lt;strong&gt;Weighted Interval Scheduling Problem&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3&gt;Schduling All Intervals&lt;/h3&gt;
-
-&lt;p&gt;Partition all intervals across multiple resources = &lt;strong&gt;Interval Partitioning/ Coloring Problem&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h4&gt;Lowerbound&lt;/h4&gt;
-
-&lt;p&gt;In any instance of interval partitioning, &lt;code&gt;# of resources needed = depth of set of intervals&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h4&gt;Pseudocode&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Sort the intervals by their start times, breaking ties arbitrarily 
-
-Let I1, I2, . . . , In denote the intervals in this order
-For j=1,2,3,...,n
-    For each interval Ii that precedes Ij in sorted order and overlaps it 
-        Exclude the label of Ii from consideration for Ij
-    Endfor
-    If there is any label from {1, 2, . . . , d} that has not been excluded then
-        Assign a nonexcluded label to Ij 
-    Else
-        Leave Ij unlabeled 
-    Endif
-Endfor
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4&gt;Proof&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Every interval will be assigned a label. No 2 overlapping intervals receive the same label&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;1. No interval unlabeled.
-
-Consider Ij, suppose t intervals precedes it and overlap it.
-These t intervals + Ij = t+1 intervals all passes over s(Ij), so 
-    t+1 &amp;lt;= d
-    t &amp;lt;= d-1
-Hence there will be a label to assign to Ij.
-
-2. No 2 overlapping intervals assigned the same label.
-
-I precedes I', and when I' is considered, we will not assign the label of I to I' from our algorithm.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;You will hence never reach a point where all labels are currently in use, which matches the lower bound and is optimal.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3&gt;&lt;em&gt;Minumum Maximum Lateness&lt;/em&gt;&lt;/h3&gt;
-
-&lt;p&gt;A set of n requests, resource available from time s, requiring t to finish, and deadline d. Schedule all requests while minimizing lateness.&lt;/p&gt;
-
-&lt;h4&gt;Attempts&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;In order of increasing length ti&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;t1 = 2, d1 = 100; t2 = 10, d2 = 10?&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;In order of increasing &lt;em&gt;slack&lt;/em&gt; time &lt;code&gt;di - ti&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;t1 = 1, d1 = 2; t2 = 10, d2 = 10?&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;Solution&lt;/h4&gt;
-
-&lt;p&gt;Base on earlier deadlines.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Order the jobs in order of their deadlines
-# Assume for simplicity of notation that d1 ≤ ... ≤ dn 
-
-Initially, f = s
-Consider the jobs i = 1, ..., n in this order
-    Assign job i to the time interval from s(i) = f to f(i) = f + ti 
-    Let f = f + ti
-End
-Return the set of scheduled intervals [s(i), f (i)] for i = 1, . . . , n
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4&gt;Proof&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Schedule has no &lt;strong&gt;gaps&lt;/strong&gt;, i.e. no idle time.&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;There is an optimal schedule with no idle time.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Prove by exchange argument.
-
-Suppose schedule A' has an inversion if job i with di scheduled before job j with dj, but dj &amp;lt; di. Our algorithm has no inversions.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;All schedules with no inversions &amp;amp; no idle time have the same max lateness.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;2 schedules with these properties can only differ in the order in which jobs with the same deadlines are scheduled.
-
-Let such deadline be d. There are some jobs with deadline d and scheduled consecutively. Among them, the latest scheduled one has the greatest lateness. This lateness does not depend on the order of the jobs!
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;There is an optimal schedule with no inversions and no idle time.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;a. If O has an inversion, there is a pair of jobs i &amp;amp; j s.t. j is schedules immediately after i, but dj &amp;lt; di.
-b. Swapping i, j, we get a schedule with one less inversion.
-c. The new max lateness &amp;lt;= original lateness.
-
-    Assume each request r is scheduled [sr, fr] with lateness lr. Let L = max_r(lr).
-
-    Let O' be the swapped schedule.
-
-    = fi = sj, f'j = s'i
-
-    All other jobs remain finishing at the same time after the swap, since t(i)+t(j) is the same.
-
-    Job j will not have lateness increased, since it is put forward.
-
-    For job i:
-        If i not delayed, we're done.
-        If i delayed:
-            l'i = f'i - di = fj - di. Since di  dj:
-                l'i = fj - di &amp;lt; fj - dj = lj
-
-    Since L = lj  l'i, the swap doesn't increase max lateness.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;An optimal schedule with no inversions exists. And all such schedules have the same max lateness. Hence algorithm optimal.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;Extension&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Includes release time?&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;References&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Dasguptap, S., Papadimitriou, C.H., &amp;amp; Vazirani, U.V. Algorithms. Chapter 5.1-5.2.&lt;/li&gt;
-&lt;li&gt;Kleinberg, J., Tardos, E. Algorithm Design. Chapter 4.1-4.2.&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Mon, 10 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/algorithm/2016/10/10/greedy-algorithm.html</link>
-        <guid isPermaLink="true">/blog/notes/algorithm/2016/10/10/greedy-algorithm.html</guid>
-        
-        <category>minimum spanning tree</category>
-        
-        <category>huffman encoding</category>
-        
-        <category>interval scheduling</category>
-        
-        <category>greedy</category>
-        
-        <category>algorithm</category>
-        
-        <category>CSC384</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>Algorithm</category>
-        
-      </item>
-    
-      <item>
-        <title>Graph Algorithm</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Dijkstra&amp;#39;s Algorithm&lt;/li&gt;
-&lt;li&gt;Shortest Paths with Negative Edges&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Dijkstra&amp;#39;s Algorithm&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Shortest path problem&lt;/li&gt;
-&lt;li&gt;Adapted from BFS with edge lengths positive&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Tricks&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Replace edges with len  1 with multiple edges of len 1 &amp;amp; dummy nodes&lt;br&gt;&lt;/li&gt;
-&lt;li&gt;Then run BFS&lt;br&gt;&lt;/li&gt;
-&lt;li&gt;Not efficient with more nodes!&lt;br&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Implementation&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Dijkstra(G, l, s):
-# Input: Graph G = (V, E), directed or undirected;
-         positive edge lengths {le : e ∈ E}; vertex s ∈ V
-# Output: For all vertices u reachable from s, dist(u) is set to the distance from s to u
-
-    for all u ∈ V : 
-        dist(u) = ∞
-        prev(u) = nil 
-    dist(s) = 0
-
-    H = makequeue(V) # using dist-values as keys 
-    while H is not empty:
-        u = deletemin(H) # = |V| times
-        for all edges (u, v) ∈ E:
-            if dist(v)  dist(u) + l(u, v): 
-                dist(v) = dist(u) + l(u, v) 
-                prev(v) = u 
-                decreasekey(H, v) # = |V| + |E| times
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Alternative
-
-Initialize dist(s) to 0, other dist(·) values to ∞ 
-R = { } # the &quot;known region&quot;
-while R != V:
-    Pick the node v !∈ R with smallest dist(·) 
-    Add v to R
-    for all edges (v, z) ∈ E:
-        if dist(z)  dist(v) + l(v, z): 
-            dist(z) = dist(v) + l(v, z)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;=&amp;gt; Binary heap: &lt;code&gt;O((|V| + |E|)log|V|)&lt;/code&gt;&lt;/p&gt;
-
-&lt;h4&gt;Update Operation&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;dist(v) = min{dist(v), dist(u) + l(u, v)}&lt;/code&gt; &lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Correct distance to v where u is second-last in shortest path &amp;amp; dist(u) is correct&lt;br&gt;&lt;/li&gt;
-&lt;li&gt;Never make dist(v) too small (i.e. never underestimate) = safe&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;Analysis - Heaps &amp;amp; Array&lt;/h4&gt;
-
-&lt;table&gt;&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;Implementation&lt;/th&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;deletemin&lt;/th&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;insert/decreasekey&lt;/th&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;&amp;#124;V&amp;#124;xdeletemin + (&amp;#124;V&amp;#124;+&amp;#124;E&amp;#124;)xinsert&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Array&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;O(&amp;#124;V&amp;#124;)&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;O(1)&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;O(&amp;#124;V&amp;#124;^2)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Binary heap&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;O(log&amp;#124;V&amp;#124;)&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;O(log&amp;#124;V&amp;#124;)&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;O((&amp;#124;V&amp;#124; + &amp;#124;E&amp;#124;)log&amp;#124;V&amp;#124;)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;d-ary heap&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;O(dlog&amp;#124;V&amp;#124;/log d)&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;O(log&amp;#124;V&amp;#124;/log d)&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;O(&amp;#124;V&amp;#124;*d + &amp;#124;E&amp;#124;log&amp;#124;V&amp;#124;/logd)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Fibonacci heap&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;O(log&amp;#124;V&amp;#124;)&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;O(1) (amortizes)&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;O(&amp;#124;V&amp;#124;log&amp;#124;V&amp;#124; + &amp;#124;E&amp;#124;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;&lt;/table&gt;
-
-&lt;ul&gt;
-&lt;li&gt;If G sparse - heap (|E| ~ |V|)&lt;br&gt;&lt;/li&gt;
-&lt;li&gt;If G dense - array (|E| ~ |V|^2)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Priority Queue Implementations&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Array&lt;br&gt;
-
-&lt;ul&gt;
-&lt;li&gt;insert/decreasekey: &lt;code&gt;O(1)&lt;/code&gt;&lt;br&gt;&lt;/li&gt;
-&lt;li&gt;deletemin: &lt;code&gt;O(n)&lt;/code&gt;&lt;br&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Binary Heap
-
-&lt;ul&gt;
-&lt;li&gt;complete binary tree (filled in from left to right, full)&lt;/li&gt;
-&lt;li&gt;key value &amp;lt;= childrens&amp;#39;
-
-&lt;ul&gt;
-&lt;li&gt;insert/decreasekey: &lt;code&gt;O(log n)&lt;/code&gt;&lt;br&gt;&lt;/li&gt;
-&lt;li&gt;deletemin: &lt;code&gt;O(log n)&lt;/code&gt;&lt;br&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;array representation: parent @ &lt;code&gt;floor(j/2)&lt;/code&gt;, children @ &lt;code&gt;2j&lt;/code&gt; &amp;amp; &lt;code&gt;2j+1&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;d-ary heap
-
-&lt;ul&gt;
-&lt;li&gt;nodes have d children&lt;/li&gt;
-&lt;li&gt;h(T) = &lt;code&gt;Θ(log d n)&lt;/code&gt; = &lt;code&gt;Θ((log n)/(log d))&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;insert: &lt;code&gt;Θ((log n)/(log d))&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;deletemin: &lt;code&gt;Θ(d * log d n)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;array representation: parent @ &lt;code&gt;(j-1)/d&lt;/code&gt;, children @ &lt;code&gt;{(j-1)d+2, ..., min{n, (j-1)d+d+1}}&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2&gt;Shortest Paths with Negative Edges&lt;/h2&gt;
-
-&lt;h3&gt;&lt;em&gt;Bellman-Ford Algorithm&lt;/em&gt;&lt;/h3&gt;
-
-&lt;p&gt;Update &lt;em&gt;all&lt;/em&gt; edges &lt;code&gt;|V|-1&lt;/code&gt; times!&lt;/p&gt;
-
-&lt;h4&gt;Implementation&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Shortest-paths(G, l, s):
-# Input: Directed graph G = (V, E);
-         edge lengths {le : e ∈ E} with no negative cycles; 
-         vertex s ∈ V
-# Output: For all vertices u reachable from s, dist(u) is set to the distance from s to u
-    for all u ∈ V : 
-        dist(u) = ∞
-        prev(u) = nil
-
-    dist(s) = 0
-    repeat |V | − 1 times:
-        for all e ∈ E: 
-            update(e)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;=&amp;gt; &lt;code&gt;O(|V|*|E|)&lt;/code&gt;&lt;/p&gt;
-
-&lt;h4&gt;Termination&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;No update occurred (assume no &lt;strong&gt;negative cycles&lt;/strong&gt;)&lt;/li&gt;
-&lt;li&gt;After &lt;code&gt;|V|-1&lt;/code&gt; times of iterations, apply 1 extra round. If some &lt;code&gt;dist&lt;/code&gt; reduced &amp;lt;- negative cycle&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2&gt;References&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Dasguptap, S., Papadimitriou, C.H., &amp;amp; Vazirani, U.V. Algorithms. Chapter 4.1-4.6.&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Mon, 10 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/algorithm/2016/10/10/graph-algorithm.html</link>
-        <guid isPermaLink="true">/blog/notes/algorithm/2016/10/10/graph-algorithm.html</guid>
-        
-        <category>dijkstra's</category>
-        
-        <category>bellman-ford</category>
-        
-        <category>graph</category>
-        
-        <category>data structure</category>
-        
-        <category>algorithm</category>
-        
-        <category>CSC384</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>Algorithm</category>
-        
-      </item>
-    
-      <item>
-        <title>Linked List Basic</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;What is Linked List?&lt;/li&gt;
-&lt;li&gt;Linked List v.s. Array&lt;/li&gt;
-&lt;li&gt;Visualizing Linked List&lt;/li&gt;
-&lt;li&gt;Basic examples (in C)&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h1&gt;What is Linked List?&lt;/h1&gt;
-
-&lt;p&gt;&lt;em&gt;Linked lists&lt;/em&gt; use &lt;strong&gt;dynamically allocated memories&lt;/strong&gt; as data storage, and associate these storages with &lt;strong&gt;pointers&lt;/strong&gt;. &lt;/p&gt;
-
-&lt;p&gt;Well, you may just think of &lt;em&gt;linked lists&lt;/em&gt; as arrays that are &lt;strong&gt;resizable&lt;/strong&gt;, easily &lt;strong&gt;rearrangible&lt;/strong&gt;, with &lt;strong&gt;non-consecutive&lt;/strong&gt; slots. &lt;/p&gt;
-
-&lt;h1&gt;Linked List v.s. Array&lt;/h1&gt;
-
-&lt;p&gt;Everyone likes comparisons. So the properties of linked list &amp;amp; array here -&lt;/p&gt;
-
-&lt;table&gt;&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;Linked List&lt;/th&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;Array&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;* Dynamic size&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Fixed size&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;* Cheaper insertion&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Expensive insertion&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;No random access&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;* Random Access&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;---&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;* Better cache performance&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Extra memory space&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;* ---&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;&lt;/table&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;We must know how many elements to allow when defining an array; &lt;strong&gt;linked lists&lt;/strong&gt; allowes more flexibility.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;To insert an element into array, we probably need to move a whole bunch of elements backwards for the newcomer to fit. For &lt;strong&gt;linked lists&lt;/strong&gt;, it&amp;#39;s just about switching between some pointers and that&amp;#39;s it.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Memories are allocated consecutively for arrays, which mean calculating &lt;code&gt;arr[5]&lt;/code&gt;, &lt;code&gt;arr[10]&lt;/code&gt;, &lt;code&gt;arr[1000]&lt;/code&gt; are all about adding offsets to &lt;code&gt;arr[0]&lt;/code&gt;, which is quite cheap. But for &lt;strong&gt;linked lists&lt;/strong&gt;, the memories are dynamically allocated on heap and do not have this luxury.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Moreover for consecutive memories, the cache performance is better, since a whole bunch of array elements that fit into the cache size will be fetched all at once.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Linked lists&lt;/strong&gt; requires more memory space than arrays due to the fact that pointers are required.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1&gt;Visualizing Linked List&lt;/h1&gt;
-
-&lt;p&gt;OK, so what&amp;#39;s the picture of &lt;em&gt;linked lists&lt;/em&gt;? It all starts with a pointer (&lt;code&gt;*list&lt;/code&gt;), followed by a list of nodes (&lt;code&gt;node_i&lt;/code&gt;):&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;
-  []   -&amp;gt;   [_]  -&amp;gt;  [_]  -&amp;gt; ...  -&amp;gt;  [_]  -&amp;gt;  NULL
-*list     node_1   node_2    ...    node_N
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Hold on, some structures need to be defined for &lt;strong&gt;lists&lt;/strong&gt; and &lt;strong&gt;nodes&lt;/strong&gt; before you can easily mingle with the crazy pointers.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;
-&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// holding the value of the node; can be any type or have multiple value fields
-&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// pointing to the next node in list
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SinglyLinkedList&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// pointing to the first node in list
-&lt;/span&gt;    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// count of nodes in list; optional field
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SinglyLinkedList&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SinglyLinkedList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;blockquote&gt;
-&lt;h4&gt;Haven&amp;#39;t seen &lt;code&gt;typedef&lt;/code&gt; before?&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;typedef&lt;/code&gt; provides an easy way to define types so that you don&amp;#39;t have to type in so many words when declaring a variable with that data type.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;typedef [actual-data-type] [a-convenient-name]&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;So in C, after defiing a struct (e.g. Node), everytime you wanna declare a Node, you type &lt;code&gt;struct Node n&lt;/code&gt;. Now I know how to alias &lt;code&gt;struct Node&lt;/code&gt; into &lt;code&gt;Node&lt;/code&gt; by &lt;code&gt;typedef&lt;/code&gt;!&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;typedef struct Node Node;&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Then we&amp;#39;re ready to use these structs and build a linked list.&lt;/p&gt;
-
-&lt;h1&gt;Basic Examples (in C)&lt;/h1&gt;
-
-&lt;h3&gt;Initialization&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;
-&lt;span class=&quot;n&quot;&gt;SinglyLinkedList&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;malloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SinglyLinkedList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;code&gt;malloc&lt;/code&gt; stands for memory allocation, which is similar to the &lt;code&gt;new&lt;/code&gt; keyword in C++.&lt;br&gt;
-You pass in the size of memory you want to allocate, so for a &lt;code&gt;SinglyLinkedList&lt;/code&gt; struct, its
-&lt;code&gt;sizeof(SinglyLinkedList)&lt;/code&gt;.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3&gt;Adding a node to list&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;
-&lt;span class=&quot;cm&quot;&gt;/*      []     -&amp;gt;    NULL   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list                 */&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// create a node
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;malloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// give the node a value
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// the node is not linked by other nodes yet
-&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// add it to the head of the list
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*      []     -&amp;gt;    [1]    -&amp;gt;     NULL   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list           ↑                   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                   *n                   */&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// remove it from the list
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt;      NULL    [1] -&amp;gt;  NULL   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list                  ↑             */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                           *n            */&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// destroy it by releasing its memory
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;free&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*      []     -&amp;gt;    NULL   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list                 */&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Always free your malloc&amp;#39;ed memories to avoid memory leak.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3&gt;Adding nodes to list&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;
-&lt;span class=&quot;c1&quot;&gt;// declare pointer temp_n to point to the head of the empty list
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// create new node
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;malloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    &lt;span class=&quot;c1&quot;&gt;// add to the head of the list
-&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// if list empty, let head point to n
-&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// else let the currently pointed node link to n (by assigning *next to point to n)
-&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt; [0] -&amp;gt; [1] -&amp;gt; [2] -&amp;gt; ... -&amp;gt; [999] -&amp;gt;  NULL   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list     ↑  -&amp;gt;  ↑  -&amp;gt;  ↑     ... -&amp;gt;   ↑              */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*          *temp_n *temp_n *temp_n        *temp_n          */&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Use a temp node pointer to move around the list.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3&gt;List traversal&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;
-&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;value: %d&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// move forward the cursor
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sum: %d&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3&gt;Insert a node into list&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt; [0] -&amp;gt; [1] -&amp;gt; [2] -&amp;gt; ... -&amp;gt; [999] -&amp;gt;  NULL   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list                                                 */&lt;/span&gt;
-
-&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// inserting into index 5 of list
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;malloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;87&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// traverse through the list to find index; assume we don't check if index is valid
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt; ... -&amp;gt; [4] -&amp;gt; [5] -&amp;gt; ... -&amp;gt;  NULL   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list            ↑                           */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                  *temp_n                        */&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// insert by moving around pointers
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*                    *n  -&amp;gt; [87]                          */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                             ↓                           */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt; ... -&amp;gt; [4] -&amp;gt;  [5]   -&amp;gt; ... -&amp;gt;  NULL        */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list            ↑                                   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                  *temp_n                                */&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*                    *n  -&amp;gt; [87]                          */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                         ⬈   ↓                           */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt; ... -&amp;gt; [4]     [5]   -&amp;gt; ... -&amp;gt;  NULL        */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list            ↑                                   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                  *temp_n                                */&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3&gt;Remove a node from list&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;
-&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// removing node at index 5 of list
-&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// traverse through the list to find index; assume we don't check if index is valid
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt; ... -&amp;gt; [4] -&amp;gt; [87] -&amp;gt; ... -&amp;gt;  NULL  */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list            ↑                           */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                  *temp_n                        */&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// remove by moving around pointers; notice that we're removing temp_n-&amp;gt;next instead of temp-&amp;gt;n
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// n = node to remove
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// connect the previous node and the next node
-&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                            *n                           */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                             ↓                           */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt; ... -&amp;gt; [4] -&amp;gt;  [87]   -&amp;gt; ... -&amp;gt;  NULL       */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list            ↑                                   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                  *temp_n                                */&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*                            *n                                    */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                             ↓                                    */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt; ... -&amp;gt; [4]     [87]   -&amp;gt;  [5]  -&amp;gt; ... -&amp;gt;  NULL       */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list            ↑  \_____________⬈                           */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                  *temp_n                                         */&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;free&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// release memory
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;   
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3&gt;Destroy the whole list before program ends&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;
-&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;free&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// finally, free list as well
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;free&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h1&gt;Summary&lt;/h1&gt;
-
-&lt;p&gt;&lt;strong&gt;Linked lists&lt;/strong&gt; are the most basic data structure to know and deal with, and its application is wide, such as creating trees. Make sure you can construct a valid linked list before you move on to the more complicated pointer-related data structure!&lt;/p&gt;
-
-&lt;p&gt;Source code can be found at &lt;a href=&quot;https://github.com/pyliaorachel/data-structure-and-algorithm/blob/master/DataStructures/LinkedList/Implementations/linked-list.c&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2&gt;References&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.geeksforgeeks.org/linked-list-vs-array/&quot;&gt;GeeksforGeeks - Linked List vs Array&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Sat, 08 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/datastructure/2016/10/08/linked-list-basic.html</link>
-        <guid isPermaLink="true">/blog/notes/datastructure/2016/10/08/linked-list-basic.html</guid>
-        
-        <category>data structure</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>DataStructure</category>
         
       </item>
     

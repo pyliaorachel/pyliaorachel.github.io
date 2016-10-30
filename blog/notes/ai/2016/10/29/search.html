@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Search</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="/css/main.css" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
+		<link rel="stylesheet" href="/css/github-markdown.css">
+
+		<!-- Place jquery before bootstrap -->
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">MyCoon</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+
+			<form class="navbar-form navbar-left">
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Search">
+				</div>
+				<button type="submit" class="btn btn-default">Submit</button>
+			</form>
+
+			<ul class="nav navbar-nav navbar-right" id="nav-links">
+				<li class="nav-home"><a href="/">Home</a></li>
+				<li class="dropdown nav-blog">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Blog<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/blog">MyCoon Blog</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/blog/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/blog/notes">
+									<span>Notes</span>
+									<span>13</span>
+								</a>
+							</li>
+						
+						<li><a href="/blog/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li class="dropdown nav-tutorial">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Tutorials<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/tutorial">MyCoon Tutorial</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/tutorial/categories">Categories</a></li>
+						
+							
+						
+
+						
+						<li><a href="/tutorial/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li  class="nav-project"><a href="/project">Projects</a></li>
+				<li class="nav-special" id="special"><a href="#">?</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+		<main class="page-content post" aria-label="Content">
+	<div class="post-wrapper">
+		<div class="wrapper">
+	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
+
+		<header class="post-header">
+			<h1 class="post-title" itemprop="name headline">Search</h1>
+			<p class="post-meta">Oct 29, 2016
+				 • Notes
+				 • pyliaorachel
+			</p>
+		</header>
+
+		
+
+		<span class="separator"> • • • </span>
+
+		<div class="post-content" itemprop="articleBody">
+			<h2>Content</h2>
+
+<ol>
+<li>Search Overview
+
+<ol>
+<li>Formalism of Search</li>
+<li>Searching Template</li>
+<li>Critical Properties of Search</li>
+</ol></li>
+<li>Uninformed Search
+
+<ol>
+<li>BFS</li>
+<li>DFS</li>
+<li>Depth Limited Search</li>
+<li>Iterative Deepening Search</li>
+<li>Uniform-Cost Search</li>
+</ol></li>
+<li>Informed/Heuristic Search
+
+<ol>
+<li>Best First Search</li>
+<li>A*</li>
+</ol></li>
+</ol>
+
+<!--more-->
+
+<hr>
+
+<h2>Search Overview</h2>
+
+<h3>Formalism of Search</h3>
+
+<ul>
+<li>State space</li>
+<li>Initial state &amp; goal state</li>
+<li>Actions/successor functions/state space transitions <code>S(x)</code></li>
+<li>Costs <code>C(x, a, y)</code></li>
+<li>Heuristics to guide search</li>
+</ul>
+
+<blockquote>
+<h4>Complex situations</h4>
+
+<ul>
+<li>Actions lead to multiple states</li>
+<li>Unsure of a given state</li>
+<li>=&gt; <strong>Probabilistic models</strong></li>
+</ul>
+</blockquote>
+
+<h3>Searching Template</h3>
+
+<ul>
+<li>State annotation
+
+<ul>
+<li>State + action, parent state, cost, ...</li>
+</ul></li>
+<li><strong>Frontier</strong>: states haven&#39;t explored or expanded but want to explore</li>
+<li>Order of frontiers (selection rules) implies the type of search, e.g. <code>BFS</code>, <code>DFS</code></li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">TreeSearch(Frontier, Successors, Goal):
+    If Frontier empty:
+        return failure
+
+    Curr = select state from Frontier
+    If (Goal(Curr)):
+        return Curr
+    Frontier' = (Frontier - {Curr}) ∪ Successors(Curr)
+    return TreeSearch(Frontier', Successors, Goal)
+</code></pre></div>
+<h3>Critical Properties of Search</h3>
+
+<ul>
+<li>Completeness</li>
+<li>Optimality</li>
+<li>Time complexity</li>
+<li>Space complexity</li>
+</ul>
+
+<h2>Uninformed Search</h2>
+
+<ul>
+<li>Fixed rule for selecting next state</li>
+<li>Do not consider any <strong>domain specific information</strong> about the particular search problem</li>
+<li>e.g. BFS, Uniform-Cost, DFS, Depth-Limited, Iterative-Deepening</li>
+</ul>
+
+<h4>Path &amp; Cycle Checking</h4>
+
+<ul>
+<li>Path checking
+
+<ul>
+<li>Ensure expanded state <code>c</code> not equal to state reached by any ancestor of <code>c</code> along this path</li>
+<li>Path checked in isolation</li>
+</ul></li>
+<li>Cycle checking/ Multiple path checking
+
+<ul>
+<li>Ensure <code>c</code> not equal to any previously expanded state</li>
+<li>Space complexity of DFS goes <code>exponential</code></li>
+<li>Non-uniform costs have additional issues</li>
+</ul></li>
+</ul>
+
+<h3>BFS</h3>
+
+<ul>
+<li><code>O(b^(d+1))</code> space: explored nodes + nodes expanded at goal level before reaching goal</li>
+<li><code>O(b^(d+1))</code> time
+
+<ul>
+<li><code>1 + b + b^2 +...+ b^d + b(b^d-1)</code></li>
+</ul></li>
+<li>Optimal</li>
+<li>Complete</li>
+</ul>
+
+<h3>DFS</h3>
+
+<ul>
+<li><code>O(bm)</code> space (one path at a time)</li>
+<li><code>O(b^m)</code> time, <code>m</code> = length of longest path in state space</li>
+<li>Complete for acyclic graph or cycles pruned</li>
+<li>Not optimal</li>
+</ul>
+
+<h3>Depth Limited Search</h3>
+<div class="highlight"><pre><code class="language-" data-lang="">DLS(Frontier, Successors, Goal):
+    While Frontier not empty:
+        n = first node from Frontier
+        Curr = terminal state of n
+        If (Goal(Curr)):
+            return n
+
+        If Depth &lt; D: // limit Frontiers to depth D
+            Frontier = (Frontier - {n}) ∪ Successors(Curr)
+        Else:
+            Frontier = Frontier - {n}
+            CutOffOccured = TRUE
+    return FAIL
+</code></pre></div>
+<h3>Iterative Deepening Search</h3>
+
+<ul>
+<li>Iteratively increase depth limit and perform DLS</li>
+<li>Stop if solution found OR DLS failed without cutting off any nodes</li>
+<li>Not good if many cycles</li>
+<li><code>O(bd)</code> space</li>
+<li><code>O(b^d)</code> time
+
+<ul>
+<li><code>(d+1)b^0 + db + ... + b^d</code></li>
+</ul></li>
+<li>Complete</li>
+<li>Optimal if costs uniform
+
+<ul>
+<li><strong>Cost bound</strong> for non-uniform costs</li>
+</ul></li>
+</ul>
+
+<h3>Uniform-Cost Search</h3>
+
+<ul>
+<li><code>Frontier</code> ordered by <strong>increasing cost of path</strong></li>
+<li>Nodes rejected or replaced on Frontier guaranteed to have more costly paths</li>
+<li><code>O(b^(C*/ε))</code> time &amp; space, <code>C*</code> = cost of optimal solution</li>
+<li>Complete if positive, nonzero transition costs</li>
+<li><p>Optimal</p>
+<div class="highlight"><pre><code class="language-" data-lang="">Given: each transition has costs &gt;= ε &gt; 0
+
+Lemma 1: If n2 is expanded immediately after n1, then c(n1) &lt;= c(n2)
+Lemma 2: When node n is expanded, every path in the search space with cost &lt; c(n) has already been expanded
+Lemma 3: The first time USC expandes a node n terminating at state S, it has found the minimal cost path to S
+</code></pre></div></li>
+</ul>
+
+<h2>Informed/Heuristic Search</h2>
+
+<ul>
+<li><code>h(n1) &lt; h(n2)</code> if we guess it&#39;s cheaper to get to goal from n1 than from n2</li>
+<li><code>h(n) = 0</code> for goal nodes n</li>
+</ul>
+
+<h3>Best First Search</h3>
+
+<ul>
+<li>Only use <code>h(n)</code> to guide the search</li>
+</ul>
+
+<h3>A*</h3>
+
+<ul>
+<li><code>f(n) = g(n) + h(n)</code>, <code>g(n)</code> = cost of path to n</li>
+<li><strong>Adimissible h(n)</strong>
+
+<ul>
+<li>Let <code>h*(n)</code> be the cost of an optimal path from n to goal node, then <strong>admissible heuristic</strong> satisfies:<br>
+<code>h(n) &lt;= h*(n)</code></li>
+<li>Never <strong>over-estimates</strong> the cost to reach goal, won&#39;t miss any promising paths</li>
+<li>Implies <strong>optimality</strong></li>
+</ul></li>
+<li><p><strong>Monotonic/Consistent h(n)</strong></p>
+
+<ul>
+<li>Local admissibility</li>
+<li><code>h(n1) &lt;= c(n1, a, n2) + h(n2)</code></li>
+<li><p>Consistency -&gt; Adimissibility</p>
+<div class="highlight"><pre><code class="language-" data-lang="">Assume h(n1) &lt;= c(n1, a, n2) + h(n2)
+Prove h(n) &lt;= h*(n)
+
+If not path from n to goal, then h*(n) = inf
+Else
+    Let n-&gt;n1-&gt;...-&gt;n* be an optimal path from n to goal
+    (Cost: h*(n); cost of sub-path: h*(ni))
+
+    Base case: n = n*, h(n) = 0 &lt;= h*(n) = 0
+    Induction: h(n1) &lt;= h*(n1)
+        h(n) &lt;= c(n, a1, n1) + h(n1) &lt;= c(n, a1, n1) + h*(n1) = h*(n)
+</code></pre></div></li>
+<li><p><code>f(n)</code> non-decreasing</p>
+<div class="highlight"><pre><code class="language-" data-lang="">f(n1) = g(n1) + h(n1) &lt;= g(n1) + c(n1, a, n2) + h(n2) = f(n2)
+</code></pre></div></li>
+<li><p><code>f(n1) &lt;= f(n2)</code> if n2 expanded after n1</p></li>
+<li><p>If n has been expanded, every path with lower f-value has already been expanded</p></li>
+<li><p>The first time A* expands a node, it has found the min cost path to that node</p></li>
+</ul></li>
+<li><p><strong>Admissible &amp; monotonic h(n)</strong> =&gt; Optimal</p>
+
+<ul>
+<li>Same time &amp; space bounds as UCS
+
+<ul>
+<li># of nodes expanded no larger than UCS</li>
+</ul></li>
+<li>Complete
+
+<ul>
+<li>Finite # of paths having <code>f-value &lt; c(SolutionPath)</code>, since each action has <code>costs &gt;= ε &gt; 0</code></li>
+</ul></li>
+<li>Optimal</li>
+<li>Cycle checking: keep only the first path to a state, rejecting all subsequent paths</li>
+</ul></li>
+<li><p>Admissibility without monotonicity</p>
+
+<ul>
+<li>Optimal
+
+<ul>
+<li>But ordering of nodes not guaranteed optimal when put in queue</li>
+</ul></li>
+<li>Cycle checking: keep revisited nodes with cost less than before</li>
+</ul></li>
+<li><p>Expand less state space, but still constrained by speed or memory</p>
+
+<ul>
+<li>IDA*: reduce memory requirements
+
+<ul>
+<li>Cutoff: <code>f-value</code></li>
+<li><code>curBound</code></li>
+<li><code>smallestNotExplored</code>: smallest <code>f-value</code> of discarded nodes in a round
+
+<ul>
+<li>Expand all nodes with <code>f-value</code> equal to <code>f-limit</code></li>
+</ul></li>
+</ul></li>
+<li>Weighted A*
+
+<ul>
+<li><code>f(n) = (1-ε) * g(n) + ε * h(n)</code></li>
+</ul></li>
+<li>Anytime A*
+
+<ul>
+<li>Find the best path for a given ε</li>
+<li>Reduce ε and replan</li>
+</ul></li>
+</ul></li>
+</ul>
+
+		</div>
+
+		<ul class="tag-list">
+			
+
+			<li class="tag">
+				AI
+			</li>
+
+			
+
+			<li class="tag">
+				CSC384
+			</li>
+
+			
+
+			<li class="tag">
+				search
+			</li>
+
+			
+		</ul>
+
+	</article>
+
+	
+		<div id="disqus_thread"></div>
+<script>
+	var disqus_config = function () {
+	    this.page.url = "https://pyliaorachel.github.io";
+	    this.page.identifier = "/blog/notes/ai/2016/10/29/search.html";
+	};
+	(function() {
+	    var d = document, s = d.createElement('script');
+	    s.src = '//pyliaorachel.disqus.com/embed.js';
+	    s.setAttribute('data-timestamp', +new Date());
+	    (d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	
+</div>
+	</div>
+</main>
+		<footer>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4 footer-link">
+				<a href="mailto:rachel5566kk@gmail.com">
+					<span class="icon icon-email">
+						<img src="/assets/svg/email-logo.svg" alt="Email Logo">
+					</span>
+					<span class="username">rachel5566kk@gmail.com</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://github.com/pyliaorachel"  target="_blank">
+					<span class="icon icon-github">
+						<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+					</span>
+					<span class="username">pyliaorachel</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://tw.linkedin.com/in/peiyu-liao" target="_blank">
+					<span class="icon icon-linkedin">
+						<img src="/assets/svg/linkedin-logo.svg" alt="LinkedIn Logo">
+					</span>
+					<span class="username">Peiyu Liao</span>
+				</a>
+			</div>
+		</div><!-- /.row -->
+		<div class="row">
+			<div class="footer-copy-right">
+				<p>2016	&copy; Liao Peiyu</p>
+			</div >
+		</div><!-- /.row -->
+	</div><!-- /.container-fluid -->
+</footer>
+		<script type="text/javascript" src="/js/main.js"></script>
+		<script type="text/javascript" src="/js/home.js"></script>
+		<script id="dsq-count-scr" src="//pyliaorachel.disqus.com/count.js" async></script>
+	</body>
+</html>
