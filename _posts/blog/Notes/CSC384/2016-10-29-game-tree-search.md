@@ -111,14 +111,14 @@ AlphaBeta(n,Player,alpha,beta): //return Utility of state
 			alpha = max(alpha, AlphaBeta(c,MIN,alpha,beta)) 
 			If beta <= alpha:
 				break 
-	return alpha
+		return alpha
 
 	Else: //Player == MIN 
 		for c in ChildList:
 			beta = min(beta, AlphaBeta(c,MAX,alpha,beta)) 
 			If beta <= alpha:
 				break 
-	return beta
+		return beta
 
 // Initial call: AlphaBeta(START_NODE, PLAYER, -infinity, infinity)
 ```

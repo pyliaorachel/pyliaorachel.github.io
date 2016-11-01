@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "CSP"
+title:  "Constraint Satisfaction Problems"
 categories: Blog Notes AI
 tags: ["AI", "CSC384", "CSP"]
 author: pyliaorachel

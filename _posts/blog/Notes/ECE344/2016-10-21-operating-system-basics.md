@@ -38,7 +38,6 @@ excerpt_separator: <!--more-->
 		- Isolates itself from apps
 			- _If NOT, then OS has to compromise for apps; apps may corrupt OS and no isolations provided to them_
 
----
 ## OS Design
 
 ### Key Ideas
@@ -127,7 +126,6 @@ protection, process mgmt, security, ...)	|	(when program runs most instructions)
 (network, CPU, memory, printer, video card, monitor, disk, ...)
 ```
 
----
 ## Hardware
 
 ### __Processor (CPU)__
@@ -220,7 +218,6 @@ protection, process mgmt, security, ...)	|	(when program runs most instructions)
 	}
 	```
 
----
 ## OS-Related Hardware
 
 - OS is S/W, when other apps are running, it is not. How does OS manage resources?

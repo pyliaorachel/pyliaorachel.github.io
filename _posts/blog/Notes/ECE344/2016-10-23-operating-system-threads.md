@@ -154,7 +154,6 @@ excerpt_separator: <!--more-->
 	- __Other states__
 		- Terminal state, pending signals, timers, swap, ...
 
----
 ## Thread Scheduling
 
 - `Thread`: an independent stream of instructions

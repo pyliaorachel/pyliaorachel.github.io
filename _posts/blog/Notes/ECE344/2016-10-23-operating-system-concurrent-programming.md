@@ -199,7 +199,6 @@ excerpt_separator: <!--more-->
 		=> Can turn to `polling`, with intervals not too long
 	- Need to ensure a thread runs for a while before switching
 
----
 ## Synchronization
 
 - `Threads` wait on some conditions before proceeding
