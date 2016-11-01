@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Operating System - Scheduling</title>
+		<title>Threads & Parallel Programming</title>
 		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
 		<link rel="stylesheet" href="/css/main.css" type="text/css">
 		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
@@ -98,8 +98,8 @@
 	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
 
 		<header class="post-header">
-			<h1 class="post-title" itemprop="name headline">Operating System - Scheduling</h1>
-			<p class="post-meta">Oct 23, 2016
+			<h1 class="post-title" itemprop="name headline">Threads & Parallel Programming</h1>
+			<p class="post-meta">Oct 30, 2016
 				 • Notes
 				 • pyliaorachel
 			</p>
@@ -113,226 +113,148 @@
 			<h2>Content</h2>
 
 <ol>
-<li>Scheduling Overview</li>
-<li>Scheduling Policies</li>
-<li>Multiprocessor Scheduling</li>
+<li>Parallelism Overview
+
+<ol>
+<li>Standard Models of Parallelism</li>
+<li>Speedup</li>
+<li>Dependence</li>
+</ol></li>
+<li>Threads &amp; Processes
+
+<ol>
+<li>Pthreads</li>
+<li>Synchronization</li>
+</ol></li>
 </ol>
 
 <!--more-->
 
 <hr>
 
-<h2>Scheduling Overview</h2>
+<h2>Parallelism Overview</h2>
+
+<h3>Standard Models of Parallelism</h3>
 
 <ul>
-<li>Prevent <code>thread starvation</code>, BUT <code>context switching</code> is expensive</li>
-<li>Runs another program when I/O performed</li>
-<li>Goals
+<li>Shared memory (pthreads)</li>
+<li>Shared memory + data parallelism (OpenMP)</li>
+<li>Message passing (MPI)</li>
+<li>Transactional memory (TM)</li>
+</ul>
+
+<h3>Speedup</h3>
 
 <ul>
-<li><strong>Batch systems</strong>: Long running, no interactive users, no time constraints
+<li><code>speedup on problem = sequential execution time of best known sequential algorithm / execution time on p processors</code>
 
 <ul>
-<li><code>CPU utilization</code>
-
-<ul>
-<li>% of time CPU is busy</li>
+<li>Avoids picking easily parallelizable algorithm with poor sequential execution time</li>
 </ul></li>
-<li><code>Throughput</code>
+<li>Linear speedup is best to be achieved
 
 <ul>
-<li># of programs complete per unit time</li>
-</ul></li>
-<li><code>Turnaround time</code>
+<li>Sub-linear speedup: due to overhead of <em>startup</em>, <em>synchronization</em>, <em>communication</em>, ...</li>
+<li>Super-linear speedup
 
 <ul>
-<li>Total time to finish a program</li>
-<li><code>turnaround = processing + waiting</code></li>
-</ul></li>
-</ul></li>
-<li><strong>Interactive (general-purpose) systems</strong>: Short running, interactive suers, weak time constraints
-
-<ul>
-<li><code>Response time</code>
-
-<ul>
-<li>Time between <em>receiving request</em> &amp; starting to <em>produce output</em></li>
+<li>Cache/memory effects</li>
+<li>Nondeterminism in search problems</li>
 </ul></li>
 </ul></li>
+<li><strong>Amdahl&#39;s Law</strong>: if <code>1/s</code> of program is sequential, speedup will not be better than <code>s</code></li>
+</ul>
+
+<h3>Dependence</h3>
+
+<ul>
+<li><strong>True dependence</strong>
+
+<ul>
+<li><code>S2</code> reads a value written by <code>S1</code></li>
+</ul></li>
+<li><strong>Anti dependence</strong>
+
+<ul>
+<li><code>S2</code> writes a value read by <code>S1</code></li>
+</ul></li>
+<li><strong>Output dependence</strong>
+
+<ul>
+<li><code>S2</code> writes a value written by <code>S1</code></li>
+</ul></li>
+<li><strong>Loop carried dependence</strong>
+
+<ul>
+<li>Statements are part of the execution of a loop</li>
+<li>e.g. <code>a[i] = f(a[i-1]) + 1;</code></li>
+<li>Prevents loop iteration parallelization</li>
+<li>Level of loop carried dependence: nesting depth of loop that carries dependence</li>
+<li>&lt;-&gt; <strong>Loop independent dependence</strong></li>
 </ul></li>
 </ul>
 
-<h2>Scheduling Policies</h2>
+<h2>Threads &amp; Processes</h2>
 
 <ul>
-<li><strong>Batch systems</strong>
+<li>Similarities
 
 <ul>
-<li>Policies
-
-<ul>
-<li><code>FIFO</code> (non-preemptive)
-
-<ul>
-<li>In order of arrival time</li>
-<li>Run thread until completion</li>
+<li>Own logical control flow</li>
+<li>Run concurrently with others</li>
 </ul></li>
-<li><code>Shortest job first</code> (non-preemptive)
+<li>Differences
 
 <ul>
-<li>In order of shortest running time</li>
-<li>Run thread until completion</li>
-<li>Starving long jobs</li>
-</ul></li>
-<li><code>Shortest remaining time</code> (preemptive)
-
-<ul>
-<li>In order of shortest remaining time</li>
-<li>Run thread until completion OR another thread arrives</li>
-<li>Preemptive version of <code>shortest job first</code></li>
-<li>Starving long jobs</li>
-<li>Optimal w.r.t. avg waiting time</li>
-</ul></li>
-</ul></li>
-<li>Properties
-
-<ul>
-<li>Some require estimate of preocessing time</li>
-<li>May starve long running threads</li>
-<li>Long response time</li>
-</ul></li>
-</ul></li>
-<li><strong>Interactive systems</strong>
-
-<ul>
-<li>Policies
-
-<ul>
-<li><code>Round-Robin</code>
-
-<ul>
-<li>Preemptive version of <code>FIFO</code></li>
-<li><code>Time slice</code>
-
-<ul>
-<li>Upper time bound each process runs </li>
-<li><code>time slice &gt;&gt; context switch time</code></li>
-<li><code>cs overhead = cs/(ts+cs)</code></li>
-</ul></li>
-<li>Run thread until <code>time slice</code> interrupt OR thread blocks</li>
-<li>Effectiveness:
-
-<ul>
-<li># of threads</li>
-<li>Size of <code>time slice</code><br>
-<strong>Long</strong> -&gt; slow response<br>
-<strong>Short</strong> -&gt; high overhead</li>
-</ul></li>
-<li>Does not require estimation of job processing time; no <code>starvation</code>; enables <code>interactivity</code> by limiting the amount of time each thread can run</li>
-<li>Reduces <code>throughtput</code> due to frequent <code>context switching</code></li>
-</ul></li>
-<li><code>Static priority</code>
-
-<ul>
-<li>In order of priority assigned</li>
-<li>Starving low prioriy threads</li>
-<li><em>Priority inversion</em>: low priority threads holding locks that high priority threads want</li>
-</ul></li>
-<li><code>Multi-level queue</code>
-
-<ul>
-<li>High, medium, &amp; low PQs</li>
-<li>Choose from high-priority PQ first (e.g. I/O threads)</li>
-<li>For each queue, <code>round-robin</code> scheduling</li>
-</ul></li>
-<li><code>Dynamic priority (feedback)</code>
-
-<ul>
-<li>Priority changed based on thread behavior; CPU-bound threads have priority reduced</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li><code>Feedback scheduling</code>
-
-<ul>
-<li>Goals
-
-<ul>
-<li>Allocate CPU fairly</li>
-<li>I/O-bound threads receive higher priority</li>
-</ul></li>
-<li>Each thread:
-
-<ul>
-<li>CPU usage (C)</li>
-<li>Current priority (Pi)</li>
-<li>Initial priority (P0)</li>
-<li>Nice value (N)</li>
-</ul></li>
-<li>Steps
-
-<ol>
-<li>Scheduler chooses thread with the <strong>smallest</strong> Pi</li>
-<li>On timer interrupt, update CPU C of running thread <code>C = C + 1</code></li>
-<li>Every time slice, update Pi <code>Pi = Pi-1/2 + C + N</code></li>
-<li>Reset C for all threads</li>
-</ol></li>
-<li><code>Time slice</code>
-
-<ul>
-<li>Many interrupts in between <code>time slice</code> to avoid excessive <code>context switches</code></li>
-<li>A <code>thread</code> runs for a full <code>time slice</code> unless:
-
-<ul>
-<li>The <code>thread</code> blocks</li>
-<li>Some blocked <code>thread</code> wakesup</li>
-</ul></li>
-<li>Longer <code>time slice</code> improves throughput</li>
-</ul></li>
+<li>Threads share code &amp; data, processes don&#39;t</li>
+<li>Process control &amp; context switches more expensive than thread control &amp; thread switches</li>
 </ul></li>
 </ul>
 
-<h2>Multiprocessor Scheduling</h2>
+<h3>Pthreads</h3>
 
 <ul>
-<li>Asymetric multiprocessing
+<li>User has to:
 
 <ul>
-<li>1 processor runs all OS code, I/O processing code, etc.</li>
-<li>Others run user code</li>
-<li>Simple implementation</li>
+<li>Decompose computation into parallel parts</li>
+<li>Create/destroy threads</li>
+<li>Add synchronization to ensure dependences covered</li>
 </ul></li>
-<li>Symmetric multiprocessing (SMP)
+<li>Functions
 
 <ul>
-<li>All processors fun OS &amp; user code</li>
-<li>Efficient</li>
-<li>Difficult implementation</li>
-<li>Scheduling issues
+<li><code>pthread_create()</code></li>
+<li><code>pthread_exit()</code></li>
+<li><code>pthread_join()</code></li>
+</ul></li>
+</ul>
+
+<h3>Synchronization</h3>
+
+<h4>Parallelization Options</h4>
 
 <ul>
-<li><strong>Processor affinity</strong>
+<li><strong>Course-grained locking</strong>: 1 big lock for critical section
 
 <ul>
-<li>Cache issue, want to ensure <code>threads</code> run on the same <code>thread</code> before</li>
-<li><code>Hard affinity</code>: a <code>thread</code> specifies which processor it wants to use</li>
+<li>Limited parallelism</li>
+<li>Easy to implement</li>
 </ul></li>
-<li><strong>Load balancing</strong>
+<li><strong>Fine-grained locking</strong>: 1 lock per variable used in critical section
 
 <ul>
-<li>Single ready queue: easy BUT tends to bottleneck because each processor needs a spinlock for ready queue</li>
-<li>1 ready queue per processor: scalable BUT <em>task migration</em> &amp; <em>load balancing</em> tricky<br>
+<li>Good parallelism: less dependencies</li>
+<li>Hard to implement
 
 <ul>
-<li><em>task migration</em>  -<br>
-Deadlock?</li>
-<li><em>load balancing</em>  -<br>
-<code>Push migration</code>: thread find less-busy processors<br>
-<code>Pull migration</code>: idle processor find thread on busy processors</li>
+<li>Deadlock, fault tolerance, priority inversion, ...</li>
 </ul></li>
 </ul></li>
-</ul></li>
-</ul></li>
+<li><strong>Semaphores</strong></li>
+<li><strong>Fork-Join</strong></li>
+<li><strong>Barriers</strong></li>
+<li><strong>Reductions</strong></li>
 </ul>
 
 		</div>
@@ -341,19 +263,13 @@ Deadlock?</li>
 			
 
 			<li class="tag">
-				OS
+				Optimization
 			</li>
 
 			
 
 			<li class="tag">
-				ECE344
-			</li>
-
-			
-
-			<li class="tag">
-				scheduling
+				ECE454
 			</li>
 
 			
@@ -366,7 +282,7 @@ Deadlock?</li>
 <script>
 	var disqus_config = function () {
 	    this.page.url = "https://pyliaorachel.github.io";
-	    this.page.identifier = "/blog/notes/os/2016/10/23/operating-system-scheduling.html";
+	    this.page.identifier = "/blog/notes/optimization/2016/10/30/threads-and-parallel-programming.html";
 	};
 	(function() {
 	    var d = document, s = d.createElement('script');

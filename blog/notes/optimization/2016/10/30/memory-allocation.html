@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Operating System - Scheduling</title>
+		<title>Memory Allocation</title>
 		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
 		<link rel="stylesheet" href="/css/main.css" type="text/css">
 		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
@@ -98,8 +98,8 @@
 	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
 
 		<header class="post-header">
-			<h1 class="post-title" itemprop="name headline">Operating System - Scheduling</h1>
-			<p class="post-meta">Oct 23, 2016
+			<h1 class="post-title" itemprop="name headline">Memory Allocation</h1>
+			<p class="post-meta">Oct 30, 2016
 				 • Notes
 				 • pyliaorachel
 			</p>
@@ -113,226 +113,182 @@
 			<h2>Content</h2>
 
 <ol>
-<li>Scheduling Overview</li>
-<li>Scheduling Policies</li>
-<li>Multiprocessor Scheduling</li>
+<li>Dynamic Memory Allocation
+
+<ol>
+<li>Memory Allocator</li>
+<li>Performance Goals</li>
+<li>Fragmentation</li>
+<li>Implementation</li>
+<li>Garbage Collection</li>
+</ol></li>
+<li>Memory-Related Bugs</li>
 </ol>
 
 <!--more-->
 
 <hr>
 
-<h2>Scheduling Overview</h2>
+<h2>Dynamic Memory Allocation</h2>
+
+<h3>Memory Allocator</h3>
 
 <ul>
-<li>Prevent <code>thread starvation</code>, BUT <code>context switching</code> is expensive</li>
-<li>Runs another program when I/O performed</li>
-<li>Goals
+<li><strong>Explicit memory allocator</strong>: <code>malloc</code> &amp; <code>free</code></li>
+<li><strong>Implicit memory allocator</strong>: garbage collection</li>
+<li>Provides abstraction of memory as a set of blocks</li>
+<li>Constraints
 
 <ul>
-<li><strong>Batch systems</strong>: Long running, no interactive users, no time constraints
-
-<ul>
-<li><code>CPU utilization</code>
-
-<ul>
-<li>% of time CPU is busy</li>
+<li>Alignment</li>
+<li>No compaction on allocated blocks</li>
+<li>Only manipulate free memory</li>
 </ul></li>
-<li><code>Throughput</code>
+<li>Goal
 
 <ul>
-<li># of programs complete per unit time</li>
-</ul></li>
-<li><code>Turnaround time</code>
+<li>Good time performance for <code>malloc</code> &amp; <code>free</code></li>
+<li>Good space utilization</li>
+<li>Good locality properties
 
 <ul>
-<li>Total time to finish a program</li>
-<li><code>turnaround = processing + waiting</code></li>
-</ul></li>
-</ul></li>
-<li><strong>Interactive (general-purpose) systems</strong>: Short running, interactive suers, weak time constraints
-
-<ul>
-<li><code>Response time</code>
-
-<ul>
-<li>Time between <em>receiving request</em> &amp; starting to <em>produce output</em></li>
-</ul></li>
+<li>Allocation close in time should be close in space</li>
 </ul></li>
 </ul></li>
 </ul>
 
-<h2>Scheduling Policies</h2>
+<h3>Performance Goals</h3>
 
 <ul>
-<li><strong>Batch systems</strong>
+<li><strong>Throughput</strong>: # of completed requests per unit time</li>
+<li><strong>Peak memory utilization</strong>
 
 <ul>
-<li>Policies
-
-<ul>
-<li><code>FIFO</code> (non-preemptive)
-
-<ul>
-<li>In order of arrival time</li>
-<li>Run thread until completion</li>
+<li>Aggregate payload <code>Pk</code></li>
+<li>Current heap size <code>Hk</code></li>
+<li>Peak memory utilization <code>Uk = (max_i&lt;k Pi) / Hk</code></li>
 </ul></li>
-<li><code>Shortest job first</code> (non-preemptive)
+</ul>
+
+<h3>Fragmentation</h3>
 
 <ul>
-<li>In order of shortest running time</li>
-<li>Run thread until completion</li>
-<li>Starving long jobs</li>
-</ul></li>
-<li><code>Shortest remaining time</code> (preemptive)
+<li><strong>Internal fragmentation</strong>
 
 <ul>
-<li>In order of shortest remaining time</li>
-<li>Run thread until completion OR another thread arrives</li>
-<li>Preemptive version of <code>shortest job first</code></li>
-<li>Starving long jobs</li>
-<li>Optimal w.r.t. avg waiting time</li>
+<li>Depends on pattern of <em>previous</em> requests</li>
 </ul></li>
-</ul></li>
-<li>Properties
+<li><strong>External fragmentation</strong>
 
 <ul>
-<li>Some require estimate of preocessing time</li>
-<li>May starve long running threads</li>
-<li>Long response time</li>
+<li>Depends on pattern of <em>future</em> requests</li>
 </ul></li>
-</ul></li>
-<li><strong>Interactive systems</strong>
+</ul>
+
+<h3>Implementation</h3>
+<div class="highlight"><pre><code class="language-" data-lang="">| size | a | - header
+| payload  |
+| padding  |
+| size | a | - footer
+</code></pre></div>
+<ul>
+<li>Keep track of <strong>size</strong>
 
 <ul>
-<li>Policies
-
-<ul>
-<li><code>Round-Robin</code>
-
-<ul>
-<li>Preemptive version of <code>FIFO</code></li>
-<li><code>Time slice</code>
-
-<ul>
-<li>Upper time bound each process runs </li>
-<li><code>time slice &gt;&gt; context switch time</code></li>
-<li><code>cs overhead = cs/(ts+cs)</code></li>
+<li>Overhead: size + allocated bit</li>
 </ul></li>
-<li>Run thread until <code>time slice</code> interrupt OR thread blocks</li>
-<li>Effectiveness:
-
-<ul>
-<li># of threads</li>
-<li>Size of <code>time slice</code><br>
-<strong>Long</strong> -&gt; slow response<br>
-<strong>Short</strong> -&gt; high overhead</li>
-</ul></li>
-<li>Does not require estimation of job processing time; no <code>starvation</code>; enables <code>interactivity</code> by limiting the amount of time each thread can run</li>
-<li>Reduces <code>throughtput</code> due to frequent <code>context switching</code></li>
-</ul></li>
-<li><code>Static priority</code>
-
-<ul>
-<li>In order of priority assigned</li>
-<li>Starving low prioriy threads</li>
-<li><em>Priority inversion</em>: low priority threads holding locks that high priority threads want</li>
-</ul></li>
-<li><code>Multi-level queue</code>
-
-<ul>
-<li>High, medium, &amp; low PQs</li>
-<li>Choose from high-priority PQ first (e.g. I/O threads)</li>
-<li>For each queue, <code>round-robin</code> scheduling</li>
-</ul></li>
-<li><code>Dynamic priority (feedback)</code>
-
-<ul>
-<li>Priority changed based on thread behavior; CPU-bound threads have priority reduced</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li><code>Feedback scheduling</code>
-
-<ul>
-<li>Goals
-
-<ul>
-<li>Allocate CPU fairly</li>
-<li>I/O-bound threads receive higher priority</li>
-</ul></li>
-<li>Each thread:
-
-<ul>
-<li>CPU usage (C)</li>
-<li>Current priority (Pi)</li>
-<li>Initial priority (P0)</li>
-<li>Nice value (N)</li>
-</ul></li>
-<li>Steps
+<li>Keep track of <strong>free blocks</strong>
 
 <ol>
-<li>Scheduler chooses thread with the <strong>smallest</strong> Pi</li>
-<li>On timer interrupt, update CPU C of running thread <code>C = C + 1</code></li>
-<li>Every time slice, update Pi <code>Pi = Pi-1/2 + C + N</code></li>
-<li>Reset C for all threads</li>
+<li>Implicit list: length to link all blocks</li>
+<li>Explicit list: pointers to link free blocks</li>
+<li>Segregated free list</li>
+<li>Blocks sorted by size</li>
 </ol></li>
-<li><code>Time slice</code>
+</ul>
+
+<h4>Implicit List</h4>
 
 <ul>
-<li>Many interrupts in between <code>time slice</code> to avoid excessive <code>context switches</code></li>
-<li>A <code>thread</code> runs for a full <code>time slice</code> unless:
+<li>Placement policy
 
 <ul>
-<li>The <code>thread</code> blocks</li>
-<li>Some blocked <code>thread</code> wakesup</li>
+<li><strong>First fit</strong></li>
+<li><strong>Next fit</strong>: fragmentation worse</li>
+<li><strong>Best fit</strong>: slower</li>
 </ul></li>
-<li>Longer <code>time slice</code> improves throughput</li>
+<li>Coalescing policy
+
+<ul>
+<li>Join adjacent free blocks</li>
+<li><strong>Immediate coalescing</strong></li>
+<li><strong>Deferred coalescing</strong>
+
+<ul>
+<li>Until <code>malloc</code> or external fragmentation reaches threshold</li>
 </ul></li>
 </ul></li>
 </ul>
 
-<h2>Multiprocessor Scheduling</h2>
+<h4>Explicit Free List</h4>
 
 <ul>
-<li>Asymetric multiprocessing
+<li>Extra data space for link pointers</li>
+<li>Need boundary tags for coalescing</li>
+<li>Insertion policy
 
 <ul>
-<li>1 processor runs all OS code, I/O processing code, etc.</li>
-<li>Others run user code</li>
-<li>Simple implementation</li>
+<li><strong>LIFO</strong></li>
+<li><strong>Address-ordered</strong></li>
 </ul></li>
-<li>Symmetric multiprocessing (SMP)
+</ul>
+
+<h4>Segragated Free List</h4>
 
 <ul>
-<li>All processors fun OS &amp; user code</li>
-<li>Efficient</li>
-<li>Difficult implementation</li>
-<li>Scheduling issues
+<li>Each size class  has own collection of blocks
 
 <ul>
-<li><strong>Processor affinity</strong>
+<li>Separate size class for small sizes</li>
+<li>Typically size classes for power of 2</li>
+</ul></li>
+</ul>
+
+<h3>Garbage Collection</h3>
+
+<h4>Mark and Sweep Collecting</h4>
 
 <ul>
-<li>Cache issue, want to ensure <code>threads</code> run on the same <code>thread</code> before</li>
-<li><code>Hard affinity</code>: a <code>thread</code> specifies which processor it wants to use</li>
-</ul></li>
-<li><strong>Load balancing</strong>
+<li><strong>Mark</strong>: scan over blocks, mark all reachable memory</li>
+<li><strong>Sweep</strong>: scan over blocks, free blocks not marked</li>
+</ul>
+
+<h2>Memory-Related Bugs</h2>
 
 <ul>
-<li>Single ready queue: easy BUT tends to bottleneck because each processor needs a spinlock for ready queue</li>
-<li>1 ready queue per processor: scalable BUT <em>task migration</em> &amp; <em>load balancing</em> tricky<br>
+<li>Dereferencing bad pointers 
 
 <ul>
-<li><em>task migration</em>  -<br>
-Deadlock?</li>
-<li><em>load balancing</em>  -<br>
-<code>Push migration</code>: thread find less-busy processors<br>
-<code>Pull migration</code>: idle processor find thread on busy processors</li>
+<li><code>scanf(&quot;%d&quot;, val)</code></li>
 </ul></li>
+<li>Reading uninitialized memory </li>
+<li>Overwriting memory
+
+<ul>
+<li>Allocating wrong sized object</li>
+<li>Off-by-one error</li>
+<li>Not checking max string size</li>
+<li>Referencing a pointer instead of the object it points to: <code>*size--</code></li>
+<li>Pointer arithmetic: <code>p += sizeof(int)</code></li>
 </ul></li>
+<li>Referencing nonexistent variables 
+
+<ul>
+<li>Return pointer to local variable</li>
 </ul></li>
-</ul></li>
+<li>Freeing blocks multiple times </li>
+<li>Referencing freed blocks</li>
+<li>Failing to free blocks</li>
 </ul>
 
 		</div>
@@ -341,19 +297,13 @@ Deadlock?</li>
 			
 
 			<li class="tag">
-				OS
+				Optimization
 			</li>
 
 			
 
 			<li class="tag">
-				ECE344
-			</li>
-
-			
-
-			<li class="tag">
-				scheduling
+				ECE454
 			</li>
 
 			
@@ -366,7 +316,7 @@ Deadlock?</li>
 <script>
 	var disqus_config = function () {
 	    this.page.url = "https://pyliaorachel.github.io";
-	    this.page.identifier = "/blog/notes/os/2016/10/23/operating-system-scheduling.html";
+	    this.page.identifier = "/blog/notes/optimization/2016/10/30/memory-allocation.html";
 	};
 	(function() {
 	    var d = document, s = d.createElement('script');

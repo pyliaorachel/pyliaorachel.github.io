@@ -6,12 +6,905 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 30 Oct 2016 12:18:46 -0400</pubDate>
-    <lastBuildDate>Sun, 30 Oct 2016 12:18:46 -0400</lastBuildDate>
+    <pubDate>Tue, 01 Nov 2016 16:14:08 -0400</pubDate>
+    <lastBuildDate>Tue, 01 Nov 2016 16:14:08 -0400</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
-        <title>CSP</title>
+        <title>Threads &amp; Parallel Programming</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Parallelism Overview
+
+&lt;ol&gt;
+&lt;li&gt;Standard Models of Parallelism&lt;/li&gt;
+&lt;li&gt;Speedup&lt;/li&gt;
+&lt;li&gt;Dependence&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Threads &amp;amp; Processes
+
+&lt;ol&gt;
+&lt;li&gt;Pthreads&lt;/li&gt;
+&lt;li&gt;Synchronization&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Parallelism Overview&lt;/h2&gt;
+
+&lt;h3&gt;Standard Models of Parallelism&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Shared memory (pthreads)&lt;/li&gt;
+&lt;li&gt;Shared memory + data parallelism (OpenMP)&lt;/li&gt;
+&lt;li&gt;Message passing (MPI)&lt;/li&gt;
+&lt;li&gt;Transactional memory (TM)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Speedup&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;speedup on problem = sequential execution time of best known sequential algorithm / execution time on p processors&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Avoids picking easily parallelizable algorithm with poor sequential execution time&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Linear speedup is best to be achieved
+
+&lt;ul&gt;
+&lt;li&gt;Sub-linear speedup: due to overhead of &lt;em&gt;startup&lt;/em&gt;, &lt;em&gt;synchronization&lt;/em&gt;, &lt;em&gt;communication&lt;/em&gt;, ...&lt;/li&gt;
+&lt;li&gt;Super-linear speedup
+
+&lt;ul&gt;
+&lt;li&gt;Cache/memory effects&lt;/li&gt;
+&lt;li&gt;Nondeterminism in search problems&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Amdahl&amp;#39;s Law&lt;/strong&gt;: if &lt;code&gt;1/s&lt;/code&gt; of program is sequential, speedup will not be better than &lt;code&gt;s&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Dependence&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;True dependence&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;S2&lt;/code&gt; reads a value written by &lt;code&gt;S1&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Anti dependence&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;S2&lt;/code&gt; writes a value read by &lt;code&gt;S1&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Output dependence&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;S2&lt;/code&gt; writes a value written by &lt;code&gt;S1&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Loop carried dependence&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Statements are part of the execution of a loop&lt;/li&gt;
+&lt;li&gt;e.g. &lt;code&gt;a[i] = f(a[i-1]) + 1;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Prevents loop iteration parallelization&lt;/li&gt;
+&lt;li&gt;Level of loop carried dependence: nesting depth of loop that carries dependence&lt;/li&gt;
+&lt;li&gt;&amp;lt;-&amp;gt; &lt;strong&gt;Loop independent dependence&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Threads &amp;amp; Processes&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Similarities
+
+&lt;ul&gt;
+&lt;li&gt;Own logical control flow&lt;/li&gt;
+&lt;li&gt;Run concurrently with others&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Differences
+
+&lt;ul&gt;
+&lt;li&gt;Threads share code &amp;amp; data, processes don&amp;#39;t&lt;/li&gt;
+&lt;li&gt;Process control &amp;amp; context switches more expensive than thread control &amp;amp; thread switches&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Pthreads&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;User has to:
+
+&lt;ul&gt;
+&lt;li&gt;Decompose computation into parallel parts&lt;/li&gt;
+&lt;li&gt;Create/destroy threads&lt;/li&gt;
+&lt;li&gt;Add synchronization to ensure dependences covered&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Functions
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;pthread_create()&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pthread_exit()&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pthread_join()&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Synchronization&lt;/h3&gt;
+
+&lt;h4&gt;Parallelization Options&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Course-grained locking&lt;/strong&gt;: 1 big lock for critical section
+
+&lt;ul&gt;
+&lt;li&gt;Limited parallelism&lt;/li&gt;
+&lt;li&gt;Easy to implement&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Fine-grained locking&lt;/strong&gt;: 1 lock per variable used in critical section
+
+&lt;ul&gt;
+&lt;li&gt;Good parallelism: less dependencies&lt;/li&gt;
+&lt;li&gt;Hard to implement
+
+&lt;ul&gt;
+&lt;li&gt;Deadlock, fault tolerance, priority inversion, ...&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Semaphores&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Fork-Join&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Barriers&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Reductions&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Sun, 30 Oct 2016 00:00:00 -0400</pubDate>
+        <link>/blog/notes/optimization/2016/10/30/threads-and-parallel-programming.html</link>
+        <guid isPermaLink="true">/blog/notes/optimization/2016/10/30/threads-and-parallel-programming.html</guid>
+        
+        <category>Optimization</category>
+        
+        <category>ECE454</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Optimization</category>
+        
+      </item>
+    
+      <item>
+        <title>Memory Optimization</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Data Representation &amp;amp; Alignment&lt;/li&gt;
+&lt;li&gt;Cache Performance
+
+&lt;ol&gt;
+&lt;li&gt;Cache Organization&lt;/li&gt;
+&lt;li&gt;Cache Performance Metrics&lt;/li&gt;
+&lt;li&gt;Code Scheduling&lt;/li&gt;
+&lt;li&gt;Blocking/Tiling&lt;/li&gt;
+&lt;li&gt;The Memory Moutain&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Virtual Memory
+
+&lt;ol&gt;
+&lt;li&gt;Virtual Memory Access&lt;/li&gt;
+&lt;li&gt;Page Table &amp;amp; TLB&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Prefetching
+
+&lt;ol&gt;
+&lt;li&gt;H/W Prefetching&lt;/li&gt;
+&lt;li&gt;S/W Prefetching&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Machine-Dependent Optimizations
+
+&lt;ol&gt;
+&lt;li&gt;Pointer Code&lt;/li&gt;
+&lt;li&gt;Instruction-Level Parallelism&lt;/li&gt;
+&lt;li&gt;Parallel Loop Unrolling&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Data Representation &amp;amp; Alignment&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Primitive data type requires K bytes -&amp;gt; address must be multiple of K&lt;/li&gt;
+&lt;li&gt;Structures align with the &lt;em&gt;largest alignment requirement of any element&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Cache Performance&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Keep working set small (temporal locality)&lt;/li&gt;
+&lt;li&gt;Use small strides (spacial locality)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Cache Organization&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;address: | tag | index | offset |
+cache block: | v | tag | data |
+S - 2^s sets
+E - 2^e blocks/lines per set
+B - 2^b bytes per cache block
+
+Cach size = S * E * B bytes
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Cache Performance Metrics&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Miss rate&lt;/li&gt;
+&lt;li&gt;Hit time
+
+&lt;ul&gt;
+&lt;li&gt;isLineInCache? + deliver block to CPU (+virtual memory translation)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Miss penalty&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Code Scheduling&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Factors
+
+&lt;ul&gt;
+&lt;li&gt;Reordering of loops&lt;/li&gt;
+&lt;li&gt;# of read/write operations&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Blocking/Tiling&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Traverse array in blocks&lt;/li&gt;
+&lt;li&gt;Imporves &lt;strong&gt;temporal locality&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;The Memory Moutain&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Measure &lt;strong&gt;read throughput&lt;/strong&gt; as a function of &lt;strong&gt;spatial &amp;amp; temporal locality&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://cfile22.uf.tistory.com/image/112730164AC0AFAB36962C&quot; alt=&quot;Memory Mountain&quot;&gt;&lt;/p&gt;
+
+&lt;h2&gt;Virtual Memory&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Why virtual memory?
+
+&lt;ul&gt;
+&lt;li&gt;Capacity/Portability&lt;/li&gt;
+&lt;li&gt;Security&lt;/li&gt;
+&lt;li&gt;Sharing&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Virtual Memory Access&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Type of cache misses
+
+&lt;ul&gt;
+&lt;li&gt;Cold/compulsory miss&lt;/li&gt;
+&lt;li&gt;Conflict miss
+
+&lt;ul&gt;
+&lt;li&gt;Avoided by &lt;em&gt;set-associative caches&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Capacity miss *
+
+&lt;ul&gt;
+&lt;li&gt;Keep working set within on-chip cache capacity&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Write
+
+&lt;ul&gt;
+&lt;li&gt;Write-back (on write-hit)&lt;/li&gt;
+&lt;li&gt;Write-allocate (on write-miss)&lt;/li&gt;
+&lt;li&gt;Write-through&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Page Table &amp;amp; TLB&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;MMU keep mapping of VA to PA in &lt;strong&gt;page table&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Page table kept in main memory, can be cached&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Translation lookaside buffer (TLB)&lt;/strong&gt;: cache for page table
+
+&lt;ul&gt;
+&lt;li&gt;TLB hit: &lt;code&gt;CPU -&amp;gt; MMU -&amp;gt; TLB -&amp;gt; MMU -&amp;gt; Mem&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;TLB miss: &lt;code&gt;CPU -&amp;gt; MMU -&amp;gt; TLB -&amp;gt; Mem -&amp;gt; TLB -&amp;gt; MMU -&amp;gt; Mem&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;TLB reach: &lt;code&gt;(# TLB entries) * (page size)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Working set&lt;/strong&gt; : a set of active virtual pages
+
+&lt;ul&gt;
+&lt;li&gt;Page miss: &lt;code&gt;(working set size) &amp;gt; (main mem size)&lt;/code&gt; -&amp;gt; &lt;strong&gt;thrashing&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;TLB miss: &lt;code&gt;(# working set pages) &amp;gt; (# TLB entries)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Prefetching&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Bring into cache elements expected to be accessed in future&lt;/li&gt;
+&lt;li&gt;Effective is:
+
+&lt;ul&gt;
+&lt;li&gt;Spare memory bandwidth&lt;/li&gt;
+&lt;li&gt;Accurate&lt;/li&gt;
+&lt;li&gt;Timely&lt;/li&gt;
+&lt;li&gt;Doesn&amp;#39;t displace other in-use data&lt;/li&gt;
+&lt;li&gt;Latency hidden by prefetched outweighs their cost&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;H/W Prefetching&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Prefetch adjacent block&lt;/li&gt;
+&lt;li&gt;Recognize a &lt;em&gt;stream&lt;/em&gt;: addresses separated by a &lt;em&gt;stride&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;Prefetch within a page boundary&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;S/W Prefetching&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Insert special &lt;code&gt;prefetch&lt;/code&gt; instructions into code
+
+&lt;ul&gt;
+&lt;li&gt;Patterns that H/W wouldn&amp;#39;t recognize e.g. linked list&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Machine-Dependent Optimizations&lt;/h2&gt;
+
+&lt;h3&gt;Pointer Code&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Not necessarily better than array code; some compilers do better job optimizing array code&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Instruction-Level Parallelism&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Limiting factor
+
+&lt;ul&gt;
+&lt;li&gt;Latency of instructions&lt;/li&gt;
+&lt;li&gt;# of functional units available
+
+&lt;ul&gt;
+&lt;li&gt;1 load&lt;/li&gt;
+&lt;li&gt;1 store&lt;/li&gt;
+&lt;li&gt;2 int (1 may be branch)&lt;/li&gt;
+&lt;li&gt;1 FP add&lt;/li&gt;
+&lt;li&gt;1 FP mul/div&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Parallel Loop Unrolling&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Accumulate in 2 different products, combine at end
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;(1 * x2 * ... * xn) * (1 * x1 * ... * x_n-1)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Dual product 
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;(1 * x1) * (x2 * x3) * ... * (x_n-1 * xn)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Limitations
+
+&lt;ul&gt;
+&lt;li&gt;Need lots of registers to hold sums/products&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Sun, 30 Oct 2016 00:00:00 -0400</pubDate>
+        <link>/blog/notes/optimization/2016/10/30/memory-optimization.html</link>
+        <guid isPermaLink="true">/blog/notes/optimization/2016/10/30/memory-optimization.html</guid>
+        
+        <category>Optimization</category>
+        
+        <category>ECE454</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Optimization</category>
+        
+      </item>
+    
+      <item>
+        <title>Memory Allocation</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Dynamic Memory Allocation
+
+&lt;ol&gt;
+&lt;li&gt;Memory Allocator&lt;/li&gt;
+&lt;li&gt;Performance Goals&lt;/li&gt;
+&lt;li&gt;Fragmentation&lt;/li&gt;
+&lt;li&gt;Implementation&lt;/li&gt;
+&lt;li&gt;Garbage Collection&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Memory-Related Bugs&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Dynamic Memory Allocation&lt;/h2&gt;
+
+&lt;h3&gt;Memory Allocator&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Explicit memory allocator&lt;/strong&gt;: &lt;code&gt;malloc&lt;/code&gt; &amp;amp; &lt;code&gt;free&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Implicit memory allocator&lt;/strong&gt;: garbage collection&lt;/li&gt;
+&lt;li&gt;Provides abstraction of memory as a set of blocks&lt;/li&gt;
+&lt;li&gt;Constraints
+
+&lt;ul&gt;
+&lt;li&gt;Alignment&lt;/li&gt;
+&lt;li&gt;No compaction on allocated blocks&lt;/li&gt;
+&lt;li&gt;Only manipulate free memory&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Goal
+
+&lt;ul&gt;
+&lt;li&gt;Good time performance for &lt;code&gt;malloc&lt;/code&gt; &amp;amp; &lt;code&gt;free&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Good space utilization&lt;/li&gt;
+&lt;li&gt;Good locality properties
+
+&lt;ul&gt;
+&lt;li&gt;Allocation close in time should be close in space&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Performance Goals&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Throughput&lt;/strong&gt;: # of completed requests per unit time&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Peak memory utilization&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Aggregate payload &lt;code&gt;Pk&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Current heap size &lt;code&gt;Hk&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Peak memory utilization &lt;code&gt;Uk = (max_i&amp;lt;k Pi) / Hk&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Fragmentation&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Internal fragmentation&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Depends on pattern of &lt;em&gt;previous&lt;/em&gt; requests&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;External fragmentation&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Depends on pattern of &lt;em&gt;future&lt;/em&gt; requests&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Implementation&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;| size | a | - header
+| payload  |
+| padding  |
+| size | a | - footer
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Keep track of &lt;strong&gt;size&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Overhead: size + allocated bit&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Keep track of &lt;strong&gt;free blocks&lt;/strong&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Implicit list: length to link all blocks&lt;/li&gt;
+&lt;li&gt;Explicit list: pointers to link free blocks&lt;/li&gt;
+&lt;li&gt;Segregated free list&lt;/li&gt;
+&lt;li&gt;Blocks sorted by size&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Implicit List&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Placement policy
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;First fit&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Next fit&lt;/strong&gt;: fragmentation worse&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Best fit&lt;/strong&gt;: slower&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Coalescing policy
+
+&lt;ul&gt;
+&lt;li&gt;Join adjacent free blocks&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Immediate coalescing&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Deferred coalescing&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Until &lt;code&gt;malloc&lt;/code&gt; or external fragmentation reaches threshold&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Explicit Free List&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Extra data space for link pointers&lt;/li&gt;
+&lt;li&gt;Need boundary tags for coalescing&lt;/li&gt;
+&lt;li&gt;Insertion policy
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;LIFO&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Address-ordered&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Segragated Free List&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Each size class  has own collection of blocks
+
+&lt;ul&gt;
+&lt;li&gt;Separate size class for small sizes&lt;/li&gt;
+&lt;li&gt;Typically size classes for power of 2&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Garbage Collection&lt;/h3&gt;
+
+&lt;h4&gt;Mark and Sweep Collecting&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Mark&lt;/strong&gt;: scan over blocks, mark all reachable memory&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Sweep&lt;/strong&gt;: scan over blocks, free blocks not marked&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Memory-Related Bugs&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Dereferencing bad pointers 
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;scanf(&amp;quot;%d&amp;quot;, val)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Reading uninitialized memory &lt;/li&gt;
+&lt;li&gt;Overwriting memory
+
+&lt;ul&gt;
+&lt;li&gt;Allocating wrong sized object&lt;/li&gt;
+&lt;li&gt;Off-by-one error&lt;/li&gt;
+&lt;li&gt;Not checking max string size&lt;/li&gt;
+&lt;li&gt;Referencing a pointer instead of the object it points to: &lt;code&gt;*size--&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Pointer arithmetic: &lt;code&gt;p += sizeof(int)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Referencing nonexistent variables 
+
+&lt;ul&gt;
+&lt;li&gt;Return pointer to local variable&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Freeing blocks multiple times &lt;/li&gt;
+&lt;li&gt;Referencing freed blocks&lt;/li&gt;
+&lt;li&gt;Failing to free blocks&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Sun, 30 Oct 2016 00:00:00 -0400</pubDate>
+        <link>/blog/notes/optimization/2016/10/30/memory-allocation.html</link>
+        <guid isPermaLink="true">/blog/notes/optimization/2016/10/30/memory-allocation.html</guid>
+        
+        <category>Optimization</category>
+        
+        <category>ECE454</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Optimization</category>
+        
+      </item>
+    
+      <item>
+        <title>Code Optimization Principles &amp; Profiling</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Measurements of Programs &amp;amp; Computers
+
+&lt;ol&gt;
+&lt;li&gt;Measurements&lt;/li&gt;
+&lt;li&gt;Amdahl&amp;#39;s Law&lt;/li&gt;
+&lt;li&gt;Tools for Measuring&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Compiler Optimizations
+
+&lt;ol&gt;
+&lt;li&gt;Common Compiler Optimizations&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Basics of Computer Architecture
+
+&lt;ol&gt;
+&lt;li&gt;Pipelines&lt;/li&gt;
+&lt;li&gt;Branch Prediction&lt;/li&gt;
+&lt;li&gt;Out-of-Order Execution&lt;/li&gt;
+&lt;li&gt;Superscalar &amp;amp; Simultaneous Multithreading(SMT)/Hyperthreading&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Measurements of Programs &amp;amp; Computers&lt;/h2&gt;
+
+&lt;h3&gt;Measurements&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;IPS&lt;/strong&gt;: instructions per second&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;FLOPS&lt;/strong&gt;: floating point operations per second&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;IPC&lt;/strong&gt;: instructions per cycle&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CPI&lt;/strong&gt;: cycles per instruction&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Amdahl&amp;#39;s Law&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;speedup = OldTime/NewTime&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;NewTime = OldTime x [(1 - f) + f/s]&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;speedup = 1 / (1 - f + f/s)&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;f&lt;/code&gt; = fraction of execution time the optimization applies to&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;s&lt;/code&gt; = improvement factor&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Tools for Measuring&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;S/W timers&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;C library: &lt;code&gt;&amp;lt;sys/times.h&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;OS-level timers: &lt;code&gt;/usr/bin/time&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;H/W timers &amp;amp; performance counters&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Built into processor chip: low-level architecture events e.g. cache misses, branch mispredictions, ...&lt;/li&gt;
+&lt;li&gt;S/W packages to make them easier to use: &lt;code&gt;perf&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Instrumentation&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Self implemented codes&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;gprof&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Periodically interrupt program&lt;/li&gt;
+&lt;li&gt;Measure &lt;em&gt;time spent&lt;/em&gt; &amp;amp; &lt;em&gt;# of calls made&lt;/em&gt; in each function&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;gcov&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Profile of execution within a function e.g. # of times each line of code was executed, which loops/conditional statements are important&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Disturbing the system slows down execution&lt;/li&gt;
+&lt;li&gt;Comparison
+|    | gprof | gcov |
+|:---|:------|:-----|
+| Compile | faster (insert counter func for each function) | slower (insert counter func for each line) |
+| Size | smaller | bigger |
+| Runtime | slower (frequent interrupts) | faster |&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Compiler Optimizations&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Preserve correctness&lt;/li&gt;
+&lt;li&gt;Improve performance
+
+&lt;ul&gt;
+&lt;li&gt;Fewer CPI
+
+&lt;ul&gt;
+&lt;li&gt;Schedule instructions&lt;/li&gt;
+&lt;li&gt;Improve cache/memory behavior&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Fewer instructions&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Worth the effort&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;---&amp;gt; Front End ---&amp;gt; Optimizer ---&amp;gt; Code Generator ---&amp;gt;
+ HLL            IR             IR                 LLL
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Limitations
+
+&lt;ul&gt;
+&lt;li&gt;Cannot change program behavior&lt;/li&gt;
+&lt;li&gt;Inter-procedural analysis too expensive -&amp;gt; most analysis performed within procedures&lt;/li&gt;
+&lt;li&gt;Hard to anticipate run-time inputs -&amp;gt; most analysis based on static information&lt;/li&gt;
+&lt;li&gt;Must be conservative&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Programmers should:
+
+&lt;ul&gt;
+&lt;li&gt;Select best algorithm&lt;/li&gt;
+&lt;li&gt;Write readable &amp;amp; maintainable code&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Eliminate optimization blockers&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Memory aliasing
+
+&lt;ul&gt;
+&lt;li&gt;2 different memory references specify single location&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Pocedural side-effects&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Common Compiler Optimizations&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Machine independent
+
+&lt;ul&gt;
+&lt;li&gt;Constant propagation&lt;/li&gt;
+&lt;li&gt;Constant folding&lt;/li&gt;
+&lt;li&gt;Common subexpression elimination&lt;/li&gt;
+&lt;li&gt;Dead code elimination&lt;/li&gt;
+&lt;li&gt;Loop invariant code motion&lt;/li&gt;
+&lt;li&gt;Function inlining
+
+&lt;ul&gt;
+&lt;li&gt;Space-speed tradeoff&lt;/li&gt;
+&lt;li&gt;Overloading issue&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Reduction in strength: replace costly operation with simpler one
+
+&lt;ul&gt;
+&lt;li&gt;Shifting (machine-dependent)&lt;/li&gt;
+&lt;li&gt;Make use of registers&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Direct access
+
+&lt;ul&gt;
+&lt;li&gt;Avoid bound checking&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Machine dependent
+
+&lt;ul&gt;
+&lt;li&gt;Instruction scheduling&lt;/li&gt;
+&lt;li&gt;Loop unrolling
+
+&lt;ul&gt;
+&lt;li&gt;Enables more aggressive instruction scheduling&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Parallel unrolling&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Basics of Computer Architecture&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;RISC: simpler instructions -&amp;gt; &lt;strong&gt;pipeline&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;64-bit: larger databases, counter not overflowing, better math performance -&amp;gt; code size increases&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Pipelines&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Important factors
+
+&lt;ul&gt;
+&lt;li&gt;Branch prediction&lt;/li&gt;
+&lt;li&gt;Data dependency&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Pipeline deeper -&amp;gt; misprediction penalty larger&lt;/li&gt;
+&lt;li&gt;Multiple instruction issue: flushing &amp;amp; refetching more instructions&lt;/li&gt;
+&lt;li&gt;OOP: More indirect branches to be predicted&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Branch Prediction&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Predict future based on history&lt;/li&gt;
+&lt;li&gt;Global predictor: predict based on &lt;em&gt;global&lt;/em&gt; &amp;amp; &lt;em&gt;local&lt;/em&gt; history
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;(m, n) prediction&lt;/strong&gt;: m-bit global x n-bit local&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Out-of-Order Execution&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Solve &lt;strong&gt;data dependency&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Mask &lt;strong&gt;cache miss delay&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Superscalar &amp;amp; Simultaneous Multithreading(SMT)/Hyperthreading&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;    1               1 2             1 2 6
+    2               3 4 5           3 4 5   
+    3               6               7 8
+    4               7 8             9
+    5               9
+    6
+    7
+    8
+    9
+single-issue     superscalar    out-of-order superscalar
+
+    1   1'          1 2 6           1 2 1'
+    2   2'          3 4 5           2'6 6'
+    3   3'          7 8             3'3 5
+    4   4'          9               4 4'5'
+    5   5'          1'2'6'          7 8 7'
+    6   6'          3'4'5'          9 8'
+    7   7'          7'8'            9'
+    8   8'          9'
+    9   9'
+2 applications      fast        hyperthreading
+                context switching
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+        <pubDate>Sun, 30 Oct 2016 00:00:00 -0400</pubDate>
+        <link>/blog/notes/optimization/2016/10/30/code-optimization-principles-and-profiling.html</link>
+        <guid isPermaLink="true">/blog/notes/optimization/2016/10/30/code-optimization-principles-and-profiling.html</guid>
+        
+        <category>Optimization</category>
+        
+        <category>ECE454</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Optimization</category>
+        
+      </item>
+    
+      <item>
+        <title>Constraint Satisfaction Problems</title>
         <description>&lt;h2&gt;Content&lt;/h2&gt;
 
 &lt;ol&gt;
@@ -231,8 +1124,8 @@ GAC(Level):
 &lt;/ul&gt;
 </description>
         <pubDate>Sun, 30 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/ai/2016/10/30/csp.html</link>
-        <guid isPermaLink="true">/blog/notes/ai/2016/10/30/csp.html</guid>
+        <link>/blog/notes/ai/2016/10/30/constraint-satisfaction-problems.html</link>
+        <guid isPermaLink="true">/blog/notes/ai/2016/10/30/constraint-satisfaction-problems.html</guid>
         
         <category>AI</category>
         
@@ -703,14 +1596,14 @@ Else
             alpha = max(alpha, AlphaBeta(c,MIN,alpha,beta)) 
             If beta &amp;lt;= alpha:
                 break 
-    return alpha
+        return alpha
 
     Else: //Player == MIN 
         for c in ChildList:
             beta = min(beta, AlphaBeta(c,MAX,alpha,beta)) 
             If beta &amp;lt;= alpha:
                 break 
-    return beta
+        return beta
 
 // Initial call: AlphaBeta(START_NODE, PLAYER, -infinity, infinity)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -1270,8 +2163,6 @@ Loop:
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;hr&gt;
-
 &lt;h2&gt;Thread Scheduling&lt;/h2&gt;
 
 &lt;ul&gt;
@@ -1747,1681 +2638,6 @@ Deadlock?&lt;/li&gt;
         <category>Notes</category>
         
         <category>OS</category>
-        
-      </item>
-    
-      <item>
-        <title>Operating System - Memory Management</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Introduction to Memory Management&lt;/li&gt;
-&lt;li&gt;Managing Memory with Bitmaps &amp;amp; Lists&lt;/li&gt;
-&lt;li&gt;Simple Memory Management &amp;amp; Fragmentation&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Introduction to Memory Management&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Requirements
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Isolation&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Abstraction&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Sharing&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Goals
-
-&lt;ul&gt;
-&lt;li&gt;Low memory overhead&lt;/li&gt;
-&lt;li&gt;Low performance overhead&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Supports
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Compiler&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Source file to object file&lt;/li&gt;
-&lt;li&gt;Generates &lt;em&gt;relocatable&lt;/em&gt; &lt;code&gt;virtual memeory addresses&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Linker&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Links multiple object files to single program on disk&lt;/li&gt;
-&lt;li&gt;Generates &lt;em&gt;absolute&lt;/em&gt; &lt;code&gt;virtual memeory addresses&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;OS&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Loads program into &lt;code&gt;physical memory&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Sets up &lt;code&gt;virtual memory H/W&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;H/W&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Translates &lt;code&gt;virtual memory&lt;/code&gt; to &lt;code&gt;physical memory&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;S/W too slow for address translation&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Managing Memory with Bitmaps &amp;amp; Lists&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;After &lt;code&gt;boot loader&lt;/code&gt; loads OS code &amp;amp; dage in low memory, &lt;code&gt;OS&lt;/code&gt; keeps track of &lt;code&gt;allocated&lt;/code&gt; &amp;amp; &lt;code&gt;free&lt;/code&gt; memory&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Bitmap&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;1 bit per chunk of memory; in use or not&lt;/li&gt;
-&lt;li&gt;Larger chunk size, lower overhead BUT more &lt;strong&gt;internal fragmentation&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|--OS code data--| bit map | chunk1 | chunk2 | ... |
-                  01101...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Linked Lists&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;A list of elements for each allocated or free region of memory&lt;/li&gt;
-&lt;li&gt;Allocated bit + starting address + length + pointer&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;| A |   f   |  B  | C | f |    D    | E | f | ... |
-
-| a | 0 | 5 | [] | --&amp;gt; | f | 5 | 3 | [] | --&amp;gt; ...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;Searching
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;First fit&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Best fit&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Quick fit&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Under which conditions is each approach preferable?&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Simple Memory Management &amp;amp; Fragmentation&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Internal fragmentation&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Program doesn&amp;#39;t use entire region -&amp;gt; paddings&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;External fragmentation&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;A large region cannot be allocated even enough memory exists
-
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Compaction&lt;/em&gt;: move processes around, but expensive&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Sun, 23 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/os/2016/10/23/operating-system-memory-management.html</link>
-        <guid isPermaLink="true">/blog/notes/os/2016/10/23/operating-system-memory-management.html</guid>
-        
-        <category>OS</category>
-        
-        <category>ECE344</category>
-        
-        <category>memory management</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>OS</category>
-        
-      </item>
-    
-      <item>
-        <title>Operating System - Concurrent Programming</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Concurrent Programming&lt;/li&gt;
-&lt;li&gt;Mutual Exclusion&lt;/li&gt;
-&lt;li&gt;Synchronization&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Concurrent Programming&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Threads&lt;/code&gt; cooperate to perform a common task by sharing data (global vars &amp;amp; heap data)&lt;/li&gt;
-&lt;li&gt;Problems
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Race conditions&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Thread interleaving&lt;/code&gt; cause incorrect results&lt;/li&gt;
-&lt;li&gt;Access to shared variable must be exclusive&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Synchronization&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Ordering between threads must be enforced&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Mutual Exclusion&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Atomic operation&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Operation appears &lt;em&gt;indivisible&lt;/em&gt;; rest of the system either doesn&amp;#39;t observe any of the effects, or all of them&lt;/li&gt;
-&lt;li&gt;Other threads may still run, but they should not observe any intermediate states of the operation&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Mutual exclusion&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Only one thread can read/update shared variables at a time&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Critical section&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The code region where &lt;code&gt;mutual exclusion&lt;/code&gt; is enforced&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Mutex Lock&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Critical sections&lt;/code&gt; accessed in between &lt;code&gt;lock&lt;/code&gt;, &lt;code&gt;unlock&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Functions
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;mutex = lock_create()&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;lock_destroy(mutex)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;lock(mutex)&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;If lock free: acquire lock&lt;/li&gt;
-&lt;li&gt;Else: wait/sleep until lock free&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;unlock(mutex)&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Release lock&lt;/li&gt;
-&lt;li&gt;Wake up one of the waiting threads&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Mutual exclusion&lt;/code&gt; conditions
-
-&lt;ul&gt;
-&lt;li&gt;NO 2 threads in &lt;code&gt;critical section&lt;/code&gt; at the same time&lt;/li&gt;
-&lt;li&gt;NO assumption on speed of thread execution&lt;/li&gt;
-&lt;li&gt;Thread running outside &lt;code&gt;critical section&lt;/code&gt; CANNOT block another thread&lt;/li&gt;
-&lt;li&gt;NO thread must wait forever to enter its &lt;code&gt;critical section&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Mutex Implementation&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Variable tracking&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;lock(l) {
-    while (l == TRUE)
-        ;
-    l = TRUE;
-}
-unlock(l) {
-    l = FALSE;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;l&lt;/code&gt; is also a shared variable, so &lt;code&gt;lock&lt;/code&gt; &amp;amp; &lt;code&gt;unlock&lt;/code&gt; should be &lt;code&gt;atomic&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Make &lt;code&gt;lock&lt;/code&gt; atomic&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;lock(l) {
-    disable_interupts;
-    while (l == TRUE)
-        ;
-    l = TRUE;
-}
-unlock(l) {
-    l = FALSE;
-    enable_interupts;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;Works only on &lt;em&gt;single core&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-&lt;h4&gt;Multiprocessor H/W provides &lt;code&gt;atomic instructions&lt;/code&gt;&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Test-and-set&lt;/code&gt; lock, &lt;code&gt;compare-and-swap&lt;/code&gt; lock&lt;/li&gt;
-&lt;li&gt;Operate on a memory word, perform 2 operations &lt;strong&gt;indivisibly&lt;/strong&gt; by CPU requesting the lock controller to lock out the memory location&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;      int tset(int *lock) { // atomic in H/W
-          int old = *lock;
-          *lock = 1;  ___&amp;gt; atomic
-          return old; _|
-      }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/blockquote&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;Spin locks&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Uses &lt;code&gt;tset&lt;/code&gt; in a loop&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;// *l init to 0
-lock(int *l) {
-    while (tset(1))
-        ;
-}
-unlock(int *l) {
-    *l = FALSE;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;Efficient only if &lt;code&gt;critical sections&lt;/code&gt; are short&lt;/li&gt;
-&lt;li&gt;But &lt;code&gt;CPU&lt;/code&gt; performs no useful working waiting in the loop -&amp;gt; &lt;strong&gt;waste CPU&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;Yielding locks&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;// *l init to 0
-lock(int *l) {
-    while (tset(1))
-        thread_yield();
-}
-unlock(int *l) {
-    *l = FALSE;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;But scheduler determines when it returns back -&amp;gt; &lt;strong&gt;delay lock acquire&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;Blocking locks&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Unlike 3., 4. polling for locks, now &lt;code&gt;unlock&lt;/code&gt; will wakeup threads sleeping in &lt;code&gt;lock&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;// *l init to 0
-lock(int *l) {
-    while (tset(1))
-        thread_sleep();
-}
-unlock(int *l) {
-    *l = FALSE;
-    thread_wakeup();
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;Access shared &lt;code&gt;ready queue&lt;/code&gt;, i.e. we need locking while implementing blocking&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Locking solutions&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Multiprocessor&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;                blocking lock    # manipulate queues
-                      ↓
-                  spin lock      # loop on atomic instruction
-                      ↓
-              atomic instruction # single instruction
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Uniprocessor&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;                blocking lock
-                      ↓
-              interrupt disabling
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Which lock to use?&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;table&gt;&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;Lock&lt;/th&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;When to use?&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Atomic instruction&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Most efficient, use when available&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Interrupt disabling, spin locks&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Critical sections short &amp;amp; will not block&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Blocking locks&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Critical sections long &amp;amp; may block (&lt;strong&gt;for synchronization&lt;/strong&gt;); overhead for context switch&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;&lt;/table&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;How many locks to create?&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;1 per individual data structure&lt;/li&gt;
-&lt;li&gt;More locks -&amp;gt; more parallelism BUT more bugs&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Why do we need &lt;code&gt;spin lock&lt;/code&gt; when implementing &lt;code&gt;blocking lock&lt;/code&gt;?&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Avoid &lt;code&gt;lost wakeup&lt;/code&gt; between checking availability of lock &amp;amp; sleep&lt;/li&gt;
-&lt;li&gt;Need another locking method to protect the shared ready queue&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Deadlocks, Starvation, Livelock&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Deadlock&lt;/code&gt;: a set of threads each waiting for a resource held by another thread
-
-&lt;ul&gt;
-&lt;li&gt;Conditions
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Mutual exclusion&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Hold &amp;amp; wait&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;No premption&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Circular wait&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Prevention
-
-&lt;ul&gt;
-&lt;li&gt;Release previously acquired locks? (hold &amp;amp; wait)
-
-&lt;ul&gt;
-&lt;li&gt;But modifications to data might have already happened&lt;/li&gt;
-&lt;li&gt;Or &lt;code&gt;livelock&lt;/code&gt; when keep trying to acquire locks&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Number each resources, need to acquire lower numbered resources before higher ones? (circular wait)
-
-&lt;ul&gt;
-&lt;li&gt;Difficult to number a whole bunch, and some of them are from third-party&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Starvation&lt;/code&gt;: a set of threads waiting for resources constantly used by others&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Livelock&lt;/code&gt;: a set of threads continue to num but make no progress
-
-&lt;ul&gt;
-&lt;li&gt;e.g. &lt;code&gt;interrupt livelock&lt;/code&gt;: interrupts queueing up and suspend the running threads
-=&amp;gt; Can turn to &lt;code&gt;polling&lt;/code&gt;, with intervals not too long&lt;/li&gt;
-&lt;li&gt;Need to ensure a thread runs for a while before switching&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Synchronization&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Threads&lt;/code&gt; wait on some conditions before proceeding&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Motivation: Producer-Consumer Problem&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Single producer &amp;amp; consumer&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;char buf[8];
-int in;
-int out;
-
-void send(char msg) {
-    while ((in-out+n) % n == n-1)
-        ; // full
-    buf[in] = msg;
-    in = (in+1) % n;
-}
-
-char receive() {
-    while (in == out)
-        ; // empty
-    msg = buf[out];
-    out = (out+1) % n;
-    return msg;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Multiple producers &amp;amp; consumers&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# deadlock
-
-void send(char msg) {
-    lock(l);
-    while ((in-out+n) % n == n-1)
-        ; // full
-    buf[in] = msg;
-    in = (in+1) % n;
-    unlock(l);
-}
-
-char receive() {
-    lock(l);
-    while (in == out)
-        ; // empty
-    msg = buf[out];
-    out = (out+1) % n;
-    return msg;
-    unlock(l);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# release locks before spinning - too tight
-
-void send(char msg) {
-    lock(l);
-    while ((in-out+n) % n == n-1) {
-        unlock(l);
-        lock(l);
-    }
-    buf[in] = msg;
-    in = (in+1) % n;
-    unlock(l);
-}
-
-char receive() {
-    lock(l);
-    while (in == out) {
-        unlock(l);
-        lock(l);
-    }
-    msg = buf[out];
-    out = (out+1) % n;
-    return msg;
-    unlock(l);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# sleep after unlocking
-
-void send(char msg) {
-    lock(l);
-    while ((in-out+n) % n == n-1) {
-        unlock(l);          ____&amp;gt; atomic! Or else lost wakeup
-        thread_sleep(full); __|
-        lock(l);
-    }
-    buf[in] = msg;
-    if (in == out)
-        thread_wakeup(empty);
-    in = (in+1) % n;
-    unlock(l);
-}
-
-char receive() {
-    lock(l);
-    while (in == out) {
-        unlock(l);
-        thread_sleep(empty);
-        lock(l);
-    }
-    msg = buf[out];
-    if ((in-out+n) % n == n-1)
-        thread_wakeup(full);
-    out = (out+1) % n;
-    unlock(l);
-    return msg;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Challenges&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Can&amp;#39;t spin or sleep while holding lock
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Deadlock&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Can&amp;#39;t release lock and then sleep
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Lost wakeup&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Need to &lt;strong&gt;unlock &amp;amp; sleep atomically&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Monitors&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Condition variable&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Used within &lt;code&gt;monitor methods&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Functions
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;cv = cv_create()&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;cv_destroy(cv)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;cv_wait(cv, lock)&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Lock released &lt;code&gt;atomically&lt;/code&gt; while waiting&lt;/li&gt;
-&lt;li&gt;Lock reacquired after wait returns&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;cv_signal(cv, lock)&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Wakeup one thread waiting on the condition&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Lost signal&lt;/code&gt;: signal occurs before a wait&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;cv_broadcast(cv, lock)&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Wakeup all threads waiting on the condition&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Basis&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;F() {
-    int disabled = disaple_interrupt;
-    do_work();
-    enable_interrupt(disabled);
-}
-do_work(){
-    int disabled = disaple_interrupt; // already disabled!
-    ...
-    enable_interrupt(disabled); // stay disabled
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;Producer-consumer&lt;/code&gt; with &lt;code&gt;monitors&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;buf[n], in, out;
-lock l = 0;
-cv full;
-cv empty;
-
-void send(char msg) {
-    lock(l);
-    while ((in-out+n) % n == n-1) {
-        // put thread into wait queue for 'full' condition
-        wait(full, l); // unlock + sleep + lock
-    }
-    buf[in] = msg;
-    if (in == out)
-        signal(empty, l);
-    in = (in+1) % n;
-    unlock(l);
-}
-
-char receive() {
-    lock(l);
-    while (in == out) {
-        wait(empty, l);
-    }
-    msg = buf[out];
-    if ((in-out+n) % n == n-1)
-        signal(full, l);
-    out = (out+1) % n;
-    unlock(l);
-    return msg;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;Variable initialization&lt;/code&gt; with &lt;code&gt;monitors&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Method1() {
-    lock(l);
-    V = malloc(...);
-    signal(cv, l); // condition = V is null
-    ...
-    unlock(l);
-}
-Method2() {
-    lock(l);
-    if (V == NULL)
-        wait(cv, l); // condition = V is null
-    assert(V);
-    unlock(l);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Lock&lt;/code&gt; is for avoiding &lt;code&gt;lost wakeup&lt;/code&gt; because &lt;code&gt;signal&lt;/code&gt; CANNOT come before &lt;code&gt;wait&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Semaphores&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Tracks number of available resources using &lt;code&gt;down&lt;/code&gt; &amp;amp; &lt;code&gt;up&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# spinning (example with race condition on s)
-
-down() {
-    while (s &amp;lt;= 0)
-        ;
-    s--;
-}
-up() {
-    s++;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# blocked
-
-down() {
-    disable_interrupts;
-    while (s &amp;lt;= 0)
-        thread_sleep(s);
-    s--;
-    enable_interrupts;
-}
-up() {
-    disable_interrupts;
-    s++;
-    thread_wakeup(s);
-    enable_interrupts;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;If &lt;code&gt;s&lt;/code&gt; init to &lt;code&gt;1&lt;/code&gt;, then behaves like &lt;code&gt;lock&lt;/code&gt; &amp;amp; &lt;code&gt;unlock&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Difference with &lt;code&gt;lock&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Different&lt;/strong&gt; threads call &lt;code&gt;down&lt;/code&gt; &amp;amp; &lt;code&gt;up&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;up&lt;/code&gt; can happen &lt;strong&gt;before&lt;/strong&gt; &lt;code&gt;down&lt;/code&gt; to bank resource&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;Producer-consumer&lt;/code&gt; with &lt;code&gt;semaphores&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;buf[n], in, out;
-lock l;
-sem full = 0;
-sem empty = n;
-
-void send(char msg) {
-    down(empty);
-    lock(l);
-    buf[in] = msg;
-    in = (in+1) % n;
-    unlock(l);
-    up(full);
-}
-
-char receive() {
-    down(full);
-    lock(l); // this lock for buf, not for avoiding lost signal
-    msg = buf[out];
-    out = (out+1) % n;
-    unlock(l);
-    up(empty);
-    return msg;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;&lt;strong&gt;Quick Questions&lt;/strong&gt;&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;What is the difference between mutual exclusion and synchronization?
-
-&lt;ul&gt;
-&lt;li&gt;Mutex: used to ensure that only one thread accesses a critical section at a time, ensuring that operations are run atomically.&lt;/li&gt;
-&lt;li&gt;Synchronization: used to ensure threads wait on some condition.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Why are locks, by themselves, not sufficient for solving synchronization problems?
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Lock&lt;/code&gt; &amp;amp; &lt;code&gt;unlock&lt;/code&gt; are used together and in that order. Synchronization problems require a more general primitive: conditional &lt;code&gt;sleep&lt;/code&gt; and &lt;code&gt;wakeup&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;What are the differences between a monitor and a semaphore?
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Monitor&lt;/code&gt; requires locks to avoid lost signal. &lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Monitor&lt;/code&gt; is associated with a lock; &lt;code&gt;semaphore&lt;/code&gt; only use locks to protect the shared resource.&lt;/li&gt;
-&lt;li&gt;No lost wakeups for &lt;code&gt;semaphore&lt;/code&gt; because the wakeups (&lt;code&gt;up()&lt;/code&gt;) will not be dedicated to a specific thread but instead used for future entries.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Down/Up&lt;/code&gt; &amp;amp; &lt;code&gt;wait/signal&lt;/code&gt; are also different.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;What are the differences between &lt;code&gt;wait()&lt;/code&gt; and &lt;code&gt;down()&lt;/code&gt;?
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Wait&lt;/code&gt; is stateless, it always waits. &lt;code&gt;Wait&lt;/code&gt; also releases a lock, waits, and then reacquires a lock. &lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Down&lt;/code&gt; has state embedded with a notion of available resources, and will only wait if resources are not available. &lt;code&gt;Down&lt;/code&gt; doesn’t have any notion of an associated lock.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;What are the differences between &lt;code&gt;signal()&lt;/code&gt; and &lt;code&gt;up()&lt;/code&gt;?
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Signal&lt;/code&gt; can be lost if no one is waiting, hence the need to use locks with condition variables, so that there is no race with &lt;code&gt;wait&lt;/code&gt;. &lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Up&lt;/code&gt; will always increase the resource available, so a future down can acquire the resource. &lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Why might you prefer one over the other?
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Semaphore&lt;/code&gt;: resource counting problem&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Monitor&lt;/code&gt;: other problems, ensures mutual exclusion&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-        <pubDate>Sun, 23 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/os/2016/10/23/operating-system-concurrent-programming.html</link>
-        <guid isPermaLink="true">/blog/notes/os/2016/10/23/operating-system-concurrent-programming.html</guid>
-        
-        <category>OS</category>
-        
-        <category>ECE344</category>
-        
-        <category>mutex</category>
-        
-        <category>synchronization</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>OS</category>
-        
-      </item>
-    
-      <item>
-        <title>Operating System - Basics</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Basics of OS&lt;/li&gt;
-&lt;li&gt;OS Design&lt;/li&gt;
-&lt;li&gt;Hardware&lt;/li&gt;
-&lt;li&gt;OS-Related Hardware&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Basics of OS&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Layer of &lt;code&gt;software&lt;/code&gt; between &lt;code&gt;hardware &amp;amp; applications&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Application dedicated to a single task; OS serves all applications&lt;/li&gt;
-&lt;li&gt;Also called &lt;code&gt;systems software&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;What OS does&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Manage H/W resources
-
-&lt;ul&gt;
-&lt;li&gt;Allows programs to interact with H/W
-
-&lt;ul&gt;
-&lt;li&gt;CPU, memory, disk, graphics card, co-processors, ...&lt;/li&gt;
-&lt;li&gt;Simpler interface to devices
-
-&lt;ul&gt;
-&lt;li&gt;e.g. access disk as files&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;If NOT, apps have to be written to specific H/W devices directly -&amp;gt; deal with all the specific H/W stuffs -&amp;gt; not compatible to another manufacturer&amp;#39;s device&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Allows running many programs at the same time
-
-&lt;ul&gt;
-&lt;li&gt;Programs share CPU, memory&lt;/li&gt;
-&lt;li&gt;Isolates apps from each other
-
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;If NOT, then memory corruption a problem&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Isolates itself from apps
-
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;If NOT, then OS has to compromise for apps; apps may corrupt OS and no isolations provided to them&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;OS Design&lt;/h2&gt;
-
-&lt;h3&gt;Key Ideas&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;How does OS allow running many programs?
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Virtualization&lt;/code&gt; - programs share resources securely&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;How does OS allow programs to interact with H/W?
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Abstraction&lt;/code&gt; for H/W&lt;/li&gt;
-&lt;li&gt;Implemented via &lt;code&gt;System calls&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Virtualization&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Programs think:
-
-&lt;ul&gt;
-&lt;li&gt;They are running on their own machine (but only one physical machine!)&lt;/li&gt;
-&lt;li&gt;They have full access to CPU, memory, disk&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Benefits
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Resource isolation&lt;/code&gt; (an ideal virtual machine)
-
-&lt;ul&gt;
-&lt;li&gt;Program cannot accidentally overwrite others&amp;#39; memory or files&lt;/li&gt;
-&lt;li&gt;Ideally, if a program uses too much memory, only its performance degrades&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Improves &lt;strong&gt;portablity&lt;/strong&gt; of programs&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;An ideal virtual machine ~ physical machine, i.e. programs won&amp;#39;t affect each other&lt;/li&gt;
-&lt;li&gt;Implementation
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Processor -&amp;gt; Threads&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Memory -&amp;gt; Virtual Memory&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Contiguous &amp;amp; private memory&lt;/li&gt;
-&lt;li&gt;Illusion of access to large amount of memory&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Disk -&amp;gt; Files&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Network -&amp;gt; Sockets&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Hides details of network protocols &amp;amp; layers&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Abstraction&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Eases programming, improves &lt;strong&gt;portability&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Concurrency&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Thread abstraction&lt;/code&gt; allows program to concurrently perform several tasks
-
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Race condition?&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;System Calls&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Program request H/W access via &lt;code&gt;system calls&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;OS API&lt;/code&gt;: a set of system calls&lt;/li&gt;
-&lt;li&gt;Requires control transfer from &lt;code&gt;user space&lt;/code&gt; to &lt;code&gt;kernel space&lt;/code&gt; via &lt;code&gt;interrupts&lt;/code&gt; or &lt;code&gt;traps&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;e.g.
-
-&lt;ul&gt;
-&lt;li&gt;Create/destroy process (&lt;em&gt;process-related system calls&lt;/em&gt;)&lt;/li&gt;
-&lt;li&gt;Allocate/deallocate memory from system (&lt;em&gt;memory-related system calls&lt;/em&gt;)&lt;/li&gt;
-&lt;li&gt;Read/write a file&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Ex.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;    Program | Library
-    -----------------
-        OS Kernel                           # program read() 
-    -----------------                       # -&amp;gt; library generates trap 
-           H/W                              # -&amp;gt; trap invokes kernel 
-                                            # -&amp;gt; kernel accesses disk 
-    Program (read) -&amp;gt; library               # -&amp;gt; kernel returns results to program
-    ------------------(trap)--^----                 
-        OS Kernel        |    |
-    ---------------------v-(result)
-                H/W             
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;OS Interface&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;OS interface&lt;/code&gt; to H/W = set of &lt;strong&gt;system calls&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;VM interface&lt;/code&gt; to H/W = subset of physical machine interface + OS interface&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;    * Application Layer
-
-    * OS Interface 
-(system calls: thread_create(), read(), write(), thread_join(), ...)
-
-    (when program needs access to devices)
-------------virtual machine interface--------
-    * OS Kernel                             |
-(thread scheduler, memory mgmt,             |
-device mgmt, file sys, network comm,        |
-protection, process mgmt, security, ...)    |   (when program runs most instructions)
-                                            |
------------physical machine interface---------virtual/physical machine interface-------
-                                                    (user mode interface)
-    * H/W Layer
-(network, CPU, memory, printer, video card, monitor, disk, ...)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;hr&gt;
-
-&lt;h2&gt;Hardware&lt;/h2&gt;
-
-&lt;h3&gt;&lt;strong&gt;Processor (CPU)&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;CPU executes a set of instructions&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Fetch&lt;/code&gt; - &lt;code&gt;Decode&lt;/code&gt; - &lt;code&gt;Execute&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;PC = &amp;lt;start address&amp;gt;;
-while (halt flag not set) {
-    IR = memory[PC];
-    PC++;
-    execute(IR);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Anatomy of a CPU:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Program Counter (PC)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Instruction Register (IR)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;General Registers&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Stack Pointer (SP)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Status Register (SR)&lt;/code&gt; or &lt;code&gt;Processor Status Word&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Memory&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Memory (DRAM) provides storage for &lt;code&gt;code&lt;/code&gt; &amp;amp; &lt;code&gt;data&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Abstraction
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Write(addr, val)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;val = Read(addr)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Anatomy of memory
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Data sections&lt;/code&gt;: global vars&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Stack&lt;/code&gt;: local vars, parameters, return values&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Heap&lt;/code&gt;: dynamic vars&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;I/O Devices&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Runs &lt;strong&gt;concurrently&lt;/strong&gt; with &lt;code&gt;CPU&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Connected to &lt;strong&gt;device-specific controllers&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Buses&lt;/code&gt; connect &lt;code&gt;CPU&lt;/code&gt; to &lt;code&gt;memory&lt;/code&gt; &amp;amp; &lt;code&gt;controllers&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Each &lt;code&gt;controller&lt;/code&gt; owns a range of &lt;code&gt;bus addresses&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;CPU&lt;/code&gt; sends messgage to address using:
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Special I/O instructions&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Memory-mapped I/O&lt;/code&gt;: 
-
-&lt;ul&gt;
-&lt;li&gt;Memory locations mapped to device registers&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Communication model
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Send(addr, val)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;val = Receive(addr)&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;CPU&lt;/code&gt; polling the addr for val &amp;amp; read the data with another address&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Similar to memory abstraction?
-
-&lt;ul&gt;
-&lt;li&gt;But data may &lt;em&gt;never arrive&lt;/em&gt;, &lt;em&gt;get corrupted&lt;/em&gt;, or &lt;em&gt;arrive out-of-order&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Polling&lt;/code&gt; frequency?
-
-&lt;ul&gt;
-&lt;li&gt;Too high -&amp;gt; waste CPU&lt;/li&gt;
-&lt;li&gt;Too low -&amp;gt; data loss or delay&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Interrupts&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Polling&lt;/code&gt; not efficient -&amp;gt; let devices send &lt;code&gt;interrupts&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;CPU&lt;/code&gt; has &lt;code&gt;interrupt request flag&lt;/code&gt; to be set by devices&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Requires support from H/W &amp;amp; S/W&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Processor execution with &lt;code&gt;interrupts&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;1. (H/W) When interrupt flag set:
-    H/W saves PC
-    Set PC to predetermined address
-    The address contains 'interrupt handler'
-2. (S/W) When H/W executes next instruction:
-    Save CPU registers
-    Run interrupt handler
-    Restore CPU registers
-3. (S/W) Handler runs 'return from interrupt' instruction:
-    Set PC to original next instruction
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;PC = &amp;lt;start address&amp;gt;;
-while (halt flag not set) {
-    IR = memory[PC];
-    PC++;
-    execute(IR);
-    if (InterruptRequest) {
-        H/W save PC, SP, SR in stack; // not all states, only those necessary to be returned from handler
-        PC = memory[0]; // where interrupt handler resides
-    }
-}
-Interrupt_handler(){
-    save_processor_state(); // gets to choose essential states to save
-    handle_interrupt();
-    restore_processor_state();
-    return;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;OS-Related Hardware&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;OS is S/W, when other apps are running, it is not. How does OS manage resources?
-
-&lt;ul&gt;
-&lt;li&gt;Requires H/W support to implement virtualization &amp;amp; abstraction &lt;strong&gt;efficiently&lt;/strong&gt; &amp;amp; &lt;strong&gt;securely&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Efficient&lt;/strong&gt; because no need to provide interpreter for every single instruction that provides H/W &lt;code&gt;abstraction&lt;/code&gt; &amp;amp; &lt;code&gt;virtualization&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Secure&lt;/strong&gt; because &lt;code&gt;CPU modes&lt;/code&gt;, &lt;code&gt;MMU&lt;/code&gt;, &amp;amp; &lt;code&gt;traps&lt;/code&gt; ensure no corruption between programs&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;CPU Modes&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;2 CPU Modes:
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Kernel mode&lt;/code&gt; - OS
-
-&lt;ul&gt;
-&lt;li&gt;Every instruction can be executed&lt;br&gt;
-e.g. access disk &amp;amp; timer, controll interrupts, setting CPU mode&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;User mode&lt;/code&gt; - Programs
-
-&lt;ul&gt;
-&lt;li&gt;A subset of instructions can be executed&lt;br&gt;
-e.g. &lt;code&gt;add&lt;/code&gt;, &lt;code&gt;sub&lt;/code&gt;, &lt;code&gt;push&lt;/code&gt;, &lt;code&gt;pop&lt;/code&gt;, etc.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Current mode kept in &lt;code&gt;status register&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Devices mapped to kernel memory&lt;/li&gt;
-&lt;li&gt;OS is priviledged &amp;amp; trusted program; correct system operation depend on correct OS design &amp;amp; implementation instead of user programs&lt;/li&gt;
-&lt;li&gt;Enables &lt;code&gt;memory isolation&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Memories &amp;amp; registers can only be changed in &lt;code&gt;privileged mode&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Memory Management&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Memory Management Unit (MMU)&lt;/code&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Programs use &lt;code&gt;virtual memory addresses&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;CPU&lt;/code&gt; sends &lt;code&gt;virtual addresses&lt;/code&gt; to &lt;code&gt;MMU&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;MMU&lt;/code&gt; translates them to &lt;code&gt;physical addresses&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;MMU&lt;/code&gt; accesses &lt;code&gt;physical addresses&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Anatomy of a simple MMU
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Base register&lt;/code&gt;
-&lt;code&gt;Phys addr = Virt addr + Base reg&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Limit register&lt;/code&gt;
-&lt;code&gt;Virt addr &amp;lt; Limit reg&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Enables &lt;code&gt;memory virtualization&lt;/code&gt; &amp;amp; &lt;code&gt;memory isolation&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Memory virtualization&lt;/code&gt;: Each program has access to a large amount of contiguous, private memory, starting at address 0&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Memory isolation&lt;/code&gt;: Ensures OS &amp;amp; other programs are located in different physical memory, and they cannot step on each other (memory access permission check)&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Trap&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;For programs to switch to &lt;code&gt;kernel mode&lt;/code&gt; and run &lt;code&gt;OS code&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Programs cannot call &lt;code&gt;OS code&lt;/code&gt; directly because &lt;code&gt;MMU&lt;/code&gt; isolates &lt;code&gt;OS code&lt;/code&gt; &amp;amp; program not in &lt;code&gt;kernel mode&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Provides a secure way to enter the kernel&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Similar to handling &lt;code&gt;interrupts&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# (H/W) On trap:
-    Switch to kernel mode
-    Run OS handler code at well-defined location
-# (S/W) OS handler code:
-    Save processor state
-    Runs kernel functions to access H/W
-    Restore processor state
-    Return to user code, switch to user mode
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;=&amp;gt; &lt;strong&gt;atomic&lt;/strong&gt; to avoid &lt;code&gt;user code&lt;/code&gt; running in &lt;code&gt;kernal mode&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Unix system calls&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Process related&lt;br&gt;
-e.g. fork, exec, wait, exit, kill, signal&lt;/li&gt;
-&lt;li&gt;File related&lt;br&gt;
-e.g. open, read, write, close, link, unlink, chdir&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Invoking system call&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;read(file, buff, n) { // library code
-    ...
-    lw v0, SYS_read // load syscall number into v0 reg
-
-    syscall // trap
-    ...
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;Traps&lt;/code&gt;, &lt;code&gt;interrupts&lt;/code&gt;, &lt;code&gt;exceptions&lt;/code&gt;&lt;/p&gt;
-
-&lt;table&gt;&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;&lt;/th&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;Interrupt&lt;/th&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;Trap&lt;/th&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;Exception&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;Cause&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;H/W external to CPU&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Explicit intruction&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Instruction failure&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Effect&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Program unaware of interrupt handling (async)&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Similar to program invoked function, function returns data (sync)&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Abnormal control flow&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Timeliness&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Needs to respond quickly&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Program suspended, OS can take time&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;OS can take time&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;&lt;/table&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;&lt;strong&gt;Quick Questions&lt;/strong&gt;&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;How does OS manage H/W?
-
-&lt;ul&gt;
-&lt;li&gt;Abstraction &amp;amp; virtualization&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;OS is software, when other applications are running, it is not running, so how can it do its work?
-
-&lt;ul&gt;
-&lt;li&gt;H/W support e.g. CPU modes, MMU, traps&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Why can’t applications corrupt other applications or the OS?
-
-&lt;ul&gt;
-&lt;li&gt;MMU helps&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Why can’t applications directly access h/w?
-
-&lt;ul&gt;
-&lt;li&gt;I/O devices are mapped to kernel memory, so no access allowed by MMU; or, I/O intructions are priviledged&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Why is the OS not a normal program?
-
-&lt;ul&gt;
-&lt;li&gt;Entered from different locations (system calls and interrupts) in response to external events&lt;/li&gt;
-&lt;li&gt;It does not have a single thread of control, it can be invoked simultaneously by two different events (e.g. system call &amp;amp; interrupt)&lt;/li&gt;
-&lt;li&gt;It is not supposed to terminate&lt;/li&gt;
-&lt;li&gt;Can execute any instruction in the machine&lt;/li&gt;
-&lt;li&gt;Has access to the entire memory on the machine&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;What if a program tries to cheat?
-
-&lt;ol&gt;
-&lt;li&gt;What happens if it issues a privileged instruction directly? 
-
-&lt;ul&gt;
-&lt;li&gt;Attempting execution of privileged instruction in user mode causes trap, so kernel gets control. Normally, kernel will kill program.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;What if a running thread doesn’t make a system call to the OS and hence hogs the CPU?
-
-&lt;ul&gt;
-&lt;li&gt;OS must register a future timer interrupt before it hands control of the CPU over to a thread; when the timer interrupt goes off, the OS gets control&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;What stops the running program from disabling an interrupt?
-
-&lt;ul&gt;
-&lt;li&gt;It is a priviledges instruction&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;What stops a program from modifying the OS so that the OS runs user code?
-
-&lt;ul&gt;
-&lt;li&gt;Program cannot even see OS code due to memory virtualization&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;What stops a program from changing the MMU registers?
-
-&lt;ul&gt;
-&lt;li&gt;It is a priviledges instruction&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;How does the OS solve these problems:
-
-&lt;ol&gt;
-&lt;li&gt;Time sharing the CPU among programs?
-
-&lt;ul&gt;
-&lt;li&gt;Timer interrupts&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Space sharing memory among programs?
-
-&lt;ul&gt;
-&lt;li&gt;MMU&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Protection of programs from each other?
-
-&lt;ul&gt;
-&lt;li&gt;1. &amp;amp; 2.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Protection of hardware/devices?
-
-&lt;ul&gt;
-&lt;li&gt;I/O devices are mapped to kernel memory, so no access allowed by MMU; or, I/O intructions are priviledged&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Protection of the OS itself?
-
-&lt;ul&gt;
-&lt;li&gt;MMU isolates OS code&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Does library code (executing in user mode) provide isolation and abstraction?
-
-&lt;ul&gt;
-&lt;li&gt;Provides abstraction but not isolation. Programs can jump to any instruction in library code, overwrite library code/data, thus bypassing any isolation that library code may try to provide.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Does a virtual machine monitor (VMM) such as VMware provide isolation and abstraction?
-
-&lt;ul&gt;
-&lt;li&gt;A VMM is a system program, similar to an OS, that allows multiple OSs to run simultaneously on a single physical machine&lt;/li&gt;
-&lt;li&gt;It provides isolation, but the same abstraction as a physical machine (each OS thinks it is running on physical hardware), thus providing no additional abstraction than the physical machine.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Why can’t user code execute some arbitrary code of its choosing in kernel mode?
-
-&lt;ul&gt;
-&lt;li&gt;User code wants to execute some code in kernel mode, so what can it do?
-
-&lt;ol&gt;
-&lt;li&gt;Write instructions into kernel image - can’t do that due to memory protection.&lt;/li&gt;
-&lt;li&gt;Transfer control to arbitrary places in kernel image to skip checks - can’t do this due to memory protection, and control can only be transferred via TRAP to well known kernel entry locations.&lt;/li&gt;
-&lt;li&gt;Execute privileged instructions - can’t do this in user mode.&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;What is the minimum number of privileged instructions that h/w must implement so that the OS can work correctly?
-
-&lt;ul&gt;
-&lt;li&gt;With memory mapped IO, you can hide all device accesses with memory protection. So programming the MMU (i.e., modify MMU registers) should be privileged. &lt;/li&gt;
-&lt;li&gt;Also, returning from a trap (e.g., iret instruction) should ensure that we cannot switch from user to kernel mode and run arbitrary kernel code. For example, on x86, a return from trap is guaranteed to execute code with the same or lower privilege level.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Similarities &amp;amp; differences between &lt;code&gt;OS&lt;/code&gt; &amp;amp; &lt;code&gt;web browsers&lt;/code&gt;?
-
-&lt;ul&gt;
-&lt;li&gt;Similarities
-
-&lt;ul&gt;
-&lt;li&gt;Both run multiple applications (processes &amp;amp; web applications)&lt;/li&gt;
-&lt;li&gt;Both need to isolate/protect different applications&lt;/li&gt;
-&lt;li&gt;Both need to ensure their own code is safe from application code&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Differences
-
-&lt;ul&gt;
-&lt;li&gt;OS uses H/W protection to protect OS and application code; browsers normally use S/W/language-level protection&lt;/li&gt;
-&lt;li&gt;OS has direct access to H/W; browsers need to use OS to access&lt;/li&gt;
-&lt;li&gt;OS usually runs local code; the main function of browsers is to run remote code and display remote data&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Why can&amp;#39;t OS code be shared like library codes do?
-
-&lt;ul&gt;
-&lt;li&gt;Some OS code needs to execute privileged instructions and hence will not run in user mode.&lt;/li&gt;
-&lt;li&gt;The OS code may manipulate data that can be globally shared across programs (e.g., the scheduler run queue). Since libraries share code but not data, the library code would not be able to access this shared data.&lt;/li&gt;
-&lt;li&gt;If the OS code is run in user mode, and it could be modified then the security guarantees provided by the OS could be compromised.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-        <pubDate>Fri, 21 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/os/2016/10/21/operating-system-basics.html</link>
-        <guid isPermaLink="true">/blog/notes/os/2016/10/21/operating-system-basics.html</guid>
-        
-        <category>OS</category>
-        
-        <category>ECE344</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>OS</category>
-        
-      </item>
-    
-      <item>
-        <title>Divide and Conquer</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Multiplication&lt;/li&gt;
-&lt;li&gt;Convex Hull&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h1&gt;Divide &amp;amp; Conquer&lt;/h1&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Breaking problems into subproblems&lt;/li&gt;
-&lt;li&gt;Recursively solving these subproblems&lt;/li&gt;
-&lt;li&gt;Combining the answers&lt;/li&gt;
-&lt;/ol&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;a subproblems of size n/b, combining the answers in O(n^d) time.
-
-The k-th level of tree has a^k subproblems, each of size n/(b^k).
-=&amp;gt; a^k * O(n/(b^k)^d) = O(n^d) * (a/(b^d))^k
-
-=&amp;gt; T(n) = aT(⌈n/b⌉) + O(nd)
-        = O(n^d)          if a/(b^d) &amp;lt; 1
-        = O((n^d)logn)    if a/(b^d) = 1
-        = O(n^(log_b(a))) if a/(b^d) &amp;gt; 1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Multiplication&lt;/h2&gt;
-
-&lt;p&gt;Multiply 2 n-bit integers &lt;code&gt;x&lt;/code&gt;, &lt;code&gt;y&lt;/code&gt; where &lt;code&gt;n&lt;/code&gt; is a power of 2.&lt;/p&gt;
-
-&lt;h4&gt;Steps&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Split &lt;code&gt;x&lt;/code&gt;, &lt;code&gt;y&lt;/code&gt; into halves.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;x = 2^(n/2)xl + xr&lt;/code&gt;&lt;br&gt;
-&lt;code&gt;y = 2^(n/2)yl + yr&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Multiplication becomes:&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;xy = (2^(n/2)xl + xr) * (2^(n/2)yl + yr) = (2^n)xlyl + 2^(n/2)(xlyr + xryl) + xryr&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Consider:&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;xlyr + xryl = (xl + xr)(yl + yr) - xlyl - xryr&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Multiplication becomes 3 multiplication subproblems.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;Running Time&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;At depth k, there are &lt;code&gt;3^k&lt;/code&gt; subproblems, each of size &lt;code&gt;n/(2^k)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;3^k * O(n/(2^k)) = (3/2)^k * O(n)&lt;/code&gt; at depth k&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;T(n) = 3T(n/2) + O(n) = O(n^1.59)&lt;/code&gt; in total&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Pseudocode&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Multiply(x, y):
-    # Input: Positive integers x and y, in binary 
-    # Output: Their product
-
-    n = max(size of x, size of y) 
-    if n = 1: 
-        return xy
-
-    xL, xR = leftmost⌈n/2⌉, rightmost⌊n/2⌋ bits of x yL, yR = leftmost⌈n/2⌉, rightmost⌊n/2⌋ bits of y
-
-    P1 = Multiply(xL, yL)
-    P2 = Multiply(xR, yR)
-    P3 = Multiply(xL + xR, yL + yR)
-    return P1 × 2^n + (P3 − P1 −P2) × 2^(n/2) + P2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;Convex Hull&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Graham&amp;#39;s scan: &lt;code&gt;O(nlogn)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;em&gt;Divide and Conquer Convex Hull&lt;/em&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Generalization of &lt;strong&gt;MergeSort&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Pseudocode&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Presort points by x coordinate =&amp;gt; O(nlogn)
-# Assume linked list of hull vertices
-
-MergeHull(HA, HB):
-    Compute upper &amp;amp; lower tangents for HA &amp;amp; HB
-    Discard all points lying between 2 tangents
-    return MergedH
-
-Hull(S):
-    If |S| &amp;lt;= 3:
-        Compute convex hull by brute force # =&amp;gt; O(1)
-        return H
-    Else:
-        Partition S into A (lowest x) &amp;amp; B (highest x) # =&amp;gt; O(n)
-        HA = Hull(A)
-        HB = Hull(B)
-        H = MergeHull(HA, HB) # =&amp;gt; O(n)
-        return H
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;=&amp;gt;  &lt;code&gt;
-    T(n) = 1           if n &amp;lt;= 3
-           n + 2T(n/2) otherwise
-&lt;/code&gt;
-=&amp;gt; &lt;code&gt;O(nlogn)&lt;/code&gt;&lt;/p&gt;
-
-&lt;h4&gt;Computing Tangents&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Walking procedure
-
-LowerTangent(HA, HB):
-    Init a = rightmost point of HA
-    Init b = leftmost point of HB
-
-    # Orientation test of a, b, and neighboring vertices 
-    While ab not a lower tangent for HA &amp;amp; HB:
-        While ab not a lower tangent for HA:
-            a = a - 1 # move clockwise
-        While ab not a lower tangent for HB:
-            b = b + 1 # move counterclockwise
-    Return ab
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;=&amp;gt; &lt;code&gt;O(|HA| + |HB|) &amp;lt;= O(|A| + |B|) = O(n)&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3&gt;&lt;em&gt;Quickhull&lt;/em&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Generalization of &lt;strong&gt;QuickSort&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;O(nlogn)&lt;/code&gt; ~ &lt;code&gt;O(n^2)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;No obvious way to convert it into randomized algorithm with &lt;code&gt;O(nlogn)&lt;/code&gt; expected running time; but still performs well&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Idea&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Discard points not on the hull as quickly as possible&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Steps&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Find max &amp;amp; min x, y coordinates&lt;/li&gt;
-&lt;li&gt;Draw a bounding rectangle -&amp;gt; those lying within discarded =&amp;gt; &lt;code&gt;O(n)&lt;/code&gt; by now&lt;/li&gt;
-&lt;li&gt;Classify remaining points into 4 corners -&amp;gt; if no remaining, then done&lt;/li&gt;
-&lt;li&gt;For each corner, find a point &lt;code&gt;c&lt;/code&gt; that lies on the hull. May choose &lt;code&gt;c&lt;/code&gt; by the most perpendicular distance.&lt;/li&gt;
-&lt;li&gt;Discard those in the triangle, and split remaining points into 2 subsets (classify them by 2 orientation tests).&lt;/li&gt;
-&lt;li&gt;Add the 2 corners in buckets, and recurse.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;Running Time&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Depends on how evenly the points are split&lt;br&gt;
-=&amp;gt;  &lt;code&gt;
-T(n) = 1             if n = 1
-       T(n1) + T(n2) where n1 + n2 &amp;lt;= n
-&lt;/code&gt;&lt;br&gt;
-=&amp;gt; &lt;code&gt;O(nlogn)&lt;/code&gt; if evenly distributed (&lt;code&gt;n1 ~= n2&lt;/code&gt;; &lt;code&gt;max(n1, n2) &amp;lt;= a * n&lt;/code&gt; for some constant &lt;code&gt;a &amp;lt; 1&lt;/code&gt;)&lt;br&gt;
-=&amp;gt; &lt;code&gt;O(n^2)&lt;/code&gt; otherwise&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;em&gt;Gift Wrapping and Jarvis&amp;#39;s March&lt;/em&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Variation of &lt;strong&gt;SelectionSort&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;O(n^2)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Steps&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Find any point on convex hull, e.g. lowest point&lt;/li&gt;
-&lt;li&gt;Say start with &lt;code&gt;p(0) = (Inf, 0)&lt;/code&gt;, &lt;code&gt;p(1) = lowest point&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Assume &lt;code&gt;p(k)&lt;/code&gt; &amp;amp; &lt;code&gt;p(k-1)&lt;/code&gt; were the last 2 points added, find the next one &lt;code&gt;q&lt;/code&gt; s.t. &lt;code&gt;angle[p(k-1), p(k), q]&lt;/code&gt; is maximized =&amp;gt; &lt;code&gt;O(n)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Repeat &lt;code&gt;h&lt;/code&gt; times, return back to starting point&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;Running Time&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;O(nh)&lt;/code&gt;, where n is the input size, h is the output size&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;If h = o(logn), then faster than Graham&amp;#39;s!&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;em&gt;Chan&amp;#39;s Algorithm&lt;/em&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Combination of &lt;strong&gt;Graham&amp;#39;s scan&lt;/strong&gt; &amp;amp; &lt;strong&gt;Jarvis&amp;#39;s march&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;Aims to be &lt;code&gt;O(nlogh)&lt;/code&gt; (lower bound)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Steps&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Partition points into groups of equal size &lt;code&gt;m&lt;/code&gt; points, total &lt;code&gt;r&lt;/code&gt; groups&lt;/li&gt;
-&lt;li&gt;For each group, compute its hull using &lt;strong&gt;Graham&amp;#39;s scan&lt;/strong&gt; =&amp;gt; total &lt;code&gt;O(rmlogm)&lt;/code&gt; = &lt;code&gt;O(nlogm)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Run &lt;strong&gt;Jarvis&amp;#39;s march&lt;/strong&gt; on the groups. Computing tangent between a point &amp;amp; a convex &lt;code&gt;m&lt;/code&gt; takes &lt;code&gt;O(logm)&lt;/code&gt; time (binary search)&lt;br&gt;
-=&amp;gt; total &lt;code&gt;O(rlogm)&lt;/code&gt; for &lt;code&gt;r&lt;/code&gt; groups&lt;br&gt;
-=&amp;gt; &lt;code&gt;h&lt;/code&gt; steps of Jarvis&amp;#39;s march, total &lt;code&gt;O(hrlogm)&lt;/code&gt; time&lt;/li&gt;
-&lt;li&gt;Combining, we get &lt;code&gt;O((n + hn/m) logm)&lt;/code&gt; time&lt;/li&gt;
-&lt;li&gt;If set &lt;code&gt;m = h&lt;/code&gt;, running time &lt;code&gt;O(nlogh)&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;Tricks&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;How do we know what &lt;code&gt;m&lt;/code&gt; is if we don&amp;#39;t know &lt;code&gt;h&lt;/code&gt; in advance?
-
-&lt;ul&gt;
-&lt;li&gt;Guess the value: try &lt;code&gt;m = 1, 2, ...&lt;/code&gt;, until &lt;code&gt;m &amp;gt;= h&lt;/code&gt; =&amp;gt; too long!&lt;/li&gt;
-&lt;li&gt;Binary search =&amp;gt; but if &lt;code&gt;m = n/2&lt;/code&gt;, stuck to &lt;code&gt;O(nlogn)&lt;/code&gt; time&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Doubling search&lt;/strong&gt;:
-Start with small &lt;code&gt;m&lt;/code&gt; and increase it rapidly (say, squaring it) =&amp;gt; &lt;code&gt;O(nlogh)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Pseudocode&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;PartialHull(P, m):
-
-    Let r = ceil(n/m)
-    Partition P into disjoint subsets P(1),P(2),... P(r), each of size at most m
-
-    For i = 1 to r do:
-        Compute Hull(P(i)) using Graham's scan
-        Store the vertices in an ordered array
-
-    Let p0 = (-Inf, 0)
-    Let p1 be the bottommost point of P
-
-    For k = 1 to m do: # =&amp;gt; O(hrlogm) where we assume h = m
-        For i = 1 to r do: # =&amp;gt; O(rlogm)
-            Compute point q in P(i) that maximizes the angle[p(k-1), p(k), q] # =&amp;gt; O(logm)
-        Let p(k+1) be the point q in q(1),q(2),...q(r) that maximizes the angle[p(k-1), p(k), q]
-        If p(k+1) = p(1):
-            Return {p(1), p(2), ... p(k)}
-
-    Return &quot;m was too small, try again.&quot;
-
-Hull(P):
-
-    For t = 1.. do: # stop when 2^2^t &amp;gt;= h, or t = ceil(lglgh)
-        Let m = min(2^(2^t), n)
-        Let L = PartialHull(P, m)
-        If L != &quot;try again&quot;:
-            Return L
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4&gt;Running Time&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;The t-th iteration takes O(nlog2^2^t) = O(n*2^t) time
-Sum(t = 1..lglgh) n*2^t =
-    n * Sum(t = 1..lglgh) 2^t &amp;lt;= 
-    n * 2^(1+lglgh) = 
-    2nlgh = 
-    O(nlogh)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2&gt;References&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.cs.wustl.edu/%7Epless/506/l3.html&quot;&gt;http://www.cs.wustl.edu/~pless/506/l3.html&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Wed, 12 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/algorithm/2016/10/12/divide-and-conquer.html</link>
-        <guid isPermaLink="true">/blog/notes/algorithm/2016/10/12/divide-and-conquer.html</guid>
-        
-        <category>convex hull</category>
-        
-        <category>divide and conquer</category>
-        
-        <category>algorithm</category>
-        
-        <category>CSC373</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>Algorithm</category>
         
       </item>
     

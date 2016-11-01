@@ -54,7 +54,7 @@
 							<li class="category">
 								<a href="/blog/notes">
 									<span>Notes</span>
-									<span>12</span>
+									<span>16</span>
 								</a>
 							</li>
 						
@@ -255,14 +255,14 @@
             alpha = max(alpha, AlphaBeta(c,MIN,alpha,beta)) 
             If beta &lt;= alpha:
                 break 
-    return alpha
+        return alpha
 
     Else: //Player == MIN 
         for c in ChildList:
             beta = min(beta, AlphaBeta(c,MAX,alpha,beta)) 
             If beta &lt;= alpha:
                 break 
-    return beta
+        return beta
 
 // Initial call: AlphaBeta(START_NODE, PLAYER, -infinity, infinity)
 </code></pre></div>
