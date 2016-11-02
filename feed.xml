@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 01 Nov 2016 16:14:08 -0400</pubDate>
-    <lastBuildDate>Tue, 01 Nov 2016 16:14:08 -0400</lastBuildDate>
+    <pubDate>Wed, 02 Nov 2016 11:47:28 -0400</pubDate>
+    <lastBuildDate>Wed, 02 Nov 2016 11:47:28 -0400</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -1592,18 +1592,22 @@ Else
     ChildList = n.Successors(Player)
 
     If Player == MAX:
+        v = -infinity
         for c in ChildList:
-            alpha = max(alpha, AlphaBeta(c,MIN,alpha,beta)) 
+            v = max(v, AlphaBeta(c,MIN,alpha,beta)) 
+            alpha = max(v, alpha)
             If beta &amp;lt;= alpha:
                 break 
-        return alpha
+        return v
 
     Else: //Player == MIN 
+        v = infinity
         for c in ChildList:
-            beta = min(beta, AlphaBeta(c,MAX,alpha,beta)) 
+            v = min(v, AlphaBeta(c,MAX,alpha,beta)) 
+            beta = min(v, beta)
             If beta &amp;lt;= alpha:
                 break 
-        return beta
+        return v
 
 // Initial call: AlphaBeta(START_NODE, PLAYER, -infinity, infinity)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
