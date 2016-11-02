@@ -107,18 +107,22 @@ AlphaBeta(n,Player,alpha,beta): //return Utility of state
 	ChildList = n.Successors(Player)
 
 	If Player == MAX:
+		v = -infinity
 		for c in ChildList:
-			alpha = max(alpha, AlphaBeta(c,MIN,alpha,beta)) 
+			v = max(v, AlphaBeta(c,MIN,alpha,beta)) 
+			alpha = max(v, alpha)
 			If beta <= alpha:
 				break 
-		return alpha
+		return v
 
 	Else: //Player == MIN 
+		v = infinity
 		for c in ChildList:
-			beta = min(beta, AlphaBeta(c,MAX,alpha,beta)) 
+			v = min(v, AlphaBeta(c,MAX,alpha,beta)) 
+			beta = min(v, beta)
 			If beta <= alpha:
 				break 
-		return beta
+		return v
 
 // Initial call: AlphaBeta(START_NODE, PLAYER, -infinity, infinity)
 ```
