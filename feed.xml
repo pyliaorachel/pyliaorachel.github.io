@@ -6,9 +6,320 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 02 Nov 2016 11:47:28 -0400</pubDate>
-    <lastBuildDate>Wed, 02 Nov 2016 11:47:28 -0400</lastBuildDate>
+    <pubDate>Thu, 03 Nov 2016 00:33:47 -0400</pubDate>
+    <lastBuildDate>Thu, 03 Nov 2016 00:33:47 -0400</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Dynamic Programming</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Shortest Paths in DAGs&lt;/li&gt;
+&lt;li&gt;Longest Increasing Subsequences&lt;/li&gt;
+&lt;li&gt;Edit Distance&lt;/li&gt;
+&lt;li&gt;Knapsack Problem&lt;/li&gt;
+&lt;li&gt;Chain Matrix Multiplication&lt;/li&gt;
+&lt;li&gt;Shortest Paths
+
+&lt;ol&gt;
+&lt;li&gt;Shortest Reliable Paths&lt;/li&gt;
+&lt;li&gt;All-Pairs Shortest Paths&lt;/li&gt;
+&lt;li&gt;The Traveling Salesman Problem&lt;/li&gt;
+&lt;li&gt;Independent Sets in Trees&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Comparison to &lt;em&gt;divide-and-conquer&lt;/em&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Divide-and-conquer&lt;/strong&gt;: subproblems &lt;em&gt;substantially smaller&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;DP&lt;/strong&gt;: subproblems &lt;em&gt;slightly smaller&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;So &lt;strong&gt;recursion&lt;/strong&gt; works well with &lt;em&gt;DAC&lt;/em&gt; but not &lt;em&gt;DP&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Define a collection of subproblems which follows:
+
+&lt;ul&gt;
+&lt;li&gt;There is an &lt;strong&gt;ordering&lt;/strong&gt; on the subproblems, and a &lt;strong&gt;relation&lt;/strong&gt; that shows how to solve a subproblem given the answers to &amp;quot;smaller&amp;quot; subproblems, that is, subproblems that appear earlier in the ordering.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Relation with DAGs
+
+&lt;ul&gt;
+&lt;li&gt;Node: subproblem&lt;/li&gt;
+&lt;li&gt;Incoming edges: subproblems needed to be pre-solved (precedence constraints)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Common subproblems&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;1.  
+    O(n)
+    [x1, x2, ..., xi], ..., xn
+2. 
+    O(mn)
+    [x1, x2, ..., xi], ..., xn
+    [y1, y2, ..., yj], ..., ym
+3. 
+    O(n^2)
+    x1, ..., [xi, ..., xj], ..., xn
+4. 
+                x1
+               /  \
+              x2  x3
+             .       .
+            .         .
+           xi   ...   xn
+
+    Subproblem - rooted subtree
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Shortest Paths in DAGs&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;DAG&lt;/strong&gt;: directed acyclic graph&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Nodes can be &lt;strong&gt;linearized&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;    A -&amp;gt; B                  __________
+  ➚        ➘               ➚           ➘
+S   ↑    ↓   D      S -&amp;gt; C -&amp;gt; A -&amp;gt; B -&amp;gt; D -&amp;gt; E
+  ➘        ➚         ➘_______➚      ➘_______➚
+    C -&amp;gt; D
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Pseudocode&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;initialize all dist(·) values to ∞ 
+dist(s) = 0
+
+for each v ∈ V\{s}, in linearized order:
+    dist(v) = min_(u,v)∈E { dist(u) + l(u,v) }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Longest Increasing Subsequences&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;Given a sequence of numbers, find a subset taken in order in which the numbers are getting strictly larger.&lt;/p&gt;
+
+&lt;h4&gt;Viewing LIS as DAG&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Node &lt;code&gt;i&lt;/code&gt;: element &lt;code&gt;i&lt;/code&gt; in the sequence&lt;/li&gt;
+&lt;li&gt;Directed edge &lt;code&gt;(i,j)&lt;/code&gt;: if element &lt;code&gt;j&lt;/code&gt; &amp;gt; element &lt;code&gt;i&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Subproblem:&lt;br&gt;
+&lt;code&gt;L(j) = length of LIS ending at j&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Solution to subproblems:&lt;br&gt;
+&lt;code&gt;L(j) = 1 + max{L(i): (i,j) ∈ E}&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Pseudocode&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;for j = 1..n:
+    L(j) = 1 + max{L(i): (i,j) ∈ E}
+return max_j L(j)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Runtime: &lt;code&gt;O(|E|) = O(n^2)&lt;/code&gt; &lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Edit Distance&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;For 2 strings, the &lt;em&gt;cost&lt;/em&gt; of an alignment between them is the # of &lt;em&gt;edits&lt;/em&gt; (insertion, deletion, substitution) needed to transform string 1 to string 2. Find the &lt;em&gt;min&lt;/em&gt; cost.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Strings &lt;code&gt;x, y&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Subproblem:&lt;br&gt;
+&lt;code&gt;E(i,j) = edit distance between x[1..i] &amp;amp; y[1..j]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Solution to subproblems:&lt;br&gt;
+&lt;code&gt;E(i,j) = min{ 1+E(i−1,j), 1+E(i,j−1), diff(i,j)+E(i−1,j−1) }&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Pseudocode&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;for i = 0..m: 
+    E(i,0) = i
+for j = 1..n: 
+    E(0,j) = j
+for i = 1..m: 
+    for j = 1..n:
+        E(i,j) = min{ E(i − 1,j) + 1, E(i,j − 1) + 1, E(i − 1,j − 1)+diff(i,j) }
+return E(m,n)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Runtime: &lt;code&gt;O(mn)&lt;/code&gt; &lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Knapsack Problem&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;n&lt;/code&gt; items of weight &lt;code&gt;w1, ..., wn&lt;/code&gt; and value &lt;code&gt;v1, ..., vn&lt;/code&gt;, what is the most valuable combination of items that the total weight is at most &lt;code&gt;W&lt;/code&gt; pounds?&lt;/p&gt;
+
+&lt;h4&gt;Allows Repetition&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Subproblem:&lt;br&gt;
+&lt;code&gt;K(w) = max value achievable with knapsack of capacity w&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Solution to subproblems:&lt;br&gt;
+&lt;code&gt;K(w) = max_i:wi&amp;lt;=w { K(w−wi)+vi }&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Pseudocode&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;K(0) = 0
+for w = 1 to W:
+    K(w) = max { K(w−wi)+vi: wi ≤w } 
+return K(W)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+&lt;h4&gt;Memoization&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;A hash table, initially empty, holds values of K(w) indexed by w
+function knapsack(w):
+  if w is in hash table: 
+      return K(w) 
+  K(w) = max { knapsack(w−wi) + vi: wi≤w } 
+  insert K(w) into hash table, with key w 
+  return K(w)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Only store information needed, unlike DP storing all&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4&gt;No Repetition&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Subproblem:&lt;br&gt;
+&lt;code&gt;K(w,j) = max value achievable with knapsack of capacity w and items 1..j&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Solution to subproblems:&lt;br&gt;
+&lt;code&gt;K(w,j) = max { K(w−wj,j-1) + vj, K(w,j-1) }&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Pseudocode&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Initialize all K(0, j) = 0 and all K(w, 0) = 0 
+for j = 1 to n:
+    for w = 1 to W:
+        if wj &amp;gt; w: 
+            K(w,j) = K(w,j−1)
+        else: 
+            K(w,j) = max { K(w,j−1),K(w−wj,j−1) + vj }
+return K(W,n)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Chain Matrix Multiplication&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;Four matrices &lt;code&gt;A x B x C x D&lt;/code&gt;, find the way of chaining that uses the least computations.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Abstraction&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Binary trees&lt;/strong&gt;: &lt;code&gt;node = product of children&lt;/code&gt;&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Ex.
+        []
+       /  \
+      []   D
+     /  \
+    []   C
+   /  \
+  A    B    
+
+(((A x B) x C) x D)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Subproblem:&lt;br&gt;
+&lt;code&gt;C(i,j) = min cost of multiplying Ai..Aj&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Solution to subproblems:&lt;br&gt;
+&lt;code&gt;C(i,j) = min_i&amp;lt;=k&amp;lt;j { C(i,k) + C(k+1,j) + m_i-1 * mk * mj }&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Pseudocode&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;fori = 1 to n: 
+    C(i,i) = 0 
+for s=1 to n−1:
+    for i=1 to n−s: 
+        j = i + s
+        C(i,j) = min { C(i,k) + C(k+1,j) + m_i−1 * mk * mj: i ≤ k &amp;lt; j } 
+return C(1,n)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Runtime: &lt;code&gt;O(n^3)&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Shortest Paths&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;h4&gt;Shortest Reliable Paths&lt;/h4&gt;
+
+&lt;p&gt;Find the shortest path in a graph from &lt;code&gt;s&lt;/code&gt; to &lt;code&gt;t&lt;/code&gt; using at most &lt;code&gt;k&lt;/code&gt; edges.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Subproblem:&lt;br&gt;
+&lt;code&gt;dist(v,i) = length of shortest path from s to v using i edges&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Solution to subproblems:&lt;br&gt;
+&lt;code&gt;dist(v,i) = min_(u,v)∈E { dist(u,i−1) + l(u,v) }&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Initial values:&lt;br&gt;
+&lt;code&gt;dist(v, 0) = infinity, dist(s, 0) = 0&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;All-Pairs Shortest Paths&lt;/h4&gt;
+
+&lt;p&gt;&lt;em&gt;Floyd-Warshall algorithm&lt;/em&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Subproblem:&lt;br&gt;
+&lt;code&gt;dist(i,j,k) = length of shortest path from i to j using only nodes {1..k}&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Solution to subproblems:&lt;br&gt;
+&lt;code&gt;dist(i,j,k) = min { dist(i,k,k−1) + dist(k,j,k−1), dist(i,j,k−1) }&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Pseudocode  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;for i = 1 to n: 
+    for j = 1 to n:
+        dist(i,j,0) = ∞
+for all (i,j) ∈ E: 
+    dist(i,j,0) = l(i,j)
+for k = 1 to n: 
+    for i = 1 to n:
+        for j = 1 to n:
+            dist(i,j,k) = min{ dist(i,k,k−1) + dist(k,j,k−1), dist(i,j,k−1) }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;The Traveling Salesman Problem&lt;/h4&gt;
+
+&lt;p&gt;Find a min cost path in a graph that starts and end at 1 and goes through all nodes exactly once.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Subproblem:&lt;br&gt;
+&lt;code&gt;C(S,j) = length of shortest path visiting nodes in S exactly once, starting at 1 and ending at j&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Solution to subproblems:&lt;br&gt;
+&lt;code&gt;C(S,j) = min_i∈S:i!=j { C(S-{j}, i) + dij }&lt;/code&gt;&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Pseudocode&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;C({1},1) = 0
+for s = 2 to n:
+    for all subsets S ⊆ {1..n} of size s and containing 1: 
+        C(S,1) = ∞
+        for all j ∈ S, j != 1: 
+            C(S,j) = min { C(S−{j},i) + dij: i∈S,i!=j}
+return min_j { C({1..n},j) + dj1 }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Runtime: &lt;code&gt;O(n^2*2^n)&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;2^n*n&lt;/code&gt; subproblems, each &lt;code&gt;O(n)&lt;/code&gt; time&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Independent Sets in Trees&lt;/h4&gt;
+
+&lt;p&gt;&lt;em&gt;Independent sets&lt;/em&gt;: for graph &lt;code&gt;G = (V,E)&lt;/code&gt;, a subset of nodes &lt;code&gt;S ⊂ V&lt;/code&gt; is an independent set if there are no edges between them.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Subproblem:&lt;br&gt;
+&lt;code&gt;I(u) = size of largest independent set of subtree hanging from u&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Solution to subproblem:&lt;br&gt;
+&lt;code&gt;u&lt;/code&gt; is either included in the largest independent set or not&lt;br&gt;
+&lt;code&gt;I(u) = max { 1 + sum_grandchildren_w_of_u I(w), sum_children_w_of_u I(w) }&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Wed, 02 Nov 2016 00:00:00 -0400</pubDate>
+        <link>/blog/notes/algorithm/2016/11/02/dynamic-programming.html</link>
+        <guid isPermaLink="true">/blog/notes/algorithm/2016/11/02/dynamic-programming.html</guid>
+        
+        <category>DP</category>
+        
+        <category>algorithm</category>
+        
+        <category>CSC373</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Algorithm</category>
+        
+      </item>
     
       <item>
         <title>Threads &amp; Parallel Programming</title>
@@ -1271,7 +1582,7 @@ GAC(Level):
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;O(bm)&lt;/code&gt; space (one path at a time)&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;O(b^m)&lt;/code&gt; time, &lt;code&gt;m&lt;/code&gt; = length of longest path in state space&lt;/li&gt;
-&lt;li&gt;Complete for acyclic graph or cycles pruned&lt;/li&gt;
+&lt;li&gt;Complete for finite depth &amp;amp; acyclic graph or cycles pruned&lt;/li&gt;
 &lt;li&gt;Not optimal&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -1551,8 +1862,8 @@ Else
 &lt;li&gt;Back balues up the tree
 
 &lt;ul&gt;
-&lt;li&gt;`U(n) = min{ U(c): c is a child of n if n is Min node }&lt;/li&gt;
-&lt;li&gt;`U(n) = max{ U(c): c is a child of n if n is Max node }&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;U(n) = min{ U(c): c is a child of n if n is Min node }&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;U(n) = max{ U(c): c is a child of n if n is Max node }&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
@@ -2389,252 +2700,6 @@ thread_switch(current, next) {
         <category>ECE344</category>
         
         <category>threads</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>OS</category>
-        
-      </item>
-    
-      <item>
-        <title>Operating System - Scheduling</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Scheduling Overview&lt;/li&gt;
-&lt;li&gt;Scheduling Policies&lt;/li&gt;
-&lt;li&gt;Multiprocessor Scheduling&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Scheduling Overview&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Prevent &lt;code&gt;thread starvation&lt;/code&gt;, BUT &lt;code&gt;context switching&lt;/code&gt; is expensive&lt;/li&gt;
-&lt;li&gt;Runs another program when I/O performed&lt;/li&gt;
-&lt;li&gt;Goals
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Batch systems&lt;/strong&gt;: Long running, no interactive users, no time constraints
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;CPU utilization&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;% of time CPU is busy&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Throughput&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;# of programs complete per unit time&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Turnaround time&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Total time to finish a program&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;turnaround = processing + waiting&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Interactive (general-purpose) systems&lt;/strong&gt;: Short running, interactive suers, weak time constraints
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Response time&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Time between &lt;em&gt;receiving request&lt;/em&gt; &amp;amp; starting to &lt;em&gt;produce output&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Scheduling Policies&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Batch systems&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Policies
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;FIFO&lt;/code&gt; (non-preemptive)
-
-&lt;ul&gt;
-&lt;li&gt;In order of arrival time&lt;/li&gt;
-&lt;li&gt;Run thread until completion&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Shortest job first&lt;/code&gt; (non-preemptive)
-
-&lt;ul&gt;
-&lt;li&gt;In order of shortest running time&lt;/li&gt;
-&lt;li&gt;Run thread until completion&lt;/li&gt;
-&lt;li&gt;Starving long jobs&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Shortest remaining time&lt;/code&gt; (preemptive)
-
-&lt;ul&gt;
-&lt;li&gt;In order of shortest remaining time&lt;/li&gt;
-&lt;li&gt;Run thread until completion OR another thread arrives&lt;/li&gt;
-&lt;li&gt;Preemptive version of &lt;code&gt;shortest job first&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Starving long jobs&lt;/li&gt;
-&lt;li&gt;Optimal w.r.t. avg waiting time&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Properties
-
-&lt;ul&gt;
-&lt;li&gt;Some require estimate of preocessing time&lt;/li&gt;
-&lt;li&gt;May starve long running threads&lt;/li&gt;
-&lt;li&gt;Long response time&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Interactive systems&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Policies
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Round-Robin&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Preemptive version of &lt;code&gt;FIFO&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Time slice&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Upper time bound each process runs &lt;/li&gt;
-&lt;li&gt;&lt;code&gt;time slice &amp;gt;&amp;gt; context switch time&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;cs overhead = cs/(ts+cs)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Run thread until &lt;code&gt;time slice&lt;/code&gt; interrupt OR thread blocks&lt;/li&gt;
-&lt;li&gt;Effectiveness:
-
-&lt;ul&gt;
-&lt;li&gt;# of threads&lt;/li&gt;
-&lt;li&gt;Size of &lt;code&gt;time slice&lt;/code&gt;&lt;br&gt;
-&lt;strong&gt;Long&lt;/strong&gt; -&amp;gt; slow response&lt;br&gt;
-&lt;strong&gt;Short&lt;/strong&gt; -&amp;gt; high overhead&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Does not require estimation of job processing time; no &lt;code&gt;starvation&lt;/code&gt;; enables &lt;code&gt;interactivity&lt;/code&gt; by limiting the amount of time each thread can run&lt;/li&gt;
-&lt;li&gt;Reduces &lt;code&gt;throughtput&lt;/code&gt; due to frequent &lt;code&gt;context switching&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Static priority&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;In order of priority assigned&lt;/li&gt;
-&lt;li&gt;Starving low prioriy threads&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Priority inversion&lt;/em&gt;: low priority threads holding locks that high priority threads want&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Multi-level queue&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;High, medium, &amp;amp; low PQs&lt;/li&gt;
-&lt;li&gt;Choose from high-priority PQ first (e.g. I/O threads)&lt;/li&gt;
-&lt;li&gt;For each queue, &lt;code&gt;round-robin&lt;/code&gt; scheduling&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Dynamic priority (feedback)&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Priority changed based on thread behavior; CPU-bound threads have priority reduced&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Feedback scheduling&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Goals
-
-&lt;ul&gt;
-&lt;li&gt;Allocate CPU fairly&lt;/li&gt;
-&lt;li&gt;I/O-bound threads receive higher priority&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Each thread:
-
-&lt;ul&gt;
-&lt;li&gt;CPU usage (C)&lt;/li&gt;
-&lt;li&gt;Current priority (Pi)&lt;/li&gt;
-&lt;li&gt;Initial priority (P0)&lt;/li&gt;
-&lt;li&gt;Nice value (N)&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Steps
-
-&lt;ol&gt;
-&lt;li&gt;Scheduler chooses thread with the &lt;strong&gt;smallest&lt;/strong&gt; Pi&lt;/li&gt;
-&lt;li&gt;On timer interrupt, update CPU C of running thread &lt;code&gt;C = C + 1&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Every time slice, update Pi &lt;code&gt;Pi = Pi-1/2 + C + N&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Reset C for all threads&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Time slice&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Many interrupts in between &lt;code&gt;time slice&lt;/code&gt; to avoid excessive &lt;code&gt;context switches&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;A &lt;code&gt;thread&lt;/code&gt; runs for a full &lt;code&gt;time slice&lt;/code&gt; unless:
-
-&lt;ul&gt;
-&lt;li&gt;The &lt;code&gt;thread&lt;/code&gt; blocks&lt;/li&gt;
-&lt;li&gt;Some blocked &lt;code&gt;thread&lt;/code&gt; wakesup&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Longer &lt;code&gt;time slice&lt;/code&gt; improves throughput&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Multiprocessor Scheduling&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Asymetric multiprocessing
-
-&lt;ul&gt;
-&lt;li&gt;1 processor runs all OS code, I/O processing code, etc.&lt;/li&gt;
-&lt;li&gt;Others run user code&lt;/li&gt;
-&lt;li&gt;Simple implementation&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Symmetric multiprocessing (SMP)
-
-&lt;ul&gt;
-&lt;li&gt;All processors fun OS &amp;amp; user code&lt;/li&gt;
-&lt;li&gt;Efficient&lt;/li&gt;
-&lt;li&gt;Difficult implementation&lt;/li&gt;
-&lt;li&gt;Scheduling issues
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Processor affinity&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Cache issue, want to ensure &lt;code&gt;threads&lt;/code&gt; run on the same &lt;code&gt;thread&lt;/code&gt; before&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Hard affinity&lt;/code&gt;: a &lt;code&gt;thread&lt;/code&gt; specifies which processor it wants to use&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Load balancing&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Single ready queue: easy BUT tends to bottleneck because each processor needs a spinlock for ready queue&lt;/li&gt;
-&lt;li&gt;1 ready queue per processor: scalable BUT &lt;em&gt;task migration&lt;/em&gt; &amp;amp; &lt;em&gt;load balancing&lt;/em&gt; tricky&lt;br&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;em&gt;task migration&lt;/em&gt;  -&lt;br&gt;
-Deadlock?&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;load balancing&lt;/em&gt;  -&lt;br&gt;
-&lt;code&gt;Push migration&lt;/code&gt;: thread find less-busy processors&lt;br&gt;
-&lt;code&gt;Pull migration&lt;/code&gt;: idle processor find thread on busy processors&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Sun, 23 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/os/2016/10/23/operating-system-scheduling.html</link>
-        <guid isPermaLink="true">/blog/notes/os/2016/10/23/operating-system-scheduling.html</guid>
-        
-        <category>OS</category>
-        
-        <category>ECE344</category>
-        
-        <category>scheduling</category>
         
         
         <category>Blog</category>

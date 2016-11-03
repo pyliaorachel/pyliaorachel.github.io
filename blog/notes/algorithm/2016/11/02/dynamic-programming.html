@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Dynamic Programming</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="/css/main.css" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
+		<link rel="stylesheet" href="/css/github-markdown.css">
+
+		<!-- Place jquery before bootstrap -->
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">MyCoon</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+
+			<form class="navbar-form navbar-left">
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Search">
+				</div>
+				<button type="submit" class="btn btn-default">Submit</button>
+			</form>
+
+			<ul class="nav navbar-nav navbar-right" id="nav-links">
+				<li class="nav-home"><a href="/">Home</a></li>
+				<li class="dropdown nav-blog">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Blog<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/blog">MyCoon Blog</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/blog/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/blog/notes">
+									<span>Notes</span>
+									<span>17</span>
+								</a>
+							</li>
+						
+							
+							
+							<li class="category">
+								<a href="/blog/tech">
+									<span>Tech</span>
+									<span>1</span>
+								</a>
+							</li>
+						
+						<li><a href="/blog/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li class="dropdown nav-tutorial">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Tutorials<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/tutorial">MyCoon Tutorial</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/tutorial/categories">Categories</a></li>
+						
+							
+						
+
+						
+						<li><a href="/tutorial/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li  class="nav-project"><a href="/project">Projects</a></li>
+				<li class="nav-special" id="special"><a href="#">?</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+		<main class="page-content post" aria-label="Content">
+	<div class="post-wrapper">
+		<div class="wrapper">
+	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
+
+		<header class="post-header">
+			<h1 class="post-title" itemprop="name headline">Dynamic Programming</h1>
+			<p class="post-meta">Nov 2, 2016
+				 • Notes
+				 • pyliaorachel
+			</p>
+		</header>
+
+		
+
+		<span class="separator"> • • • </span>
+
+		<div class="post-content" itemprop="articleBody">
+			<h2>Content</h2>
+
+<ol>
+<li>Shortest Paths in DAGs</li>
+<li>Longest Increasing Subsequences</li>
+<li>Edit Distance</li>
+<li>Knapsack Problem</li>
+<li>Chain Matrix Multiplication</li>
+<li>Shortest Paths
+
+<ol>
+<li>Shortest Reliable Paths</li>
+<li>All-Pairs Shortest Paths</li>
+<li>The Traveling Salesman Problem</li>
+<li>Independent Sets in Trees</li>
+</ol></li>
+</ol>
+
+<!--more-->
+
+<hr>
+
+<ul>
+<li>Comparison to <em>divide-and-conquer</em>
+
+<ul>
+<li><strong>Divide-and-conquer</strong>: subproblems <em>substantially smaller</em></li>
+<li><strong>DP</strong>: subproblems <em>slightly smaller</em></li>
+<li>So <strong>recursion</strong> works well with <em>DAC</em> but not <em>DP</em></li>
+</ul></li>
+<li>Define a collection of subproblems which follows:
+
+<ul>
+<li>There is an <strong>ordering</strong> on the subproblems, and a <strong>relation</strong> that shows how to solve a subproblem given the answers to &quot;smaller&quot; subproblems, that is, subproblems that appear earlier in the ordering.</li>
+</ul></li>
+<li>Relation with DAGs
+
+<ul>
+<li>Node: subproblem</li>
+<li>Incoming edges: subproblems needed to be pre-solved (precedence constraints)</li>
+</ul></li>
+<li><p>Common subproblems</p>
+<div class="highlight"><pre><code class="language-" data-lang="">1.  
+    O(n)
+    [x1, x2, ..., xi], ..., xn
+2. 
+    O(mn)
+    [x1, x2, ..., xi], ..., xn
+    [y1, y2, ..., yj], ..., ym
+3. 
+    O(n^2)
+    x1, ..., [xi, ..., xj], ..., xn
+4. 
+                x1
+               /  \
+              x2  x3
+             .       .
+            .         .
+           xi   ...   xn
+
+    Subproblem - rooted subtree
+</code></pre></div></li>
+</ul>
+
+<h3><strong>Shortest Paths in DAGs</strong></h3>
+
+<ul>
+<li><strong>DAG</strong>: directed acyclic graph</li>
+<li><p>Nodes can be <strong>linearized</strong></p>
+<div class="highlight"><pre><code class="language-" data-lang="">    A -&gt; B                  __________
+  ➚        ➘               ➚           ➘
+S   ↑    ↓   D      S -&gt; C -&gt; A -&gt; B -&gt; D -&gt; E
+  ➘        ➚         ➘_______➚      ➘_______➚
+    C -&gt; D
+</code></pre></div></li>
+<li><p>Pseudocode</p>
+<div class="highlight"><pre><code class="language-" data-lang="">initialize all dist(·) values to ∞ 
+dist(s) = 0
+
+for each v ∈ V\{s}, in linearized order:
+    dist(v) = min_(u,v)∈E { dist(u) + l(u,v) }
+</code></pre></div></li>
+</ul>
+
+<h3><strong>Longest Increasing Subsequences</strong></h3>
+
+<p>Given a sequence of numbers, find a subset taken in order in which the numbers are getting strictly larger.</p>
+
+<h4>Viewing LIS as DAG</h4>
+
+<ul>
+<li>Node <code>i</code>: element <code>i</code> in the sequence</li>
+<li>Directed edge <code>(i,j)</code>: if element <code>j</code> &gt; element <code>i</code></li>
+<li>Subproblem:<br>
+<code>L(j) = length of LIS ending at j</code></li>
+<li>Solution to subproblems:<br>
+<code>L(j) = 1 + max{L(i): (i,j) ∈ E}</code></li>
+<li><p>Pseudocode</p>
+<div class="highlight"><pre><code class="language-" data-lang="">for j = 1..n:
+    L(j) = 1 + max{L(i): (i,j) ∈ E}
+return max_j L(j)
+</code></pre></div></li>
+<li><p>Runtime: <code>O(|E|) = O(n^2)</code> </p></li>
+</ul>
+
+<h3><strong>Edit Distance</strong></h3>
+
+<p>For 2 strings, the <em>cost</em> of an alignment between them is the # of <em>edits</em> (insertion, deletion, substitution) needed to transform string 1 to string 2. Find the <em>min</em> cost.</p>
+
+<ul>
+<li>Strings <code>x, y</code></li>
+<li>Subproblem:<br>
+<code>E(i,j) = edit distance between x[1..i] &amp; y[1..j]</code></li>
+<li>Solution to subproblems:<br>
+<code>E(i,j) = min{ 1+E(i−1,j), 1+E(i,j−1), diff(i,j)+E(i−1,j−1) }</code></li>
+<li><p>Pseudocode</p>
+<div class="highlight"><pre><code class="language-" data-lang="">for i = 0..m: 
+    E(i,0) = i
+for j = 1..n: 
+    E(0,j) = j
+for i = 1..m: 
+    for j = 1..n:
+        E(i,j) = min{ E(i − 1,j) + 1, E(i,j − 1) + 1, E(i − 1,j − 1)+diff(i,j) }
+return E(m,n)
+</code></pre></div></li>
+<li><p>Runtime: <code>O(mn)</code> </p></li>
+</ul>
+
+<h3><strong>Knapsack Problem</strong></h3>
+
+<p><code>n</code> items of weight <code>w1, ..., wn</code> and value <code>v1, ..., vn</code>, what is the most valuable combination of items that the total weight is at most <code>W</code> pounds?</p>
+
+<h4>Allows Repetition</h4>
+
+<ul>
+<li>Subproblem:<br>
+<code>K(w) = max value achievable with knapsack of capacity w</code></li>
+<li>Solution to subproblems:<br>
+<code>K(w) = max_i:wi&lt;=w { K(w−wi)+vi }</code></li>
+<li><p>Pseudocode</p>
+<div class="highlight"><pre><code class="language-" data-lang="">K(0) = 0
+for w = 1 to W:
+    K(w) = max { K(w−wi)+vi: wi ≤w } 
+return K(W)
+</code></pre></div></li>
+</ul>
+
+<blockquote>
+<h4>Memoization</h4>
+<div class="highlight"><pre><code class="language-" data-lang="">A hash table, initially empty, holds values of K(w) indexed by w
+function knapsack(w):
+  if w is in hash table: 
+      return K(w) 
+  K(w) = max { knapsack(w−wi) + vi: wi≤w } 
+  insert K(w) into hash table, with key w 
+  return K(w)
+</code></pre></div>
+<p>Only store information needed, unlike DP storing all</p>
+</blockquote>
+
+<h4>No Repetition</h4>
+
+<ul>
+<li>Subproblem:<br>
+<code>K(w,j) = max value achievable with knapsack of capacity w and items 1..j</code></li>
+<li>Solution to subproblems:<br>
+<code>K(w,j) = max { K(w−wj,j-1) + vj, K(w,j-1) }</code></li>
+<li><p>Pseudocode</p>
+<div class="highlight"><pre><code class="language-" data-lang="">Initialize all K(0, j) = 0 and all K(w, 0) = 0 
+for j = 1 to n:
+    for w = 1 to W:
+        if wj &gt; w: 
+            K(w,j) = K(w,j−1)
+        else: 
+            K(w,j) = max { K(w,j−1),K(w−wj,j−1) + vj }
+return K(W,n)
+</code></pre></div></li>
+</ul>
+
+<h3><strong>Chain Matrix Multiplication</strong></h3>
+
+<p>Four matrices <code>A x B x C x D</code>, find the way of chaining that uses the least computations.</p>
+
+<ul>
+<li><p>Abstraction</p>
+
+<ul>
+<li><strong>Binary trees</strong>: <code>node = product of children</code><br></li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">Ex.
+        []
+       /  \
+      []   D
+     /  \
+    []   C
+   /  \
+  A    B    
+
+(((A x B) x C) x D)
+</code></pre></div></li>
+<li><p>Subproblem:<br>
+<code>C(i,j) = min cost of multiplying Ai..Aj</code></p></li>
+<li><p>Solution to subproblems:<br>
+<code>C(i,j) = min_i&lt;=k&lt;j { C(i,k) + C(k+1,j) + m_i-1 * mk * mj }</code></p></li>
+<li><p>Pseudocode</p>
+<div class="highlight"><pre><code class="language-" data-lang="">fori = 1 to n: 
+    C(i,i) = 0 
+for s=1 to n−1:
+    for i=1 to n−s: 
+        j = i + s
+        C(i,j) = min { C(i,k) + C(k+1,j) + m_i−1 * mk * mj: i ≤ k &lt; j } 
+return C(1,n)
+</code></pre></div></li>
+<li><p>Runtime: <code>O(n^3)</code></p></li>
+</ul>
+
+<h3><strong>Shortest Paths</strong></h3>
+
+<h4>Shortest Reliable Paths</h4>
+
+<p>Find the shortest path in a graph from <code>s</code> to <code>t</code> using at most <code>k</code> edges.</p>
+
+<ul>
+<li>Subproblem:<br>
+<code>dist(v,i) = length of shortest path from s to v using i edges</code></li>
+<li>Solution to subproblems:<br>
+<code>dist(v,i) = min_(u,v)∈E { dist(u,i−1) + l(u,v) }</code></li>
+<li>Initial values:<br>
+<code>dist(v, 0) = infinity, dist(s, 0) = 0</code></li>
+</ul>
+
+<h4>All-Pairs Shortest Paths</h4>
+
+<p><em>Floyd-Warshall algorithm</em></p>
+
+<ul>
+<li>Subproblem:<br>
+<code>dist(i,j,k) = length of shortest path from i to j using only nodes {1..k}</code></li>
+<li>Solution to subproblems:<br>
+<code>dist(i,j,k) = min { dist(i,k,k−1) + dist(k,j,k−1), dist(i,j,k−1) }</code></li>
+<li><p>Pseudocode  </p>
+<div class="highlight"><pre><code class="language-" data-lang="">for i = 1 to n: 
+    for j = 1 to n:
+        dist(i,j,0) = ∞
+for all (i,j) ∈ E: 
+    dist(i,j,0) = l(i,j)
+for k = 1 to n: 
+    for i = 1 to n:
+        for j = 1 to n:
+            dist(i,j,k) = min{ dist(i,k,k−1) + dist(k,j,k−1), dist(i,j,k−1) }
+</code></pre></div></li>
+</ul>
+
+<h4>The Traveling Salesman Problem</h4>
+
+<p>Find a min cost path in a graph that starts and end at 1 and goes through all nodes exactly once.</p>
+
+<ul>
+<li>Subproblem:<br>
+<code>C(S,j) = length of shortest path visiting nodes in S exactly once, starting at 1 and ending at j</code></li>
+<li>Solution to subproblems:<br>
+<code>C(S,j) = min_i∈S:i!=j { C(S-{j}, i) + dij }</code><br></li>
+<li><p>Pseudocode</p>
+<div class="highlight"><pre><code class="language-" data-lang="">C({1},1) = 0
+for s = 2 to n:
+    for all subsets S ⊆ {1..n} of size s and containing 1: 
+        C(S,1) = ∞
+        for all j ∈ S, j != 1: 
+            C(S,j) = min { C(S−{j},i) + dij: i∈S,i!=j}
+return min_j { C({1..n},j) + dj1 }
+</code></pre></div></li>
+<li><p>Runtime: <code>O(n^2*2^n)</code></p>
+
+<ul>
+<li><code>2^n*n</code> subproblems, each <code>O(n)</code> time</li>
+</ul></li>
+</ul>
+
+<h4>Independent Sets in Trees</h4>
+
+<p><em>Independent sets</em>: for graph <code>G = (V,E)</code>, a subset of nodes <code>S ⊂ V</code> is an independent set if there are no edges between them.</p>
+
+<ul>
+<li>Subproblem:<br>
+<code>I(u) = size of largest independent set of subtree hanging from u</code></li>
+<li>Solution to subproblem:<br>
+<code>u</code> is either included in the largest independent set or not<br>
+<code>I(u) = max { 1 + sum_grandchildren_w_of_u I(w), sum_children_w_of_u I(w) }</code></li>
+</ul>
+
+		</div>
+
+		<ul class="tag-list">
+			
+
+			<li class="tag">
+				DP
+			</li>
+
+			
+
+			<li class="tag">
+				algorithm
+			</li>
+
+			
+
+			<li class="tag">
+				CSC373
+			</li>
+
+			
+		</ul>
+
+	</article>
+
+	
+		<div id="disqus_thread"></div>
+<script>
+	var disqus_config = function () {
+	    this.page.url = "https://pyliaorachel.github.io";
+	    this.page.identifier = "/blog/notes/algorithm/2016/11/02/dynamic-programming.html";
+	};
+	(function() {
+	    var d = document, s = d.createElement('script');
+	    s.src = '//pyliaorachel.disqus.com/embed.js';
+	    s.setAttribute('data-timestamp', +new Date());
+	    (d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	
+</div>
+	</div>
+</main>
+		<footer>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4 footer-link">
+				<a href="mailto:rachel5566kk@gmail.com">
+					<span class="icon icon-email">
+						<img src="/assets/svg/email-logo.svg" alt="Email Logo">
+					</span>
+					<span class="username">rachel5566kk@gmail.com</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://github.com/pyliaorachel"  target="_blank">
+					<span class="icon icon-github">
+						<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+					</span>
+					<span class="username">pyliaorachel</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://tw.linkedin.com/in/peiyu-liao" target="_blank">
+					<span class="icon icon-linkedin">
+						<img src="/assets/svg/linkedin-logo.svg" alt="LinkedIn Logo">
+					</span>
+					<span class="username">Peiyu Liao</span>
+				</a>
+			</div>
+		</div><!-- /.row -->
+		<div class="row">
+			<div class="footer-copy-right">
+				<p>2016	&copy; Liao Peiyu</p>
+			</div >
+		</div><!-- /.row -->
+	</div><!-- /.container-fluid -->
+</footer>
+		<script type="text/javascript" src="/js/main.js"></script>
+		<script type="text/javascript" src="/js/home.js"></script>
+		<script id="dsq-count-scr" src="//pyliaorachel.disqus.com/count.js" async></script>
+	</body>
+</html>
