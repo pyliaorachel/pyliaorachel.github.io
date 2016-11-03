@@ -69,8 +69,8 @@ excerpt_separator: <!--more-->
 	- Edges: possible moves
 	- Leaves: terminals (utilities U(t) labeled)
 2. Back balues up the tree
-	- `U(n) = min{ U(c): c is a child of n if n is Min node }
-	- `U(n) = max{ U(c): c is a child of n if n is Max node }
+	- `U(n) = min{ U(c): c is a child of n if n is Min node }`
+	- `U(n) = max{ U(c): c is a child of n if n is Max node }`
 
 - `O(b^d)` space
 
