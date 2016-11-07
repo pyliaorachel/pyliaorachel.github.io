@@ -273,7 +273,7 @@
 <li><strong>Regular</strong>: linear indexing
 
 <ul>
-<li>All srrays accessed through linear expressions of loop indices, known at compile time</li>
+<li>All arrays accessed through linear expressions of loop indices, known at compile time</li>
 </ul></li>
 <li><strong>Irregular</strong>: non-linear indexing
 
@@ -356,15 +356,14 @@ for (i = 0; i &lt; n; i++)
 <div class="highlight"><pre><code class="language-" data-lang="">for some number of timesteps { 
     for all molecules i
         for all nearby molecules j
-            force[i] += f (loc[i], loc[j]);
+            force[i] += f(loc[i], loc[j]);
     for all molecules i
-        loc[i] = g (loc[i], force[i]);
+        loc[i] = g(loc[i], force[i]);
 }
 
 for each molecule i
     number of nearby molecules count[i]
-    array of indices of nearby molecules index[j]
-(0 &lt;= j &lt; count[i])
+    array of indices of nearby molecules index[j] // 0 &lt;= j &lt; count[i]
 
 for some number of timesteps { 
     for (i = 0; i &lt; num_mol; i++)
@@ -379,19 +378,19 @@ for some number of timesteps {
 
 <ul>
 <li>Can run in parallel</li>
-</ul></li>
-<li><strong>Loop-carried dependence (reduction)</strong> on j-loop
-
-<ul>
-<li>Fork-join between loops</li>
 <li>May have <strong>load balancing</strong> problem</li>
 </ul></li>
+<li><strong>Loop-carried dependence (reduction)</strong> on j-loop</li>
 <li>No loop-carried dependences in 2nd i-loop
 
 <ul>
 <li>Can run in parallel</li>
 </ul></li>
-<li><strong>True-dependence</strong> between 1st &amp; 2nd i-loop</li>
+<li><strong>True-dependence</strong> between 1st &amp; 2nd i-loop
+
+<ul>
+<li>Fork-join between loops</li>
+</ul></li>
 </ul>
 
 		</div>
