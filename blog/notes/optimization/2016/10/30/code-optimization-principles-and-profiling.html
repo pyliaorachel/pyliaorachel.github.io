@@ -178,7 +178,7 @@
 <li>Built into processor chip: low-level architecture events e.g. cache misses, branch mispredictions, ...</li>
 <li>S/W packages to make them easier to use: <code>perf</code></li>
 </ul></li>
-<li><strong>Instrumentation</strong>
+<li><p><strong>Instrumentation</strong></p>
 
 <ul>
 <li>Self implemented codes</li>
@@ -194,12 +194,31 @@
 <li>Profile of execution within a function e.g. # of times each line of code was executed, which loops/conditional statements are important</li>
 </ul></li>
 <li>Disturbing the system slows down execution</li>
-<li>Comparison
-|    | gprof | gcov |
-|:---|:------|:-----|
-| Compile | faster (insert counter func for each function) | slower (insert counter func for each line) |
-| Size | smaller | bigger |
-| Runtime | slower (frequent interrupts) | faster |</li>
+<li><p>Comparison</p>
+
+<table><thead>
+<tr>
+<th style="text-align: left"></th>
+<th style="text-align: left">gprof</th>
+<th style="text-align: left">gcov</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: left">Compile</td>
+<td style="text-align: left">faster (insert counter func for each function)</td>
+<td style="text-align: left">slower (insert counter func for each line)</td>
+</tr>
+<tr>
+<td style="text-align: left">Size</td>
+<td style="text-align: left">smaller</td>
+<td style="text-align: left">bigger</td>
+</tr>
+<tr>
+<td style="text-align: left">Runtime</td>
+<td style="text-align: left">slower (frequent interrupts)</td>
+<td style="text-align: left">faster</td>
+</tr>
+</tbody></table></li>
 </ul></li>
 </ul>
 

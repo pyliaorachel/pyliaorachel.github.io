@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 05 Nov 2016 19:10:22 -0400</pubDate>
-    <lastBuildDate>Sat, 05 Nov 2016 19:10:22 -0400</lastBuildDate>
+    <pubDate>Mon, 07 Nov 2016 14:50:21 -0500</pubDate>
+    <lastBuildDate>Mon, 07 Nov 2016 14:50:21 -0500</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -1157,7 +1157,7 @@ Cach size = S * E * B bytes
 &lt;li&gt;Built into processor chip: low-level architecture events e.g. cache misses, branch mispredictions, ...&lt;/li&gt;
 &lt;li&gt;S/W packages to make them easier to use: &lt;code&gt;perf&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Instrumentation&lt;/strong&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Instrumentation&lt;/strong&gt;&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Self implemented codes&lt;/li&gt;
@@ -1173,12 +1173,31 @@ Cach size = S * E * B bytes
 &lt;li&gt;Profile of execution within a function e.g. # of times each line of code was executed, which loops/conditional statements are important&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;Disturbing the system slows down execution&lt;/li&gt;
-&lt;li&gt;Comparison
-|    | gprof | gcov |
-|:---|:------|:-----|
-| Compile | faster (insert counter func for each function) | slower (insert counter func for each line) |
-| Size | smaller | bigger |
-| Runtime | slower (frequent interrupts) | faster |&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Comparison&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;&lt;/th&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;gprof&lt;/th&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;gcov&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Compile&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;faster (insert counter func for each function)&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;slower (insert counter func for each line)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Size&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;smaller&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;bigger&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Runtime&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;slower (frequent interrupts)&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;faster&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
