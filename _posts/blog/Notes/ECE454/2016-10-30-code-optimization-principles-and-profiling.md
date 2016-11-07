@@ -58,11 +58,12 @@ excerpt_separator: <!--more-->
 		- Profile of execution within a function e.g. # of times each line of code was executed, which loops/conditional statements are important
 	- Disturbing the system slows down execution
 	- Comparison
-	|    | gprof | gcov |
-	|:---|:------|:-----|
-	| Compile | faster (insert counter func for each function) | slower (insert counter func for each line) |
-	| Size | smaller | bigger |
-	| Runtime | slower (frequent interrupts) | faster |
+	
+		|    | gprof | gcov |
+		|:---|:------|:-----|
+		| Compile | faster (insert counter func for each function) | slower (insert counter func for each line) |
+		| Size | smaller | bigger |
+		| Runtime | slower (frequent interrupts) | faster |
 
 ## Compiler Optimizations
 
