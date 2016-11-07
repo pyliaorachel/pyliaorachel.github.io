@@ -110,7 +110,7 @@ Cach size = S * E * B bytes
 ## Prefetching
 
 - Bring into cache elements expected to be accessed in future
-- Effective is:
+- Effective if:
 	- Spare memory bandwidth
 	- Accurate
 	- Timely

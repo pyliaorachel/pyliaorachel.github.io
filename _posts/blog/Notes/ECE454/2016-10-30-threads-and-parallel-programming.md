@@ -99,7 +99,7 @@ excerpt_separator: <!--more-->
 
 - Processors do the same thing on different data
 	- __Regular__: linear indexing
-		- All srrays accessed through linear expressions of loop indices, known at compile time
+		- All arrays accessed through linear expressions of loop indices, known at compile time
 	- __Irregular__: non-linear indexing
 		- Some arrays accessed through non-linear expressions of loop indices, some only known at runtime
 		- Difficult for parallelism based on _data distribution_
@@ -159,15 +159,14 @@ for some number of timesteps/iterations {
 for some number of timesteps { 
 	for all molecules i
 		for all nearby molecules j
-			force[i] += f (loc[i], loc[j]);
+			force[i] += f(loc[i], loc[j]);
 	for all molecules i
-		loc[i] = g (loc[i], force[i]);
+		loc[i] = g(loc[i], force[i]);
 }
 
 for each molecule i
 	number of nearby molecules count[i]
-	array of indices of nearby molecules index[j]
-(0 <= j < count[i])
+	array of indices of nearby molecules index[j] // 0 <= j < count[i]
 
 for some number of timesteps { 
 	for (i = 0; i < num_mol; i++)
@@ -180,12 +179,12 @@ for some number of timesteps {
 
 - No loop-carried dependences in 1st i-loop
 	- Can run in parallel
-- __Loop-carried dependence (reduction)__ on j-loop
-	- Fork-join between loops
 	- May have __load balancing__ problem
+- __Loop-carried dependence (reduction)__ on j-loop
 - No loop-carried dependences in 2nd i-loop
 	- Can run in parallel
 - __True-dependence__ between 1st & 2nd i-loop
+	- Fork-join between loops
 
 
 
