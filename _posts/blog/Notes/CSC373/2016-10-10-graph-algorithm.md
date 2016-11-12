@@ -12,6 +12,8 @@ excerpt_separator: <!--more-->
 
 1. Dijkstra's Algorithm
 2. Shortest Paths with Negative Edges
+	1. Bellman-Ford Algorithm
+3. Shortest Paths in DAGs
 
 <!--more-->
 ---
@@ -124,8 +126,46 @@ Shortest-paths(G, l, s):
 1. No update occurred (assume no __negative cycles__)
 2. After `|V|-1` times of iterations, apply 1 extra round. If some `dist` reduced <- negative cycle
 
+#### Proofs
+
+[Proofs](https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/06DynamicProgrammingII.pdf)
+
+- If some path from `v` to `t` contains a negative cycle, then there does not exist a cheapest path from `v` to `t`.
+- If `G` has no negative cycles, then there exists a cheapest path from `v` to `t` that is simple (and has ≤ `n – 1` edges).
+- `dist(v)` is the cost of some `v-t` path; after the `ith` pass, `dist(v)` is no larger than the cost of the cheapest `v-t` path using ≤ `i` edges.
+- If the successor graph contains a directed cycle, then it is a negative cycle.
+
+#### Features v.s. Dijkstra's
+
+- Handles __negative weights__
+- Only need __local information__ [StackOverflow](http://stackoverflow.com/questions/16273092/difference-between-bellman-ford-and-dijkstras-algorithm)
+
+## Shortest Paths in DAGs
+
+In any path of a DAG, the vertices appear in __increasing linearized order__.
+
+#### Implementation
+
+```
+Dag-shortest-paths(G, l, s):
+# Input: DagG = (V,E);
+		 edge lengths { le: e ∈ E };
+		 vertex s ∈ V
+# Output: For all vertices u reachable from s, dist(u) is set to the distance from s to u
+
+for all u ∈ V: 
+	dist(u) = ∞
+	prev(u) = nil
+
+dist(s) = 0
+Linearize G # DFS
+for each u ∈ V, in linearized order:
+	for all edges (u, v) ∈ E: 
+		update(u, v)
+```
+
 ## References
-* Dasguptap, S., Papadimitriou, C.H., & Vazirani, U.V. Algorithms. Chapter 4.1-4.6.
+* Dasguptap, S., Papadimitriou, C.H., & Vazirani, U.V. Algorithms. Chapter 4.1-4.7.
 
 
 

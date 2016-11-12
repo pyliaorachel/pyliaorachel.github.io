@@ -100,9 +100,18 @@ Given a sequence of numbers, find a subset taken in order in which the numbers a
 
 - Runtime: `O(|E|) = O(n^2)` 
 
+#### O(nlogn) Implementation
+
+Binary search. Keep indices for reconstruction.  
+
+[GeeksForGeeks](http://www.geeksforgeeks.org/longest-monotonically-increasing-subsequence-size-n-log-n/)  
+[StackOverflow](http://stackoverflow.com/questions/2631726/how-to-determine-the-longest-increasing-subsequence-using-dynamic-programming)
+
 ### __Edit Distance__
 
-For 2 strings, the _cost_ of an alignment between them is the # of _edits_ (insertion, deletion, substitution) needed to transform string 1 to string 2. Find the _min_ cost.
+For 2 strings, the _cost_ of an alignment between them is the # of _edits_ (insertion, deletion, substitution) needed to transform string 1 to string 2. Find the _min_ cost.  
+
+[Hirscberg's Algorithm](http://web.stanford.edu/class/cs262/presentations/lecture3.pdf)
 
 - Strings `x, y`
 - Subproblem:  
@@ -122,6 +131,52 @@ For 2 strings, the _cost_ of an alignment between them is the # of _edits_ (inse
 	return E(m,n)
 	```
 - Runtime: `O(mn)` 
+
+- Space Efficient Algorithm
+
+	```
+	# O(m) space
+	Space-Efficient-Alignment(X,Y):
+		Array B[0...m,0...1]
+		Initialize B[i,0]=iδ for each i (just as in column 0 of A) 
+
+		For j = 1,...,n
+			B[0,1] = jδ # corresponds to entry A[0,j] 
+			For i = 1,...,m
+				B[i,1]= min[αxiyj+B[i−1, 0], δ+B[i−1,1], δ+B[i,0]]
+			Endfor
+			Move column 1 of B to column 0 to make room for next iteration:
+				Update B[i, 0]= B[i, 1] for each i 
+		Endfor
+	```
+
+	To backtrack:  
+
+		1. Let `f(i,j)` denote optimal path from `(0,0)` to `(i,j)`, `g(i,j)` denote optimal path from `(i,j)` to `(m,n)`
+		2. Find index `q` that minimizes `f(q,k) + g(q,k)`
+		3. Divide problem into `(0,0)` to `(q,n/2)` & `(q+1,n/2+1)` to `(m,n)`
+
+	```
+	Backward-Space-Efficient-Alignment(X,Y):
+		# start from the opposite corner
+		# similar to Space-Efficient-Alignment, but now B[i,1]= min[αxiyj+B[i+1, 0], δ+B[i+1,1], δ+B[i,0]]
+
+	Divide-and-Conquer-Alignment(X,Y):
+		Let m be the number of symbols in X 
+		Let n be the number of symbols in Y 
+		If m≤2 or n≤2 then
+			Compute optimal alignment using Alignment(X,Y) 
+
+		Call Space-Efficient-Alignment(X,Y[1:n/2])
+		Call Backward-Space-Efficient-Alignment(X,Y[n/2+1:n]) 
+
+		Let q be the index minimizing f(q,n/2)+g(q,n/2)
+		Add (q,n/2) to global list P 
+
+		Divide-and-Conquer-Alignment(X[1:q],Y[1:n/2]) 
+		Divide-and-Conquer-Alignment(X[q+1:m],Y[n/2+1:n]) 
+		Return P
+	```
 
 ### __Knapsack Problem__
 
@@ -278,6 +333,8 @@ _Independent sets_: for graph `G = (V,E)`, a subset of nodes `S ⊂ V` is an ind
 - Solution to subproblem:  
 	`u` is either included in the largest independent set or not  
 	`I(u) = max { 1 + sum_grandchildren_w_of_u I(w), sum_children_w_of_u I(w) }`
+
+
 
 
 
