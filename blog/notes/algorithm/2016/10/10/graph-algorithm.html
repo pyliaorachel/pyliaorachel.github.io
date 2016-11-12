@@ -54,7 +54,7 @@
 							<li class="category">
 								<a href="/blog/notes">
 									<span>Notes</span>
-									<span>17</span>
+									<span>21</span>
 								</a>
 							</li>
 						
@@ -114,7 +114,12 @@
 
 <ol>
 <li>Dijkstra&#39;s Algorithm</li>
-<li>Shortest Paths with Negative Edges</li>
+<li>Shortest Paths with Negative Edges
+
+<ol>
+<li>Bellman-Ford Algorithm</li>
+</ol></li>
+<li>Shortest Paths in DAGs</li>
 </ol>
 
 <!--more-->
@@ -283,10 +288,49 @@ while R != V:
 <li>After <code>|V|-1</code> times of iterations, apply 1 extra round. If some <code>dist</code> reduced &lt;- negative cycle</li>
 </ol>
 
+<h4>Proofs</h4>
+
+<p><a href="https://www.cs.princeton.edu/%7Ewayne/kleinberg-tardos/pdf/06DynamicProgrammingII.pdf">Proofs</a></p>
+
+<ul>
+<li>If some path from <code>v</code> to <code>t</code> contains a negative cycle, then there does not exist a cheapest path from <code>v</code> to <code>t</code>.</li>
+<li>If <code>G</code> has no negative cycles, then there exists a cheapest path from <code>v</code> to <code>t</code> that is simple (and has ≤ <code>n – 1</code> edges).</li>
+<li><code>dist(v)</code> is the cost of some <code>v-t</code> path; after the <code>ith</code> pass, <code>dist(v)</code> is no larger than the cost of the cheapest <code>v-t</code> path using ≤ <code>i</code> edges.</li>
+<li>If the successor graph contains a directed cycle, then it is a negative cycle.</li>
+</ul>
+
+<h4>Features v.s. Dijkstra&#39;s</h4>
+
+<ul>
+<li>Handles <strong>negative weights</strong></li>
+<li>Only need <strong>local information</strong> <a href="http://stackoverflow.com/questions/16273092/difference-between-bellman-ford-and-dijkstras-algorithm">StackOverflow</a></li>
+</ul>
+
+<h2>Shortest Paths in DAGs</h2>
+
+<p>In any path of a DAG, the vertices appear in <strong>increasing linearized order</strong>.</p>
+
+<h4>Implementation</h4>
+<div class="highlight"><pre><code class="language-" data-lang="">Dag-shortest-paths(G, l, s):
+# Input: DagG = (V,E);
+         edge lengths { le: e ∈ E };
+         vertex s ∈ V
+# Output: For all vertices u reachable from s, dist(u) is set to the distance from s to u
+
+for all u ∈ V: 
+    dist(u) = ∞
+    prev(u) = nil
+
+dist(s) = 0
+Linearize G # DFS
+for each u ∈ V, in linearized order:
+    for all edges (u, v) ∈ E: 
+        update(u, v)
+</code></pre></div>
 <h2>References</h2>
 
 <ul>
-<li>Dasguptap, S., Papadimitriou, C.H., &amp; Vazirani, U.V. Algorithms. Chapter 4.1-4.6.</li>
+<li>Dasguptap, S., Papadimitriou, C.H., &amp; Vazirani, U.V. Algorithms. Chapter 4.1-4.7.</li>
 </ul>
 
 		</div>

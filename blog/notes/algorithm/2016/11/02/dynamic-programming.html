@@ -54,7 +54,7 @@
 							<li class="category">
 								<a href="/blog/notes">
 									<span>Notes</span>
-									<span>17</span>
+									<span>21</span>
 								</a>
 							</li>
 						
@@ -215,9 +215,18 @@ return max_j L(j)
 <li><p>Runtime: <code>O(|E|) = O(n^2)</code> </p></li>
 </ul>
 
+<h4>O(nlogn) Implementation</h4>
+
+<p>Binary search. Keep indices for reconstruction.  </p>
+
+<p><a href="http://www.geeksforgeeks.org/longest-monotonically-increasing-subsequence-size-n-log-n/">GeeksForGeeks</a><br>
+<a href="http://stackoverflow.com/questions/2631726/how-to-determine-the-longest-increasing-subsequence-using-dynamic-programming">StackOverflow</a></p>
+
 <h3><strong>Edit Distance</strong></h3>
 
-<p>For 2 strings, the <em>cost</em> of an alignment between them is the # of <em>edits</em> (insertion, deletion, substitution) needed to transform string 1 to string 2. Find the <em>min</em> cost.</p>
+<p>For 2 strings, the <em>cost</em> of an alignment between them is the # of <em>edits</em> (insertion, deletion, substitution) needed to transform string 1 to string 2. Find the <em>min</em> cost.  </p>
+
+<p><a href="http://web.stanford.edu/class/cs262/presentations/lecture3.pdf">Hirscberg&#39;s Algorithm</a></p>
 
 <ul>
 <li>Strings <code>x, y</code></li>
@@ -236,6 +245,45 @@ for i = 1..m:
 return E(m,n)
 </code></pre></div></li>
 <li><p>Runtime: <code>O(mn)</code> </p></li>
+<li><p>Space Efficient Algorithm</p>
+<div class="highlight"><pre><code class="language-" data-lang=""># O(m) space
+Space-Efficient-Alignment(X,Y):
+    Array B[0...m,0...1]
+    Initialize B[i,0]=iδ for each i (just as in column 0 of A) 
+
+    For j = 1,...,n
+        B[0,1] = jδ # corresponds to entry A[0,j] 
+        For i = 1,...,m
+            B[i,1]= min[αxiyj+B[i−1, 0], δ+B[i−1,1], δ+B[i,0]]
+        Endfor
+        Move column 1 of B to column 0 to make room for next iteration:
+            Update B[i, 0]= B[i, 1] for each i 
+    Endfor
+</code></pre></div>
+<p>To backtrack:  </p>
+<div class="highlight"><pre><code class="language-" data-lang="">1. Let `f(i,j)` denote optimal path from `(0,0)` to `(i,j)`, `g(i,j)` denote optimal path from `(i,j)` to `(m,n)`
+2. Find index `q` that minimizes `f(q,k) + g(q,k)`
+3. Divide problem into `(0,0)` to `(q,n/2)` &amp; `(q+1,n/2+1)` to `(m,n)`
+</code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">Backward-Space-Efficient-Alignment(X,Y):
+    # start from the opposite corner
+    # similar to Space-Efficient-Alignment, but now B[i,1]= min[αxiyj+B[i+1, 0], δ+B[i+1,1], δ+B[i,0]]
+
+Divide-and-Conquer-Alignment(X,Y):
+    Let m be the number of symbols in X 
+    Let n be the number of symbols in Y 
+    If m≤2 or n≤2 then
+        Compute optimal alignment using Alignment(X,Y) 
+
+    Call Space-Efficient-Alignment(X,Y[1:n/2])
+    Call Backward-Space-Efficient-Alignment(X,Y[n/2+1:n]) 
+
+    Let q be the index minimizing f(q,n/2)+g(q,n/2)
+    Add (q,n/2) to global list P 
+
+    Divide-and-Conquer-Alignment(X[1:q],Y[1:n/2]) 
+    Divide-and-Conquer-Alignment(X[q+1:m],Y[n/2+1:n]) 
+    Return P
+</code></pre></div></li>
 </ul>
 
 <h3><strong>Knapsack Problem</strong></h3>

@@ -6,9 +6,837 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 07 Nov 2016 16:07:03 -0500</pubDate>
-    <lastBuildDate>Mon, 07 Nov 2016 16:07:03 -0500</lastBuildDate>
+    <pubDate>Sat, 12 Nov 2016 13:40:18 -0500</pubDate>
+    <lastBuildDate>Sat, 12 Nov 2016 13:40:18 -0500</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Network Flow</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Flow Network Overview&lt;/li&gt;
+&lt;li&gt;Maximum-Flow Problem
+
+&lt;ol&gt;
+&lt;li&gt;Residual Graph&lt;/li&gt;
+&lt;li&gt;Implementation (Ford-Fulkerson Algorithm)&lt;/li&gt;
+&lt;li&gt;Analysis&lt;/li&gt;
+&lt;li&gt;Max-Flow Min-Cut Theorem&lt;/li&gt;
+&lt;li&gt;Choosing Good Augmenting Paths&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Extensions to Max-Flow Problem
+
+&lt;ol&gt;
+&lt;li&gt;Circulations with Demands&lt;/li&gt;
+&lt;li&gt;Circulations with Demands &amp;amp; Lower Bounds&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Bipartite Matching&lt;/li&gt;
+&lt;li&gt;Image Segmentation&lt;/li&gt;
+&lt;li&gt;Project Selection&lt;/li&gt;
+&lt;li&gt;Baseball Elimination&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h3&gt;&lt;strong&gt;Flow Network Overview&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Components
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Capacities&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Source nodes&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Sink nodes&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Traffic&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Graph representation&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;G = (V,E)
+edge ce = capacity where ce &amp;gt;= 0
+source node s ∈ V
+sink node t ∈ V
+internal nodes = all other nodes
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Assumptions&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;No edge enters &lt;code&gt;s&lt;/code&gt; &amp;amp; no edge leaves &lt;code&gt;t&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;At least 1 edge incident to each node&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;c&lt;/code&gt; is int&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Flow conditions &amp;amp; notations&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;f(e)&lt;/code&gt; satisfies:
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;0 &amp;lt;= f(e) &amp;lt;= ce&lt;/code&gt; for all edges&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sum_e_into_v(f(e)) = sum_e_outof_v(f(e))&lt;/code&gt; for all internal nodes&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;v(f)&lt;/code&gt; denotes &lt;strong&gt;amount of flow generated at source&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;sum_e_outof_s(f(e))&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;f_out(v)&lt;/code&gt; = &lt;code&gt;sum_e_outof_v(f(e))&lt;/code&gt;; &lt;code&gt;f_in(v)&lt;/code&gt; = &lt;code&gt;sum_e_into_v(f(e))&lt;/code&gt; &lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Maximum-Flow Problem&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;Given a flow network, find a flow of max possible value.&lt;/p&gt;
+
+&lt;h4&gt;Residual Graph&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A graph indicating additional possible flow. If there is a path from source to sink in residual graph, then it is possible to add flow. &lt;/li&gt;
+&lt;li&gt;Every edge of a residual graph has a value &lt;code&gt;residual capacity = original capacity of the edge - current flow&lt;/code&gt;. Residual capacity is basically the current capacity of the edge.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Implementation (Ford-Fulkerson Algorithm)&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=-8MwfgB-lyM&quot;&gt;Video&lt;/a&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Initial flow &lt;code&gt;f&lt;/code&gt; = 0&lt;/li&gt;
+&lt;li&gt;Find an augmenting path &lt;code&gt;P&lt;/code&gt; from &lt;code&gt;s&lt;/code&gt; to &lt;code&gt;t&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Augment the path &lt;code&gt;P&lt;/code&gt; with flow &lt;code&gt;f&lt;/code&gt;, return new flow &lt;code&gt;f&amp;#39;&lt;/code&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Let &lt;code&gt;b = bottleneck(P,f)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;For each edge &lt;code&gt;e = (u,v)&lt;/code&gt; of &lt;code&gt;P&lt;/code&gt;:
+
+&lt;ul&gt;
+&lt;li&gt;If &lt;em&gt;forward edge&lt;/em&gt;, &lt;code&gt;f(e) += b&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;If &lt;em&gt;backward edge&lt;/em&gt;, &lt;code&gt;f(e=(v,u)) -= b&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;return updated f&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Update &lt;code&gt;f&lt;/code&gt; to &lt;code&gt;f&amp;#39;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Update residual graph &lt;code&gt;Gf&lt;/code&gt; to &lt;code&gt;Gf&amp;#39;&lt;/code&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Node set the same&lt;/li&gt;
+&lt;li&gt;For each edge &lt;code&gt;e = (u,v)&lt;/code&gt; of &lt;code&gt;Gf&lt;/code&gt;, &lt;code&gt;f(e) &amp;lt; ce&lt;/code&gt;:
+
+&lt;ul&gt;
+&lt;li&gt;Push &lt;code&gt;e = (u,v)&lt;/code&gt; with capacity &lt;code&gt;ce - f(e)&lt;/code&gt; (&lt;em&gt;forward edges&lt;/em&gt;)&lt;/li&gt;
+&lt;li&gt;Push &lt;code&gt;e&amp;#39; = (v,u)&lt;/code&gt; with capacity &lt;code&gt;f(e)&lt;/code&gt; (&lt;em&gt;backward edges&lt;/em&gt;)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Repeat until no path found&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;augment(f,P):
+    Let b = bottleneck(P,f) 
+    For each edge (u,v) ∈ P:
+        If e = (u,v) is a forward edge: 
+            increase f(e) in G by b
+        Else: # ((u, v) is a backward edge, and let e = (v, u)) 
+            decrease f(e) in G by b
+    Return f
+
+Max-Flow():
+    Initially f(e) = 0 for all e in G
+    While there is an s-t path in the residual graph Gf:
+        Let P be a simple s-t path in Gf
+        f' = augment(f,P)
+        Update f to be f'
+        Update the residual graph Gf to be Gf'
+    Return f
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Analysis&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Termination
+
+&lt;ul&gt;
+&lt;li&gt;At every intermediate stage of the Ford-Fulkerson Algorithm, the flow values {&lt;code&gt;f(e)&lt;/code&gt;} and the &lt;strong&gt;residual capacities in Gf are integers&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;The flow value strictly increases when we apply an augmentation, since we add &lt;code&gt;bottleneck &amp;gt; 0&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Upper bound: &lt;code&gt;f_out(s)&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Hence the algorithm runs for at most &lt;code&gt;f_out(s)&lt;/code&gt; iterations.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Runtime
+
+&lt;ul&gt;
+&lt;li&gt;Let &lt;code&gt;m = |E|&lt;/code&gt;, &lt;code&gt;n = |V|&lt;/code&gt;, &lt;code&gt;C = f_out(s)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;m &amp;gt;= n/2&lt;/code&gt; since all nodes have at least 1 incident edge, so &lt;code&gt;O(m+n) = O(m)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;BFS/DFS: &lt;code&gt;O(m+n) = O(m)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;augment&lt;/code&gt;: &lt;code&gt;O(n)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Build new residual graph: &lt;code&gt;O(m)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Overall &lt;code&gt;O(mC)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Max-Flow Min-Cut Theorem&lt;/h4&gt;
+
+&lt;p&gt;In every flow network, the maximum value of an s-t flow is equal to the minimum capacity of an s-t cut.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Cut
+
+&lt;ul&gt;
+&lt;li&gt;Divide nodes into 2 sets &lt;code&gt;A&lt;/code&gt; &amp;amp; &lt;code&gt;B&lt;/code&gt; s.t. &lt;code&gt;s ∈ A&lt;/code&gt; and &lt;code&gt;t ∈ B&lt;/code&gt;. Any flow going from &lt;code&gt;s&lt;/code&gt; to &lt;code&gt;t&lt;/code&gt; must cross from &lt;code&gt;A&lt;/code&gt; into &lt;code&gt;B&lt;/code&gt; at some point and use up some of the edge capacity from &lt;code&gt;A&lt;/code&gt; to &lt;code&gt;B&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Cut&lt;/strong&gt; puts bound on max flow
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Minimum cut&lt;/strong&gt;: the minimum capacity of any division, which equals the max flow&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Facts&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Let &lt;code&gt;f&lt;/code&gt; be any s-t flow, and &lt;code&gt;(A, B)&lt;/code&gt; any s-t cut. Then&lt;br&gt;
+&lt;code&gt;v(f) = f_out(A) − f_in(A)&lt;/code&gt; and&lt;br&gt;
+&lt;code&gt;v(f) = f_in(B) − f_out(B)&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;v(f) = f_out(s) - f_in(s)
+     = sum_v_in_A(f_out(v) - f_in(v)) # f_out(v) - f_in(v) = 0 for internal nodes
+     = sum_e_outof_A(f(e)) - sum_e_into_A(f(e))
+     = f_out(A) - f_in(A)
+f_out(A) = f_in(B); f_in(A) = f_out(B)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Let &lt;code&gt;f&lt;/code&gt; be any s-t flow, and &lt;code&gt;(A,B)&lt;/code&gt; any s-t cut. Then&lt;br&gt;
+&lt;code&gt;v(f) &amp;lt;= c(A,B)&lt;/code&gt;, where &lt;code&gt;c(A,B) = sum_e_outof_A(ce)&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;v(f) = f_out(A) − f_in(A)
+     ≤ f_out(A) # f_in(A) &amp;gt;= 0
+     = sum_e_outof_A(f(e))
+     ≤ sum_e_outof_A(ce)
+     = c(A,B)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;=&amp;gt; Any flow is upper-bounded by the capacity of every cut&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Let &lt;code&gt;f&lt;/code&gt; be an s-t flow s.t. no s-t path in the residual graph &lt;code&gt;Gf&lt;/code&gt;. Then there is an s-t cut &lt;code&gt;(A*,B*)&lt;/code&gt; in &lt;code&gt;G&lt;/code&gt; where &lt;code&gt;v(f) = c(A*,B*)&lt;/code&gt;.  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Let A* be a set of nodes in G where there is a s-v path in Gf
+Let B* = V - A*
+v(f) = f_out(A*) − f_in(A*)
+     = sum_e_outof_A*(f(e)) − sum_e_into_A*_f(e)
+     = sum_e_outof_A*(ce) - 0 # f(e) = ce
+     = c(A*,B*)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The flow &lt;code&gt;f&lt;/code&gt; returned by Ford-Fulkerson is max flow.  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Let f* be max flow, (A*,B*) be min cut
+Then there exists a flow f s.t. v(f) = c(A,B) by 3.
+And by 2., v(f) = c(A,B) &amp;lt;= c(A*,B*)
+Hence A = A*, B = B* because c(A*,B*) should be minimum
+And by 2., v(f*) &amp;lt;= c(A*,B*) = v(f)
+Hence f = f* because v(f*) should be maximum
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Given a max flow, we can compute an s-t min cut in &lt;code&gt;O(m)&lt;/code&gt; time by constructing the residual graph and perform BFS/DFS to find &lt;code&gt;A*&lt;/code&gt; &amp;amp; &lt;code&gt;B*&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If all capacities in the flow network are integers, then there is a max flow &lt;code&gt;f&lt;/code&gt; where every flow value &lt;code&gt;f(e)&lt;/code&gt; is an integer.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5&gt;Notes&lt;/h5&gt;
+
+&lt;ul&gt;
+&lt;li&gt;With &lt;strong&gt;rational numbers&lt;/strong&gt;:
+
+&lt;ul&gt;
+&lt;li&gt;Multiply all by least common multiple of all capacities&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;With &lt;strong&gt;real numbers&lt;/strong&gt;:
+
+&lt;ul&gt;
+&lt;li&gt;May not terminate, since the progress we make at each iteration can be small&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Max-flow min-cut theorm&lt;/strong&gt; still holds&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Choosing Good Augmenting Paths&lt;/h4&gt;
+
+&lt;h5&gt;Idea 1&lt;/h5&gt;
+
+&lt;p&gt;Find the path with &lt;code&gt;large bottleneck capacity&lt;/code&gt;.&lt;br&gt;
+Maintain a &lt;strong&gt;scaling parameter &lt;code&gt;sp&lt;/code&gt;&lt;/strong&gt; and look for paths having bottleneck of &lt;em&gt;at least &lt;code&gt;sp&lt;/code&gt;&lt;/em&gt;.  &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Implementation&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Scaling Max-Flow():
+    Initially f(e) = 0 for all e in G
+    Initially set sp = largest power of 2 &amp;lt;= max_e_outof_s(ce) 
+
+    While sp &amp;gt;= 1:
+        While there is an s-t path in the graph Gf(sp):
+            Let P be a simple s-t path in Gf(sp)
+                f' = augment(f,P)
+                Update f to be f'
+                Update Gf(sp)
+        sp /= 2
+    Return f
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Runtime&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Outer &lt;code&gt;While&lt;/code&gt; loop (scaling phase): at most &lt;code&gt;1 + logC&lt;/code&gt; where &lt;code&gt;C = sum_e_outof_s(ce)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;During the scaling phase, each augmentation increases the flow by at least &lt;code&gt;sp&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;v(f) &amp;gt;= max flow - m*sp&lt;/code&gt; where &lt;code&gt;f = flow at the end of scaling phase&lt;/code&gt; and &lt;code&gt;m = |E|&lt;/code&gt;  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;f(e) &amp;gt; ce - sp for e = (u,v) which u ∈ A and v ∈ B
+f(e) ≥ sp for e = (u,v) which u ∈ B and v ∈ A
+
+v(f) = sum_e_outof_A(f(e)) − sum_e_into_A(f(e))
+     ≥ sum_e_outof_A(ce - sp) - sum_e_into_A(sp)
+     = c(A,B) - m*sp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;# of augmentations in a scaling phase is at most &lt;code&gt;2m&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;v(f*) &amp;lt;= v(f_prev) + m*sp = v(f_prev) + 2m*sp_prev
+Each augmentation increases the flow by &amp;gt;= sp_prev
+So at most 2m augmentations
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Augmentation: &lt;code&gt;O(m)&lt;/code&gt; time; &lt;code&gt;1 + logC&lt;/code&gt; scaling phases; &lt;code&gt;2m&lt;/code&gt; augmentations each phase =&amp;gt; &lt;code&gt;O(m^2 logC)&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Scaling: polynomial in size of input (# of edges &amp;amp; numerical representation of capacities)&lt;br&gt;
+Original: polynomial in magnatude of capacities&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5&gt;Idea 2&lt;/h5&gt;
+
+&lt;p&gt;Choose path with &lt;strong&gt;fewest number of edges&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h3&gt;&lt;strong&gt;Extensions to Max-Flow Problem&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;h4&gt;Circulations with Demands&lt;/h4&gt;
+
+&lt;p&gt;Multiple sources &amp;amp; sinks with fixed supply/demand values.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Demands
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;dv &amp;gt; 0&lt;/code&gt;: &lt;code&gt;v&lt;/code&gt; wish to receive &lt;code&gt;dv&lt;/code&gt; more flow than it sends out (&lt;strong&gt;sink&lt;/strong&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dv &amp;lt; 0&lt;/code&gt;: &lt;code&gt;v&lt;/code&gt; wish to send out &lt;code&gt;dv&lt;/code&gt; more flow than it receives (&lt;strong&gt;source&lt;/strong&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;dv = 0&lt;/code&gt;: not source nor sink&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Conditions
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;0 &amp;lt;= f(e) &amp;lt;= ce&lt;/code&gt; for all edges&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sum_e_into_v(f(e)) = sum_e_outof_v(f(e))&lt;/code&gt; for all internal nodes&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;All demands satisfied&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Total supply = total demand&lt;br&gt;
+&lt;code&gt;sum_v(dv) = sum_v(f_in(v)) - sum_v(f_out(v)) = 0&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;sum_v_dv&amp;gt;0(dv) = sum_v_dv&amp;lt;0(-dv)&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Conversion to Max-Flow Problem
+
+&lt;ul&gt;
+&lt;li&gt;Create super-source &lt;code&gt;s*&lt;/code&gt; connecting each node in &lt;code&gt;S&lt;/code&gt;; create super-sink &lt;code&gt;t*&lt;/code&gt; connecting each node in &lt;code&gt;T&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;A feasible circulation is found iff max s*-t* flow has value &lt;code&gt;D&lt;/code&gt;, where &lt;code&gt;D = max capaxity from s*/to t*&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Graph G has a feasible circulation with demands &lt;code&gt;{dv}&lt;/code&gt; if and only if for all cuts (A,B):&lt;br&gt;
+&lt;code&gt;sum_v_in_B(dv) &amp;lt;= c(A,B)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Circulations with Demands &amp;amp; Lower Bounds&lt;/h4&gt;
+
+&lt;p&gt;Enforce flow to use certain edges - place &lt;strong&gt;lower bounds&lt;/strong&gt; on edges.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Conditions
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;le &amp;lt;= f(e) &amp;lt;= ce&lt;/code&gt; for all edges, where &lt;code&gt;le&lt;/code&gt; is the lower bound&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sum_e_into_v(f(e)) = sum_e_outof_v(f(e))&lt;/code&gt; for all internal nodes&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;All demands satisfied&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Total supply = total demand&lt;br&gt;
+&lt;code&gt;sum_v(dv) = sum_v(f_in(v)) - sum_v(f_out(v)) = 0&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;sum_v_dv&amp;gt;0(dv) = sum_v_dv&amp;lt;0(-dv)&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Conversion to Max-Flow Problem
+
+&lt;ul&gt;
+&lt;li&gt;Let capacities of edges be &lt;code&gt;ce - le&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Let demands of nodes be &lt;code&gt;dv - Lv&lt;/code&gt;, where &lt;code&gt;Lv = sum_e_into_v(le) - sum_e_outof_v(le)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;There is a feasible circulation in &lt;code&gt;G&lt;/code&gt; iff there is a feasible circulation in &lt;code&gt;G&amp;#39;&lt;/code&gt;, where &lt;code&gt;G&lt;/code&gt; is the original graph, &lt;code&gt;G&amp;#39;&lt;/code&gt; is the converted one&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Bipartite Matching&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Max-flow problem property: &lt;strong&gt;if all edge capacities are integers, then the optimal flow found by our algorithm is integral.&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Idea
+
+&lt;ul&gt;
+&lt;li&gt;Connect nodes from 1 set to &lt;code&gt;s&lt;/code&gt; with capacity 1&lt;/li&gt;
+&lt;li&gt;Connect nodes from another set to &lt;code&gt;t&lt;/code&gt; with capacity 1&lt;/li&gt;
+&lt;li&gt;Find max flow&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Image Segmentation&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;Separate the foreground and background of an image.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Goal&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Let &lt;code&gt;ai&lt;/code&gt; be likelihood to foreground for pixel &lt;code&gt;i&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Let &lt;code&gt;bi&lt;/code&gt; be likelihood to background for pixel &lt;code&gt;i&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Let &lt;code&gt;pij&lt;/code&gt; be separation penalty&lt;/li&gt;
+&lt;li&gt;Maximize &lt;code&gt;q(A,B) = sum_i_in_A(ai) + sum_j_in_B(bi) - sum_(i,j)_in_diff_set(pij)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;3 problems&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;The goal is seeking to maximize an objective
+
+&lt;ul&gt;
+&lt;li&gt;Maximize&lt;br&gt;
+&lt;code&gt;q(A,B) = sum_i_in_A(ai) + sum_j_in_B(bi) - sum_(i,j)_in_diff_set(pij)&lt;/code&gt;&lt;br&gt;
+&amp;lt;=&amp;gt; Minimize&lt;br&gt;
+&lt;code&gt;q&amp;#39;(A,B) = sum_i_in_A(bi) + sum_j_in_B(ai) + sum_(i,j)_in_diff_set(pij)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;No source &amp;amp; sink
+
+&lt;ul&gt;
+&lt;li&gt;Create super-source &lt;code&gt;s*&lt;/code&gt; for foreground &amp;amp; super-sink &lt;code&gt;t*&lt;/code&gt; for background&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Undirected graph
+
+&lt;ul&gt;
+&lt;li&gt;Model neighboring pair with 2 directed edges&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Graph representation&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Edges (s,j), where j ∈ B; capacity = aj
+Edges (i,t), where i ∈ A; capacity = bi
+Edges (i,j), where i ∈ A and j ∈ B; capacity = p_ij
+
+c(A,B) = q'(A,B)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Project Selection&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;A set of projects &lt;code&gt;P&lt;/code&gt; has &lt;em&gt;revenue&lt;/em&gt; &lt;code&gt;pi&lt;/code&gt; being either positive or negative. Certain projects have &lt;em&gt;prerequisites&lt;/em&gt; for other projects. Find a set of projects that maximizes the profits.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Graph representation&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Edges (s,i), where pi &amp;gt; 0; capacity = pi
+Edges (i,t), where pi &amp;lt; 0; capacity = -pi
+Edges (i,j), where i depends on j; capacity = inf
+
+Max flow C = sum_i_pi&amp;gt;0(pi)
+Min cut (A',B'), where if i ∈ A has edge (i,j), j ∈ A
+Set of projects: A'-{s}, optimal
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Optimality analysis&lt;/p&gt;
+
+&lt;p&gt;Prove the min cut in &lt;code&gt;G&amp;#39;&lt;/code&gt; determines the optimum set of projects.  &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Capacity of cut &lt;code&gt;(A&amp;#39;,B&amp;#39;)&lt;/code&gt; is &lt;code&gt;c(A&amp;#39;,B&amp;#39;) = C − sum_i_in_A(pi)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;If &lt;code&gt;(A&amp;#39;, B&amp;#39;)&lt;/code&gt; is a cut with capacity &amp;lt;= C, then set &lt;code&gt;A = A&amp;#39; − {s}&lt;/code&gt; satisfies the precedence constraints&lt;/li&gt;
+&lt;li&gt;Hence &lt;code&gt;c(A&amp;#39;,B&amp;#39;) = C - profit(A)&lt;/code&gt; and small cuts imply big profits&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;&lt;strong&gt;Baseball Elimination&lt;/strong&gt;&lt;/h3&gt;
+
+&lt;p&gt;A set of teams &lt;code&gt;S&lt;/code&gt;, each has &lt;code&gt;wi&lt;/code&gt; wins. Some games &lt;code&gt;g_xy&lt;/code&gt; left. Check if team &lt;code&gt;z&lt;/code&gt; has been eliminated.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Averaging argument&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Suppose z has indeed been eliminated. 
+Then:
+
+- z can finish with at most m wins.
+- There is a set of teams T ⊆ S s.t. 
+    sum_x_in_T(wx) + sum_x,y_in_T(gxy) &amp;gt; m|T|
+
+Hence one of the teams in T must end with &amp;gt; m wins.
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Graph representation&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Let u_xy be some games left between x &amp;amp; y
+Let m be w_z + remaining_games_of_z
+Let g* be total number of games left
+
+Edges (s,u_xy), capacity = g_xy
+Edges (u_xy,vx), capacity = inf
+Edges (vx,t), capacity = m - wx
+
+Eliminate x iff max flow in G &amp;lt; g* # else after g* games every team will have wins not exceeding m
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Analysis&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If both &lt;code&gt;x&lt;/code&gt;, &lt;code&gt;y&lt;/code&gt; belong to &lt;code&gt;T&lt;/code&gt;, then &lt;code&gt;u_xy ∈ A&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;(A, B)&lt;/code&gt; is a min cut: &lt;code&gt;u_xy ∈ A&lt;/code&gt; iff both &lt;code&gt;x, y ∈ T&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;T&lt;/code&gt; can be used in the averaging argument   &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;c(A,B) = sum_x_in_T(m-wx) + sum_{x,y}_!in_T(g_xy)
+       = m|T| - sum_x_in_T(wx) + (g* - sum_x,y_in_T(g_xy))
+m|T| - sum_x_in_T(wx) - sum_x,y_in_T(g_xy) &amp;lt; 0 # c(A,B) = g' &amp;lt; g*
+
+sum_x_in_T(wx) + sum_x,y_in_T(g_xy) &amp;gt; m|T|
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;References&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.geeksforgeeks.org/ford-fulkerson-algorithm-for-maximum-flow-problem/&quot;&gt;GeeksForGeeks&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Wed, 09 Nov 2016 00:00:00 -0500</pubDate>
+        <link>/blog/notes/algorithm/2016/11/09/network-flow.html</link>
+        <guid isPermaLink="true">/blog/notes/algorithm/2016/11/09/network-flow.html</guid>
+        
+        <category>network flow</category>
+        
+        <category>algorithm</category>
+        
+        <category>CSC373</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Algorithm</category>
+        
+      </item>
+    
+      <item>
+        <title>Data Stucture Notes</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;p&gt;Data stucture notes for coding competitions.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;BST&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;map&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Dictionary&lt;/li&gt;
+&lt;li&gt;Insertion, deletion, searching &lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;lower_bound&lt;/code&gt;, &lt;code&gt;upper_bound&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Find element in range&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://acm.timus.ru/problem.aspx?space=1&amp;amp;num=1613&quot;&gt;http://acm.timus.ru/problem.aspx?space=1&amp;amp;num=1613&lt;/a&gt;
+&lt;a href=&quot;http://poj.org/problem?id=2418&quot;&gt;http://poj.org/problem?id=2418&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2&gt;Monotone Queue&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;3 basic operations
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;push&lt;/code&gt; in &lt;code&gt;O(1)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pop&lt;/code&gt; in &lt;code&gt;O(1)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;max&lt;/code&gt;/&lt;code&gt;min&lt;/code&gt; in &lt;code&gt;O(1)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Implementation&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Insert(k):
+    while (queue not empty) and (tail element &amp;gt;= k):
+        discard tail
+    append k to tail
+
+Min():
+    return head of queue
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a href=&quot;http://poj.org/problem?id=2823&quot;&gt;http://poj.org/problem?id=2823&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2&gt;Block List&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Structure
+
+&lt;ul&gt;
+&lt;li&gt;Partition indices into &lt;code&gt;O(sqrt(n))&lt;/code&gt; segments, each of length &lt;code&gt;O(sqrt(n))&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;3 basic operations
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;insert&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;delete&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Range operation on &lt;code&gt;[i,j]&lt;/code&gt; in &lt;code&gt;O(sqrt(n))&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Implementation&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Insert(x):
+    # invariant: each segment has elements &amp;gt;= L and &amp;lt; 3L; OR only one segment &amp;lt; 3L
+
+    locate segment S # O(sqrt(n))
+    brute force insertion on S # O(L)
+    if size(S) == 3L:
+        evenly split into 2 segments
+
+Delete(x):
+    locate segment S # O(sqrt(n))
+    brute force deletion on S # O(L)
+    if size(S) == L and S has adjacent segment:
+        combine 2 segments
+        evenly split into 2 segments
+
+# range operation
+# change &amp;amp; sum as example
+
+## change [i,j] to x
+Change(i, j, x):
+    if i == l and j == r: # O(1)
+        b = true
+        y = x
+        s = x * (r - l + 1)
+    else: # O(L)
+        if b == true:
+            set every element in [l,r] to y
+            b = false
+        set every element in [i,j] to x
+        calculate s
+
+## query [i,j]
+Query(i, j):
+    if i == l and j == r: # O(1)
+        return s
+    else: # O(L)
+        if b == ture:
+            set every element in [l,r] to y
+            b = false
+        set every element in [i,j] to x
+        calculate s
+        return s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a href=&quot;http://poj.org/problem?id=3580&quot;&gt;http://poj.org/problem?id=3580&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2&gt;Merge-find Set&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Disjoint-set_data_structure&quot;&gt;Wiki&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Structure
+
+&lt;ul&gt;
+&lt;li&gt;A ground set &lt;code&gt;S&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;A collection &lt;code&gt;C&lt;/code&gt; of subsets of &lt;code&gt;S&lt;/code&gt; where 2 different elements in &lt;code&gt;C&lt;/code&gt; are disjoint&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;3 basic operations
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;union&lt;/code&gt;: union 2 subsets&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;find&lt;/code&gt;: find the subset a specific elememt is in&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;test&lt;/code&gt;: test where 2 elements are in the same subset&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Implementation (linear)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;P: P[i] = parent of i in S
+F(P): forest difined by P
+
+Find(x):
+    while P[x] != x:
+        x = P[x]
+    return x # root
+
+Union(x):
+    P[Find(x)] = Find(y)
+
+Test(x, y):
+    return Find(x) == Find(y)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Implementation (optimized)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;R: rank of element; init R = {0}
+
+Find(x): # path compression
+    if P[x] != x:
+        P[x] = Find(P[x])
+    return x
+
+Union(x): # union by rank
+    x' = Find(x)
+    y' = Find(y)
+    if R[x'] &amp;lt; R[y']:
+        P[x'] = y'
+    elif R[x'] &amp;gt; R[y']:
+        P[y'] = x'
+    else:
+        P[x'] = y'
+        R[y']++
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Extension 1: Maintaining the Difference&lt;/h3&gt;
+
+&lt;p&gt;For each element &lt;code&gt;i&lt;/code&gt;, &lt;code&gt;V[i]&lt;/code&gt; is the underlying unknown integer. Information &lt;code&gt;V[j] - V[i] = k&lt;/code&gt; comes.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Problem
+
+&lt;ol&gt;
+&lt;li&gt;Consistent with previously known information?&lt;/li&gt;
+&lt;li&gt;If consistent, record the information&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;V[j] - V[i]&lt;/code&gt; uniquely determined?&lt;/li&gt;
+&lt;li&gt;If unique, answer the value&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Implementation&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;D: difference; D[i] = V[i] - V[P[i]]; init D = {0}
+
+Find(x):
+    if P[x] != x:
+        (P[x],d) = Find(P[x])
+        D[x] += d
+    return (x, D[x])
+
+Union(i, j, k): # V[i] - V[j] = k
+    (x',D[i]) = Find(i)
+    (y',D[j]) = Find(j)
+    if R[x'] &amp;lt; R[y']:
+        P[x'] = y'
+        D[x'] = D[j] - D[i] - k
+    elif R[x'] &amp;gt; R[y']:
+        P[y'] = x'
+        D[y'] = D[i] - D[j] - k
+    else:
+        P[x'] = y'
+        D[x'] = D[j] - D[i] - k
+        R[y']++r
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Apply the data structure&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Provided &lt;code&gt;V[j] - V[i] = k&lt;/code&gt;: &lt;code&gt;Union(i,j,k)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Answer &lt;code&gt;V[j] - V[i]&lt;/code&gt;: if &lt;code&gt;Test(i,j)&lt;/code&gt; then &lt;code&gt;return D[j] - D[i]&lt;/code&gt;&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://acm.hdu.edu.cn/showproblem.php?pid=3038&quot;&gt;http://acm.hdu.edu.cn/showproblem.php?pid=3038&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Extension 2: XOR&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://acm.hdu.edu.cn/showproblem.php?pid=3234&quot;&gt;http://acm.hdu.edu.cn/showproblem.php?pid=3234&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Wed, 09 Nov 2016 00:00:00 -0500</pubDate>
+        <link>/blog/notes/competition/2016/11/09/data-structure-notes.html</link>
+        <guid isPermaLink="true">/blog/notes/competition/2016/11/09/data-structure-notes.html</guid>
+        
+        <category>competition</category>
+        
+        <category>data structure</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Competition</category>
+        
+      </item>
+    
+      <item>
+        <title>Competition Notes</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;p&gt;Notes for coding competitions.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Complexity&lt;/h2&gt;
+
+&lt;h3&gt;TLE&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;10^8&lt;/code&gt; int operations/&lt;code&gt;10^7&lt;/code&gt; floating point operations in a for loop run in around &lt;strong&gt;1 sec&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;n = 20: exponential ok&lt;/li&gt;
+&lt;li&gt;n = 100: &lt;code&gt;O(n^3)&lt;/code&gt; ok&lt;/li&gt;
+&lt;li&gt;n = 1000: &lt;code&gt;O(n^2)&lt;/code&gt; ok&lt;/li&gt;
+&lt;li&gt;n = 10^4: &lt;code&gt;n*polylog(n)&lt;/code&gt; ^ &lt;code&gt;n*sqrt(n)&lt;/code&gt; ok&lt;/li&gt;
+&lt;li&gt;n = 10^5: &lt;code&gt;nlogn&lt;/code&gt; ok&lt;/li&gt;
+&lt;li&gt;n = 10^6: &lt;code&gt;O(n)&lt;/code&gt; ok&lt;/li&gt;
+&lt;li&gt;n = 10^9: &lt;code&gt;O(logn)&lt;/code&gt; ok&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Online Resource&lt;/h2&gt;
+
+&lt;h3&gt;Data Structure&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://acm.timus.ru/problemset.aspx?space=1&amp;amp;tag=structure&quot;&gt;Timus OJ&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Wed, 09 Nov 2016 00:00:00 -0500</pubDate>
+        <link>/blog/notes/competition/2016/11/09/competition-notes.html</link>
+        <guid isPermaLink="true">/blog/notes/competition/2016/11/09/competition-notes.html</guid>
+        
+        <category>competition</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Competition</category>
+        
+      </item>
+    
+      <item>
+        <title>Competition Cheatsheet</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;p&gt;Cheatsheet for coding competitions.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Complexity Limit&lt;/h2&gt;
+
+&lt;h3&gt;TLE&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;10^8&lt;/code&gt; int operations/&lt;code&gt;10^7&lt;/code&gt; floating point operations in a for loop run in around &lt;strong&gt;1 sec&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;n = 20: exponential ok&lt;/li&gt;
+&lt;li&gt;n = 100: &lt;code&gt;O(n^3)&lt;/code&gt; ok&lt;/li&gt;
+&lt;li&gt;n = 1000: &lt;code&gt;O(n^2)&lt;/code&gt; ok&lt;/li&gt;
+&lt;li&gt;n = 10^4: &lt;code&gt;n*polylog(n)&lt;/code&gt; ^ &lt;code&gt;n*sqrt(n)&lt;/code&gt; ok&lt;/li&gt;
+&lt;li&gt;n = 10^5: &lt;code&gt;nlogn&lt;/code&gt; ok&lt;/li&gt;
+&lt;li&gt;n = 10^6: &lt;code&gt;O(n)&lt;/code&gt; ok&lt;/li&gt;
+&lt;li&gt;n = 10^9: &lt;code&gt;O(logn)&lt;/code&gt; ok&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;STL&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;vector&lt;/code&gt; in &lt;code&gt;&amp;lt;vector&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;priority_queue&lt;/code&gt; in &lt;code&gt;&amp;lt;queue&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sort&lt;/code&gt; in &lt;code&gt;&amp;lt;algorithm&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;binary_search&lt;/code&gt; in &lt;code&gt;&amp;lt;algorithm&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;next_permutation&lt;/code&gt; in &lt;code&gt;&amp;lt;algorithm&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;lower_bound&lt;/code&gt;, &lt;code&gt;upper_bound&lt;/code&gt; in &lt;code&gt;&amp;lt;algorithm&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;set&lt;/code&gt;, &lt;code&gt;multiset&lt;/code&gt; in &lt;code&gt;&amp;lt;set&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;map&lt;/code&gt;, &lt;code&gt;multimap&lt;/code&gt; in &lt;code&gt;&amp;lt;map&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Wed, 09 Nov 2016 00:00:00 -0500</pubDate>
+        <link>/blog/notes/competition/2016/11/09/competition-cheatsheet.html</link>
+        <guid isPermaLink="true">/blog/notes/competition/2016/11/09/competition-cheatsheet.html</guid>
+        
+        <category>competition</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Competition</category>
+        
+      </item>
     
       <item>
         <title>Dynamic Programming</title>
@@ -117,9 +945,18 @@ return max_j L(j)
 &lt;li&gt;&lt;p&gt;Runtime: &lt;code&gt;O(|E|) = O(n^2)&lt;/code&gt; &lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;h4&gt;O(nlogn) Implementation&lt;/h4&gt;
+
+&lt;p&gt;Binary search. Keep indices for reconstruction.  &lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.geeksforgeeks.org/longest-monotonically-increasing-subsequence-size-n-log-n/&quot;&gt;GeeksForGeeks&lt;/a&gt;&lt;br&gt;
+&lt;a href=&quot;http://stackoverflow.com/questions/2631726/how-to-determine-the-longest-increasing-subsequence-using-dynamic-programming&quot;&gt;StackOverflow&lt;/a&gt;&lt;/p&gt;
+
 &lt;h3&gt;&lt;strong&gt;Edit Distance&lt;/strong&gt;&lt;/h3&gt;
 
-&lt;p&gt;For 2 strings, the &lt;em&gt;cost&lt;/em&gt; of an alignment between them is the # of &lt;em&gt;edits&lt;/em&gt; (insertion, deletion, substitution) needed to transform string 1 to string 2. Find the &lt;em&gt;min&lt;/em&gt; cost.&lt;/p&gt;
+&lt;p&gt;For 2 strings, the &lt;em&gt;cost&lt;/em&gt; of an alignment between them is the # of &lt;em&gt;edits&lt;/em&gt; (insertion, deletion, substitution) needed to transform string 1 to string 2. Find the &lt;em&gt;min&lt;/em&gt; cost.  &lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://web.stanford.edu/class/cs262/presentations/lecture3.pdf&quot;&gt;Hirscberg&amp;#39;s Algorithm&lt;/a&gt;&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Strings &lt;code&gt;x, y&lt;/code&gt;&lt;/li&gt;
@@ -138,6 +975,45 @@ for i = 1..m:
 return E(m,n)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Runtime: &lt;code&gt;O(mn)&lt;/code&gt; &lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Space Efficient Algorithm&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# O(m) space
+Space-Efficient-Alignment(X,Y):
+    Array B[0...m,0...1]
+    Initialize B[i,0]=iδ for each i (just as in column 0 of A) 
+
+    For j = 1,...,n
+        B[0,1] = jδ # corresponds to entry A[0,j] 
+        For i = 1,...,m
+            B[i,1]= min[αxiyj+B[i−1, 0], δ+B[i−1,1], δ+B[i,0]]
+        Endfor
+        Move column 1 of B to column 0 to make room for next iteration:
+            Update B[i, 0]= B[i, 1] for each i 
+    Endfor
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To backtrack:  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;1. Let `f(i,j)` denote optimal path from `(0,0)` to `(i,j)`, `g(i,j)` denote optimal path from `(i,j)` to `(m,n)`
+2. Find index `q` that minimizes `f(q,k) + g(q,k)`
+3. Divide problem into `(0,0)` to `(q,n/2)` &amp;amp; `(q+1,n/2+1)` to `(m,n)`
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Backward-Space-Efficient-Alignment(X,Y):
+    # start from the opposite corner
+    # similar to Space-Efficient-Alignment, but now B[i,1]= min[αxiyj+B[i+1, 0], δ+B[i+1,1], δ+B[i,0]]
+
+Divide-and-Conquer-Alignment(X,Y):
+    Let m be the number of symbols in X 
+    Let n be the number of symbols in Y 
+    If m≤2 or n≤2 then
+        Compute optimal alignment using Alignment(X,Y) 
+
+    Call Space-Efficient-Alignment(X,Y[1:n/2])
+    Call Backward-Space-Efficient-Alignment(X,Y[n/2+1:n]) 
+
+    Let q be the index minimizing f(q,n/2)+g(q,n/2)
+    Add (q,n/2) to global list P 
+
+    Divide-and-Conquer-Alignment(X[1:q],Y[1:n/2]) 
+    Divide-and-Conquer-Alignment(X[q+1:m],Y[n/2+1:n]) 
+    Return P
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3&gt;&lt;strong&gt;Knapsack Problem&lt;/strong&gt;&lt;/h3&gt;
@@ -1605,1263 +2481,6 @@ GAC(Level):
         <category>Notes</category>
         
         <category>AI</category>
-        
-      </item>
-    
-      <item>
-        <title>Search</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Search Overview
-
-&lt;ol&gt;
-&lt;li&gt;Formalism of Search&lt;/li&gt;
-&lt;li&gt;Searching Template&lt;/li&gt;
-&lt;li&gt;Critical Properties of Search&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Uninformed Search
-
-&lt;ol&gt;
-&lt;li&gt;BFS&lt;/li&gt;
-&lt;li&gt;DFS&lt;/li&gt;
-&lt;li&gt;Depth Limited Search&lt;/li&gt;
-&lt;li&gt;Iterative Deepening Search&lt;/li&gt;
-&lt;li&gt;Uniform-Cost Search&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Informed/Heuristic Search
-
-&lt;ol&gt;
-&lt;li&gt;Best First Search&lt;/li&gt;
-&lt;li&gt;A*&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Search Overview&lt;/h2&gt;
-
-&lt;h3&gt;Formalism of Search&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;State space&lt;/li&gt;
-&lt;li&gt;Initial state &amp;amp; goal state&lt;/li&gt;
-&lt;li&gt;Actions/successor functions/state space transitions &lt;code&gt;S(x)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Costs &lt;code&gt;C(x, a, y)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Heuristics to guide search&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-&lt;h4&gt;Complex situations&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Actions lead to multiple states&lt;/li&gt;
-&lt;li&gt;Unsure of a given state&lt;/li&gt;
-&lt;li&gt;=&amp;gt; &lt;strong&gt;Probabilistic models&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/blockquote&gt;
-
-&lt;h3&gt;Searching Template&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;State annotation
-
-&lt;ul&gt;
-&lt;li&gt;State + action, parent state, cost, ...&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Frontier&lt;/strong&gt;: states haven&amp;#39;t explored or expanded but want to explore&lt;/li&gt;
-&lt;li&gt;Order of frontiers (selection rules) implies the type of search, e.g. &lt;code&gt;BFS&lt;/code&gt;, &lt;code&gt;DFS&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;TreeSearch(Frontier, Successors, Goal):
-    If Frontier empty:
-        return failure
-
-    Curr = select state from Frontier
-    If (Goal(Curr)):
-        return Curr
-    Frontier' = (Frontier - {Curr}) ∪ Successors(Curr)
-    return TreeSearch(Frontier', Successors, Goal)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3&gt;Critical Properties of Search&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Completeness&lt;/li&gt;
-&lt;li&gt;Optimality&lt;/li&gt;
-&lt;li&gt;Time complexity&lt;/li&gt;
-&lt;li&gt;Space complexity&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Uninformed Search&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Fixed rule for selecting next state&lt;/li&gt;
-&lt;li&gt;Do not consider any &lt;strong&gt;domain specific information&lt;/strong&gt; about the particular search problem&lt;/li&gt;
-&lt;li&gt;e.g. BFS, Uniform-Cost, DFS, Depth-Limited, Iterative-Deepening&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Path &amp;amp; Cycle Checking&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Path checking
-
-&lt;ul&gt;
-&lt;li&gt;Ensure expanded state &lt;code&gt;c&lt;/code&gt; not equal to state reached by any ancestor of &lt;code&gt;c&lt;/code&gt; along this path&lt;/li&gt;
-&lt;li&gt;Path checked in isolation&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Cycle checking/ Multiple path checking
-
-&lt;ul&gt;
-&lt;li&gt;Ensure &lt;code&gt;c&lt;/code&gt; not equal to any previously expanded state&lt;/li&gt;
-&lt;li&gt;Space complexity of DFS goes &lt;code&gt;exponential&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Non-uniform costs have additional issues&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;BFS&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;O(b^(d+1))&lt;/code&gt; space: explored nodes + nodes expanded at goal level before reaching goal&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;O(b^(d+1))&lt;/code&gt; time
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;1 + b + b^2 +...+ b^d + b(b^d-1)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Optimal&lt;/li&gt;
-&lt;li&gt;Complete&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;DFS&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;O(bm)&lt;/code&gt; space (one path at a time)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;O(b^m)&lt;/code&gt; time, &lt;code&gt;m&lt;/code&gt; = length of longest path in state space&lt;/li&gt;
-&lt;li&gt;Complete for finite depth &amp;amp; acyclic graph or cycles pruned&lt;/li&gt;
-&lt;li&gt;Not optimal&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Depth Limited Search&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;DLS(Frontier, Successors, Goal):
-    While Frontier not empty:
-        n = first node from Frontier
-        Curr = terminal state of n
-        If (Goal(Curr)):
-            return n
-
-        If Depth &amp;lt; D: // limit Frontiers to depth D
-            Frontier = (Frontier - {n}) ∪ Successors(Curr)
-        Else:
-            Frontier = Frontier - {n}
-            CutOffOccured = TRUE
-    return FAIL
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3&gt;Iterative Deepening Search&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Iteratively increase depth limit and perform DLS&lt;/li&gt;
-&lt;li&gt;Stop if solution found OR DLS failed without cutting off any nodes&lt;/li&gt;
-&lt;li&gt;Not good if many cycles&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;O(bd)&lt;/code&gt; space&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;O(b^d)&lt;/code&gt; time
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;(d+1)b^0 + db + ... + b^d&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Complete&lt;/li&gt;
-&lt;li&gt;Optimal if costs uniform
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Cost bound&lt;/strong&gt; for non-uniform costs&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Uniform-Cost Search&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Frontier&lt;/code&gt; ordered by &lt;strong&gt;increasing cost of path&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;Nodes rejected or replaced on Frontier guaranteed to have more costly paths&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;O(b^(C*/ε))&lt;/code&gt; time &amp;amp; space, &lt;code&gt;C*&lt;/code&gt; = cost of optimal solution&lt;/li&gt;
-&lt;li&gt;Complete if positive, nonzero transition costs&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Optimal&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Given: each transition has costs &amp;gt;= ε &amp;gt; 0
-
-Lemma 1: If n2 is expanded immediately after n1, then c(n1) &amp;lt;= c(n2)
-Lemma 2: When node n is expanded, every path in the search space with cost &amp;lt; c(n) has already been expanded
-Lemma 3: The first time USC expandes a node n terminating at state S, it has found the minimal cost path to S
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Informed/Heuristic Search&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;h(n1) &amp;lt; h(n2)&lt;/code&gt; if we guess it&amp;#39;s cheaper to get to goal from n1 than from n2&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;h(n) = 0&lt;/code&gt; for goal nodes n&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Best First Search&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Only use &lt;code&gt;h(n)&lt;/code&gt; to guide the search&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;A*&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;f(n) = g(n) + h(n)&lt;/code&gt;, &lt;code&gt;g(n)&lt;/code&gt; = cost of path to n&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Adimissible h(n)&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Let &lt;code&gt;h*(n)&lt;/code&gt; be the cost of an optimal path from n to goal node, then &lt;strong&gt;admissible heuristic&lt;/strong&gt; satisfies:&lt;br&gt;
-&lt;code&gt;h(n) &amp;lt;= h*(n)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Never &lt;strong&gt;over-estimates&lt;/strong&gt; the cost to reach goal, won&amp;#39;t miss any promising paths&lt;/li&gt;
-&lt;li&gt;Implies &lt;strong&gt;optimality&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Monotonic/Consistent h(n)&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Local admissibility&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;h(n1) &amp;lt;= c(n1, a, n2) + h(n2)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Consistency -&amp;gt; Adimissibility&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Assume h(n1) &amp;lt;= c(n1, a, n2) + h(n2)
-Prove h(n) &amp;lt;= h*(n)
-
-If not path from n to goal, then h*(n) = inf
-Else
-    Let n-&amp;gt;n1-&amp;gt;...-&amp;gt;n* be an optimal path from n to goal
-    (Cost: h*(n); cost of sub-path: h*(ni))
-
-    Base case: n = n*, h(n) = 0 &amp;lt;= h*(n) = 0
-    Induction: h(n1) &amp;lt;= h*(n1)
-        h(n) &amp;lt;= c(n, a1, n1) + h(n1) &amp;lt;= c(n, a1, n1) + h*(n1) = h*(n)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;f(n)&lt;/code&gt; non-decreasing&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;f(n1) = g(n1) + h(n1) &amp;lt;= g(n1) + c(n1, a, n2) + h(n2) = f(n2)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;f(n1) &amp;lt;= f(n2)&lt;/code&gt; if n2 expanded after n1&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;If n has been expanded, every path with lower f-value has already been expanded&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The first time A* expands a node, it has found the min cost path to that node&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Admissible &amp;amp; monotonic h(n)&lt;/strong&gt; =&amp;gt; Optimal&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Same time &amp;amp; space bounds as UCS
-
-&lt;ul&gt;
-&lt;li&gt;# of nodes expanded no larger than UCS&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Complete
-
-&lt;ul&gt;
-&lt;li&gt;Finite # of paths having &lt;code&gt;f-value &amp;lt; c(SolutionPath)&lt;/code&gt;, since each action has &lt;code&gt;costs &amp;gt;= ε &amp;gt; 0&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Optimal&lt;/li&gt;
-&lt;li&gt;Cycle checking: keep only the first path to a state, rejecting all subsequent paths&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Admissibility without monotonicity&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Optimal
-
-&lt;ul&gt;
-&lt;li&gt;But ordering of nodes not guaranteed optimal when put in queue&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Cycle checking: keep revisited nodes with cost less than before&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Expand less state space, but still constrained by speed or memory&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;IDA*: reduce memory requirements
-
-&lt;ul&gt;
-&lt;li&gt;Cutoff: &lt;code&gt;f-value&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;curBound&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;smallestNotExplored&lt;/code&gt;: smallest &lt;code&gt;f-value&lt;/code&gt; of discarded nodes in a round
-
-&lt;ul&gt;
-&lt;li&gt;Expand all nodes with &lt;code&gt;f-value&lt;/code&gt; equal to &lt;code&gt;f-limit&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Weighted A*
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;f(n) = (1-ε) * g(n) + ε * h(n)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Anytime A*
-
-&lt;ul&gt;
-&lt;li&gt;Find the best path for a given ε&lt;/li&gt;
-&lt;li&gt;Reduce ε and replan&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Sat, 29 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/ai/2016/10/29/search.html</link>
-        <guid isPermaLink="true">/blog/notes/ai/2016/10/29/search.html</guid>
-        
-        <category>AI</category>
-        
-        <category>CSC384</category>
-        
-        <category>search</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>AI</category>
-        
-      </item>
-    
-      <item>
-        <title>Game Tree Search</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Game Overview
-
-&lt;ol&gt;
-&lt;li&gt;Game Properties&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Two-Player Zero-Sum Game
-
-&lt;ol&gt;
-&lt;li&gt;Definition&lt;/li&gt;
-&lt;li&gt;Intuition&lt;/li&gt;
-&lt;li&gt;MiniMax Strategy&lt;/li&gt;
-&lt;li&gt;Real-Time/Online search&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Game Overview&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Generalization of Search Problems
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Game tree&lt;/strong&gt;: actions of &amp;gt;= 1 players/agents&lt;/li&gt;
-&lt;li&gt;Agents acting to &lt;strong&gt;maximize their profits&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;Others&amp;#39; profits might not have positive effect on yours&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Key Features of Game
-
-&lt;ul&gt;
-&lt;li&gt;Each player has different goal&lt;/li&gt;
-&lt;li&gt;Different paths/states assigned different costs&lt;/li&gt;
-&lt;li&gt;Each player tries to alter the world to best benefit itself&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Game Properties&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Two-player&lt;/li&gt;
-&lt;li&gt;Discrete: game states or decision can be mapped on discrete values&lt;/li&gt;
-&lt;li&gt;Finite: a finite # of states/decisions can be made&lt;/li&gt;
-&lt;li&gt;Zero-sum (Fully Competitive): A gains = B loses
-
-&lt;ul&gt;
-&lt;li&gt;Strategic/normal form game: one shot e.g. rock-paper-scissors&lt;/li&gt;
-&lt;li&gt;Extensive form game: turn-taking, multiple moves&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Deterministic: no chance involved&lt;/li&gt;
-&lt;li&gt;Perfect Information: all aspects of the state are fully observable&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Two-Player Zero-Sum Game&lt;/h2&gt;
-
-&lt;h3&gt;Definition&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;2 players: &lt;code&gt;A&lt;/code&gt;(Max), &lt;code&gt;B&lt;/code&gt;(Min)&lt;/li&gt;
-&lt;li&gt;States &lt;code&gt;S&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Initial state &lt;code&gt;I&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Terminal positions &lt;code&gt;T&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Successor functions
-
-&lt;ul&gt;
-&lt;li&gt;Input: a state&lt;/li&gt;
-&lt;li&gt;Return: a set of possible next states&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Utility/Payoff function &lt;code&gt;V: T -&amp;gt; R&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Mapping showing how good each terminal state is for A/how bad for B&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Intuition&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Game ends when terminal &lt;code&gt;t ∊ T&lt;/code&gt; reached&lt;/li&gt;
-&lt;li&gt;Game state: state-player pair&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;A&lt;/code&gt; gets &lt;code&gt;V(t)&lt;/code&gt;, &lt;code&gt;B&lt;/code&gt; gets &lt;code&gt;-V(t)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;MiniMax Strategy&lt;/h3&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Build full game tree
-
-&lt;ul&gt;
-&lt;li&gt;Root: start state&lt;/li&gt;
-&lt;li&gt;Edges: possible moves&lt;/li&gt;
-&lt;li&gt;Leaves: terminals (utilities U(t) labeled)&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Back balues up the tree
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;U(n) = min{ U(c): c is a child of n if n is Min node }&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;U(n) = max{ U(c): c is a child of n if n is Max node }&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;O(b^d)&lt;/code&gt; space&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Depth-First Implementation&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;To avoid expanding the tree exponentially in size&lt;/li&gt;
-&lt;li&gt;Need &lt;strong&gt;finite depth&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;DFMiniMax(n, Player): //return Utility of state n given that Player is MIN or MAX
-
-    If n is TERMINAL:
-        Return V(n) //Return terminal states utility (V is specified as part of game)
-
-    //Apply Player s moves to get successor states. 
-    ChildList = n.Successors(Player)
-
-    If Player == MIN:
-        return minimum of DFMiniMax(c, MAX) over c ∈ ChildList
-    Else: //Player is MAX
-        return maximum of DFMiniMax(c, MIN) over c ∈ ChildList
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4&gt;Pruning&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;α-cuts(max node) &amp;amp; β-cuts(min node)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;AlphaBeta(n,Player,alpha,beta): //return Utility of state 
-
-    If n is TERMINAL:
-        return V(n) //Return terminal states utility 
-
-    ChildList = n.Successors(Player)
-
-    If Player == MAX:
-        v = -infinity
-        for c in ChildList:
-            v = max(v, AlphaBeta(c,MIN,alpha,beta)) 
-            alpha = max(v, alpha)
-            If beta &amp;lt;= alpha:
-                break 
-        return v
-
-    Else: //Player == MIN 
-        v = infinity
-        for c in ChildList:
-            v = min(v, AlphaBeta(c,MAX,alpha,beta)) 
-            beta = min(v, beta)
-            If beta &amp;lt;= alpha:
-                break 
-        return v
-
-// Initial call: AlphaBeta(START_NODE, PLAYER, -infinity, infinity)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;O(b^d)&lt;/code&gt; space if no pruning, &lt;code&gt;O(b^(d/2))&lt;/code&gt; if optimal pruning
-
-&lt;ul&gt;
-&lt;li&gt;Branching factor of 1st layer: B; 2nd: 1; 3rd: B; ...&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;In practice, must make &lt;strong&gt;heuristic estimates&lt;/strong&gt; of the terminal nodes -&amp;gt; &lt;strong&gt;evaluation function&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Real-Time/Online search&lt;/h3&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Run A* until out of memory&lt;/li&gt;
-&lt;li&gt;Use &lt;strong&gt;evaluation function&lt;/strong&gt; to decide which path looks best&lt;/li&gt;
-&lt;li&gt;Make the move&lt;/li&gt;
-&lt;li&gt;Restart search at the node reached (can be cached)&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-        <pubDate>Sat, 29 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/ai/2016/10/29/game-tree-search.html</link>
-        <guid isPermaLink="true">/blog/notes/ai/2016/10/29/game-tree-search.html</guid>
-        
-        <category>AI</category>
-        
-        <category>CSC384</category>
-        
-        <category>search</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>AI</category>
-        
-      </item>
-    
-      <item>
-        <title>Operating System - Unix &amp; Pthread</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Process-Related Unix System Calls&lt;/li&gt;
-&lt;li&gt;Posix Thread&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Process-Related Unix System Calls&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;A &lt;code&gt;process&lt;/code&gt; in Unix consistes of an &lt;code&gt;address space&lt;/code&gt; &amp;amp; a &lt;code&gt;thread&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;API
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;getpid()&lt;/code&gt;, &lt;code&gt;getppid()&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Pid identifies &lt;code&gt;address space&lt;/code&gt; &amp;amp; &lt;code&gt;thread&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;fork()&lt;/code&gt;, &lt;code&gt;execv()&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Create &lt;code&gt;processes&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;exit()&lt;/code&gt;, &lt;code&gt;wait()&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Terminate &lt;code&gt;processes&lt;/code&gt; &amp;amp; synchronize with terminating &lt;code&gt;process&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;kill()&lt;/code&gt;, &lt;code&gt;sigaction()&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Communicate with another &lt;code&gt;process&lt;/code&gt; via &lt;code&gt;signals&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;fork()&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Create &lt;code&gt;childe process&lt;/code&gt; from &lt;code&gt;parent process&lt;/code&gt; with an identical copy of:
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Thread state&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Address space&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;int n = 5;
-int pid = fork(); 
-if (pid == 0) {
-    // run child code
-    n = n + 1;
-} else { // pid value &amp;gt; 0
-    // run parent code
-    n = n - 1;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;execv()&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Replaces current &lt;code&gt;process&lt;/code&gt; with a new &lt;code&gt;program&lt;/code&gt;:
-
-&lt;ul&gt;
-&lt;li&gt;Loaded from disk&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Code&lt;/code&gt; &amp;amp; &lt;code&gt;data&lt;/code&gt; copied from disk&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Stack&lt;/code&gt; initialized with activation frame of &lt;code&gt;main()&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Processor registers&lt;/code&gt; reinitialized&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Pid&lt;/code&gt; stays the same&lt;/li&gt;
-&lt;li&gt;Doesn&amp;#39;t return&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;char *cmd = &quot;/bin/ls&quot;; 
-char *arg1 = &quot;-l&quot;; 
-char *args[3];
-args[1] = arg1; 
-args[2] = NULL;
-execv(cmd, args);
-// code doesn’t execute
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;fork()&lt;/code&gt; + &lt;code&gt;execv()&lt;/code&gt; can run a new program as a new process with the old one kept&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;exit(retval)&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Terminate itself:
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Address space&lt;/code&gt; destroyed&lt;/li&gt;
-&lt;li&gt;Process-specific OS state destroyed (e.g. open files)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;retval&lt;/code&gt; saved &amp;amp; return to &lt;code&gt;parent process&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;For &lt;code&gt;parent process&lt;/code&gt; to learn about &lt;code&gt;child process&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Thread state&lt;/code&gt; destroyed&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;wait()&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Wait for &lt;code&gt;child process&lt;/code&gt; to terminate; synchronize with &lt;code&gt;child processes&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Returns &lt;code&gt;retval&lt;/code&gt; returned from &lt;code&gt;exit()&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;4 cases:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;W&lt;/code&gt; wait starts, &lt;code&gt;C&lt;/code&gt; continue, &lt;code&gt;E&lt;/code&gt; exit starts, &lt;code&gt;D&lt;/code&gt; exit done&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Semaphore required for 1, 2, 3
-
-1.
-         down(c)  up(p)
-Parent ---&amp;gt; W      C-----&amp;gt;
-                  / \
-Child  --------&amp;gt; E   D
-              up(c) down(p)
-
-2.
-
-Parent --------&amp;gt; WC-----&amp;gt;
-                 / \
-Child  ------&amp;gt; E  | D           # OS keeps child exit retval until wait() is issued by parent,
-            (zombie process)    # or destroyed when parent exits
-
-3.
-
-Parent --------&amp;gt; E
-                / \
-Child  -----&amp;gt; E    D
-
-4.
-
-Parent ---&amp;gt; E
-
-Child  --------&amp;gt; ED
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;Each &lt;code&gt;child process&lt;/code&gt; needs a pair of &lt;code&gt;semaphore&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;kill()&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Process send signals to itself or other &lt;code&gt;processes&lt;/code&gt; by calling &lt;code&gt;kill&lt;/code&gt; system call&lt;/li&gt;
-&lt;li&gt;Receiver executes &lt;code&gt;signal handler&lt;/code&gt;; if not setup, forced to exit&lt;/li&gt;
-&lt;li&gt;Receiver process exits when scheduled to run next
-
-&lt;ul&gt;
-&lt;li&gt;Because if receiver is holding the lock, it must be released by itself instead of other threads&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;sigaction()&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Setup &lt;code&gt;signal handler&lt;/code&gt; function&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Posix Thread&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Allows creating additional threads in a &lt;code&gt;Unix process&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;API
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;pthread_create(thread, attr, start_routine, arg)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;pthread_exit(status)&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Returns &lt;code&gt;status&lt;/code&gt; to a joining thread&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;pthread_join(thread_id, status)&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Block thread until thread with &lt;code&gt;thread_id&lt;/code&gt; terminates&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;pthread_yield()&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Synchronization API&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Mutex&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_lock(&amp;amp;mut);
-pthread_mutex_unlock(&amp;amp;mut)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Monitor&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;int x,y;
-pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER; 
-pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
-
-pthread_mutex_lock(&amp;amp;mut); 
-while (x &amp;lt;= y) {
-    pthread_cond_wait(&amp;amp;cond, &amp;amp;mut); 
-}
-/* operate on x and y */ 
-pthread_mutex_unlock(&amp;amp;mut);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;pthread_mutex_lock(&amp;amp;mut);
-/* modify x and y */
-if (x &amp;gt; y) 
-    pthread_cond_signal(&amp;amp;cond); 
-pthread_mutex_unlock(&amp;amp;mut);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Semaphores&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;sem_t sem name;
-sem_init(&amp;amp;sem_name, 0, 0); // (_, flag, init value)
-sem_wait(&amp;amp;sem_name);
-sem_post(&amp;amp;sem);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Related Articles&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.cs.rutgers.edu/%7Epxk/416/notes/04-processes.html&quot;&gt;Processes - Process Creation and States.&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Sun, 23 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/os/2016/10/23/operating-system-unix-and-pthread.html</link>
-        <guid isPermaLink="true">/blog/notes/os/2016/10/23/operating-system-unix-and-pthread.html</guid>
-        
-        <category>OS</category>
-        
-        <category>ECE344</category>
-        
-        <category>unix</category>
-        
-        <category>pthread</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>OS</category>
-        
-      </item>
-    
-      <item>
-        <title>Operating System - Threads</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Threads and Processes&lt;/li&gt;
-&lt;li&gt;Thread Scheduling&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Threads and Processes&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;When a &lt;strong&gt;program&lt;/strong&gt; runs, it is called a &lt;code&gt;process&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;OS maintains states for each abstraction:
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Thread(CPU) state&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Registers, PC, SP, ...&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Address Space (memory) state&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Program instructions, static &amp;amp; dynamic data, ...&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Device &amp;amp; other state&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Open files, network connection state, ...&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Threads&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Abstraction of &lt;strong&gt;virtualizing CPU&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Each &lt;code&gt;thread&lt;/code&gt; thinks it has its own set of &lt;code&gt;CPU registers&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;# of &lt;code&gt;threads&lt;/code&gt; arbitrary; # of &lt;code&gt;CPUs&lt;/code&gt; fixed&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Enables &lt;strong&gt;concurrency&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Running multiple programs concurrently&lt;/li&gt;
-&lt;li&gt;Running multiple tasks concurrently
-
-&lt;ul&gt;
-&lt;li&gt;Hiding I/O latency
-
-&lt;ul&gt;
-&lt;li&gt;Can use &lt;code&gt;non-blocking file I/O&lt;/code&gt; (&lt;code&gt;event-driven&lt;/code&gt;), but harder to get right because need to build a state machine&lt;/li&gt;
-&lt;li&gt;~ &lt;code&gt;interrupts&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Run truly in parallel with multiple &lt;code&gt;CPUs&lt;/code&gt; via &lt;code&gt;multiplexing&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Threads v.s. Functions&lt;/strong&gt;&lt;/p&gt;
-
-&lt;table&gt;&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;Threads&lt;/th&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;Functions&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Independent streams of execution, one thread no need to run to the end before switching&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;LIFO policy, functions runs untill the end&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Thread scheduler multiplexes the threads on CPU&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;One function calls another function&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Each thread has its own stack, calling its own set of functions&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Running on a single stack&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Runs in parallel with multiprocessors&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Cannot run in parallel with multiprocessors because functions stack together&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;&lt;/table&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Address Space&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Abstraction of &lt;strong&gt;virtualizing memory&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;A set of &lt;em&gt;virtual memory regions&lt;/em&gt; accessible to a program
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Text&lt;/code&gt;: program code&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Data&lt;/code&gt;, &lt;code&gt;Heap&lt;/code&gt;: static, dynamic variables&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Stack&lt;/code&gt;: for function &amp;amp; system calls&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Provides &lt;strong&gt;memory protection&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Address space (order may vary with different H/W &amp;amp; compiler environment)&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;        +++++++++++++++ ----
-        |    param    |  |
-        +++++++++++++++  |
-        |   ret val   |  |
-        +++++++++++++++  |
-        |   ret addr  |  |  activation frame
-        +++++++++++++++  |  for current function
-  fp -&amp;gt; |   prev fp   |  |
-        +++++++++++++++  |
-        |  other regs |  |
-        +++++++++++++++  |
-  sp -&amp;gt; |  local var  |  |      # function call:
-        +++++++++++++++ ----    # push %rbp; save old fp
-        |      ↓      |         # mov %rbp %rsp; init sp to fp
-        |             |         # retq; call *sp
-        |      ↑      |
-        +++++++++++++++         # return:
-        |    data     |         # add $24 %rsp; pop off stack
-        +++++++++++++++         # pop %rbp; fp=*sp (or *fp), sp++
-        |    text     |         # retq; call *sp
-        +++++++++++++++
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Processes&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;A running program consistes of &amp;gt;= 1 processes
-
-&lt;ul&gt;
-&lt;li&gt;Traditionally:
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;process = addr space + thread&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Threads&lt;/code&gt; communicate using &lt;code&gt;system calls&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Today:
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;process = addr space + &amp;gt;= 1 threads&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Threads&lt;/code&gt; share &lt;code&gt;addr space&lt;/code&gt; (but not &lt;code&gt;stack&lt;/code&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Threads&lt;/code&gt; communicate with &lt;code&gt;reading/writing memory&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Speed up cases analysis:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Vector operation
-for (k = 0; k &amp;lt; n; k++)
-    a[k] = b[k]*c[k] + d[k]*e[k];
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;Multiple processes?
-
-&lt;ul&gt;
-&lt;li&gt;Communicate with &lt;code&gt;system call&lt;/code&gt;...&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Multiple threads?
-
-&lt;ul&gt;
-&lt;li&gt;Must make it global to share data&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;On single processor?
-
-&lt;ul&gt;
-&lt;li&gt;Threads go one after another&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;On multiprocessor?
-
-&lt;ul&gt;
-&lt;li&gt;O&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Web server
-Loop:
-    1. get network message from client -&amp;gt; I/O
-    2. get URL data form disk, cache in memory -&amp;gt; I/O
-    3. compose response
-    4. send response -&amp;gt; I/O
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;Multiple processes?
-
-&lt;ul&gt;
-&lt;li&gt;Cannot share the cache (stored in global resource area of that process)&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Multiple threads?
-
-&lt;ul&gt;
-&lt;li&gt;O&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;On single processor?
-
-&lt;ul&gt;
-&lt;li&gt;O&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;On multiprocessor?
-
-&lt;ul&gt;
-&lt;li&gt;O&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Threads v.s. Processes&lt;/strong&gt;&lt;/p&gt;
-
-&lt;table&gt;&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;&lt;/th&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;Threads&lt;/th&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;Processes&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Memory needed&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Shared, less&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Not shared, more&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Communication &amp;amp; Synchronization&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Via &lt;strong&gt;shared vars&lt;/strong&gt;, faster&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Via &lt;strong&gt;system calls&lt;/strong&gt;, slower&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Switching&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Save &amp;amp; restore regs, faster&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Change MMU&amp;#39;s regs (e.g. base &amp;amp; limit), slower&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Robustness&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Memory sharing -&amp;gt; bugs&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Communication explicit -&amp;gt; robust&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;&lt;/table&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Program v.s. Process&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Program&lt;/strong&gt;: a set of instructions &amp;amp; data&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Process&lt;/strong&gt;: a program loaded in memory and executing&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;OS-Level Process State&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;OS keeps state for each process: &lt;code&gt;process state&lt;/code&gt;, &lt;code&gt;process control block (PCB)&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Thread state&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Processor regs&lt;/code&gt; for resuming/suspending thread&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Thread id&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Various &lt;code&gt;parameters&lt;/code&gt; e.g. scheduling parameters&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Address space state&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Location of &lt;code&gt;text&lt;/code&gt;, &lt;code&gt;data&lt;/code&gt;, &lt;code&gt;stack&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;MMU virtual memory state&lt;/code&gt; i.e. virtual -&amp;gt; physical mapping&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Device related state&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Open files, network connections&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Other states&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Terminal state, pending signals, timers, swap, ...&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Thread Scheduling&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Thread&lt;/code&gt;: an independent stream of instructions
-
-&lt;ul&gt;
-&lt;li&gt;Which to choose?&lt;/li&gt;
-&lt;li&gt;When to switch?&lt;/li&gt;
-&lt;li&gt;How to switch?&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Thread scheduling&lt;/code&gt;: running threads in some order
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Thread state&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Running&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Ready&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Blocked&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Exited&lt;/code&gt; (not yet destroyed)&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Scheduling policies&lt;/code&gt; to change states&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Thread scheduling functions&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;thread_yield&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Running -&amp;gt; Ready&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;thread_sleep&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Running -&amp;gt; Blocked&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;thread_wakeup&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Blocked -&amp;gt; Ready&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Preemptive scheduling&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Scheduler&lt;/code&gt; uses &lt;code&gt;timer interrupt&lt;/code&gt; to control threads&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Interrupt handler&lt;/code&gt; calls yield on behalf of running thread
-
-&lt;ul&gt;
-&lt;li&gt;Normally &lt;code&gt;interrupt handler&lt;/code&gt; returns to original call; here, it calls &lt;code&gt;thread_yield()&lt;/code&gt; instead&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Scheduler implementation
-
-&lt;ul&gt;
-&lt;li&gt;Thread structures maintained in &lt;code&gt;queues&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Ready queue&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Generally 1 per CPU&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Wait queue&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Separate &lt;code&gt;wait queues&lt;/code&gt; for each type of event e.g. disk, console, timer, network, ...&lt;/li&gt;
-&lt;li&gt;Generally shared by CPUs&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Exited queue&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Generally shared by CPUs&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Scheduling functions&lt;/code&gt; move &lt;code&gt;threads&lt;/code&gt; between &lt;code&gt;queues&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Thread &amp;amp; Context Switch&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;context switch&lt;/code&gt; (&lt;code&gt;process switch&lt;/code&gt;) = &lt;code&gt;thread switch&lt;/code&gt; + &lt;code&gt;address space switch&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Address space switch&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Updating &lt;code&gt;MMU&amp;#39;s&lt;/code&gt; registers&lt;/li&gt;
-&lt;li&gt;More expensive than &lt;code&gt;thread switch&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Context switch&lt;/code&gt; v.s. &lt;code&gt;Mode switch&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Unrelated; the former switch threads, the latter switch CPU modes&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Functions&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;thread_yield&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;thread_yield() {
-    enqueue_ready_queue(current)
-    next = choose_next_thread()
-    thread_switch(current, next)
-}
-thread_switch(current, next) {
-    save_processor_state(current-&amp;gt;cpu_regs)
-    ...
-    restore_processor_state(next-&amp;gt;cpu_regs)
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;thread_init&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Create the first (main) thread&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;thread_create&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Allocate thread struct, stack memory, init PC, SP&lt;/li&gt;
-&lt;li&gt;Add to ready queue&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Thread Creation &amp;amp; Termination&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Functions
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;thread_exit&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Does not destroy itself; switch to another thread and it will destroy this thread&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;thread_destroy&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Actually destroy thread structure &amp;amp; stack of exited threads&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Kernel Threads v.s. User Threads&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;table&gt;&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;&lt;/th&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;Kernel Threads&lt;/th&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;User Threads&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Implementation scope&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Implemented in kernel&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Implemented in user program&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Virtualization&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Virtualize CPU&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Virtualize kernel thread&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Switching cost&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Must run kernel code, expensive&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;~procedure calls, less expensive&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Scheduling policy&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Fixed&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Custom definition&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Blocking system calls&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Switch to another kernel thread&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;All threads (associated with the same kernel thread) block -&amp;gt; overlap of I/O &amp;amp; computations impossible&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Multiprocessors&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Threads use multiple CPUs concurrently&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Cannot use multiple CPUs consurrently&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;&lt;/table&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Kernel level scheduler&lt;/code&gt; doesn&amp;#39;t know about &lt;code&gt;user threads&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;&lt;strong&gt;Quick Questions&lt;/strong&gt;&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Is the OS code run in a separate process? A separate thread? Does it need a process structure?
-
-&lt;ul&gt;
-&lt;li&gt;OS code runs when a process makes a system call or when an interrupt occurs. In either case, the OS generally runs in the thread and address space context of the user process, and hence it does not require its own process or thread state.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;What is the address space of an OS?
-
-&lt;ul&gt;
-&lt;li&gt;The entire physical memory&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2&gt;Related Articles&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.quora.com/How-does-thread-switching-differ-from-process-switching&quot;&gt;Thread Switching v.s. Process Switching&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Sun, 23 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/os/2016/10/23/operating-system-threads.html</link>
-        <guid isPermaLink="true">/blog/notes/os/2016/10/23/operating-system-threads.html</guid>
-        
-        <category>OS</category>
-        
-        <category>ECE344</category>
-        
-        <category>threads</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>OS</category>
         
       </item>
     

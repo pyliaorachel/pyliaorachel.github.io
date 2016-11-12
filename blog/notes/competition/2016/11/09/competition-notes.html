@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>MyCoon Tutorial - Categories</title>
+		<title>Competition Notes</title>
 		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
 		<link rel="stylesheet" href="/css/main.css" type="text/css">
 		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
@@ -92,39 +92,85 @@
 		</div><!-- /.navbar-collapse -->
 	</div><!-- /.container-fluid -->
 </nav>
-		<main class="page-content blog" aria-label="Content">
-	<div class="blog-wrapper">
+		<main class="page-content post" aria-label="Content">
+	<div class="post-wrapper">
+		<div class="wrapper">
+	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
+
+		<header class="post-header">
+			<h1 class="post-title" itemprop="name headline">Competition Notes</h1>
+			<p class="post-meta">Nov 9, 2016
+				 • Notes
+				 • pyliaorachel
+			</p>
+		</header>
+
 		
-<div class="blog-wrapper">
 
-	<div class="non-excerpt-page">
+		<span class="separator"> • • • </span>
 
-		
+		<div class="post-content" itemprop="articleBody">
+			<h2>Content</h2>
 
-		
+<p>Notes for coding competitions.</p>
 
-		
+<!--more-->
 
-		<h1 class="title-text">Categories</h1>
-		
-			<div class="wrapper">
+<hr>
 
-	<div class="no-post">
-		<div class="alert-emoji">
-			(;´༎ຶД༎ຶ`)
+<h2>Complexity</h2>
+
+<h3>TLE</h3>
+
+<p><code>10^8</code> int operations/<code>10^7</code> floating point operations in a for loop run in around <strong>1 sec</strong>.</p>
+
+<ul>
+<li>n = 20: exponential ok</li>
+<li>n = 100: <code>O(n^3)</code> ok</li>
+<li>n = 1000: <code>O(n^2)</code> ok</li>
+<li>n = 10^4: <code>n*polylog(n)</code> ^ <code>n*sqrt(n)</code> ok</li>
+<li>n = 10^5: <code>nlogn</code> ok</li>
+<li>n = 10^6: <code>O(n)</code> ok</li>
+<li>n = 10^9: <code>O(logn)</code> ok</li>
+</ul>
+
+<h2>Online Resource</h2>
+
+<h3>Data Structure</h3>
+
+<p><a href="http://acm.timus.ru/problemset.aspx?space=1&amp;tag=structure">Timus OJ</a></p>
+
 		</div>
-		<h1 class="msg">
-			No tutorials now. Do come back later!
-		</h1>
 
-	</div>
+		<ul class="tag-list">
+			
 
+			<li class="tag">
+				competition
+			</li>
+
+			
+		</ul>
+
+	</article>
+
+	
+		<div id="disqus_thread"></div>
+<script>
+	var disqus_config = function () {
+	    this.page.url = "https://pyliaorachel.github.io";
+	    this.page.identifier = "/blog/notes/competition/2016/11/09/competition-notes.html";
+	};
+	(function() {
+	    var d = document, s = d.createElement('script');
+	    s.src = '//pyliaorachel.disqus.com/embed.js';
+	    s.setAttribute('data-timestamp', +new Date());
+	    (d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	
 </div>
-		
-	</div>
-
-</div>
-
 	</div>
 </main>
 		<footer>

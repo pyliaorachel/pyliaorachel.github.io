@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Network Flow</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="/css/main.css" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
+		<link rel="stylesheet" href="/css/github-markdown.css">
+
+		<!-- Place jquery before bootstrap -->
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">MyCoon</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+
+			<form class="navbar-form navbar-left">
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Search">
+				</div>
+				<button type="submit" class="btn btn-default">Submit</button>
+			</form>
+
+			<ul class="nav navbar-nav navbar-right" id="nav-links">
+				<li class="nav-home"><a href="/">Home</a></li>
+				<li class="dropdown nav-blog">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Blog<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/blog">MyCoon Blog</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/blog/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/blog/notes">
+									<span>Notes</span>
+									<span>21</span>
+								</a>
+							</li>
+						
+							
+							
+							<li class="category">
+								<a href="/blog/tech">
+									<span>Tech</span>
+									<span>1</span>
+								</a>
+							</li>
+						
+						<li><a href="/blog/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li class="dropdown nav-tutorial">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Tutorials<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/tutorial">MyCoon Tutorial</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/tutorial/categories">Categories</a></li>
+						
+							
+						
+
+						
+						<li><a href="/tutorial/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li  class="nav-project"><a href="/project">Projects</a></li>
+				<li class="nav-special" id="special"><a href="#">?</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+		<main class="page-content post" aria-label="Content">
+	<div class="post-wrapper">
+		<div class="wrapper">
+	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
+
+		<header class="post-header">
+			<h1 class="post-title" itemprop="name headline">Network Flow</h1>
+			<p class="post-meta">Nov 9, 2016
+				 • Notes
+				 • pyliaorachel
+			</p>
+		</header>
+
+		
+
+		<span class="separator"> • • • </span>
+
+		<div class="post-content" itemprop="articleBody">
+			<h2>Content</h2>
+
+<ol>
+<li>Flow Network Overview</li>
+<li>Maximum-Flow Problem
+
+<ol>
+<li>Residual Graph</li>
+<li>Implementation (Ford-Fulkerson Algorithm)</li>
+<li>Analysis</li>
+<li>Max-Flow Min-Cut Theorem</li>
+<li>Choosing Good Augmenting Paths</li>
+</ol></li>
+<li>Extensions to Max-Flow Problem
+
+<ol>
+<li>Circulations with Demands</li>
+<li>Circulations with Demands &amp; Lower Bounds</li>
+</ol></li>
+<li>Bipartite Matching</li>
+<li>Image Segmentation</li>
+<li>Project Selection</li>
+<li>Baseball Elimination</li>
+</ol>
+
+<!--more-->
+
+<hr>
+
+<h3><strong>Flow Network Overview</strong></h3>
+
+<ul>
+<li>Components
+
+<ul>
+<li><strong>Capacities</strong></li>
+<li><strong>Source nodes</strong></li>
+<li><strong>Sink nodes</strong></li>
+<li><strong>Traffic</strong></li>
+</ul></li>
+<li><p>Graph representation</p>
+<div class="highlight"><pre><code class="language-" data-lang="">G = (V,E)
+edge ce = capacity where ce &gt;= 0
+source node s ∈ V
+sink node t ∈ V
+internal nodes = all other nodes
+</code></pre></div></li>
+<li><p>Assumptions</p>
+
+<ul>
+<li>No edge enters <code>s</code> &amp; no edge leaves <code>t</code></li>
+<li>At least 1 edge incident to each node</li>
+<li><code>c</code> is int</li>
+</ul></li>
+<li><p>Flow conditions &amp; notations</p>
+
+<ul>
+<li><code>f(e)</code> satisfies:
+
+<ol>
+<li><code>0 &lt;= f(e) &lt;= ce</code> for all edges</li>
+<li><code>sum_e_into_v(f(e)) = sum_e_outof_v(f(e))</code> for all internal nodes</li>
+</ol></li>
+<li><code>v(f)</code> denotes <strong>amount of flow generated at source</strong>
+
+<ul>
+<li><code>sum_e_outof_s(f(e))</code></li>
+</ul></li>
+<li><code>f_out(v)</code> = <code>sum_e_outof_v(f(e))</code>; <code>f_in(v)</code> = <code>sum_e_into_v(f(e))</code> </li>
+</ul></li>
+</ul>
+
+<h3><strong>Maximum-Flow Problem</strong></h3>
+
+<p>Given a flow network, find a flow of max possible value.</p>
+
+<h4>Residual Graph</h4>
+
+<ul>
+<li>A graph indicating additional possible flow. If there is a path from source to sink in residual graph, then it is possible to add flow. </li>
+<li>Every edge of a residual graph has a value <code>residual capacity = original capacity of the edge - current flow</code>. Residual capacity is basically the current capacity of the edge.</li>
+</ul>
+
+<h4>Implementation (Ford-Fulkerson Algorithm)</h4>
+
+<p><a href="https://www.youtube.com/watch?v=-8MwfgB-lyM">Video</a></p>
+
+<ol>
+<li>Initial flow <code>f</code> = 0</li>
+<li>Find an augmenting path <code>P</code> from <code>s</code> to <code>t</code></li>
+<li>Augment the path <code>P</code> with flow <code>f</code>, return new flow <code>f&#39;</code>
+
+<ol>
+<li>Let <code>b = bottleneck(P,f)</code></li>
+<li>For each edge <code>e = (u,v)</code> of <code>P</code>:
+
+<ul>
+<li>If <em>forward edge</em>, <code>f(e) += b</code></li>
+<li>If <em>backward edge</em>, <code>f(e=(v,u)) -= b</code></li>
+</ul></li>
+<li>return updated f</li>
+</ol></li>
+<li>Update <code>f</code> to <code>f&#39;</code></li>
+<li>Update residual graph <code>Gf</code> to <code>Gf&#39;</code>
+
+<ol>
+<li>Node set the same</li>
+<li>For each edge <code>e = (u,v)</code> of <code>Gf</code>, <code>f(e) &lt; ce</code>:
+
+<ul>
+<li>Push <code>e = (u,v)</code> with capacity <code>ce - f(e)</code> (<em>forward edges</em>)</li>
+<li>Push <code>e&#39; = (v,u)</code> with capacity <code>f(e)</code> (<em>backward edges</em>)</li>
+</ul></li>
+</ol></li>
+<li>Repeat until no path found</li>
+</ol>
+<div class="highlight"><pre><code class="language-" data-lang="">augment(f,P):
+    Let b = bottleneck(P,f) 
+    For each edge (u,v) ∈ P:
+        If e = (u,v) is a forward edge: 
+            increase f(e) in G by b
+        Else: # ((u, v) is a backward edge, and let e = (v, u)) 
+            decrease f(e) in G by b
+    Return f
+
+Max-Flow():
+    Initially f(e) = 0 for all e in G
+    While there is an s-t path in the residual graph Gf:
+        Let P be a simple s-t path in Gf
+        f' = augment(f,P)
+        Update f to be f'
+        Update the residual graph Gf to be Gf'
+    Return f
+</code></pre></div>
+<h4>Analysis</h4>
+
+<ul>
+<li>Termination
+
+<ul>
+<li>At every intermediate stage of the Ford-Fulkerson Algorithm, the flow values {<code>f(e)</code>} and the <strong>residual capacities in Gf are integers</strong>.</li>
+<li>The flow value strictly increases when we apply an augmentation, since we add <code>bottleneck &gt; 0</code>.</li>
+<li>Upper bound: <code>f_out(s)</code>.</li>
+<li>Hence the algorithm runs for at most <code>f_out(s)</code> iterations.</li>
+</ul></li>
+<li>Runtime
+
+<ul>
+<li>Let <code>m = |E|</code>, <code>n = |V|</code>, <code>C = f_out(s)</code></li>
+<li><code>m &gt;= n/2</code> since all nodes have at least 1 incident edge, so <code>O(m+n) = O(m)</code></li>
+<li>BFS/DFS: <code>O(m+n) = O(m)</code></li>
+<li><code>augment</code>: <code>O(n)</code></li>
+<li>Build new residual graph: <code>O(m)</code></li>
+<li>Overall <code>O(mC)</code></li>
+</ul></li>
+</ul>
+
+<h4>Max-Flow Min-Cut Theorem</h4>
+
+<p>In every flow network, the maximum value of an s-t flow is equal to the minimum capacity of an s-t cut.</p>
+
+<ul>
+<li>Cut
+
+<ul>
+<li>Divide nodes into 2 sets <code>A</code> &amp; <code>B</code> s.t. <code>s ∈ A</code> and <code>t ∈ B</code>. Any flow going from <code>s</code> to <code>t</code> must cross from <code>A</code> into <code>B</code> at some point and use up some of the edge capacity from <code>A</code> to <code>B</code>.</li>
+<li><strong>Cut</strong> puts bound on max flow
+
+<ul>
+<li><strong>Minimum cut</strong>: the minimum capacity of any division, which equals the max flow</li>
+</ul></li>
+</ul></li>
+<li><p>Facts</p>
+
+<ol>
+<li><p>Let <code>f</code> be any s-t flow, and <code>(A, B)</code> any s-t cut. Then<br>
+<code>v(f) = f_out(A) − f_in(A)</code> and<br>
+<code>v(f) = f_in(B) − f_out(B)</code></p>
+<div class="highlight"><pre><code class="language-" data-lang="">v(f) = f_out(s) - f_in(s)
+     = sum_v_in_A(f_out(v) - f_in(v)) # f_out(v) - f_in(v) = 0 for internal nodes
+     = sum_e_outof_A(f(e)) - sum_e_into_A(f(e))
+     = f_out(A) - f_in(A)
+f_out(A) = f_in(B); f_in(A) = f_out(B)
+</code></pre></div></li>
+<li><p>Let <code>f</code> be any s-t flow, and <code>(A,B)</code> any s-t cut. Then<br>
+<code>v(f) &lt;= c(A,B)</code>, where <code>c(A,B) = sum_e_outof_A(ce)</code></p>
+<div class="highlight"><pre><code class="language-" data-lang="">v(f) = f_out(A) − f_in(A)
+     ≤ f_out(A) # f_in(A) &gt;= 0
+     = sum_e_outof_A(f(e))
+     ≤ sum_e_outof_A(ce)
+     = c(A,B)
+</code></pre></div>
+<p>=&gt; Any flow is upper-bounded by the capacity of every cut</p></li>
+<li><p>Let <code>f</code> be an s-t flow s.t. no s-t path in the residual graph <code>Gf</code>. Then there is an s-t cut <code>(A*,B*)</code> in <code>G</code> where <code>v(f) = c(A*,B*)</code>.  </p>
+<div class="highlight"><pre><code class="language-" data-lang="">Let A* be a set of nodes in G where there is a s-v path in Gf
+Let B* = V - A*
+v(f) = f_out(A*) − f_in(A*)
+     = sum_e_outof_A*(f(e)) − sum_e_into_A*_f(e)
+     = sum_e_outof_A*(ce) - 0 # f(e) = ce
+     = c(A*,B*)
+</code></pre></div></li>
+<li><p>The flow <code>f</code> returned by Ford-Fulkerson is max flow.  </p>
+<div class="highlight"><pre><code class="language-" data-lang="">Let f* be max flow, (A*,B*) be min cut
+Then there exists a flow f s.t. v(f) = c(A,B) by 3.
+And by 2., v(f) = c(A,B) &lt;= c(A*,B*)
+Hence A = A*, B = B* because c(A*,B*) should be minimum
+And by 2., v(f*) &lt;= c(A*,B*) = v(f)
+Hence f = f* because v(f*) should be maximum
+</code></pre></div></li>
+<li><p>Given a max flow, we can compute an s-t min cut in <code>O(m)</code> time by constructing the residual graph and perform BFS/DFS to find <code>A*</code> &amp; <code>B*</code>.</p></li>
+<li><p>If all capacities in the flow network are integers, then there is a max flow <code>f</code> where every flow value <code>f(e)</code> is an integer.</p></li>
+</ol></li>
+</ul>
+
+<h5>Notes</h5>
+
+<ul>
+<li>With <strong>rational numbers</strong>:
+
+<ul>
+<li>Multiply all by least common multiple of all capacities</li>
+</ul></li>
+<li>With <strong>real numbers</strong>:
+
+<ul>
+<li>May not terminate, since the progress we make at each iteration can be small</li>
+<li><strong>Max-flow min-cut theorm</strong> still holds</li>
+</ul></li>
+</ul>
+
+<h4>Choosing Good Augmenting Paths</h4>
+
+<h5>Idea 1</h5>
+
+<p>Find the path with <code>large bottleneck capacity</code>.<br>
+Maintain a <strong>scaling parameter <code>sp</code></strong> and look for paths having bottleneck of <em>at least <code>sp</code></em>.  </p>
+
+<ul>
+<li><p>Implementation</p>
+<div class="highlight"><pre><code class="language-" data-lang="">Scaling Max-Flow():
+    Initially f(e) = 0 for all e in G
+    Initially set sp = largest power of 2 &lt;= max_e_outof_s(ce) 
+
+    While sp &gt;= 1:
+        While there is an s-t path in the graph Gf(sp):
+            Let P be a simple s-t path in Gf(sp)
+                f' = augment(f,P)
+                Update f to be f'
+                Update Gf(sp)
+        sp /= 2
+    Return f
+</code></pre></div></li>
+<li><p>Runtime</p>
+
+<ul>
+<li>Outer <code>While</code> loop (scaling phase): at most <code>1 + logC</code> where <code>C = sum_e_outof_s(ce)</code></li>
+<li>During the scaling phase, each augmentation increases the flow by at least <code>sp</code></li>
+<li><p><code>v(f) &gt;= max flow - m*sp</code> where <code>f = flow at the end of scaling phase</code> and <code>m = |E|</code>  </p>
+<div class="highlight"><pre><code class="language-" data-lang="">f(e) &gt; ce - sp for e = (u,v) which u ∈ A and v ∈ B
+f(e) ≥ sp for e = (u,v) which u ∈ B and v ∈ A
+
+v(f) = sum_e_outof_A(f(e)) − sum_e_into_A(f(e))
+     ≥ sum_e_outof_A(ce - sp) - sum_e_into_A(sp)
+     = c(A,B) - m*sp
+</code></pre></div></li>
+<li><p># of augmentations in a scaling phase is at most <code>2m</code></p>
+<div class="highlight"><pre><code class="language-" data-lang="">v(f*) &lt;= v(f_prev) + m*sp = v(f_prev) + 2m*sp_prev
+Each augmentation increases the flow by &gt;= sp_prev
+So at most 2m augmentations
+</code></pre></div></li>
+<li><p>Augmentation: <code>O(m)</code> time; <code>1 + logC</code> scaling phases; <code>2m</code> augmentations each phase =&gt; <code>O(m^2 logC)</code></p></li>
+<li><p>Scaling: polynomial in size of input (# of edges &amp; numerical representation of capacities)<br>
+Original: polynomial in magnatude of capacities</p></li>
+</ul></li>
+</ul>
+
+<h5>Idea 2</h5>
+
+<p>Choose path with <strong>fewest number of edges</strong>.</p>
+
+<h3><strong>Extensions to Max-Flow Problem</strong></h3>
+
+<h4>Circulations with Demands</h4>
+
+<p>Multiple sources &amp; sinks with fixed supply/demand values.</p>
+
+<ul>
+<li>Demands
+
+<ul>
+<li><code>dv &gt; 0</code>: <code>v</code> wish to receive <code>dv</code> more flow than it sends out (<strong>sink</strong>)</li>
+<li><code>dv &lt; 0</code>: <code>v</code> wish to send out <code>dv</code> more flow than it receives (<strong>source</strong>)</li>
+<li><code>dv = 0</code>: not source nor sink</li>
+</ul></li>
+<li>Conditions
+
+<ol>
+<li><code>0 &lt;= f(e) &lt;= ce</code> for all edges</li>
+<li><code>sum_e_into_v(f(e)) = sum_e_outof_v(f(e))</code> for all internal nodes</li>
+<li><strong>All demands satisfied</strong></li>
+<li>Total supply = total demand<br>
+<code>sum_v(dv) = sum_v(f_in(v)) - sum_v(f_out(v)) = 0</code><br>
+<code>sum_v_dv&gt;0(dv) = sum_v_dv&lt;0(-dv)</code></li>
+</ol></li>
+<li>Conversion to Max-Flow Problem
+
+<ul>
+<li>Create super-source <code>s*</code> connecting each node in <code>S</code>; create super-sink <code>t*</code> connecting each node in <code>T</code></li>
+<li>A feasible circulation is found iff max s*-t* flow has value <code>D</code>, where <code>D = max capaxity from s*/to t*</code></li>
+<li>Graph G has a feasible circulation with demands <code>{dv}</code> if and only if for all cuts (A,B):<br>
+<code>sum_v_in_B(dv) &lt;= c(A,B)</code></li>
+</ul></li>
+</ul>
+
+<h4>Circulations with Demands &amp; Lower Bounds</h4>
+
+<p>Enforce flow to use certain edges - place <strong>lower bounds</strong> on edges.</p>
+
+<ul>
+<li>Conditions
+
+<ol>
+<li><code>le &lt;= f(e) &lt;= ce</code> for all edges, where <code>le</code> is the lower bound</li>
+<li><code>sum_e_into_v(f(e)) = sum_e_outof_v(f(e))</code> for all internal nodes</li>
+<li><strong>All demands satisfied</strong></li>
+<li>Total supply = total demand<br>
+<code>sum_v(dv) = sum_v(f_in(v)) - sum_v(f_out(v)) = 0</code><br>
+<code>sum_v_dv&gt;0(dv) = sum_v_dv&lt;0(-dv)</code></li>
+</ol></li>
+<li>Conversion to Max-Flow Problem
+
+<ul>
+<li>Let capacities of edges be <code>ce - le</code></li>
+<li>Let demands of nodes be <code>dv - Lv</code>, where <code>Lv = sum_e_into_v(le) - sum_e_outof_v(le)</code></li>
+<li>There is a feasible circulation in <code>G</code> iff there is a feasible circulation in <code>G&#39;</code>, where <code>G</code> is the original graph, <code>G&#39;</code> is the converted one</li>
+</ul></li>
+</ul>
+
+<h3><strong>Bipartite Matching</strong></h3>
+
+<ul>
+<li>Max-flow problem property: <strong>if all edge capacities are integers, then the optimal flow found by our algorithm is integral.</strong></li>
+<li>Idea
+
+<ul>
+<li>Connect nodes from 1 set to <code>s</code> with capacity 1</li>
+<li>Connect nodes from another set to <code>t</code> with capacity 1</li>
+<li>Find max flow</li>
+</ul></li>
+</ul>
+
+<h3><strong>Image Segmentation</strong></h3>
+
+<p>Separate the foreground and background of an image.</p>
+
+<ul>
+<li><p>Goal</p>
+
+<ul>
+<li>Let <code>ai</code> be likelihood to foreground for pixel <code>i</code></li>
+<li>Let <code>bi</code> be likelihood to background for pixel <code>i</code></li>
+<li>Let <code>pij</code> be separation penalty</li>
+<li>Maximize <code>q(A,B) = sum_i_in_A(ai) + sum_j_in_B(bi) - sum_(i,j)_in_diff_set(pij)</code></li>
+</ul></li>
+<li><p>3 problems</p>
+
+<ol>
+<li>The goal is seeking to maximize an objective
+
+<ul>
+<li>Maximize<br>
+<code>q(A,B) = sum_i_in_A(ai) + sum_j_in_B(bi) - sum_(i,j)_in_diff_set(pij)</code><br>
+&lt;=&gt; Minimize<br>
+<code>q&#39;(A,B) = sum_i_in_A(bi) + sum_j_in_B(ai) + sum_(i,j)_in_diff_set(pij)</code></li>
+</ul></li>
+<li>No source &amp; sink
+
+<ul>
+<li>Create super-source <code>s*</code> for foreground &amp; super-sink <code>t*</code> for background</li>
+</ul></li>
+<li>Undirected graph
+
+<ul>
+<li>Model neighboring pair with 2 directed edges</li>
+</ul></li>
+</ol></li>
+<li><p>Graph representation</p>
+<div class="highlight"><pre><code class="language-" data-lang="">Edges (s,j), where j ∈ B; capacity = aj
+Edges (i,t), where i ∈ A; capacity = bi
+Edges (i,j), where i ∈ A and j ∈ B; capacity = p_ij
+
+c(A,B) = q'(A,B)
+</code></pre></div></li>
+</ul>
+
+<h3><strong>Project Selection</strong></h3>
+
+<p>A set of projects <code>P</code> has <em>revenue</em> <code>pi</code> being either positive or negative. Certain projects have <em>prerequisites</em> for other projects. Find a set of projects that maximizes the profits.</p>
+
+<ul>
+<li><p>Graph representation</p>
+<div class="highlight"><pre><code class="language-" data-lang="">Edges (s,i), where pi &gt; 0; capacity = pi
+Edges (i,t), where pi &lt; 0; capacity = -pi
+Edges (i,j), where i depends on j; capacity = inf
+
+Max flow C = sum_i_pi&gt;0(pi)
+Min cut (A',B'), where if i ∈ A has edge (i,j), j ∈ A
+Set of projects: A'-{s}, optimal
+</code></pre></div></li>
+<li><p>Optimality analysis</p>
+
+<p>Prove the min cut in <code>G&#39;</code> determines the optimum set of projects.  </p>
+
+<ul>
+<li>Capacity of cut <code>(A&#39;,B&#39;)</code> is <code>c(A&#39;,B&#39;) = C − sum_i_in_A(pi)</code></li>
+<li>If <code>(A&#39;, B&#39;)</code> is a cut with capacity &lt;= C, then set <code>A = A&#39; − {s}</code> satisfies the precedence constraints</li>
+<li>Hence <code>c(A&#39;,B&#39;) = C - profit(A)</code> and small cuts imply big profits</li>
+</ul></li>
+</ul>
+
+<h3><strong>Baseball Elimination</strong></h3>
+
+<p>A set of teams <code>S</code>, each has <code>wi</code> wins. Some games <code>g_xy</code> left. Check if team <code>z</code> has been eliminated.</p>
+
+<ul>
+<li><p>Averaging argument</p>
+<div class="highlight"><pre><code class="language-" data-lang="">Suppose z has indeed been eliminated. 
+Then:
+
+- z can finish with at most m wins.
+- There is a set of teams T ⊆ S s.t. 
+    sum_x_in_T(wx) + sum_x,y_in_T(gxy) &gt; m|T|
+
+Hence one of the teams in T must end with &gt; m wins.
+
+</code></pre></div></li>
+<li><p>Graph representation</p>
+<div class="highlight"><pre><code class="language-" data-lang="">Let u_xy be some games left between x &amp; y
+Let m be w_z + remaining_games_of_z
+Let g* be total number of games left
+
+Edges (s,u_xy), capacity = g_xy
+Edges (u_xy,vx), capacity = inf
+Edges (vx,t), capacity = m - wx
+
+Eliminate x iff max flow in G &lt; g* # else after g* games every team will have wins not exceeding m
+</code></pre></div></li>
+<li><p>Analysis</p>
+
+<ul>
+<li>If both <code>x</code>, <code>y</code> belong to <code>T</code>, then <code>u_xy ∈ A</code></li>
+<li><code>(A, B)</code> is a min cut: <code>u_xy ∈ A</code> iff both <code>x, y ∈ T</code></li>
+<li><p><code>T</code> can be used in the averaging argument   </p>
+<div class="highlight"><pre><code class="language-" data-lang="">c(A,B) = sum_x_in_T(m-wx) + sum_{x,y}_!in_T(g_xy)
+       = m|T| - sum_x_in_T(wx) + (g* - sum_x,y_in_T(g_xy))
+m|T| - sum_x_in_T(wx) - sum_x,y_in_T(g_xy) &lt; 0 # c(A,B) = g' &lt; g*
+
+sum_x_in_T(wx) + sum_x,y_in_T(g_xy) &gt; m|T|
+</code></pre></div></li>
+</ul></li>
+</ul>
+
+<h2>References</h2>
+
+<ul>
+<li><a href="http://www.geeksforgeeks.org/ford-fulkerson-algorithm-for-maximum-flow-problem/">GeeksForGeeks</a></li>
+</ul>
+
+		</div>
+
+		<ul class="tag-list">
+			
+
+			<li class="tag">
+				network flow
+			</li>
+
+			
+
+			<li class="tag">
+				algorithm
+			</li>
+
+			
+
+			<li class="tag">
+				CSC373
+			</li>
+
+			
+		</ul>
+
+	</article>
+
+	
+		<div id="disqus_thread"></div>
+<script>
+	var disqus_config = function () {
+	    this.page.url = "https://pyliaorachel.github.io";
+	    this.page.identifier = "/blog/notes/algorithm/2016/11/09/network-flow.html";
+	};
+	(function() {
+	    var d = document, s = d.createElement('script');
+	    s.src = '//pyliaorachel.disqus.com/embed.js';
+	    s.setAttribute('data-timestamp', +new Date());
+	    (d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	
+</div>
+	</div>
+</main>
+		<footer>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4 footer-link">
+				<a href="mailto:rachel5566kk@gmail.com">
+					<span class="icon icon-email">
+						<img src="/assets/svg/email-logo.svg" alt="Email Logo">
+					</span>
+					<span class="username">rachel5566kk@gmail.com</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://github.com/pyliaorachel"  target="_blank">
+					<span class="icon icon-github">
+						<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+					</span>
+					<span class="username">pyliaorachel</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://tw.linkedin.com/in/peiyu-liao" target="_blank">
+					<span class="icon icon-linkedin">
+						<img src="/assets/svg/linkedin-logo.svg" alt="LinkedIn Logo">
+					</span>
+					<span class="username">Peiyu Liao</span>
+				</a>
+			</div>
+		</div><!-- /.row -->
+		<div class="row">
+			<div class="footer-copy-right">
+				<p>2016	&copy; Liao Peiyu</p>
+			</div >
+		</div><!-- /.row -->
+	</div><!-- /.container-fluid -->
+</footer>
+		<script type="text/javascript" src="/js/main.js"></script>
+		<script type="text/javascript" src="/js/home.js"></script>
+		<script id="dsq-count-scr" src="//pyliaorachel.disqus.com/count.js" async></script>
+	</body>
+</html>

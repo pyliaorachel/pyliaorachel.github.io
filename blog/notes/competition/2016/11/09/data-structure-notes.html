@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Game Tree Search</title>
+		<title>Data Stucture Notes</title>
 		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
 		<link rel="stylesheet" href="/css/main.css" type="text/css">
 		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
@@ -98,8 +98,8 @@
 	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
 
 		<header class="post-header">
-			<h1 class="post-title" itemprop="name headline">Game Tree Search</h1>
-			<p class="post-meta">Oct 29, 2016
+			<h1 class="post-title" itemprop="name headline">Data Stucture Notes</h1>
+			<p class="post-meta">Nov 9, 2016
 				 • Notes
 				 • pyliaorachel
 			</p>
@@ -112,181 +112,222 @@
 		<div class="post-content" itemprop="articleBody">
 			<h2>Content</h2>
 
-<ol>
-<li>Game Overview
-
-<ol>
-<li>Game Properties</li>
-</ol></li>
-<li>Two-Player Zero-Sum Game
-
-<ol>
-<li>Definition</li>
-<li>Intuition</li>
-<li>MiniMax Strategy</li>
-<li>Real-Time/Online search</li>
-</ol></li>
-</ol>
+<p>Data stucture notes for coding competitions.</p>
 
 <!--more-->
 
 <hr>
 
-<h2>Game Overview</h2>
+<h2>BST</h2>
 
 <ul>
-<li>Generalization of Search Problems
+<li><code>map</code>
 
 <ul>
-<li><strong>Game tree</strong>: actions of &gt;= 1 players/agents</li>
-<li>Agents acting to <strong>maximize their profits</strong></li>
-<li>Others&#39; profits might not have positive effect on yours</li>
+<li>Dictionary</li>
+<li>Insertion, deletion, searching </li>
 </ul></li>
-<li>Key Features of Game
+<li><code>lower_bound</code>, <code>upper_bound</code>
 
 <ul>
-<li>Each player has different goal</li>
-<li>Different paths/states assigned different costs</li>
-<li>Each player tries to alter the world to best benefit itself</li>
+<li>Find element in range</li>
 </ul></li>
 </ul>
 
-<h3>Game Properties</h3>
+<p><a href="http://acm.timus.ru/problem.aspx?space=1&amp;num=1613">http://acm.timus.ru/problem.aspx?space=1&amp;num=1613</a>
+<a href="http://poj.org/problem?id=2418">http://poj.org/problem?id=2418</a></p>
+
+<h2>Monotone Queue</h2>
 
 <ul>
-<li>Two-player</li>
-<li>Discrete: game states or decision can be mapped on discrete values</li>
-<li>Finite: a finite # of states/decisions can be made</li>
-<li>Zero-sum (Fully Competitive): A gains = B loses
+<li>3 basic operations
 
 <ul>
-<li>Strategic/normal form game: one shot e.g. rock-paper-scissors</li>
-<li>Extensive form game: turn-taking, multiple moves</li>
+<li><code>push</code> in <code>O(1)</code></li>
+<li><code>pop</code> in <code>O(1)</code></li>
+<li><code>max</code>/<code>min</code> in <code>O(1)</code></li>
 </ul></li>
-<li>Deterministic: no chance involved</li>
-<li>Perfect Information: all aspects of the state are fully observable</li>
+<li>Implementation</li>
 </ul>
+<div class="highlight"><pre><code class="language-" data-lang="">Insert(k):
+    while (queue not empty) and (tail element &gt;= k):
+        discard tail
+    append k to tail
 
-<h2>Two-Player Zero-Sum Game</h2>
+Min():
+    return head of queue
+</code></pre></div>
+<p><a href="http://poj.org/problem?id=2823">http://poj.org/problem?id=2823</a></p>
 
-<h3>Definition</h3>
+<h2>Block List</h2>
 
 <ul>
-<li>2 players: <code>A</code>(Max), <code>B</code>(Min)</li>
-<li>States <code>S</code></li>
-<li>Initial state <code>I</code></li>
-<li>Terminal positions <code>T</code></li>
-<li>Successor functions
+<li>Structure
 
 <ul>
-<li>Input: a state</li>
-<li>Return: a set of possible next states</li>
+<li>Partition indices into <code>O(sqrt(n))</code> segments, each of length <code>O(sqrt(n))</code></li>
 </ul></li>
-<li>Utility/Payoff function <code>V: T -&gt; R</code>
+<li>3 basic operations
 
 <ul>
-<li>Mapping showing how good each terminal state is for A/how bad for B</li>
+<li><code>insert</code></li>
+<li><code>delete</code></li>
+<li>Range operation on <code>[i,j]</code> in <code>O(sqrt(n))</code></li>
 </ul></li>
+<li>Implementation</li>
 </ul>
+<div class="highlight"><pre><code class="language-" data-lang="">Insert(x):
+    # invariant: each segment has elements &gt;= L and &lt; 3L; OR only one segment &lt; 3L
 
-<h3>Intuition</h3>
+    locate segment S # O(sqrt(n))
+    brute force insertion on S # O(L)
+    if size(S) == 3L:
+        evenly split into 2 segments
+
+Delete(x):
+    locate segment S # O(sqrt(n))
+    brute force deletion on S # O(L)
+    if size(S) == L and S has adjacent segment:
+        combine 2 segments
+        evenly split into 2 segments
+
+# range operation
+# change &amp; sum as example
+
+## change [i,j] to x
+Change(i, j, x):
+    if i == l and j == r: # O(1)
+        b = true
+        y = x
+        s = x * (r - l + 1)
+    else: # O(L)
+        if b == true:
+            set every element in [l,r] to y
+            b = false
+        set every element in [i,j] to x
+        calculate s
+
+## query [i,j]
+Query(i, j):
+    if i == l and j == r: # O(1)
+        return s
+    else: # O(L)
+        if b == ture:
+            set every element in [l,r] to y
+            b = false
+        set every element in [i,j] to x
+        calculate s
+        return s
+</code></pre></div>
+<p><a href="http://poj.org/problem?id=3580">http://poj.org/problem?id=3580</a></p>
+
+<h2>Merge-find Set</h2>
+
+<p><a href="https://en.wikipedia.org/wiki/Disjoint-set_data_structure">Wiki</a></p>
 
 <ul>
-<li>Game ends when terminal <code>t ∊ T</code> reached</li>
-<li>Game state: state-player pair</li>
-<li><code>A</code> gets <code>V(t)</code>, <code>B</code> gets <code>-V(t)</code></li>
-</ul>
+<li>Structure
 
-<h3>MiniMax Strategy</h3>
+<ul>
+<li>A ground set <code>S</code></li>
+<li>A collection <code>C</code> of subsets of <code>S</code> where 2 different elements in <code>C</code> are disjoint</li>
+</ul></li>
+<li>3 basic operations
+
+<ul>
+<li><code>union</code>: union 2 subsets</li>
+<li><code>find</code>: find the subset a specific elememt is in</li>
+<li><code>test</code>: test where 2 elements are in the same subset</li>
+</ul></li>
+<li>Implementation (linear)</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">P: P[i] = parent of i in S
+F(P): forest difined by P
+
+Find(x):
+    while P[x] != x:
+        x = P[x]
+    return x # root
+
+Union(x):
+    P[Find(x)] = Find(y)
+
+Test(x, y):
+    return Find(x) == Find(y)
+</code></pre></div>
+<ul>
+<li>Implementation (optimized)</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">R: rank of element; init R = {0}
+
+Find(x): # path compression
+    if P[x] != x:
+        P[x] = Find(P[x])
+    return x
+
+Union(x): # union by rank
+    x' = Find(x)
+    y' = Find(y)
+    if R[x'] &lt; R[y']:
+        P[x'] = y'
+    elif R[x'] &gt; R[y']:
+        P[y'] = x'
+    else:
+        P[x'] = y'
+        R[y']++
+</code></pre></div>
+<h3>Extension 1: Maintaining the Difference</h3>
+
+<p>For each element <code>i</code>, <code>V[i]</code> is the underlying unknown integer. Information <code>V[j] - V[i] = k</code> comes.</p>
+
+<ul>
+<li>Problem
 
 <ol>
-<li>Build full game tree
-
-<ul>
-<li>Root: start state</li>
-<li>Edges: possible moves</li>
-<li>Leaves: terminals (utilities U(t) labeled)</li>
-</ul></li>
-<li>Back balues up the tree
-
-<ul>
-<li><code>U(n) = min{ U(c): c is a child of n if n is Min node }</code></li>
-<li><code>U(n) = max{ U(c): c is a child of n if n is Max node }</code></li>
-</ul></li>
-</ol>
-
-<ul>
-<li><code>O(b^d)</code> space</li>
+<li>Consistent with previously known information?</li>
+<li>If consistent, record the information</li>
+<li><code>V[j] - V[i]</code> uniquely determined?</li>
+<li>If unique, answer the value</li>
+</ol></li>
+<li>Implementation</li>
 </ul>
+<div class="highlight"><pre><code class="language-" data-lang="">D: difference; D[i] = V[i] - V[P[i]]; init D = {0}
 
-<h4>Depth-First Implementation</h4>
+Find(x):
+    if P[x] != x:
+        (P[x],d) = Find(P[x])
+        D[x] += d
+    return (x, D[x])
 
-<ul>
-<li>To avoid expanding the tree exponentially in size</li>
-<li>Need <strong>finite depth</strong></li>
-</ul>
-<div class="highlight"><pre><code class="language-" data-lang="">DFMiniMax(n, Player): //return Utility of state n given that Player is MIN or MAX
+Union(i, j, k): # V[i] - V[j] = k
+    (x',D[i]) = Find(i)
+    (y',D[j]) = Find(j)
+    if R[x'] &lt; R[y']:
+        P[x'] = y'
+        D[x'] = D[j] - D[i] - k
+    elif R[x'] &gt; R[y']:
+        P[y'] = x'
+        D[y'] = D[i] - D[j] - k
+    else:
+        P[x'] = y'
+        D[x'] = D[j] - D[i] - k
+        R[y']++r
 
-    If n is TERMINAL:
-        Return V(n) //Return terminal states utility (V is specified as part of game)
-
-    //Apply Player s moves to get successor states. 
-    ChildList = n.Successors(Player)
-
-    If Player == MIN:
-        return minimum of DFMiniMax(c, MAX) over c ∈ ChildList
-    Else: //Player is MAX
-        return maximum of DFMiniMax(c, MIN) over c ∈ ChildList
-</code></pre></div>
-<h4>Pruning</h4>
-
-<ul>
-<li>α-cuts(max node) &amp; β-cuts(min node)</li>
-</ul>
-<div class="highlight"><pre><code class="language-" data-lang="">AlphaBeta(n,Player,alpha,beta): //return Utility of state 
-
-    If n is TERMINAL:
-        return V(n) //Return terminal states utility 
-
-    ChildList = n.Successors(Player)
-
-    If Player == MAX:
-        v = -infinity
-        for c in ChildList:
-            v = max(v, AlphaBeta(c,MIN,alpha,beta)) 
-            alpha = max(v, alpha)
-            If beta &lt;= alpha:
-                break 
-        return v
-
-    Else: //Player == MIN 
-        v = infinity
-        for c in ChildList:
-            v = min(v, AlphaBeta(c,MAX,alpha,beta)) 
-            beta = min(v, beta)
-            If beta &lt;= alpha:
-                break 
-        return v
-
-// Initial call: AlphaBeta(START_NODE, PLAYER, -infinity, infinity)
 </code></pre></div>
 <ul>
-<li><code>O(b^d)</code> space if no pruning, <code>O(b^(d/2))</code> if optimal pruning
+<li><p>Apply the data structure</p>
 
 <ul>
-<li>Branching factor of 1st layer: B; 2nd: 1; 3rd: B; ...</li>
+<li>Provided <code>V[j] - V[i] = k</code>: <code>Union(i,j,k)</code></li>
+<li>Answer <code>V[j] - V[i]</code>: if <code>Test(i,j)</code> then <code>return D[j] - D[i]</code><br></li>
 </ul></li>
-<li>In practice, must make <strong>heuristic estimates</strong> of the terminal nodes -&gt; <strong>evaluation function</strong></li>
 </ul>
 
-<h3>Real-Time/Online search</h3>
+<p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=3038">http://acm.hdu.edu.cn/showproblem.php?pid=3038</a></p>
 
-<ol>
-<li>Run A* until out of memory</li>
-<li>Use <strong>evaluation function</strong> to decide which path looks best</li>
-<li>Make the move</li>
-<li>Restart search at the node reached (can be cached)</li>
-</ol>
+<h3>Extension 2: XOR</h3>
+
+<p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=3234">http://acm.hdu.edu.cn/showproblem.php?pid=3234</a></p>
 
 		</div>
 
@@ -294,19 +335,13 @@
 			
 
 			<li class="tag">
-				AI
+				competition
 			</li>
 
 			
 
 			<li class="tag">
-				CSC384
-			</li>
-
-			
-
-			<li class="tag">
-				search
+				data structure
 			</li>
 
 			
@@ -319,7 +354,7 @@
 <script>
 	var disqus_config = function () {
 	    this.page.url = "https://pyliaorachel.github.io";
-	    this.page.identifier = "/blog/notes/ai/2016/10/29/game-tree-search.html";
+	    this.page.identifier = "/blog/notes/competition/2016/11/09/data-structure-notes.html";
 	};
 	(function() {
 	    var d = document, s = d.createElement('script');
