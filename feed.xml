@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 14 Nov 2016 16:34:26 -0500</pubDate>
-    <lastBuildDate>Mon, 14 Nov 2016 16:34:26 -0500</lastBuildDate>
+    <pubDate>Mon, 14 Nov 2016 16:43:23 -0500</pubDate>
+    <lastBuildDate>Mon, 14 Nov 2016 16:43:23 -0500</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -105,7 +105,7 @@ while R != V:
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h4&gt;Runtime&lt;/h4&gt;
 
-&lt;p&gt;=&amp;gt; &lt;code&gt;O(|V||E|)&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;O(|V||E|)&lt;/code&gt;&lt;/p&gt;
 
 &lt;h4&gt;Negative Cycle Detection&lt;/h4&gt;
 
@@ -138,6 +138,10 @@ while R != V:
                 if dist(i,j) &amp;gt; dist(i,k) + dist(k,j)
                     dist(i,j) = dist(i,k) + dist(k,j)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Runtime&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;O(|V|^3)&lt;/code&gt;&lt;/p&gt;
+
 &lt;h2&gt;Shortest Paths in DAGs&lt;/h2&gt;
 
 &lt;h4&gt;Features&lt;/h4&gt;

@@ -203,7 +203,7 @@ while R != V:
 </code></pre></div>
 <h4>Runtime</h4>
 
-<p>=&gt; <code>O(|V||E|)</code></p>
+<p><code>O(|V||E|)</code></p>
 
 <h4>Negative Cycle Detection</h4>
 
@@ -236,6 +236,10 @@ while R != V:
                 if dist(i,j) &gt; dist(i,k) + dist(k,j)
                     dist(i,j) = dist(i,k) + dist(k,j)
 </code></pre></div>
+<h4>Runtime</h4>
+
+<p><code>O(|V|^3)</code></p>
+
 <h2>Shortest Paths in DAGs</h2>
 
 <h4>Features</h4>
