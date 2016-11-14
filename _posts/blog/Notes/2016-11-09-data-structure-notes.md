@@ -8,9 +8,16 @@ comments: true
 excerpt_separator: <!--more-->
 ---
 
+Data stucture notes for coding competitions.
+
 ## Content
 
-Data stucture notes for coding competitions.
+1. BST
+2. Monotone Queue
+3. Block List
+4. Merge-Find Set
+5. Split & Join AVL
+6. Persistent AVL
 
 <!--more-->
 ---
@@ -22,12 +29,12 @@ Data stucture notes for coding competitions.
 - `lower_bound`, `upper_bound`
 	- Find element in range
 
-http://acm.timus.ru/problem.aspx?space=1&num=1613
-http://poj.org/problem?id=2418
+[For Fans of Statistics](http://acm.timus.ru/problem.aspx?space=1&num=1613)
+[Hardwood Species](http://poj.org/problem?id=2418)
 
 ## Monotone Queue
 
-- 3 basic operations
+- Basic operations
 	- `push` in `O(1)`
 	- `pop` in `O(1)`
 	- `max`/`min` in `O(1)`
@@ -43,13 +50,13 @@ Min():
 	return head of queue
 ```
 
-http://poj.org/problem?id=2823
+[Sliding Window](http://poj.org/problem?id=2823)
 
 ## Block List
 
 - Structure
 	- Partition indices into `O(sqrt(n))` segments, each of length `O(sqrt(n))`
-- 3 basic operations
+- Basic operations
 	- `insert`
 	- `delete`
 	- Range operation on `[i,j]` in `O(sqrt(n))`
@@ -100,16 +107,16 @@ Query(i, j):
 		return s
 ```
 
-http://poj.org/problem?id=3580
+[SuperMemo](http://poj.org/problem?id=3580)
 
-## Merge-find Set
+## Merge-Find Set
 
 [Wiki](https://en.wikipedia.org/wiki/Disjoint-set_data_structure)
 
 - Structure
 	- A ground set `S`
 	- A collection `C` of subsets of `S` where 2 different elements in `C` are disjoint
-- 3 basic operations
+- Basic operations
 	- `union`: union 2 subsets
 	- `find`: find the subset a specific elememt is in
 	- `test`: test where 2 elements are in the same subset
@@ -194,14 +201,29 @@ Union(i, j, k): # V[i] - V[j] = k
 	- Provided `V[j] - V[i] = k`: `Union(i,j,k)`
 	- Answer `V[j] - V[i]`: if `Test(i,j)` then `return D[j] - D[i]`  
 
-http://acm.hdu.edu.cn/showproblem.php?pid=3038
+[How Many Answers Are Wrong](http://acm.hdu.edu.cn/showproblem.php?pid=3038)
 
 ### Extension 2: XOR
 
-http://acm.hdu.edu.cn/showproblem.php?pid=3234
+[Exclusive-OR](http://acm.hdu.edu.cn/showproblem.php?pid=3234)
 
+## Split & Join AVL
 
+- Basic operations
+	- `join`: `T1` & `T2` are AVL trees, and any keyword in `T1` is less than any keyword in `T2`. Return a union in `O(|h(T1)-h(T2)|)`
+	- `split`: return `T1` with keywords less than `k` & `T2` with keywords larger than `k` in `O(h(T))`
+	- `insert`: `split(T,x)`: return `join(T1,{x},T2)`
+	- `delete`: `split(T,x)`: return `join(T1,T2)`
+	- `intervalSelection`: return `T` with elements `k1 <= e <= k2`
+	- `intervalCut`: cut out interval
+	- `linkAndCut`: `intervalCut` and link to another place
+	- other statistic maintainenance e.g. min, max, sum
 
+## Persistent AVL
+
+AVL is link based, and modification operations are `join` & `split`. Each time `O(logn)` nodes visited and modified. Create a copy of `root` to modified nodes.
+
+[Version Controlled Editor](https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&category=24&page=show_problem&problem=3983)
 
 
 
