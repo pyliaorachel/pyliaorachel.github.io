@@ -98,7 +98,8 @@ Bellman-Ford(G, l, s):
 ```
 
 #### Runtime
-=> `O(|V||E|)`
+
+`O(|V||E|)`
 
 #### Negative Cycle Detection
 
@@ -131,6 +132,10 @@ Floyd-Warshal(G, l, s):
 				if dist(i,j) > dist(i,k) + dist(k,j)
 					dist(i,j) = dist(i,k) + dist(k,j)
 ```
+
+#### Runtime
+
+`O(|V|^3)`
 
 ## Shortest Paths in DAGs
 
