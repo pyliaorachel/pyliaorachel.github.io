@@ -54,7 +54,7 @@
 							<li class="category">
 								<a href="/blog/notes">
 									<span>Notes</span>
-									<span>21</span>
+									<span>22</span>
 								</a>
 							</li>
 						
@@ -110,9 +110,18 @@
 		<span class="separator"> • • • </span>
 
 		<div class="post-content" itemprop="articleBody">
-			<h2>Content</h2>
+			<p>Data stucture notes for coding competitions.</p>
 
-<p>Data stucture notes for coding competitions.</p>
+<h2>Content</h2>
+
+<ol>
+<li>BST</li>
+<li>Monotone Queue</li>
+<li>Block List</li>
+<li>Merge-Find Set</li>
+<li>Split &amp; Join AVL</li>
+<li>Persistent AVL</li>
+</ol>
 
 <!--more-->
 
@@ -134,13 +143,13 @@
 </ul></li>
 </ul>
 
-<p><a href="http://acm.timus.ru/problem.aspx?space=1&amp;num=1613">http://acm.timus.ru/problem.aspx?space=1&amp;num=1613</a>
-<a href="http://poj.org/problem?id=2418">http://poj.org/problem?id=2418</a></p>
+<p><a href="http://acm.timus.ru/problem.aspx?space=1&amp;num=1613">For Fans of Statistics</a>
+<a href="http://poj.org/problem?id=2418">Hardwood Species</a></p>
 
 <h2>Monotone Queue</h2>
 
 <ul>
-<li>3 basic operations
+<li>Basic operations
 
 <ul>
 <li><code>push</code> in <code>O(1)</code></li>
@@ -157,7 +166,7 @@
 Min():
     return head of queue
 </code></pre></div>
-<p><a href="http://poj.org/problem?id=2823">http://poj.org/problem?id=2823</a></p>
+<p><a href="http://poj.org/problem?id=2823">Sliding Window</a></p>
 
 <h2>Block List</h2>
 
@@ -167,7 +176,7 @@ Min():
 <ul>
 <li>Partition indices into <code>O(sqrt(n))</code> segments, each of length <code>O(sqrt(n))</code></li>
 </ul></li>
-<li>3 basic operations
+<li>Basic operations
 
 <ul>
 <li><code>insert</code></li>
@@ -219,9 +228,9 @@ Query(i, j):
         calculate s
         return s
 </code></pre></div>
-<p><a href="http://poj.org/problem?id=3580">http://poj.org/problem?id=3580</a></p>
+<p><a href="http://poj.org/problem?id=3580">SuperMemo</a></p>
 
-<h2>Merge-find Set</h2>
+<h2>Merge-Find Set</h2>
 
 <p><a href="https://en.wikipedia.org/wiki/Disjoint-set_data_structure">Wiki</a></p>
 
@@ -232,7 +241,7 @@ Query(i, j):
 <li>A ground set <code>S</code></li>
 <li>A collection <code>C</code> of subsets of <code>S</code> where 2 different elements in <code>C</code> are disjoint</li>
 </ul></li>
-<li>3 basic operations
+<li>Basic operations
 
 <ul>
 <li><code>union</code>: union 2 subsets</li>
@@ -323,11 +332,34 @@ Union(i, j, k): # V[i] - V[j] = k
 </ul></li>
 </ul>
 
-<p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=3038">http://acm.hdu.edu.cn/showproblem.php?pid=3038</a></p>
+<p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=3038">How Many Answers Are Wrong</a></p>
 
 <h3>Extension 2: XOR</h3>
 
-<p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=3234">http://acm.hdu.edu.cn/showproblem.php?pid=3234</a></p>
+<p><a href="http://acm.hdu.edu.cn/showproblem.php?pid=3234">Exclusive-OR</a></p>
+
+<h2>Split &amp; Join AVL</h2>
+
+<ul>
+<li>Basic operations
+
+<ul>
+<li><code>join</code>: <code>T1</code> &amp; <code>T2</code> are AVL trees, and any keyword in <code>T1</code> is less than any keyword in <code>T2</code>. Return a union in <code>O(|h(T1)-h(T2)|)</code></li>
+<li><code>split</code>: return <code>T1</code> with keywords less than <code>k</code> &amp; <code>T2</code> with keywords larger than <code>k</code> in <code>O(h(T))</code></li>
+<li><code>insert</code>: <code>split(T,x)</code>: return <code>join(T1,{x},T2)</code></li>
+<li><code>delete</code>: <code>split(T,x)</code>: return <code>join(T1,T2)</code></li>
+<li><code>intervalSelection</code>: return <code>T</code> with elements <code>k1 &lt;= e &lt;= k2</code></li>
+<li><code>intervalCut</code>: cut out interval</li>
+<li><code>linkAndCut</code>: <code>intervalCut</code> and link to another place</li>
+<li>other statistic maintainenance e.g. min, max, sum</li>
+</ul></li>
+</ul>
+
+<h2>Persistent AVL</h2>
+
+<p>AVL is link based, and modification operations are <code>join</code> &amp; <code>split</code>. Each time <code>O(logn)</code> nodes visited and modified. Create a copy of <code>root</code> to modified nodes.</p>
+
+<p><a href="https://uva.onlinejudge.org/index.php?option=com_onlinejudge&amp;Itemid=8&amp;category=24&amp;page=show_problem&amp;problem=3983">Version Controlled Editor</a></p>
 
 		</div>
 

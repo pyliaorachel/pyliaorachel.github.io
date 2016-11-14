@@ -6,9 +6,187 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 12 Nov 2016 13:40:18 -0500</pubDate>
-    <lastBuildDate>Sat, 12 Nov 2016 13:40:18 -0500</lastBuildDate>
+    <pubDate>Mon, 14 Nov 2016 16:34:26 -0500</pubDate>
+    <lastBuildDate>Mon, 14 Nov 2016 16:34:26 -0500</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Shortest Path Algorithms</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Dijkstra&amp;#39;s Algorithm&lt;/li&gt;
+&lt;li&gt;Bellman-Ford Algorithm&lt;/li&gt;
+&lt;li&gt;Floyd–Warshall Algorithm&lt;/li&gt;
+&lt;li&gt;Shortest Paths in DAGs&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Dijkstra&amp;#39;s Algorithm&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.geeksforgeeks.org/greedy-algorithms-set-6-dijkstras-shortest-path-algorithm/&quot;&gt;GeeksForGeeks&lt;/a&gt;&lt;br&gt;
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm&quot;&gt;Wiki&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4&gt;Features&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Only handles positive edges&lt;/li&gt;
+&lt;li&gt;Need &lt;strong&gt;global information&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Similar to &lt;a href=&quot;http://www.geeksforgeeks.org/greedy-algorithms-set-5-prims-minimum-spanning-tree-mst-2/&quot;&gt;Prim&amp;#39;s&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Implementation&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Dijkstra(G, l, s):
+# Input: Graph G = (V, E), directed or undirected;
+         positive edge lengths {le : e ∈ E}; vertex s ∈ V
+# Output: For all vertices u reachable from s, dist(u) is set to the distance from s to u
+
+    for all u ∈ V : 
+        dist(u) = ∞
+        prev(u) = nil 
+    dist(s) = 0
+
+    H = makequeue(V) # using dist-values as keys 
+    while H is not empty:
+        u = deletemin(H) # = |V| times
+        for all edges (u, v) ∈ E:
+            if dist(v) &amp;gt; dist(u) + l(u, v): 
+                dist(v) = dist(u) + l(u, v) 
+                prev(v) = u 
+                decreasekey(H, v) # = |V| + |E| times
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Alternative
+
+Initialize dist(s) to 0, other dist(·) values to ∞ 
+R = { } # the &quot;known region&quot;
+while R != V:
+    Pick the node v !∈ R with smallest dist(·) 
+    Add v to R
+    for all edges (v, z) ∈ E:
+        if dist(z) &amp;gt; dist(v) + l(v, z): 
+            dist(z) = dist(v) + l(v, z)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Runtime&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Binary heap: &lt;code&gt;O(|E|log|V|)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Array: &lt;code&gt;O(|V|^2)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Bellman-Ford Algorithm&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.geeksforgeeks.org/dynamic-programming-set-23-bellman-ford-algorithm/&quot;&gt;GeeksForGeeks&lt;/a&gt;&lt;br&gt;
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Bellman%E2%80%93Ford_algorithm&quot;&gt;Wiki&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4&gt;Features&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Handles &lt;strong&gt;negative edges&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Only need &lt;strong&gt;local information&lt;/strong&gt; &lt;a href=&quot;http://stackoverflow.com/questions/16273092/difference-between-bellman-ford-and-dijkstras-algorithm&quot;&gt;StackOverflow&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Implementation&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Bellman-Ford(G, l, s):
+# Input: Directed graph G = (V, E);
+         edge lengths {le : e ∈ E} with no negative cycles; 
+         vertex s ∈ V
+# Output: For all vertices u reachable from s, dist(u) is set to the distance from s to u
+
+    for all u ∈ V : 
+        dist(u) = ∞
+        prev(u) = nil
+
+    dist(s) = 0
+    repeat |V| − 1 times:
+        for all e ∈ E: 
+            update(e)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Runtime&lt;/h4&gt;
+
+&lt;p&gt;=&amp;gt; &lt;code&gt;O(|V||E|)&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4&gt;Negative Cycle Detection&lt;/h4&gt;
+
+&lt;p&gt;After &lt;code&gt;|V|-1&lt;/code&gt; times of iterations, apply 1 extra round. If some &lt;code&gt;dist&lt;/code&gt; reduced, then there is negative cycle.&lt;/p&gt;
+
+&lt;h2&gt;Floyd-Warshal Algorithm&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.geeksforgeeks.org/dynamic-programming-set-16-floyd-warshall-algorithm/&quot;&gt;GeeksForGeeks&lt;/a&gt;&lt;br&gt;
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm&quot;&gt;Wiki&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4&gt;Features&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Handles &lt;strong&gt;negative edges&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Find shortest paths between &lt;strong&gt;all pairs of vertices&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;No &lt;strong&gt;negative cycles&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Implementation&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Floyd-Warshal(G, l, s):
+
+    for all u ∈ V: 
+        dist(u,u) = 0
+    for all (u,v) ∈ E:
+        dist(u,v) = l(u,v)
+
+    for k = 1..|V|:
+        for i = 1..|V|:
+            for j = 1..|V|:
+                if dist(i,j) &amp;gt; dist(i,k) + dist(k,j)
+                    dist(i,j) = dist(i,k) + dist(k,j)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Shortest Paths in DAGs&lt;/h2&gt;
+
+&lt;h4&gt;Features&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Vertices appear in &lt;strong&gt;increasing linearized order&lt;/strong&gt; in any paths&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Implementation&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Dag-shortest-paths(G, l, s):
+# Input: DagG = (V,E);
+         edge lengths { le: e ∈ E };
+         vertex s ∈ V
+# Output: For all vertices u reachable from s, dist(u) is set to the distance from s to u
+
+for all u ∈ V: 
+    dist(u) = ∞
+    prev(u) = nil
+
+dist(s) = 0
+Linearize G # DFS
+for each u ∈ V, in linearized order:
+    for all edges (u, v) ∈ E: 
+        update(u, v)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+        <pubDate>Mon, 14 Nov 2016 00:00:00 -0500</pubDate>
+        <link>/blog/notes/algorithm/2016/11/14/shortest-path-algorithms.html</link>
+        <guid isPermaLink="true">/blog/notes/algorithm/2016/11/14/shortest-path-algorithms.html</guid>
+        
+        <category>dijkstra's</category>
+        
+        <category>bellman-ford</category>
+        
+        <category>floyd–warshall</category>
+        
+        <category>data structure</category>
+        
+        <category>algorithm</category>
+        
+        <category>CSC373</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Algorithm</category>
+        
+      </item>
     
       <item>
         <title>Network Flow</title>
@@ -501,9 +679,18 @@ sum_x_in_T(wx) + sum_x,y_in_T(g_xy) &amp;gt; m|T|
     
       <item>
         <title>Data Stucture Notes</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
+        <description>&lt;p&gt;Data stucture notes for coding competitions.&lt;/p&gt;
 
-&lt;p&gt;Data stucture notes for coding competitions.&lt;/p&gt;
+&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;BST&lt;/li&gt;
+&lt;li&gt;Monotone Queue&lt;/li&gt;
+&lt;li&gt;Block List&lt;/li&gt;
+&lt;li&gt;Merge-Find Set&lt;/li&gt;
+&lt;li&gt;Split &amp;amp; Join AVL&lt;/li&gt;
+&lt;li&gt;Persistent AVL&lt;/li&gt;
+&lt;/ol&gt;
 
 &lt;!--more--&gt;
 
@@ -525,13 +712,13 @@ sum_x_in_T(wx) + sum_x,y_in_T(g_xy) &amp;gt; m|T|
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;a href=&quot;http://acm.timus.ru/problem.aspx?space=1&amp;amp;num=1613&quot;&gt;http://acm.timus.ru/problem.aspx?space=1&amp;amp;num=1613&lt;/a&gt;
-&lt;a href=&quot;http://poj.org/problem?id=2418&quot;&gt;http://poj.org/problem?id=2418&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://acm.timus.ru/problem.aspx?space=1&amp;amp;num=1613&quot;&gt;For Fans of Statistics&lt;/a&gt;
+&lt;a href=&quot;http://poj.org/problem?id=2418&quot;&gt;Hardwood Species&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2&gt;Monotone Queue&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;3 basic operations
+&lt;li&gt;Basic operations
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;push&lt;/code&gt; in &lt;code&gt;O(1)&lt;/code&gt;&lt;/li&gt;
@@ -548,7 +735,7 @@ sum_x_in_T(wx) + sum_x,y_in_T(g_xy) &amp;gt; m|T|
 Min():
     return head of queue
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;a href=&quot;http://poj.org/problem?id=2823&quot;&gt;http://poj.org/problem?id=2823&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://poj.org/problem?id=2823&quot;&gt;Sliding Window&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2&gt;Block List&lt;/h2&gt;
 
@@ -558,7 +745,7 @@ Min():
 &lt;ul&gt;
 &lt;li&gt;Partition indices into &lt;code&gt;O(sqrt(n))&lt;/code&gt; segments, each of length &lt;code&gt;O(sqrt(n))&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;3 basic operations
+&lt;li&gt;Basic operations
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;insert&lt;/code&gt;&lt;/li&gt;
@@ -610,9 +797,9 @@ Query(i, j):
         calculate s
         return s
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;a href=&quot;http://poj.org/problem?id=3580&quot;&gt;http://poj.org/problem?id=3580&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://poj.org/problem?id=3580&quot;&gt;SuperMemo&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2&gt;Merge-find Set&lt;/h2&gt;
+&lt;h2&gt;Merge-Find Set&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Disjoint-set_data_structure&quot;&gt;Wiki&lt;/a&gt;&lt;/p&gt;
 
@@ -623,7 +810,7 @@ Query(i, j):
 &lt;li&gt;A ground set &lt;code&gt;S&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;A collection &lt;code&gt;C&lt;/code&gt; of subsets of &lt;code&gt;S&lt;/code&gt; where 2 different elements in &lt;code&gt;C&lt;/code&gt; are disjoint&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;3 basic operations
+&lt;li&gt;Basic operations
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;union&lt;/code&gt;: union 2 subsets&lt;/li&gt;
@@ -714,11 +901,34 @@ Union(i, j, k): # V[i] - V[j] = k
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;&lt;a href=&quot;http://acm.hdu.edu.cn/showproblem.php?pid=3038&quot;&gt;http://acm.hdu.edu.cn/showproblem.php?pid=3038&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://acm.hdu.edu.cn/showproblem.php?pid=3038&quot;&gt;How Many Answers Are Wrong&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3&gt;Extension 2: XOR&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&quot;http://acm.hdu.edu.cn/showproblem.php?pid=3234&quot;&gt;http://acm.hdu.edu.cn/showproblem.php?pid=3234&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://acm.hdu.edu.cn/showproblem.php?pid=3234&quot;&gt;Exclusive-OR&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2&gt;Split &amp;amp; Join AVL&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Basic operations
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;join&lt;/code&gt;: &lt;code&gt;T1&lt;/code&gt; &amp;amp; &lt;code&gt;T2&lt;/code&gt; are AVL trees, and any keyword in &lt;code&gt;T1&lt;/code&gt; is less than any keyword in &lt;code&gt;T2&lt;/code&gt;. Return a union in &lt;code&gt;O(|h(T1)-h(T2)|)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;split&lt;/code&gt;: return &lt;code&gt;T1&lt;/code&gt; with keywords less than &lt;code&gt;k&lt;/code&gt; &amp;amp; &lt;code&gt;T2&lt;/code&gt; with keywords larger than &lt;code&gt;k&lt;/code&gt; in &lt;code&gt;O(h(T))&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;insert&lt;/code&gt;: &lt;code&gt;split(T,x)&lt;/code&gt;: return &lt;code&gt;join(T1,{x},T2)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;delete&lt;/code&gt;: &lt;code&gt;split(T,x)&lt;/code&gt;: return &lt;code&gt;join(T1,T2)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;intervalSelection&lt;/code&gt;: return &lt;code&gt;T&lt;/code&gt; with elements &lt;code&gt;k1 &amp;lt;= e &amp;lt;= k2&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;intervalCut&lt;/code&gt;: cut out interval&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;linkAndCut&lt;/code&gt;: &lt;code&gt;intervalCut&lt;/code&gt; and link to another place&lt;/li&gt;
+&lt;li&gt;other statistic maintainenance e.g. min, max, sum&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Persistent AVL&lt;/h2&gt;
+
+&lt;p&gt;AVL is link based, and modification operations are &lt;code&gt;join&lt;/code&gt; &amp;amp; &lt;code&gt;split&lt;/code&gt;. Each time &lt;code&gt;O(logn)&lt;/code&gt; nodes visited and modified. Create a copy of &lt;code&gt;root&lt;/code&gt; to modified nodes.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://uva.onlinejudge.org/index.php?option=com_onlinejudge&amp;amp;Itemid=8&amp;amp;category=24&amp;amp;page=show_problem&amp;amp;problem=3983&quot;&gt;Version Controlled Editor&lt;/a&gt;&lt;/p&gt;
 </description>
         <pubDate>Wed, 09 Nov 2016 00:00:00 -0500</pubDate>
         <link>/blog/notes/competition/2016/11/09/data-structure-notes.html</link>
@@ -2242,245 +2452,6 @@ single-issue     superscalar    out-of-order superscalar
         <category>Notes</category>
         
         <category>Optimization</category>
-        
-      </item>
-    
-      <item>
-        <title>Constraint Satisfaction Problems</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Constraint Satisfaction Problems (Backtracking Search) Overview
-
-&lt;ol&gt;
-&lt;li&gt;CSP v.s Traditional Search Problems&lt;/li&gt;
-&lt;li&gt;Feature Vectors&lt;/li&gt;
-&lt;li&gt;Constraint Graph&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Solving CSPs
-
-&lt;ol&gt;
-&lt;li&gt;Viewing CSP as Search Problem&lt;/li&gt;
-&lt;li&gt;Backtracking Search Algorithm&lt;/li&gt;
-&lt;li&gt;Constraint Propagation
-
-&lt;ol&gt;
-&lt;li&gt;Forward Checking&lt;/li&gt;
-&lt;li&gt;Generalizaed Arc Consistency&lt;/li&gt;
-&lt;li&gt;Heuristics&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Constraint Satisfaction Problems (Backtracking Search) Overview&lt;/h2&gt;
-
-&lt;h3&gt;CSP v.s Traditional Search Problems&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;CSP does not care about the &lt;em&gt;sequence of moves&lt;/em&gt; to reach goal state&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Feature Vectors&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Represent states as &lt;strong&gt;vectors of feature values&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;Formalization
-
-&lt;ul&gt;
-&lt;li&gt;A set of &lt;strong&gt;features/variables&lt;/strong&gt; &lt;code&gt;V1, ... Vn&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Domain&lt;/strong&gt; for each variable &lt;code&gt;Dom[Vi]&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;A set of &lt;strong&gt;constraints&lt;/strong&gt; &lt;code&gt;C1, ..., Cm&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Scope&lt;/strong&gt;: a set of variables it operates over&lt;/li&gt;
-&lt;li&gt;Unary, binary, higher-order constraints&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;State&lt;/strong&gt;: assignment of value for each variable&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Partial state&lt;/strong&gt;: assignment of value for some variables&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Goal state&lt;/strong&gt;: a state satisfying all &lt;strong&gt;constraints&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Constraint Graph&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Nodes: &lt;strong&gt;variables&lt;/strong&gt;; arcs: &lt;strong&gt;constraints&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Solving CSPs&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Search through the space of partial assignments&lt;/li&gt;
-&lt;li&gt;Order of assignments does not matter&lt;/li&gt;
-&lt;li&gt;If we falsify a constraint, we immediately reject the current partial assignment&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Viewing CSP as Search Problem&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Initial state&lt;/strong&gt;: empty assignment&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Successor function&lt;/strong&gt;: a value assigned to any unassigned variable s.t. no constraints return false&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Goal test&lt;/strong&gt;: complete assignment&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Backtracking Search Algorithm&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Similar to DFS&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;BT(Level):
-    If all variables assigned:
-        PRINT Value of each Variable
-        RETURN
-
-    V := PickUnassignedVariable()
-    Assigned[V] := TRUE
-    for d := each member of Domain(V):
-        Value[V] := d
-        ConstraintsOK = TRUE
-        for each constraint C such that
-            a) V is a variable of C and
-            b) all other variables of C are assigned: 
-            If C is not satisfied by the set of current assignments:
-                ConstraintsOK = FALSE
-                break
-        If ConstraintsOk == TRUE:
-            BT(Level+1)
-    Assigned[V] := FALSE //UNDO as we have tried all of V’s values return
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3&gt;Constraint Propagation&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Look ahead&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Forward Checking&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;When instantiating a variable, check all constrants with &lt;strong&gt;only one ininstantiated variable&lt;/strong&gt; remaining&lt;/li&gt;
-&lt;li&gt;Prune values of that variable that violate the constraint&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Algorithm&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;FCCheck(C,x):
-    // C is a constraint with all its variables already assigned, except for variable x
-
-    for d := each member of CurDom[x]:
-        If making x = d together with previous assignments
-    to variables in scope C falsifies C:
-            remove d from CurDom[x]
-
-    If CurDom[x] = {}:
-        return DWO (Domain Wipe Out)
-    Else:
-        return ok
-
-FC(Level):
-    If all variables assigned:
-        PRINT Value of each Variable
-        RETURN
-
-    V := PickAnUnassignedVariable()
-    Assigned[V] := TRUE
-    for d := each member of CurDom(V):
-        Value[V] := d
-        DWOoccured:= False
-        for each constraint C over V such that
-            a) C has only one unassigned variable X in its scope:
-            If (FCCheck(C,X) == DWO):
-                DWOoccurred:= True
-                break
-        If(not DWOoccured)
-            FC(Level+1)
-        RestoreAllValuesPrunedByFCCheck()
-    Assigned[V] := FALSE
-    return;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Generalizaed Arc Consistency&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;C(V1, ..., Vn)&lt;/code&gt; is GAC with regard to &lt;code&gt;Vi&lt;/code&gt; iff for every value of &lt;code&gt;Vi&lt;/code&gt;, there exist values of &lt;code&gt;V1, ..., Vn&lt;/code&gt; that satisfy C&lt;/li&gt;
-&lt;li&gt;If for &lt;code&gt;Vi = d&lt;/code&gt; is not consistent wrt the constraint, &lt;code&gt;d&lt;/code&gt; is &lt;strong&gt;arc inconsistent&lt;/strong&gt; and can be removed from domain of &lt;code&gt;Vi&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;A constraint that is GAC may become non-GAC due to pruning of domain values during search&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Algorithm&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;GAC_Enforce():
-// GAC-Queue contains all constraints one of whose variables has had its domain reduced
-
-while GACQueue not empty:
-    C = GACQueue.extract()
-    for V := each member of scope(C):
-        for d := CurDom[V]:
-            Find an assignment A for all other variables in scope(C) such that C(A ∪ V=d) = True
-            if A not found:
-                CurDom[V] = CurDom[V] – d 
-            if CurDom[V] = ∅:
-                empty GACQueue
-                return DWO
-            else:
-                push all constraints C’ s.t. V ∈ scope(C’) and C’ !∈ GACQueue on to GACQueue
-return TRUE
-
-GAC(Level):
-    If all variables are assigned:
-        PRINT Value of each Variable
-        RETURN
-
-    V := PickAnUnassignedVariable()
-    Assigned[V] := TRUE
-    for d := each member of CurDom(V):
-        Value[V] := d
-        Prune all values of V != d from CurDom[V]
-        for each constraint C whose scope contains V:
-            Put C on GACQueue
-        if(GAC_Enforce() != DWO):
-            GAC(Level+1)
-        RestoreAllValuesPrunedFromCurDoms()
-
-    Assigned[V] := FALSE
-    return;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;May keep track of &lt;strong&gt;supports&lt;/strong&gt; to avoid having to search through all possible assignments and check satisfication&lt;/li&gt;
-&lt;li&gt;Check if current support still valie, i.e. all values it assigns still lie in the variables&amp;#39; current domains&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Heuristics&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Ordering of variables
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Minimum Remaining Values (MRV)&lt;/strong&gt;: returns the variable with the most constrained current domain&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Degree Heuristic (DH)&lt;/strong&gt;: returns variable imposing the most constraints on remaining unassigned variables&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Ordering of values
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Least Constraining Value (LCV)&lt;/strong&gt;: the best value is the one ruling out the fewest domain values in other variables that share at least one constraint with var&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Sun, 30 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/ai/2016/10/30/constraint-satisfaction-problems.html</link>
-        <guid isPermaLink="true">/blog/notes/ai/2016/10/30/constraint-satisfaction-problems.html</guid>
-        
-        <category>AI</category>
-        
-        <category>CSC384</category>
-        
-        <category>CSP</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>AI</category>
         
       </item>
     
