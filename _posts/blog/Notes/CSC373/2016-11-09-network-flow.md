@@ -257,7 +257,8 @@ Multiple sources & sinks with fixed supply/demand values.
 		`sum_v_dv>0(dv) = sum_v_dv<0(-dv)`
 - Conversion to Max-Flow Problem
 	- Create super-source `s*` connecting each node in `S`; create super-sink `t*` connecting each node in `T`
-	- A feasible circulation is found iff max s*-t* flow has value `D`, where `D = max capaxity from s*/to t*`
+	- For each node in `S` (`dv < 0`), add `(s*,v)` with capacity `-dv`; for each node in `T` (`dv > 0`), add `(v,t*)` with capacity `dv`
+	- A feasible circulation is found iff max s*-t* flow has value `D`, where `D = max capaxity from s* to t*` (saturating edges connected to `s*` and `t*`)
 	- Graph G has a feasible circulation with demands `{dv}` if and only if for all cuts (A,B):  
 		`sum_v_in_B(dv) <= c(A,B)`
 
