@@ -52,18 +52,18 @@
 							
 							
 							<li class="category">
-								<a href="/blog/notes">
-									<span>Notes</span>
-									<span>22</span>
+								<a href="/blog/tech">
+									<span>Tech</span>
+									<span>2</span>
 								</a>
 							</li>
 						
 							
 							
 							<li class="category">
-								<a href="/blog/tech">
-									<span>Tech</span>
-									<span>1</span>
+								<a href="/blog/notes">
+									<span>Notes</span>
+									<span>21</span>
 								</a>
 							</li>
 						
@@ -418,7 +418,8 @@ Original: polynomial in magnatude of capacities</p></li>
 
 <ul>
 <li>Create super-source <code>s*</code> connecting each node in <code>S</code>; create super-sink <code>t*</code> connecting each node in <code>T</code></li>
-<li>A feasible circulation is found iff max s*-t* flow has value <code>D</code>, where <code>D = max capaxity from s*/to t*</code></li>
+<li>For each node in <code>S</code> (<code>dv &lt; 0</code>), add <code>(s*,v)</code> with capacity <code>-dv</code>; for each node in <code>T</code> (<code>dv &gt; 0</code>), add <code>(v,t*)</code> with capacity <code>dv</code></li>
+<li>A feasible circulation is found iff max s*-t* flow has value <code>D</code>, where <code>D = max capaxity from s* to t*</code> (saturating edges connected to <code>s*</code> and <code>t*</code>)</li>
 <li>Graph G has a feasible circulation with demands <code>{dv}</code> if and only if for all cuts (A,B):<br>
 <code>sum_v_in_B(dv) &lt;= c(A,B)</code></li>
 </ul></li>

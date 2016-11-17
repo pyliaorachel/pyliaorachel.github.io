@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 14 Nov 2016 16:43:23 -0500</pubDate>
-    <lastBuildDate>Mon, 14 Nov 2016 16:43:23 -0500</lastBuildDate>
+    <pubDate>Thu, 17 Nov 2016 10:42:53 -0500</pubDate>
+    <lastBuildDate>Thu, 17 Nov 2016 10:42:53 -0500</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -168,8 +168,8 @@ for each u ∈ V, in linearized order:
         update(u, v)
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
         <pubDate>Mon, 14 Nov 2016 00:00:00 -0500</pubDate>
-        <link>/blog/notes/algorithm/2016/11/14/shortest-path-algorithms.html</link>
-        <guid isPermaLink="true">/blog/notes/algorithm/2016/11/14/shortest-path-algorithms.html</guid>
+        <link>/blog/tech/algorithm/2016/11/14/shortest-path-algorithms.html</link>
+        <guid isPermaLink="true">/blog/tech/algorithm/2016/11/14/shortest-path-algorithms.html</guid>
         
         <category>dijkstra's</category>
         
@@ -186,7 +186,7 @@ for each u ∈ V, in linearized order:
         
         <category>Blog</category>
         
-        <category>Notes</category>
+        <category>Tech</category>
         
         <category>Algorithm</category>
         
@@ -502,7 +502,8 @@ Original: polynomial in magnatude of capacities&lt;/p&gt;&lt;/li&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Create super-source &lt;code&gt;s*&lt;/code&gt; connecting each node in &lt;code&gt;S&lt;/code&gt;; create super-sink &lt;code&gt;t*&lt;/code&gt; connecting each node in &lt;code&gt;T&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;A feasible circulation is found iff max s*-t* flow has value &lt;code&gt;D&lt;/code&gt;, where &lt;code&gt;D = max capaxity from s*/to t*&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;For each node in &lt;code&gt;S&lt;/code&gt; (&lt;code&gt;dv &amp;lt; 0&lt;/code&gt;), add &lt;code&gt;(s*,v)&lt;/code&gt; with capacity &lt;code&gt;-dv&lt;/code&gt;; for each node in &lt;code&gt;T&lt;/code&gt; (&lt;code&gt;dv &amp;gt; 0&lt;/code&gt;), add &lt;code&gt;(v,t*)&lt;/code&gt; with capacity &lt;code&gt;dv&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;A feasible circulation is found iff max s*-t* flow has value &lt;code&gt;D&lt;/code&gt;, where &lt;code&gt;D = max capaxity from s* to t*&lt;/code&gt; (saturating edges connected to &lt;code&gt;s*&lt;/code&gt; and &lt;code&gt;t*&lt;/code&gt;)&lt;/li&gt;
 &lt;li&gt;Graph G has a feasible circulation with demands &lt;code&gt;{dv}&lt;/code&gt; if and only if for all cuts (A,B):&lt;br&gt;
 &lt;code&gt;sum_v_in_B(dv) &amp;lt;= c(A,B)&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
