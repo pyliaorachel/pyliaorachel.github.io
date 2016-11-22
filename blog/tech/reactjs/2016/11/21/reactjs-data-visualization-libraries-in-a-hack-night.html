@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>ReactJS Data Visualization Libraries in a Hack Night</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="/css/main.css" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
+		<link rel="stylesheet" href="/css/github-markdown.css">
+
+		<!-- Place jquery before bootstrap -->
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">MyCoon</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+
+			<form class="navbar-form navbar-left">
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Search">
+				</div>
+				<button type="submit" class="btn btn-default">Submit</button>
+			</form>
+
+			<ul class="nav navbar-nav navbar-right" id="nav-links">
+				<li class="nav-home"><a href="/">Home</a></li>
+				<li class="dropdown nav-blog">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Blog<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/blog">MyCoon Blog</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/blog/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/blog/tech">
+									<span>Tech</span>
+									<span>3</span>
+								</a>
+							</li>
+						
+							
+							
+							<li class="category">
+								<a href="/blog/notes">
+									<span>Notes</span>
+									<span>22</span>
+								</a>
+							</li>
+						
+						<li><a href="/blog/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li class="dropdown nav-tutorial">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Tutorials<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/tutorial">MyCoon Tutorial</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/tutorial/categories">Categories</a></li>
+						
+							
+						
+
+						
+						<li><a href="/tutorial/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li  class="nav-project"><a href="/project">Projects</a></li>
+				<li class="nav-special" id="special"><a href="#">?</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+		<main class="page-content post" aria-label="Content">
+	<div class="post-wrapper">
+		<div class="wrapper">
+	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
+
+		<header class="post-header">
+			<h1 class="post-title" itemprop="name headline">ReactJS Data Visualization Libraries in a Hack Night</h1>
+			<p class="post-meta">Nov 21, 2016
+				 • Tech
+				 • pyliaorachel
+			</p>
+		</header>
+
+		
+			<h2 class="prerequisites-title">Prerequisites</h2>
+			<ul class="prerequisites-list">
+				
+
+				<li class="prerequisite">
+					react
+				</li>
+
+				
+			</ul>
+		
+
+		<span class="separator"> • • • </span>
+
+		<div class="post-content" itemprop="articleBody">
+			<p>At the hackathon last night, we were given a bunch of advertising data to work with so that data can be more understandable. I experimented with several React data visualization libraries, out of which I couldn&#39;t really find a perfect one. I will share the experience working with the libraries, and what pros and cons I found.</p>
+
+<!--more-->
+
+<p><em>All versions of implementation and final demo can be found <a href="https://github.com/pyliaorachel/hack-with-ix/tree/master">here</a>.</em></p>
+
+<p>Basically, below is just some subjective observations in a hack night, so there may be many mistakes in the description. I do appreciate any corrections!</p>
+
+<h3>react-chartjs</h3>
+
+<p><a href="https://github.com/reactjs/react-chartjs">react-chartjs</a></p>
+
+<p><img src="https://github.com/pyliaorachel/hack-with-ix/blob/demo/ui/src/assets/react-chartjs.png?raw=true" alt="react-chartjs"></p>
+
+<p>The main problem is in its documentation, which seems to be fancy but are actually including too many information which is loosely distributed throughout the entire doc.</p>
+
+<p>Especially the <code>options</code>, which determines the settings, style, scale, and all other important stuffs, are really messy and not working as expected. I searched through many examples but simply cannot get rid of the gray color in my chart. Discarded it because nobody wants such a chart with not-very-appealing look.</p>
+
+<p>But I really like that I can work out a formatted x-axis display value. This should be a basic functionality, but surprisingly not many libraries get this well.</p>
+
+<h5>Data Parsing</h5>
+
+<p>Use <code>labels</code> as x-axis or categories, <code>data</code> in <code>datasets</code> as y-axis or values.</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">chartData</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">datasets</span><span class="p">:</span> <span class="p">[{</span>
+        <span class="na">data</span><span class="p">:</span> <span class="p">[</span><span class="mi">45</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+        <span class="c1">// other options</span>
+    <span class="p">}],</span>
+    <span class="na">labels</span><span class="p">:</span> <span class="p">[</span><span class="s1">'Red'</span><span class="p">,</span> <span class="s1">'Blue'</span><span class="p">,</span> <span class="s1">'Purple'</span><span class="p">,</span> <span class="s1">'Yellow'</span><span class="p">]</span>
+<span class="p">};</span>
+</code></pre></div>
+<h5>Pros</h5>
+
+<ul>
+<li>Use <code>labels</code> to represent x-axis, which is great that I can customize</li>
+</ul>
+
+<h5>Cons</h5>
+
+<ul>
+<li>Not providing a clear react version documentation but uses <a href="http://www.chartjs.org/docs/">chartjs</a>&#39;s instead, which I don&#39;t really like because of the extensive information</li>
+<li>Demonstration page not clear with how the data look like</li>
+<li>Don&#39;t know why, but some of the <code>options</code> are not working, and I can&#39;t do the styling because of this</li>
+</ul>
+
+<h3>react-d3</h3>
+
+<p><a href="https://github.com/esbullington/react-d3">react-d3</a></p>
+
+<p><img src="https://github.com/pyliaorachel/hack-with-ix/blob/demo/ui/src/assets/react-d3.png?raw=true" alt="react-d3"></p>
+
+<p>The main problem is in data parsing.</p>
+
+<p>You need to go through the whole data and explicitly parse out the <code>x</code> and <code>y</code> in a <code>values</code> array, which is most commonly done by simply setting the <code>field</code> key in other libraries. This can be helpful if you want even more flexibility, but this is seldom the case.</p>
+
+<p>And again, where can I easily find the styling instructions? Miserable.</p>
+
+<h5>Data Parsing</h5>
+
+<p>Parse points as <code>x-y</code> pairs in a <code>values</code> array for coordinate charts.<br>
+Parse categories as <code>label</code> and values as <code>value</code> for category charts.</p>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">lineData</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="s2">"series1"</span><span class="p">,</span>
+    <span class="na">values</span><span class="p">:</span> <span class="p">[</span> <span class="p">{</span> <span class="na">x</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="na">y</span><span class="p">:</span> <span class="mi">20</span> <span class="p">},</span> <span class="p">...,</span> <span class="p">{</span> <span class="na">x</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="na">y</span><span class="p">:</span> <span class="mi">10</span> <span class="p">}</span> <span class="p">],</span>
+    <span class="na">strokeWidth</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="na">strokeDashArray</span><span class="p">:</span> <span class="s2">"5,5"</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="p">....</span>
+  <span class="p">{</span>
+    <span class="nl">name</span><span class="p">:</span> <span class="s2">"series2"</span><span class="p">,</span>
+    <span class="nx">values</span><span class="err">:</span> <span class="p">[</span> <span class="p">{</span> <span class="na">x</span><span class="p">:</span> <span class="mi">70</span><span class="p">,</span> <span class="na">y</span><span class="p">:</span> <span class="mi">82</span> <span class="p">},</span> <span class="p">...,</span> <span class="p">{</span> <span class="na">x</span><span class="p">:</span> <span class="mi">76</span><span class="p">,</span> <span class="na">y</span><span class="p">:</span> <span class="mi">82</span> <span class="p">}</span> <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">];</span>
+</code></pre></div><div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">pieData</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span><span class="na">label</span><span class="p">:</span> <span class="s1">'Margarita'</span><span class="p">,</span> <span class="na">value</span><span class="p">:</span> <span class="mf">20.0</span><span class="p">},</span>
+  <span class="p">{</span><span class="na">label</span><span class="p">:</span> <span class="s1">'John'</span><span class="p">,</span> <span class="na">value</span><span class="p">:</span> <span class="mf">55.0</span><span class="p">},</span>
+  <span class="p">{</span><span class="na">label</span><span class="p">:</span> <span class="s1">'Tim'</span><span class="p">,</span> <span class="na">value</span><span class="p">:</span> <span class="mf">25.0</span> <span class="p">}</span>
+<span class="p">];</span>
+</code></pre></div>
+<h5>Pros</h5>
+
+<ul>
+<li>Nice demonstration page, simple and clear</li>
+<li>Parse the x/y coordinates ourselves, which can be more flexible (but also a con)</li>
+</ul>
+
+<h5>Cons</h5>
+
+<ul>
+<li>The styling instructions are somehow hidden deep in the documentation</li>
+<li>Need to parse the x/y coordinates ourselves, which is more tedious (but also a pro)</li>
+<li>Customize displayed x-/y-axis is not flexible enough (only found time on x-axis to be formattable, but the instructions are not clear)</li>
+</ul>
+
+<h3>react-d3-basic</h3>
+
+<p><a href="https://github.com/react-d3/react-d3-basic">react-d3-basic</a></p>
+
+<p><img src="https://github.com/pyliaorachel/hack-with-ix/blob/demo/ui/src/assets/react-d3-basic.png?raw=true" alt="react-d3-basic"></p>
+
+<p>To be honest, I choose this as the final working version simply because I KNOW HOW TO STYLE IT. The documentation is the nice ever.</p>
+
+<p>The main problem is still in data parsing and non-customizable x-axis display value.</p>
+
+<p>Although the doc is nice, but the data are not especially shown, so I have to look for the <code>.csv</code> files on github and found some missing. Not a big problem though, but a problem to hackers in hackathons.</p>
+
+<p>For the x-axis display values, it provides an <code>x</code> function for you to map. But they are not actually intended for you to map displayed values but only actual values. So if you want the function to return a string representation of a date, it fails because only number values are allowed.</p>
+
+<p>And the bar-type charts yelled to me miserable errors for a missing <code>bandwidth</code> function deep in the <code>chartjs</code> package, probably because I used the bar charts to build some streaming charts. So be careful when implementing them.</p>
+
+<h5>Data Parsing</h5>
+
+<p>Use <code>field</code> for the y-axis filter. Argument in <code>x</code> function is the data object itself, so be sure the datum is parsed in a way that have both <code>x</code> and <code>y</code> values.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">// sample data
+[
+  {
+    total: 1,
+    incineration: 1,
+    garbageBury: 1,
+    month: 1,
+  },
+  {
+    total: 2,
+    incineration: 2,
+    garbageBury: 2,
+    month: 2,
+  },
+  ...
+]
+</code></pre></div><div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">chartSeries</span> <span class="o">=</span> <span class="nx">chartSeries</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span>
+    <span class="na">field</span><span class="p">:</span> <span class="s1">'total'</span><span class="p">,</span>
+    <span class="na">name</span><span class="p">:</span> <span class="s1">'Total'</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="na">field</span><span class="p">:</span> <span class="s1">'incineration'</span><span class="p">,</span>
+    <span class="na">name</span><span class="p">:</span> <span class="s1">'Incineration'</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="na">field</span><span class="p">:</span> <span class="s1">'garbageBury'</span><span class="p">,</span>
+    <span class="na">name</span><span class="p">:</span> <span class="s1">'Garbage Bury'</span><span class="p">,</span>
+    <span class="na">area</span><span class="p">:</span> <span class="kc">true</span>
+  <span class="p">}</span>
+<span class="p">];</span>
+
+<span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">parseDate</span><span class="p">(</span><span class="nx">d</span><span class="p">.</span><span class="nx">month</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div>
+<h5>Pros</h5>
+
+<ul>
+<li>Nice documentation, simple and clear</li>
+<li>Easy to style</li>
+</ul>
+
+<h5>Cons</h5>
+
+<ul>
+<li>Need more examples on how to parse the data for different charts</li>
+<li>Customized x-/y-axis is not flexible enough</li>
+</ul>
+
+		</div>
+
+		<ul class="tag-list">
+			
+
+			<li class="tag">
+				react
+			</li>
+
+			
+
+			<li class="tag">
+				react-chartjs
+			</li>
+
+			
+
+			<li class="tag">
+				react-d3
+			</li>
+
+			
+
+			<li class="tag">
+				react-d3-basic
+			</li>
+
+			
+
+			<li class="tag">
+				data visualization
+			</li>
+
+			
+		</ul>
+
+	</article>
+
+	
+		<div id="disqus_thread"></div>
+<script>
+	var disqus_config = function () {
+	    this.page.url = "https://pyliaorachel.github.io";
+	    this.page.identifier = "/blog/tech/reactjs/2016/11/21/reactjs-data-visualization-libraries-in-a-hack-night.html";
+	};
+	(function() {
+	    var d = document, s = d.createElement('script');
+	    s.src = '//pyliaorachel.disqus.com/embed.js';
+	    s.setAttribute('data-timestamp', +new Date());
+	    (d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	
+</div>
+	</div>
+</main>
+		<footer>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4 footer-link">
+				<a href="mailto:rachel5566kk@gmail.com">
+					<span class="icon icon-email">
+						<img src="/assets/svg/email-logo.svg" alt="Email Logo">
+					</span>
+					<span class="username">rachel5566kk@gmail.com</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://github.com/pyliaorachel"  target="_blank">
+					<span class="icon icon-github">
+						<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+					</span>
+					<span class="username">pyliaorachel</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://tw.linkedin.com/in/peiyu-liao" target="_blank">
+					<span class="icon icon-linkedin">
+						<img src="/assets/svg/linkedin-logo.svg" alt="LinkedIn Logo">
+					</span>
+					<span class="username">Peiyu Liao</span>
+				</a>
+			</div>
+		</div><!-- /.row -->
+		<div class="row">
+			<div class="footer-copy-right">
+				<p>2016	&copy; Liao Peiyu</p>
+			</div >
+		</div><!-- /.row -->
+	</div><!-- /.container-fluid -->
+</footer>
+		<script type="text/javascript" src="/js/main.js"></script>
+		<script type="text/javascript" src="/js/home.js"></script>
+		<script id="dsq-count-scr" src="//pyliaorachel.disqus.com/count.js" async></script>
+	</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Docker Beginner</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="/css/main.css" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
+		<link rel="stylesheet" href="/css/github-markdown.css">
+
+		<!-- Place jquery before bootstrap -->
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">MyCoon</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+
+			<form class="navbar-form navbar-left">
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Search">
+				</div>
+				<button type="submit" class="btn btn-default">Submit</button>
+			</form>
+
+			<ul class="nav navbar-nav navbar-right" id="nav-links">
+				<li class="nav-home"><a href="/">Home</a></li>
+				<li class="dropdown nav-blog">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Blog<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/blog">MyCoon Blog</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/blog/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/blog/tech">
+									<span>Tech</span>
+									<span>3</span>
+								</a>
+							</li>
+						
+							
+							
+							<li class="category">
+								<a href="/blog/notes">
+									<span>Notes</span>
+									<span>22</span>
+								</a>
+							</li>
+						
+						<li><a href="/blog/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li class="dropdown nav-tutorial">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Tutorials<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/tutorial">MyCoon Tutorial</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/tutorial/categories">Categories</a></li>
+						
+							
+						
+
+						
+						<li><a href="/tutorial/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li  class="nav-project"><a href="/project">Projects</a></li>
+				<li class="nav-special" id="special"><a href="#">?</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+		<main class="page-content post" aria-label="Content">
+	<div class="post-wrapper">
+		<div class="wrapper">
+	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
+
+		<header class="post-header">
+			<h1 class="post-title" itemprop="name headline">Docker Beginner</h1>
+			<p class="post-meta">Nov 17, 2016
+				 • Notes
+				 • pyliaorachel
+			</p>
+		</header>
+
+		
+
+		<span class="separator"> • • • </span>
+
+		<div class="post-content" itemprop="articleBody">
+			<h2>Content</h2>
+
+<ol>
+<li>Basics
+
+<ol>
+<li>Terminologies</li>
+<li>Commands</li>
+</ol></li>
+<li>Docker Images
+
+<ol>
+<li>Image Types</li>
+<li>Create Images</li>
+</ol></li>
+<li>Docker Compose
+
+<ol>
+<li><code>docker-compose.yml</code></li>
+<li>Run Application</li>
+</ol></li>
+</ol>
+
+<!--more-->
+
+<hr>
+
+<h2>Basics</h2>
+
+<h3>Terminologies</h3>
+
+<ul>
+<li><strong>Images</strong>: the <strong>file system and configuration of an application</strong> used to <strong>create containers</strong>
+
+<ul>
+<li><code>docker inspect image-name</code></li>
+</ul></li>
+<li><strong>Containers</strong>: <strong>running instances of Docker images</strong>
+
+<ul>
+<li>Run the actual applications; includes an application and all of its dependencies </li>
+<li>Share the kernel with other containers</li>
+<li>Run as an isolated process in user space on the host OS </li>
+<li>A container created by <code>docker run</code></li>
+</ul></li>
+<li><strong>Docker daemon</strong>: the background service running on the host that <strong>manages building, running and distributing Docker containers</strong></li>
+<li><strong>Docker client</strong>: the command line tool that allows the user to interact with the Docker daemon</li>
+<li><strong>Docker Hub</strong>: a registry of Docker images</li>
+</ul>
+
+<h3>Commands</h3>
+
+<p><code>docker login</code> login to docker hub<br>
+<code>docker ps</code> list current running containers<br>
+    - <code>docker ps -a</code> list containers ran before<br>
+<code>docker images</code> list images<br>
+<code>docker pull image-name</code> pull image from hub<br>
+    - <code>image-name:version</code> specify version e.g. <code>ubuntu:12.04</code>, <code>ubuntu:latest</code>
+<code>docker push USERNAME/image-name</code> push image to hub<br>
+<code>docker run image-name [command]</code> executes commands in container<br>
+    - <code>docker pull</code> if image not exists
+    - <code>-it</code> iterative mode; will not exit container<br>
+    - <code>-d</code> detached mode; detach running container from terminal
+    - <code>-P</code> publish all the exposed container ports to random ports on the Docker host
+    - <code>-p</code> specify port number e.g. <code>-p 8888:80</code> link 8888 on container to 80 on host
+    - <code>-e</code> pass environment variables
+        - e.g. <code>-e AUTHOR=&quot;name&quot;</code>
+    - <code>--name</code> specify container name
+<code>docker stop container-name</code> stop running container<br>
+<code>docker rm container1-name container2-name ...</code> remove containers<br>
+    - <code>-f</code> remove running containers 
+<code>docker port container-name</code> port of running container
+<code>docker search image-name</code> search for images  </p>
+
+<h2>Docker Images</h2>
+
+<h3>Image Types</h3>
+
+<ul>
+<li>Base images v.s. child images
+
+<ul>
+<li><strong>Base image</strong>: no parent images, usually images with an OS</li>
+<li><strong>Child image</strong>: build on base images and add additional functionality</li>
+</ul></li>
+<li>Official images v.s. user images
+
+<ul>
+<li><strong>Official image</strong>: no prefix</li>
+<li><strong>User image</strong>: <code>user/image-name</code>; based on <em>base image</em></li>
+</ul></li>
+</ul>
+
+<h3>Create Images</h3>
+
+<h4>Steps</h4>
+
+<ol>
+<li>Create an app</li>
+<li>Write a Dockerfile</li>
+<li>Build the image</li>
+<li>Run your image</li>
+<li>Dockerfile commands summary</li>
+</ol>
+
+<h4>Dockerfile</h4>
+
+<p>List of commands the Docker daemon calls while creating an image.</p>
+
+<ul>
+<li>Base Docker image to run from</li>
+<li>Location of your project code</li>
+<li>Dependencies</li>
+<li>Commands to run at start-up</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang=""># specify base image
+FROM alpine:latest # username/imagename:version
+
+# copying files &amp; installing dependencies
+RUN apk add --update py-pip # install Python pip package to the alpine linux distribution # RUN add new layers
+
+# install required Python packages &amp; copy files
+COPY requirements.txt /usr/src/app/
+RUN pip install --no-cache-dir -r /usr/src/app/requirements.txt
+COPY app.py /usr/src/app/
+COPY templates/index.html /usr/src/app/templates/
+
+# specify port number
+EXPOSE 5000
+
+# run application; one CMD per Dockerfile/Image
+CMD ["python", "/usr/src/app/app.py"] # which command to run by default when started
+</code></pre></div>
+<h4>Build Images</h4>
+
+<p><code>docker build -t &lt;USERNAME&gt;/appname [path-to-dockerfile]</code><br>
+    - <code>-t</code> optional tag name</p>
+
+<h2>Docker Compose</h2>
+
+<p>Define &amp; run multi-container apps.</p>
+
+<h3><code>docker-compose.yml</code></h3>
+
+<p>Describe containers &amp; volumes you want.</p>
+<div class="highlight"><pre><code class="language-yml" data-lang="yml"><span class="s">version</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2"</span>
+
+<span class="s">services</span><span class="pi">:</span>
+  <span class="s">vote</span><span class="pi">:</span>
+    <span class="s">build</span><span class="pi">:</span> <span class="s">./vote</span>
+    <span class="s">command</span><span class="pi">:</span> <span class="s">python app.py</span>
+    <span class="s">volumes</span><span class="pi">:</span>
+     <span class="pi">-</span> <span class="s">./vote:/app</span>
+    <span class="s">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">5000:80"</span>
+    <span class="s">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">front-tier</span>
+      <span class="pi">-</span> <span class="s">back-tier</span>
+
+  <span class="s">result</span><span class="pi">:</span>
+    <span class="s">build</span><span class="pi">:</span> <span class="s">./result</span>
+    <span class="s">command</span><span class="pi">:</span> <span class="s">nodemon --debug server.js</span>
+    <span class="s">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">./result:/app</span>
+    <span class="s">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">5001:80"</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">5858:5858"</span>
+    <span class="s">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">front-tier</span>
+      <span class="pi">-</span> <span class="s">back-tier</span>
+
+  <span class="s">worker</span><span class="pi">:</span>
+    <span class="s">build</span><span class="pi">:</span> <span class="s">./worker</span>
+    <span class="s">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">back-tier</span>
+
+  <span class="s">redis</span><span class="pi">:</span>
+    <span class="s">image</span><span class="pi">:</span> <span class="s">redis:alpine</span>
+    <span class="s">container_name</span><span class="pi">:</span> <span class="s">redis</span>
+    <span class="s">ports</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">6379"</span><span class="pi">]</span>
+    <span class="s">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">back-tier</span>
+
+  <span class="s">db</span><span class="pi">:</span>
+    <span class="s">image</span><span class="pi">:</span> <span class="s">postgres:9.4</span>
+    <span class="s">container_name</span><span class="pi">:</span> <span class="s">db</span>
+    <span class="s">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">db-data:/var/lib/postgresql/data"</span>
+    <span class="s">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">back-tier</span>
+
+<span class="s">volumes</span><span class="pi">:</span>
+  <span class="s">db-data</span><span class="pi">:</span>
+
+<span class="s">networks</span><span class="pi">:</span>
+  <span class="s">front-tier</span><span class="pi">:</span>
+  <span class="s">back-tier</span><span class="pi">:</span>
+</code></pre></div>
+<ul>
+<li><strong>Networks</strong>: containers can communicate with others in the same network</li>
+</ul>
+
+<h3>Run Application</h3>
+
+<p><code>docker-compose up -d</code> start all containers in <code>docker-compose.yml</code><br>
+    - <code>-d</code> run in daemon mode in background</p>
+
+<p>Then build &amp; push to hub.</p>
+
+		</div>
+
+		<ul class="tag-list">
+			
+
+			<li class="tag">
+				docker
+			</li>
+
+			
+		</ul>
+
+	</article>
+
+	
+		<div id="disqus_thread"></div>
+<script>
+	var disqus_config = function () {
+	    this.page.url = "https://pyliaorachel.github.io";
+	    this.page.identifier = "/blog/notes/docker/2016/11/17/docker-beginner.html";
+	};
+	(function() {
+	    var d = document, s = d.createElement('script');
+	    s.src = '//pyliaorachel.disqus.com/embed.js';
+	    s.setAttribute('data-timestamp', +new Date());
+	    (d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	
+</div>
+	</div>
+</main>
+		<footer>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4 footer-link">
+				<a href="mailto:rachel5566kk@gmail.com">
+					<span class="icon icon-email">
+						<img src="/assets/svg/email-logo.svg" alt="Email Logo">
+					</span>
+					<span class="username">rachel5566kk@gmail.com</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://github.com/pyliaorachel"  target="_blank">
+					<span class="icon icon-github">
+						<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+					</span>
+					<span class="username">pyliaorachel</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://tw.linkedin.com/in/peiyu-liao" target="_blank">
+					<span class="icon icon-linkedin">
+						<img src="/assets/svg/linkedin-logo.svg" alt="LinkedIn Logo">
+					</span>
+					<span class="username">Peiyu Liao</span>
+				</a>
+			</div>
+		</div><!-- /.row -->
+		<div class="row">
+			<div class="footer-copy-right">
+				<p>2016	&copy; Liao Peiyu</p>
+			</div >
+		</div><!-- /.row -->
+	</div><!-- /.container-fluid -->
+</footer>
+		<script type="text/javascript" src="/js/main.js"></script>
+		<script type="text/javascript" src="/js/home.js"></script>
+		<script id="dsq-count-scr" src="//pyliaorachel.disqus.com/count.js" async></script>
+	</body>
+</html>

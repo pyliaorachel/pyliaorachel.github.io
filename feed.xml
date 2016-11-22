@@ -6,9 +6,424 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 17 Nov 2016 10:42:53 -0500</pubDate>
-    <lastBuildDate>Thu, 17 Nov 2016 10:42:53 -0500</lastBuildDate>
+    <pubDate>Mon, 21 Nov 2016 23:36:22 -0500</pubDate>
+    <lastBuildDate>Mon, 21 Nov 2016 23:36:22 -0500</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>ReactJS Data Visualization Libraries in a Hack Night</title>
+        <description>&lt;p&gt;At the hackathon last night, we were given a bunch of advertising data to work with so that data can be more understandable. I experimented with several React data visualization libraries, out of which I couldn&amp;#39;t really find a perfect one. I will share the experience working with the libraries, and what pros and cons I found.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;p&gt;&lt;em&gt;All versions of implementation and final demo can be found &lt;a href=&quot;https://github.com/pyliaorachel/hack-with-ix/tree/master&quot;&gt;here&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Basically, below is just some subjective observations in a hack night, so there may be many mistakes in the description. I do appreciate any corrections!&lt;/p&gt;
+
+&lt;h3&gt;react-chartjs&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/reactjs/react-chartjs&quot;&gt;react-chartjs&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/pyliaorachel/hack-with-ix/blob/demo/ui/src/assets/react-chartjs.png?raw=true&quot; alt=&quot;react-chartjs&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The main problem is in its documentation, which seems to be fancy but are actually including too many information which is loosely distributed throughout the entire doc.&lt;/p&gt;
+
+&lt;p&gt;Especially the &lt;code&gt;options&lt;/code&gt;, which determines the settings, style, scale, and all other important stuffs, are really messy and not working as expected. I searched through many examples but simply cannot get rid of the gray color in my chart. Discarded it because nobody wants such a chart with not-very-appealing look.&lt;/p&gt;
+
+&lt;p&gt;But I really like that I can work out a formatted x-axis display value. This should be a basic functionality, but surprisingly not many libraries get this well.&lt;/p&gt;
+
+&lt;h5&gt;Data Parsing&lt;/h5&gt;
+
+&lt;p&gt;Use &lt;code&gt;labels&lt;/code&gt; as x-axis or categories, &lt;code&gt;data&lt;/code&gt; in &lt;code&gt;datasets&lt;/code&gt; as y-axis or values.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;chartData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;datasets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;45&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;// other options&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}],&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;labels&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Red'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Blue'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Purple'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Yellow'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h5&gt;Pros&lt;/h5&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Use &lt;code&gt;labels&lt;/code&gt; to represent x-axis, which is great that I can customize&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5&gt;Cons&lt;/h5&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Not providing a clear react version documentation but uses &lt;a href=&quot;http://www.chartjs.org/docs/&quot;&gt;chartjs&lt;/a&gt;&amp;#39;s instead, which I don&amp;#39;t really like because of the extensive information&lt;/li&gt;
+&lt;li&gt;Demonstration page not clear with how the data look like&lt;/li&gt;
+&lt;li&gt;Don&amp;#39;t know why, but some of the &lt;code&gt;options&lt;/code&gt; are not working, and I can&amp;#39;t do the styling because of this&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;react-d3&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/esbullington/react-d3&quot;&gt;react-d3&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/pyliaorachel/hack-with-ix/blob/demo/ui/src/assets/react-d3.png?raw=true&quot; alt=&quot;react-d3&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;The main problem is in data parsing.&lt;/p&gt;
+
+&lt;p&gt;You need to go through the whole data and explicitly parse out the &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; in a &lt;code&gt;values&lt;/code&gt; array, which is most commonly done by simply setting the &lt;code&gt;field&lt;/code&gt; key in other libraries. This can be helpful if you want even more flexibility, but this is seldom the case.&lt;/p&gt;
+
+&lt;p&gt;And again, where can I easily find the styling instructions? Miserable.&lt;/p&gt;
+
+&lt;h5&gt;Data Parsing&lt;/h5&gt;
+
+&lt;p&gt;Parse points as &lt;code&gt;x-y&lt;/code&gt; pairs in a &lt;code&gt;values&lt;/code&gt; array for coordinate charts.&lt;br&gt;
+Parse categories as &lt;code&gt;label&lt;/code&gt; and values as &lt;code&gt;value&lt;/code&gt; for category charts.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;lineData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;series1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;values&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;24&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;strokeWidth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;strokeDashArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;5,5&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;....&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;series2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;values&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;70&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;82&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;76&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;82&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;pieData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Margarita'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;20.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'John'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;55.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Tim'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;25.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h5&gt;Pros&lt;/h5&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Nice demonstration page, simple and clear&lt;/li&gt;
+&lt;li&gt;Parse the x/y coordinates ourselves, which can be more flexible (but also a con)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5&gt;Cons&lt;/h5&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The styling instructions are somehow hidden deep in the documentation&lt;/li&gt;
+&lt;li&gt;Need to parse the x/y coordinates ourselves, which is more tedious (but also a pro)&lt;/li&gt;
+&lt;li&gt;Customize displayed x-/y-axis is not flexible enough (only found time on x-axis to be formattable, but the instructions are not clear)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;react-d3-basic&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/react-d3/react-d3-basic&quot;&gt;react-d3-basic&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/pyliaorachel/hack-with-ix/blob/demo/ui/src/assets/react-d3-basic.png?raw=true&quot; alt=&quot;react-d3-basic&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;To be honest, I choose this as the final working version simply because I KNOW HOW TO STYLE IT. The documentation is the nice ever.&lt;/p&gt;
+
+&lt;p&gt;The main problem is still in data parsing and non-customizable x-axis display value.&lt;/p&gt;
+
+&lt;p&gt;Although the doc is nice, but the data are not especially shown, so I have to look for the &lt;code&gt;.csv&lt;/code&gt; files on github and found some missing. Not a big problem though, but a problem to hackers in hackathons.&lt;/p&gt;
+
+&lt;p&gt;For the x-axis display values, it provides an &lt;code&gt;x&lt;/code&gt; function for you to map. But they are not actually intended for you to map displayed values but only actual values. So if you want the function to return a string representation of a date, it fails because only number values are allowed.&lt;/p&gt;
+
+&lt;p&gt;And the bar-type charts yelled to me miserable errors for a missing &lt;code&gt;bandwidth&lt;/code&gt; function deep in the &lt;code&gt;chartjs&lt;/code&gt; package, probably because I used the bar charts to build some streaming charts. So be careful when implementing them.&lt;/p&gt;
+
+&lt;h5&gt;Data Parsing&lt;/h5&gt;
+
+&lt;p&gt;Use &lt;code&gt;field&lt;/code&gt; for the y-axis filter. Argument in &lt;code&gt;x&lt;/code&gt; function is the data object itself, so be sure the datum is parsed in a way that have both &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; values.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;// sample data
+[
+  {
+    total: 1,
+    incineration: 1,
+    garbageBury: 1,
+    month: 1,
+  },
+  {
+    total: 2,
+    incineration: 2,
+    garbageBury: 2,
+    month: 2,
+  },
+  ...
+]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;chartSeries&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;chartSeries&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;field&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'total'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Total'&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;field&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'incineration'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Incineration'&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;field&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'garbageBury'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Garbage Bury'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;area&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;parseDate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;month&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h5&gt;Pros&lt;/h5&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Nice documentation, simple and clear&lt;/li&gt;
+&lt;li&gt;Easy to style&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5&gt;Cons&lt;/h5&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Need more examples on how to parse the data for different charts&lt;/li&gt;
+&lt;li&gt;Customized x-/y-axis is not flexible enough&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Mon, 21 Nov 2016 00:00:00 -0500</pubDate>
+        <link>/blog/tech/reactjs/2016/11/21/reactjs-data-visualization-libraries-in-a-hack-night.html</link>
+        <guid isPermaLink="true">/blog/tech/reactjs/2016/11/21/reactjs-data-visualization-libraries-in-a-hack-night.html</guid>
+        
+        <category>react</category>
+        
+        <category>react-chartjs</category>
+        
+        <category>react-d3</category>
+        
+        <category>react-d3-basic</category>
+        
+        <category>data visualization</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Tech</category>
+        
+        <category>ReactJS</category>
+        
+      </item>
+    
+      <item>
+        <title>Docker Beginner</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Basics
+
+&lt;ol&gt;
+&lt;li&gt;Terminologies&lt;/li&gt;
+&lt;li&gt;Commands&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Docker Images
+
+&lt;ol&gt;
+&lt;li&gt;Image Types&lt;/li&gt;
+&lt;li&gt;Create Images&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Docker Compose
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;docker-compose.yml&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Run Application&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Basics&lt;/h2&gt;
+
+&lt;h3&gt;Terminologies&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Images&lt;/strong&gt;: the &lt;strong&gt;file system and configuration of an application&lt;/strong&gt; used to &lt;strong&gt;create containers&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;docker inspect image-name&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Containers&lt;/strong&gt;: &lt;strong&gt;running instances of Docker images&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Run the actual applications; includes an application and all of its dependencies &lt;/li&gt;
+&lt;li&gt;Share the kernel with other containers&lt;/li&gt;
+&lt;li&gt;Run as an isolated process in user space on the host OS &lt;/li&gt;
+&lt;li&gt;A container created by &lt;code&gt;docker run&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Docker daemon&lt;/strong&gt;: the background service running on the host that &lt;strong&gt;manages building, running and distributing Docker containers&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Docker client&lt;/strong&gt;: the command line tool that allows the user to interact with the Docker daemon&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Docker Hub&lt;/strong&gt;: a registry of Docker images&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Commands&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;docker login&lt;/code&gt; login to docker hub&lt;br&gt;
+&lt;code&gt;docker ps&lt;/code&gt; list current running containers&lt;br&gt;
+    - &lt;code&gt;docker ps -a&lt;/code&gt; list containers ran before&lt;br&gt;
+&lt;code&gt;docker images&lt;/code&gt; list images&lt;br&gt;
+&lt;code&gt;docker pull image-name&lt;/code&gt; pull image from hub&lt;br&gt;
+    - &lt;code&gt;image-name:version&lt;/code&gt; specify version e.g. &lt;code&gt;ubuntu:12.04&lt;/code&gt;, &lt;code&gt;ubuntu:latest&lt;/code&gt;
+&lt;code&gt;docker push USERNAME/image-name&lt;/code&gt; push image to hub&lt;br&gt;
+&lt;code&gt;docker run image-name [command]&lt;/code&gt; executes commands in container&lt;br&gt;
+    - &lt;code&gt;docker pull&lt;/code&gt; if image not exists
+    - &lt;code&gt;-it&lt;/code&gt; iterative mode; will not exit container&lt;br&gt;
+    - &lt;code&gt;-d&lt;/code&gt; detached mode; detach running container from terminal
+    - &lt;code&gt;-P&lt;/code&gt; publish all the exposed container ports to random ports on the Docker host
+    - &lt;code&gt;-p&lt;/code&gt; specify port number e.g. &lt;code&gt;-p 8888:80&lt;/code&gt; link 8888 on container to 80 on host
+    - &lt;code&gt;-e&lt;/code&gt; pass environment variables
+        - e.g. &lt;code&gt;-e AUTHOR=&amp;quot;name&amp;quot;&lt;/code&gt;
+    - &lt;code&gt;--name&lt;/code&gt; specify container name
+&lt;code&gt;docker stop container-name&lt;/code&gt; stop running container&lt;br&gt;
+&lt;code&gt;docker rm container1-name container2-name ...&lt;/code&gt; remove containers&lt;br&gt;
+    - &lt;code&gt;-f&lt;/code&gt; remove running containers 
+&lt;code&gt;docker port container-name&lt;/code&gt; port of running container
+&lt;code&gt;docker search image-name&lt;/code&gt; search for images  &lt;/p&gt;
+
+&lt;h2&gt;Docker Images&lt;/h2&gt;
+
+&lt;h3&gt;Image Types&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Base images v.s. child images
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Base image&lt;/strong&gt;: no parent images, usually images with an OS&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Child image&lt;/strong&gt;: build on base images and add additional functionality&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Official images v.s. user images
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Official image&lt;/strong&gt;: no prefix&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;User image&lt;/strong&gt;: &lt;code&gt;user/image-name&lt;/code&gt;; based on &lt;em&gt;base image&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Create Images&lt;/h3&gt;
+
+&lt;h4&gt;Steps&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Create an app&lt;/li&gt;
+&lt;li&gt;Write a Dockerfile&lt;/li&gt;
+&lt;li&gt;Build the image&lt;/li&gt;
+&lt;li&gt;Run your image&lt;/li&gt;
+&lt;li&gt;Dockerfile commands summary&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;Dockerfile&lt;/h4&gt;
+
+&lt;p&gt;List of commands the Docker daemon calls while creating an image.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Base Docker image to run from&lt;/li&gt;
+&lt;li&gt;Location of your project code&lt;/li&gt;
+&lt;li&gt;Dependencies&lt;/li&gt;
+&lt;li&gt;Commands to run at start-up&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# specify base image
+FROM alpine:latest # username/imagename:version
+
+# copying files &amp;amp; installing dependencies
+RUN apk add --update py-pip # install Python pip package to the alpine linux distribution # RUN add new layers
+
+# install required Python packages &amp;amp; copy files
+COPY requirements.txt /usr/src/app/
+RUN pip install --no-cache-dir -r /usr/src/app/requirements.txt
+COPY app.py /usr/src/app/
+COPY templates/index.html /usr/src/app/templates/
+
+# specify port number
+EXPOSE 5000
+
+# run application; one CMD per Dockerfile/Image
+CMD [&quot;python&quot;, &quot;/usr/src/app/app.py&quot;] # which command to run by default when started
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Build Images&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;docker build -t &amp;lt;USERNAME&amp;gt;/appname [path-to-dockerfile]&lt;/code&gt;&lt;br&gt;
+    - &lt;code&gt;-t&lt;/code&gt; optional tag name&lt;/p&gt;
+
+&lt;h2&gt;Docker Compose&lt;/h2&gt;
+
+&lt;p&gt;Define &amp;amp; run multi-container apps.&lt;/p&gt;
+
+&lt;h3&gt;&lt;code&gt;docker-compose.yml&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Describe containers &amp;amp; volumes you want.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yml&quot; data-lang=&quot;yml&quot;&gt;&lt;span class=&quot;s&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;2&quot;&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;vote&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;./vote&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;python app.py&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+     &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;./vote:/app&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;5000:80&quot;&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;front-tier&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;
+
+  &lt;span class=&quot;s&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;./result&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;nodemon --debug server.js&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;./result:/app&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;5001:80&quot;&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;5858:5858&quot;&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;front-tier&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;
+
+  &lt;span class=&quot;s&quot;&gt;worker&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;./worker&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;
+
+  &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis:alpine&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;6379&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;
+
+  &lt;span class=&quot;s&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;postgres:9.4&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;db&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;db-data:/var/lib/postgresql/data&quot;&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;db-data&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;front-tier&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Networks&lt;/strong&gt;: containers can communicate with others in the same network&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Run Application&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;docker-compose up -d&lt;/code&gt; start all containers in &lt;code&gt;docker-compose.yml&lt;/code&gt;&lt;br&gt;
+    - &lt;code&gt;-d&lt;/code&gt; run in daemon mode in background&lt;/p&gt;
+
+&lt;p&gt;Then build &amp;amp; push to hub.&lt;/p&gt;
+</description>
+        <pubDate>Thu, 17 Nov 2016 00:00:00 -0500</pubDate>
+        <link>/blog/notes/docker/2016/11/17/docker-beginner.html</link>
+        <guid isPermaLink="true">/blog/notes/docker/2016/11/17/docker-beginner.html</guid>
+        
+        <category>docker</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Docker</category>
+        
+      </item>
     
       <item>
         <title>Shortest Path Algorithms</title>
@@ -472,7 +887,12 @@ Original: polynomial in magnatude of capacities&lt;/p&gt;&lt;/li&gt;
 
 &lt;h5&gt;Idea 2&lt;/h5&gt;
 
-&lt;p&gt;Choose path with &lt;strong&gt;fewest number of edges&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Choose path with &lt;strong&gt;fewest number of edges&lt;/strong&gt;.&lt;br&gt;
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Edmonds%E2%80%93Karp_algorithm&quot;&gt;Edmond-Karp&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Runtime: &lt;code&gt;O(|V||E|^2)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h3&gt;&lt;strong&gt;Extensions to Max-Flow Problem&lt;/strong&gt;&lt;/h3&gt;
 
@@ -1963,489 +2383,6 @@ Cach size = S * E * B bytes
         <pubDate>Sun, 30 Oct 2016 00:00:00 -0400</pubDate>
         <link>/blog/notes/optimization/2016/10/30/memory-optimization.html</link>
         <guid isPermaLink="true">/blog/notes/optimization/2016/10/30/memory-optimization.html</guid>
-        
-        <category>Optimization</category>
-        
-        <category>ECE454</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>Optimization</category>
-        
-      </item>
-    
-      <item>
-        <title>Memory Allocation</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Dynamic Memory Allocation
-
-&lt;ol&gt;
-&lt;li&gt;Memory Allocator&lt;/li&gt;
-&lt;li&gt;Performance Goals&lt;/li&gt;
-&lt;li&gt;Fragmentation&lt;/li&gt;
-&lt;li&gt;Implementation&lt;/li&gt;
-&lt;li&gt;Garbage Collection&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Memory-Related Bugs&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Dynamic Memory Allocation&lt;/h2&gt;
-
-&lt;h3&gt;Memory Allocator&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Explicit memory allocator&lt;/strong&gt;: &lt;code&gt;malloc&lt;/code&gt; &amp;amp; &lt;code&gt;free&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Implicit memory allocator&lt;/strong&gt;: garbage collection&lt;/li&gt;
-&lt;li&gt;Provides abstraction of memory as a set of blocks&lt;/li&gt;
-&lt;li&gt;Constraints
-
-&lt;ul&gt;
-&lt;li&gt;Alignment&lt;/li&gt;
-&lt;li&gt;No compaction on allocated blocks&lt;/li&gt;
-&lt;li&gt;Only manipulate free memory&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Goal
-
-&lt;ul&gt;
-&lt;li&gt;Good time performance for &lt;code&gt;malloc&lt;/code&gt; &amp;amp; &lt;code&gt;free&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Good space utilization&lt;/li&gt;
-&lt;li&gt;Good locality properties
-
-&lt;ul&gt;
-&lt;li&gt;Allocation close in time should be close in space&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Performance Goals&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Throughput&lt;/strong&gt;: # of completed requests per unit time&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Peak memory utilization&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Aggregate payload &lt;code&gt;Pk&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Current heap size &lt;code&gt;Hk&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Peak memory utilization &lt;code&gt;Uk = (max_i&amp;lt;k Pi) / Hk&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Fragmentation&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Internal fragmentation&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Depends on pattern of &lt;em&gt;previous&lt;/em&gt; requests&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;External fragmentation&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Depends on pattern of &lt;em&gt;future&lt;/em&gt; requests&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Implementation&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;| size | a | - header
-| payload  |
-| padding  |
-| size | a | - footer
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;Keep track of &lt;strong&gt;size&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Overhead: size + allocated bit&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Keep track of &lt;strong&gt;free blocks&lt;/strong&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Implicit list: length to link all blocks&lt;/li&gt;
-&lt;li&gt;Explicit list: pointers to link free blocks&lt;/li&gt;
-&lt;li&gt;Segregated free list&lt;/li&gt;
-&lt;li&gt;Blocks sorted by size&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Implicit List&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Placement policy
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;First fit&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Next fit&lt;/strong&gt;: fragmentation worse&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Best fit&lt;/strong&gt;: slower&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Coalescing policy
-
-&lt;ul&gt;
-&lt;li&gt;Join adjacent free blocks&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Immediate coalescing&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Deferred coalescing&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Until &lt;code&gt;malloc&lt;/code&gt; or external fragmentation reaches threshold&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Explicit Free List&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Extra data space for link pointers&lt;/li&gt;
-&lt;li&gt;Need boundary tags for coalescing&lt;/li&gt;
-&lt;li&gt;Insertion policy
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;LIFO&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Address-ordered&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Segragated Free List&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Each size class  has own collection of blocks
-
-&lt;ul&gt;
-&lt;li&gt;Separate size class for small sizes&lt;/li&gt;
-&lt;li&gt;Typically size classes for power of 2&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Garbage Collection&lt;/h3&gt;
-
-&lt;h4&gt;Mark and Sweep Collecting&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Mark&lt;/strong&gt;: scan over blocks, mark all reachable memory&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Sweep&lt;/strong&gt;: scan over blocks, free blocks not marked&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Memory-Related Bugs&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Dereferencing bad pointers 
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;scanf(&amp;quot;%d&amp;quot;, val)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Reading uninitialized memory &lt;/li&gt;
-&lt;li&gt;Overwriting memory
-
-&lt;ul&gt;
-&lt;li&gt;Allocating wrong sized object&lt;/li&gt;
-&lt;li&gt;Off-by-one error&lt;/li&gt;
-&lt;li&gt;Not checking max string size&lt;/li&gt;
-&lt;li&gt;Referencing a pointer instead of the object it points to: &lt;code&gt;*size--&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Pointer arithmetic: &lt;code&gt;p += sizeof(int)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Referencing nonexistent variables 
-
-&lt;ul&gt;
-&lt;li&gt;Return pointer to local variable&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Freeing blocks multiple times &lt;/li&gt;
-&lt;li&gt;Referencing freed blocks&lt;/li&gt;
-&lt;li&gt;Failing to free blocks&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Sun, 30 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/optimization/2016/10/30/memory-allocation.html</link>
-        <guid isPermaLink="true">/blog/notes/optimization/2016/10/30/memory-allocation.html</guid>
-        
-        <category>Optimization</category>
-        
-        <category>ECE454</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>Optimization</category>
-        
-      </item>
-    
-      <item>
-        <title>Code Optimization Principles &amp; Profiling</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Measurements of Programs &amp;amp; Computers
-
-&lt;ol&gt;
-&lt;li&gt;Measurements&lt;/li&gt;
-&lt;li&gt;Amdahl&amp;#39;s Law&lt;/li&gt;
-&lt;li&gt;Tools for Measuring&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Compiler Optimizations
-
-&lt;ol&gt;
-&lt;li&gt;Common Compiler Optimizations&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Basics of Computer Architecture
-
-&lt;ol&gt;
-&lt;li&gt;Pipelines&lt;/li&gt;
-&lt;li&gt;Branch Prediction&lt;/li&gt;
-&lt;li&gt;Out-of-Order Execution&lt;/li&gt;
-&lt;li&gt;Superscalar &amp;amp; Simultaneous Multithreading(SMT)/Hyperthreading&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Measurements of Programs &amp;amp; Computers&lt;/h2&gt;
-
-&lt;h3&gt;Measurements&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;IPS&lt;/strong&gt;: instructions per second&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;FLOPS&lt;/strong&gt;: floating point operations per second&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;IPC&lt;/strong&gt;: instructions per cycle&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;CPI&lt;/strong&gt;: cycles per instruction&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Amdahl&amp;#39;s Law&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;speedup = OldTime/NewTime&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;NewTime = OldTime x [(1 - f) + f/s]&lt;/code&gt;&lt;br&gt;
-&lt;code&gt;speedup = 1 / (1 - f + f/s)&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;f&lt;/code&gt; = fraction of execution time the optimization applies to&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;s&lt;/code&gt; = improvement factor&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Tools for Measuring&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;S/W timers&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;C library: &lt;code&gt;&amp;lt;sys/times.h&amp;gt;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;OS-level timers: &lt;code&gt;/usr/bin/time&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;H/W timers &amp;amp; performance counters&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Built into processor chip: low-level architecture events e.g. cache misses, branch mispredictions, ...&lt;/li&gt;
-&lt;li&gt;S/W packages to make them easier to use: &lt;code&gt;perf&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Instrumentation&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Self implemented codes&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;gprof&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Periodically interrupt program&lt;/li&gt;
-&lt;li&gt;Measure &lt;em&gt;time spent&lt;/em&gt; &amp;amp; &lt;em&gt;# of calls made&lt;/em&gt; in each function&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;gcov&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Profile of execution within a function e.g. # of times each line of code was executed, which loops/conditional statements are important&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Disturbing the system slows down execution&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Comparison&lt;/p&gt;
-
-&lt;table&gt;&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;&lt;/th&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;gprof&lt;/th&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;gcov&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Compile&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;faster (insert counter func for each function)&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;slower (insert counter func for each line)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Size&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;smaller&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;bigger&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Runtime&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;slower (frequent interrupts)&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;faster&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;&lt;/table&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Compiler Optimizations&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Preserve correctness&lt;/li&gt;
-&lt;li&gt;Improve performance
-
-&lt;ul&gt;
-&lt;li&gt;Fewer CPI
-
-&lt;ul&gt;
-&lt;li&gt;Schedule instructions&lt;/li&gt;
-&lt;li&gt;Improve cache/memory behavior&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Fewer instructions&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Worth the effort&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;---&amp;gt; Front End ---&amp;gt; Optimizer ---&amp;gt; Code Generator ---&amp;gt;
- HLL            IR             IR                 LLL
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;Limitations
-
-&lt;ul&gt;
-&lt;li&gt;Cannot change program behavior&lt;/li&gt;
-&lt;li&gt;Inter-procedural analysis too expensive -&amp;gt; most analysis performed within procedures&lt;/li&gt;
-&lt;li&gt;Hard to anticipate run-time inputs -&amp;gt; most analysis based on static information&lt;/li&gt;
-&lt;li&gt;Must be conservative&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Programmers should:
-
-&lt;ul&gt;
-&lt;li&gt;Select best algorithm&lt;/li&gt;
-&lt;li&gt;Write readable &amp;amp; maintainable code&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Eliminate optimization blockers&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Memory aliasing
-
-&lt;ul&gt;
-&lt;li&gt;2 different memory references specific single location&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Pocedural side-effects&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Common Compiler Optimizations&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Machine independent
-
-&lt;ul&gt;
-&lt;li&gt;Constant propagation&lt;/li&gt;
-&lt;li&gt;Constant folding&lt;/li&gt;
-&lt;li&gt;Common subexpression elimination&lt;/li&gt;
-&lt;li&gt;Dead code elimination&lt;/li&gt;
-&lt;li&gt;Loop invariant code motion&lt;/li&gt;
-&lt;li&gt;Function inlining
-
-&lt;ul&gt;
-&lt;li&gt;Space-speed tradeoff&lt;/li&gt;
-&lt;li&gt;Overloading issue&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Reduction in strength: replace costly operation with simpler one
-
-&lt;ul&gt;
-&lt;li&gt;Shifting (machine-dependent)&lt;/li&gt;
-&lt;li&gt;Make use of registers&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Direct access
-
-&lt;ul&gt;
-&lt;li&gt;Avoid bound checking&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Machine dependent
-
-&lt;ul&gt;
-&lt;li&gt;Instruction scheduling&lt;/li&gt;
-&lt;li&gt;Loop unrolling
-
-&lt;ul&gt;
-&lt;li&gt;Enables more aggressive instruction scheduling&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Parallel unrolling&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Basics of Computer Architecture&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;RISC: simpler instructions -&amp;gt; &lt;strong&gt;pipeline&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;64-bit: larger databases, counter not overflowing, better math performance -&amp;gt; code size increases&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Pipelines&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Important factors
-
-&lt;ul&gt;
-&lt;li&gt;Branch prediction&lt;/li&gt;
-&lt;li&gt;Data dependency&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Pipeline deeper -&amp;gt; misprediction penalty larger&lt;/li&gt;
-&lt;li&gt;Multiple instruction issue: flushing &amp;amp; refetching more instructions&lt;/li&gt;
-&lt;li&gt;OOP: More indirect branches to be predicted&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Branch Prediction&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Predict future based on history&lt;/li&gt;
-&lt;li&gt;Global predictor: predict based on &lt;em&gt;global&lt;/em&gt; &amp;amp; &lt;em&gt;local&lt;/em&gt; history
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;(m, n) prediction&lt;/strong&gt;: m-bit global x n-bit local&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Out-of-Order Execution&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Solve &lt;strong&gt;data dependency&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;Mask &lt;strong&gt;cache miss delay&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Superscalar &amp;amp; Simultaneous Multithreading(SMT)/Hyperthreading&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;    1               1 2             1 2 6
-    2               3 4 5           3 4 5   
-    3               6               7 8
-    4               7 8             9
-    5               9
-    6
-    7
-    8
-    9
-single-issue     superscalar    out-of-order superscalar
-
-    1   1'          1 2 6           1 2 1'
-    2   2'          3 4 5           2'6 6'
-    3   3'          7 8             3'3 5
-    4   4'          9               4 4'5'
-    5   5'          1'2'6'          7 8 7'
-    6   6'          3'4'5'          9 8'
-    7   7'          7'8'            9'
-    8   8'          9'
-    9   9'
-2 applications      fast        hyperthreading
-                context switching
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
-        <pubDate>Sun, 30 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/optimization/2016/10/30/code-optimization-principles-and-profiling.html</link>
-        <guid isPermaLink="true">/blog/notes/optimization/2016/10/30/code-optimization-principles-and-profiling.html</guid>
         
         <category>Optimization</category>
         
