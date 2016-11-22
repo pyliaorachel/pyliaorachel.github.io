@@ -236,7 +236,10 @@ Maintain a __scaling parameter `sp`__ and look for paths having bottleneck of _a
 
 ##### Idea 2
 
-Choose path with __fewest number of edges__.
+Choose path with __fewest number of edges__.  
+[Edmond-Karp](https://en.wikipedia.org/wiki/Edmonds%E2%80%93Karp_algorithm)
+
+- Runtime: `O(|V||E|^2)`
 
 ### __Extensions to Max-Flow Problem__
 
