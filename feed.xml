@@ -6,9 +6,163 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 21 Nov 2016 23:36:22 -0500</pubDate>
-    <lastBuildDate>Mon, 21 Nov 2016 23:36:22 -0500</lastBuildDate>
+    <pubDate>Tue, 22 Nov 2016 22:22:22 -0500</pubDate>
+    <lastBuildDate>Tue, 22 Nov 2016 22:22:22 -0500</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Operating System - Paging</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Introduction to Virtual Memory&lt;/li&gt;
+&lt;li&gt;Paging MMU&lt;/li&gt;
+&lt;li&gt;Page Tables&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Introduction to Virtual Memory&lt;/h2&gt;
+
+&lt;h4&gt;Problems with Contiguous Memory&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Growing program requires copying entire program&lt;/li&gt;
+&lt;li&gt;Wasted memory due to &lt;strong&gt;internal &amp;amp; external fragmentation&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Running program requires loading entire program&lt;/li&gt;
+&lt;li&gt;Max program size limited by memory size&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Paging MMU&lt;/h2&gt;
+
+&lt;h4&gt;Pages &amp;amp; Frames&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Page&lt;/strong&gt;: contiguous, fixed size chunks in virtual address space&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Frame&lt;/strong&gt;: physical memory mapped from a page&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Virtual &amp;amp; Physical Addresses&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# 32-bit machine, virtual address space 2^32 B
+# page size 2^12, # of pages 2^20
+|...20 bits...|.12 bits.|
+    page num     offset
+
+# e.g. physical address space 2^30 B
+# frame size 2^12, # of frames 2^18
+|...18 bits...|.12 bits.|
+    page num     offset
+
+               VA               PA
+          -----------&amp;gt;     -----------&amp;gt;
+Processor              MMU              Bus
+          &amp;lt;----------------------------
+                       data
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Benefits of Paging&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Growing program requires allocating a page at a time&lt;/li&gt;
+&lt;li&gt;No external fragmentation (page granularity); internal fragmentation 1/2 page per region&lt;/li&gt;
+&lt;li&gt;Pages can be loaded in memory as program runs&lt;/li&gt;
+&lt;li&gt;Max program size limited by disk size&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Page Tables&lt;/h2&gt;
+
+&lt;p&gt;Mapping information maintained by MMU.&lt;/p&gt;
+
+&lt;h4&gt;Page Table Entries (PTE)&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|...18 bits...|.7 bits.|C|D|R|W|V|
+   frame num    unused
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Storing Page Table&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Stored in memory
+
+&lt;ul&gt;
+&lt;li&gt;Each memory access requires 2 memory accesses: PTE &amp;amp; PA&lt;/li&gt;
+&lt;li&gt;Solution: Cache PTE in TLB&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Page table register (PTR)&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;For MMU to store the location of start of page table&lt;/li&gt;
+&lt;li&gt;OS associates a seperate page table for each process&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Address space switch&lt;/strong&gt; switches PTR&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Page Table Size&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;#pages * PTE size (typically word size)
+= (va_size / page_size) * PTE size
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Smaller page size: lower internal fragmentation&lt;/li&gt;
+&lt;li&gt;Larger page size: fewer PTE &amp;amp; memory overhead&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Multi-Level Page Table&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|.10 bits.|.10 bits.|.12 bits.|
+    PT1       PT2      offset
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Slower than &lt;em&gt;single-level page table&lt;/em&gt; because more memory accesses&lt;/li&gt;
+&lt;li&gt;Saves space&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Inverted Page Table&lt;/h4&gt;
+
+&lt;p&gt;Maps &lt;strong&gt;frame num -&amp;gt; (thread id, page num)&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|....|...52 bits...|.12 bits.|
+ TID    page num     offset
+  |         |
+  -----------
+       |
+   hash func ----&amp;gt; index into page table
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Exhaustive search is slow
+
+&lt;ul&gt;
+&lt;li&gt;Use hash table indexed by page number&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Hashing function needs to be good&lt;/li&gt;
+&lt;li&gt;Poor cache locality
+
+&lt;ul&gt;
+&lt;li&gt;Adjacent pages hashed to scattered locations&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Sharing memory is complecated&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Related Resources&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.quora.com/What-is-the-differences-between-a-page-table-and-an-inverted-page-table&quot;&gt;What are the differences between a page table and an inverted page table?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Tue, 22 Nov 2016 00:00:00 -0500</pubDate>
+        <link>/blog/notes/os/2016/11/22/operating-system-paging.html</link>
+        <guid isPermaLink="true">/blog/notes/os/2016/11/22/operating-system-paging.html</guid>
+        
+        <category>OS</category>
+        
+        <category>ECE344</category>
+        
+        <category>paging</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>OS</category>
+        
+      </item>
     
       <item>
         <title>ReactJS Data Visualization Libraries in a Hack Night</title>
@@ -2120,269 +2274,6 @@ for some number of timesteps {
         <pubDate>Sun, 30 Oct 2016 00:00:00 -0400</pubDate>
         <link>/blog/notes/optimization/2016/10/30/threads-and-parallel-programming.html</link>
         <guid isPermaLink="true">/blog/notes/optimization/2016/10/30/threads-and-parallel-programming.html</guid>
-        
-        <category>Optimization</category>
-        
-        <category>ECE454</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>Optimization</category>
-        
-      </item>
-    
-      <item>
-        <title>Memory Optimization</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Data Representation &amp;amp; Alignment&lt;/li&gt;
-&lt;li&gt;Cache Performance
-
-&lt;ol&gt;
-&lt;li&gt;Cache Organization&lt;/li&gt;
-&lt;li&gt;Cache Performance Metrics&lt;/li&gt;
-&lt;li&gt;Code Scheduling&lt;/li&gt;
-&lt;li&gt;Blocking/Tiling&lt;/li&gt;
-&lt;li&gt;The Memory Moutain&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Virtual Memory
-
-&lt;ol&gt;
-&lt;li&gt;Virtual Memory Access&lt;/li&gt;
-&lt;li&gt;Page Table &amp;amp; TLB&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Prefetching
-
-&lt;ol&gt;
-&lt;li&gt;H/W Prefetching&lt;/li&gt;
-&lt;li&gt;S/W Prefetching&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Machine-Dependent Optimizations
-
-&lt;ol&gt;
-&lt;li&gt;Pointer Code&lt;/li&gt;
-&lt;li&gt;Instruction-Level Parallelism&lt;/li&gt;
-&lt;li&gt;Parallel Loop Unrolling&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Data Representation &amp;amp; Alignment&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Primitive data type requires K bytes -&amp;gt; address must be multiple of K&lt;/li&gt;
-&lt;li&gt;Structures align with the &lt;em&gt;largest alignment requirement of any element&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Cache Performance&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Keep working set small (temporal locality)&lt;/li&gt;
-&lt;li&gt;Use small strides (spacial locality)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Cache Organization&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;address: | tag | index | offset |
-cache block: | v | tag | data |
-S - 2^s sets
-E - 2^e blocks/lines per set
-B - 2^b bytes per cache block
-
-Cach size = S * E * B bytes
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3&gt;Cache Performance Metrics&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Miss rate&lt;/li&gt;
-&lt;li&gt;Hit time
-
-&lt;ul&gt;
-&lt;li&gt;isLineInCache? + deliver block to CPU (+virtual memory translation)&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Miss penalty&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Code Scheduling&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Factors
-
-&lt;ul&gt;
-&lt;li&gt;Reordering of loops&lt;/li&gt;
-&lt;li&gt;# of read/write operations&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Blocking/Tiling&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Traverse array in blocks&lt;/li&gt;
-&lt;li&gt;Imporves &lt;strong&gt;temporal locality&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;The Memory Moutain&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Measure &lt;strong&gt;read throughput&lt;/strong&gt; as a function of &lt;strong&gt;spatial &amp;amp; temporal locality&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://cfile22.uf.tistory.com/image/112730164AC0AFAB36962C&quot; alt=&quot;Memory Mountain&quot;&gt;&lt;/p&gt;
-
-&lt;h2&gt;Virtual Memory&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Why virtual memory?
-
-&lt;ul&gt;
-&lt;li&gt;Capacity/Portability&lt;/li&gt;
-&lt;li&gt;Security&lt;/li&gt;
-&lt;li&gt;Sharing&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Virtual Memory Access&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Type of cache misses
-
-&lt;ul&gt;
-&lt;li&gt;Cold/compulsory miss&lt;/li&gt;
-&lt;li&gt;Conflict miss
-
-&lt;ul&gt;
-&lt;li&gt;Avoided by &lt;em&gt;set-associative caches&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Capacity miss *
-
-&lt;ul&gt;
-&lt;li&gt;Keep working set within on-chip cache capacity&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Write
-
-&lt;ul&gt;
-&lt;li&gt;Write-back (on write-hit)&lt;/li&gt;
-&lt;li&gt;Write-allocate (on write-miss)&lt;/li&gt;
-&lt;li&gt;Write-through&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Page Table &amp;amp; TLB&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;MMU keep mapping of VA to PA in &lt;strong&gt;page table&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Page table kept in main memory, can be cached&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Translation lookaside buffer (TLB)&lt;/strong&gt;: cache for page table
-
-&lt;ul&gt;
-&lt;li&gt;TLB hit: &lt;code&gt;CPU -&amp;gt; MMU -&amp;gt; TLB -&amp;gt; MMU -&amp;gt; Mem&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;TLB miss: &lt;code&gt;CPU -&amp;gt; MMU -&amp;gt; TLB -&amp;gt; Mem -&amp;gt; TLB -&amp;gt; MMU -&amp;gt; Mem&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;TLB reach: &lt;code&gt;(# TLB entries) * (page size)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Working set&lt;/strong&gt; : a set of active virtual pages
-
-&lt;ul&gt;
-&lt;li&gt;Page miss: &lt;code&gt;(working set size) &amp;gt; (main mem size)&lt;/code&gt; -&amp;gt; &lt;strong&gt;thrashing&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;TLB miss: &lt;code&gt;(# working set pages) &amp;gt; (# TLB entries)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Prefetching&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Bring into cache elements expected to be accessed in future&lt;/li&gt;
-&lt;li&gt;Effective if:
-
-&lt;ul&gt;
-&lt;li&gt;Spare memory bandwidth&lt;/li&gt;
-&lt;li&gt;Accurate&lt;/li&gt;
-&lt;li&gt;Timely&lt;/li&gt;
-&lt;li&gt;Doesn&amp;#39;t displace other in-use data&lt;/li&gt;
-&lt;li&gt;Latency hidden by prefetched outweighs their cost&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;H/W Prefetching&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Prefetch adjacent block&lt;/li&gt;
-&lt;li&gt;Recognize a &lt;em&gt;stream&lt;/em&gt;: addresses separated by a &lt;em&gt;stride&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;Prefetch within a page boundary&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;S/W Prefetching&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Insert special &lt;code&gt;prefetch&lt;/code&gt; instructions into code
-
-&lt;ul&gt;
-&lt;li&gt;Patterns that H/W wouldn&amp;#39;t recognize e.g. linked list&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Machine-Dependent Optimizations&lt;/h2&gt;
-
-&lt;h3&gt;Pointer Code&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Not necessarily better than array code; some compilers do better job optimizing array code&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Instruction-Level Parallelism&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Limiting factor
-
-&lt;ul&gt;
-&lt;li&gt;Latency of instructions&lt;/li&gt;
-&lt;li&gt;# of functional units available
-
-&lt;ul&gt;
-&lt;li&gt;1 load&lt;/li&gt;
-&lt;li&gt;1 store&lt;/li&gt;
-&lt;li&gt;2 int (1 may be branch)&lt;/li&gt;
-&lt;li&gt;1 FP add&lt;/li&gt;
-&lt;li&gt;1 FP mul/div&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Parallel Loop Unrolling&lt;/h3&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Accumulate in 2 different products, combine at end
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;(1 * x2 * ... * xn) * (1 * x1 * ... * x_n-1)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Dual product 
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;(1 * x1) * (x2 * x3) * ... * (x_n-1 * xn)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Limitations
-
-&lt;ul&gt;
-&lt;li&gt;Need lots of registers to hold sums/products&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Sun, 30 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/optimization/2016/10/30/memory-optimization.html</link>
-        <guid isPermaLink="true">/blog/notes/optimization/2016/10/30/memory-optimization.html</guid>
         
         <category>Optimization</category>
         
