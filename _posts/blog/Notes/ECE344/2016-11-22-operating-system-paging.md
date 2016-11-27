@@ -13,6 +13,8 @@ excerpt_separator: <!--more-->
 1. Introduction to Virtual Memory
 2. Paging MMU
 3. Page Tables
+4. Translation Lookaside Buffer (TLB)
+5. Memory Protection
 
 <!--more-->
 ---
@@ -119,6 +121,71 @@ Maps __frame num -> (thread id, page num)__
 - Poor cache locality
 	- Adjacent pages hashed to scattered locations
 - Sharing memory is complecated
+
+## Translation Lookaside Buffer (TLB)
+
+- H/W cache of PTE
+	- Small # of entries
+	- Exploits locality (program uses small # of pages at a time)
+
+```
+|virtual page number (VPN)|...18 bits...|.7 bits.|C|D|R|W|V|
+   							 frame num	  unused
+|	key: page number	  |				data: PTE		   |
+
+V: valid, W: writable, R: referenced (H/W), D: dirty (H/W), C: cacheable
+```
+
+V: is the entry valid or not?  
+W: is the page writable?  
+C: is the page cacheable? when not cacheable, processor should bypass the cache when accessing the page, e.g., to access memory-mapped device registers  
+D: has a writable page been written to (is it dirty with respect to the data on disk)?  
+R: has a page been referenced?  
+unused: unused by hardware, can be used by OS  
+
+H/W may or may not need execution bit, but instead use _read_ as _execute_  
+
+#### TLB Operations
+
+##### TLB Lookup
+
+Fully associative TLB example  
+
+![TLB lookup](http://www.cems.uwe.ac.uk/~br-gaster/courses/2015-2016/CNOS/lectures/reveal.js-jade/decks/cnos_lecture9/resources/tlb-lookup.png)
+
+##### TLB cache miss handling
+
+- TLB lookup fails -> page table lookup -> TLB cache replaced (__TLB replacement policy__)
+- Handled by H/W or OS
+	- H/W managed TLB
+		- H/W defines page table format & replacement policy
+		- PTR to locate page table in physical memory
+		- Fast miss handling
+	- S/W managed TLB
+		- H/W generates trap called __TLB miss fault__
+			- __Read fault__
+			- __Write fault__
+		- OS handles TLB miss similar to exception handling
+		- OS figures out correct PTE, add in TLB (CPU has instructions to modify TLB)
+		- Page tables become entirely a OS data structure (no PTR in H/W, H/W doesn't know about page table)
+		- TLB replacement policy managed in S/W
+		- Slower by more flexible miss handling
+
+##### TLB cache invalidate
+
+- Adds cost to context switching
+	- Changing PTR + invalidating TLB + TLB misses afterwards
+- Invalidate options
+	- __Clear TLB__: clearing valid bit of all entries
+	- __Tagged TLB__: H/W maintains __id tag__ on each entry
+		- Compare current thread id (stored in register) to the tag
+		- No invalidation; enables space multiplexing of entries
+
+## Memory Protection
+
+- Generate __protection fault__ if memory access inconsistent with protection bits
+	- __Read-only fault__
+	- __No-execute fault__
 
 #### Related Resources
 
