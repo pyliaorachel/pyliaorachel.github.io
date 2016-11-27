@@ -6,9 +6,786 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 22 Nov 2016 22:22:22 -0500</pubDate>
-    <lastBuildDate>Tue, 22 Nov 2016 22:22:22 -0500</lastBuildDate>
+    <pubDate>Sun, 27 Nov 2016 11:32:06 -0500</pubDate>
+    <lastBuildDate>Sun, 27 Nov 2016 11:32:06 -0500</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>NP-Complete Problems</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Search Problems
+
+&lt;ol&gt;
+&lt;li&gt;Satisfiability Problem (SAT)&lt;/li&gt;
+&lt;li&gt;Traveling Salesman Problem (TSP)&lt;/li&gt;
+&lt;li&gt;Integer Linear Programming (ILP)
+
+&lt;ul&gt;
+&lt;li&gt;Zero-One Equations (ZOE)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Three-Dimensional Matching (3D Matching)&lt;/li&gt;
+&lt;li&gt;Independent Set&lt;/li&gt;
+&lt;li&gt;Clique&lt;/li&gt;
+&lt;li&gt;Knapsack Problem&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;NP-Complete Problems&lt;/li&gt;
+&lt;li&gt;Reductions
+
+&lt;ol&gt;
+&lt;li&gt;Generalization/Special Case&lt;/li&gt;
+&lt;li&gt;Rudrata Path -&amp;gt; Rudrata Cycle&lt;/li&gt;
+&lt;li&gt;3SAT -&amp;gt; Independent Set&lt;/li&gt;
+&lt;li&gt;SAT -&amp;gt; 3SAT&lt;/li&gt;
+&lt;li&gt;Independent Set -&amp;gt; Vertex Cover&lt;/li&gt;
+&lt;li&gt;Independent Set -&amp;gt; Clique&lt;/li&gt;
+&lt;li&gt;3SAT -&amp;gt; 3D Matching&lt;/li&gt;
+&lt;li&gt;3D Matching -&amp;gt; ZOE&lt;/li&gt;
+&lt;li&gt;ZOE -&amp;gt; Subset Sum&lt;/li&gt;
+&lt;li&gt;ZOE -&amp;gt; Rudrata Cycle&lt;/li&gt;
+&lt;li&gt;Rudrata Cycle -&amp;gt; TSP&lt;/li&gt;
+&lt;li&gt;Any Problem in NP -&amp;gt; SAT&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Search Problems&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Components
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Instance I&lt;/strong&gt;: input data specifying the problem&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Solution S&lt;/strong&gt;: object meeting particular specification&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Algorithm C&lt;/strong&gt; s.t. &lt;code&gt;C(I,S) = true&lt;/code&gt; &amp;lt;=&amp;gt; &lt;code&gt;S&lt;/code&gt; is a solution to &lt;code&gt;I&lt;/code&gt;; &lt;em&gt;quick checking&lt;/em&gt; &amp;lt;=&amp;gt; &lt;code&gt;C&lt;/code&gt; runs in polynomial-time in &lt;code&gt;|I|&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Can be reduced to/from &lt;strong&gt;optimization problems&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Satisfiability Problem (SAT)&lt;/h4&gt;
+
+&lt;p&gt;Boolean formula in conjunctive normal form (CNF), find a set of assignments s.t. every clause contains a literal that is &lt;code&gt;true&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h4&gt;Traveling Salesman Problem (TSP)&lt;/h4&gt;
+
+&lt;p&gt;Given &lt;code&gt;n&lt;/code&gt; vertices and all connected with a cost &lt;code&gt;c&lt;/code&gt;, find a permutation of vertices s.t. the total cost is at most the budget &lt;code&gt;b&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Search problem is polynomial-time checkable:
+
+&lt;ul&gt;
+&lt;li&gt;Each vertex is visited exactly once&lt;/li&gt;
+&lt;li&gt;Total cost &amp;lt;= &lt;code&gt;b&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;CANNOT check optimality
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Binary search&lt;/strong&gt; to find optimum cost&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Integer Linear Programming (ILP)&lt;/h4&gt;
+
+&lt;p&gt;Given a set of linear inequalities &lt;code&gt;Ax ≤ b&lt;/code&gt;, where &lt;code&gt;A&lt;/code&gt; is an &lt;code&gt;m × n&lt;/code&gt; matrix and &lt;code&gt;b&lt;/code&gt; is an &lt;code&gt;m-vector&lt;/code&gt;; an objective function specified by an &lt;code&gt;n-vector&lt;/code&gt; &lt;code&gt;c&lt;/code&gt;; and finally, a goal &lt;code&gt;g&lt;/code&gt;. Find a nonnegative integer &lt;code&gt;n-vector&lt;/code&gt; &lt;code&gt;x&lt;/code&gt; such that &lt;code&gt;Ax ≤ b&lt;/code&gt; and &lt;code&gt;cx ≥ g&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h5&gt;Zero-One Equations (ZOE)&lt;/h5&gt;
+
+&lt;p&gt;Find a vector &lt;code&gt;x&lt;/code&gt; of 0&amp;#39;s and 1&amp;#39;s satisfying &lt;code&gt;Ax = 1&lt;/code&gt;, where &lt;code&gt;A&lt;/code&gt; is an &lt;code&gt;m × n&lt;/code&gt; matrix with 0−1 entries and &lt;code&gt;1&lt;/code&gt; is the &lt;code&gt;m-vector&lt;/code&gt; of all 1&amp;#39;s.&lt;/p&gt;
+
+&lt;h4&gt;Three-Dimensional Matching (3D Matching)&lt;/h4&gt;
+
+&lt;p&gt;Find a matching (&lt;code&gt;n&lt;/code&gt; disjoint edges) between 3 sets of &lt;code&gt;n&lt;/code&gt; nodes.&lt;/p&gt;
+
+&lt;h4&gt;Independent Set&lt;/h4&gt;
+
+&lt;p&gt;Given a graph and an integer &lt;code&gt;g&lt;/code&gt;, find &lt;code&gt;g&lt;/code&gt; vertices that are independent, i.e. no edges between them.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Dual: &lt;strong&gt;vertex cover&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Special case of &lt;strong&gt;set cover&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Clique&lt;/h4&gt;
+
+&lt;p&gt;Given a graph and a goal &lt;code&gt;g&lt;/code&gt;, find a set of &lt;code&gt;g&lt;/code&gt; vertices such that the induced subgraph is complete.&lt;/p&gt;
+
+&lt;h4&gt;Knapsack Problem&lt;/h4&gt;
+
+&lt;p&gt;Given integer weights &lt;code&gt;w1,...,wn&lt;/code&gt; and integer values &lt;code&gt;v1, ..., vn&lt;/code&gt; for &lt;code&gt;n&lt;/code&gt; items. Find a set of items with total weight &amp;lt;= &lt;code&gt;W&lt;/code&gt; and total value &amp;gt;= &lt;code&gt;g&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Unary knapsack&lt;/strong&gt;: encode integers in unary&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Subset sum&lt;/strong&gt;: item&amp;#39;s value equals its weight
+
+&lt;ul&gt;
+&lt;li&gt;Find a subset of items that adds up to exactly &lt;code&gt;W&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;NP-Complete Problems&lt;/h2&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&quot;text-align: center&quot;&gt;Hard problems (NP-complete)&lt;/th&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;Easy problems (in P)&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;3SAT&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;2SAT, HORN SAT&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;TRAVELING SALESMAN PROBLEM&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;MINIMUM SPANNING TREE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;LONGEST PATH&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;SHORTEST PATH&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;3D MATCHING&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;BIPARTITE MATCHING&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;KNAPSACK&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;UNARY KNAPSACK&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;INDEPENDENT SET&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;INDEPENDENT SET on trees&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;INTEGER LINEAR PROGRAMMING&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;LINEAR PROGRAMMING&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;RUDRATA PATH&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;EULER PATH&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;BALANCED CUT&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;MINIMUM CUT&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;NP-complete problems can be reduced to/from any of the others.&lt;/p&gt;
+
+&lt;h4&gt;P, NP, NP-Complete&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;NP&lt;/strong&gt;: class of search problems s.t. any proposed solution can be quickly checked for correctness&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;P&lt;/strong&gt;: class of search problems that can be solved in polynomial time, and correctly reports no solution if so&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;NP-complete&lt;/strong&gt;: search problem where all other search problems reduce to it&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|--------NP-------|
+|P|...|NP-complete|
+      |-------NP Hard-------|
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Reductions&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# f, h are polynomial transformation algorithms
+
+    |----------------Algorithm for A-----------------|
+I ---&amp;gt; f --f(I)--&amp;gt; Algorithm for B --S of f(I)--&amp;gt; h --&amp;gt; h(S) of I
+                                   -------------------&amp;gt; No solution to I
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Reduction from A to B:
+    A --&amp;gt; B
+If we know A is hard, then B is hard as well. All problems in NP reduce to B via A.
+
+If A --&amp;gt; B and B --&amp;gt; C, then A --&amp;gt; C
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;                                All NP
+                                   |
+                                  SAT
+                                   |
+                                  3SAT
+                                  ⬋  ⬊
+                    Independent Set  3D Matching
+                        ⬋  ⬊            |
+            Vertex Cover    Clique     ZOE
+                                     ⬋  |  ⬊
+                            Subset Sum ILP Rudrata Cycle
+                                                |
+                                               TSP
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Generalization/Special Case&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Circuit SAT&lt;/strong&gt; is a generalization of &lt;strong&gt;SAT&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;SAT&lt;/strong&gt; is a generalization of &lt;strong&gt;3SAT&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Set cover&lt;/strong&gt; is a generalization of &lt;strong&gt;vertex cover&lt;/strong&gt; and &lt;strong&gt;3D matching&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ILP&lt;/strong&gt; is a generatlization of &lt;strong&gt;ZOE&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Rudrata Path -&amp;gt; Rudrata Cycle&lt;/h4&gt;
+
+&lt;p&gt;Given a graph, is there a path starting at s and ending at t that goes through each vertex exactly once?&lt;br&gt;
+-&amp;gt; Is there a cycle that passes through each vertex exactly once?&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Reduce &lt;code&gt;G&lt;/code&gt; in rudrata path to &lt;code&gt;G&amp;#39;&lt;/code&gt; in rudrata cycle:
+
+&lt;ul&gt;
+&lt;li&gt;Add vertex &lt;code&gt;x&lt;/code&gt; and edges &lt;code&gt;(s,x)&lt;/code&gt;, &lt;code&gt;(x,t)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;3SAT -&amp;gt; Independent Set&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt; Graph &lt;code&gt;G&lt;/code&gt; has a triangle for each clause (or an edge if clause of two literals), with vertices labeled by the clause&amp;#39;s literals&lt;/li&gt;
+&lt;li&gt;Add edges between any two vertices that represent opposite literals&lt;/li&gt;
+&lt;li&gt;Goal &lt;code&gt;g&lt;/code&gt; is the number of clauses&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;SAT -&amp;gt; 3SAT&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt; Any clause with &amp;gt; 3 literals in instance &lt;code&gt;I&lt;/code&gt; of SAT, transform:&lt;br&gt;
+&lt;code&gt;(a1 ∨ a2 ∨ ... ∨ ak)  -&amp;gt; (a1 ∨ a2 ∨ y1)(~y1 ∨ a3 ∨ y2)...(~yk−3 ∨ ak−1 ∨ ak)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Further restriction: no variable appears in &lt;code&gt;k&lt;/code&gt; &amp;gt; 3 clauses
+
+&lt;ul&gt;
+&lt;li&gt;Replace variable &lt;code&gt;x&lt;/code&gt; with &lt;code&gt;x1, x2, ..., xk&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Add clauses &lt;code&gt;(~x1 ∨ x2)(~x2 ∨ x3)...(~xk ∨ x1)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Independent Set -&amp;gt; Vertex Cover&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Independent set &lt;code&gt;S&lt;/code&gt;, vertex cover &lt;code&gt;V - S&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Independent Set -&amp;gt; Clique&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Map instance &lt;code&gt;(G, g)&lt;/code&gt; of independent set to complement graph &lt;code&gt;(~G, g)&lt;/code&gt; of clique&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;3SAT -&amp;gt; 3D Matching&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.cs.cmu.edu/%7Eckingsf/bioinfo-lectures/3dm.pdf&quot;&gt;CMU Notes&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4&gt;3D Matching -&amp;gt; ZOE&lt;/h4&gt;
+
+&lt;p&gt;Given an &lt;code&gt;m × n&lt;/code&gt; matrix &lt;code&gt;A&lt;/code&gt; with 0−1 entries, and we must find a 0−1
+vector &lt;code&gt;x = (x1, ..., xn)&lt;/code&gt; such that the &lt;code&gt;m&lt;/code&gt; equations &lt;code&gt;Ax = 1&lt;/code&gt; are satisfied.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Let columns of &lt;code&gt;A&lt;/code&gt; be triples in 3D matching&lt;/li&gt;
+&lt;li&gt;Let rows of &lt;code&gt;A&lt;/code&gt; be all matching items&lt;/li&gt;
+&lt;li&gt;Aij is 1 if the triple inclues the item&lt;/li&gt;
+&lt;li&gt;Choose a set of triples &lt;code&gt;X&lt;/code&gt; to be 1 s.t. the resulting column is all 1 (i.e. all items chosen once)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;ZOE -&amp;gt; Subset Sum&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Let columns of &lt;code&gt;A&lt;/code&gt; be representations of (n+1)-ary integers&lt;/li&gt;
+&lt;li&gt;Choose a set of integers s.t. sum is 11...1 (won&amp;#39;t be affected by &lt;em&gt;carry&lt;/em&gt; because base &lt;code&gt;n+1&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;ZOE -&amp;gt; ILP&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;For &lt;code&gt;Ax ≤ b&lt;/code&gt;, rewrite each equation as 2 inequalities&lt;/li&gt;
+&lt;li&gt;Add for each variable &lt;code&gt;xi&lt;/code&gt; inequalities &lt;code&gt;xi ≤ 1&lt;/code&gt; and &lt;code&gt;−xi ≤ 0&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;ZOE -&amp;gt; Rudrata Cycle&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;ZOE -&amp;gt; Rudrata cycle with paired edges&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Each variable &lt;code&gt;xi&lt;/code&gt; =&amp;gt; two parallel edges (xi = 1 and 0)&lt;/li&gt;
+&lt;li&gt;Each equation &lt;code&gt;xj1 + ... + xjk = 1&lt;/code&gt;involving &lt;code&gt;k&lt;/code&gt; variables =&amp;gt; &lt;code&gt;k&lt;/code&gt; parallel edges&lt;/li&gt;
+&lt;li&gt;Every equation and every variable xi appearing in it, add to &lt;code&gt;C&lt;/code&gt; the pair &lt;code&gt;(e,e&amp;#39;)&lt;/code&gt;, &lt;code&gt;e&lt;/code&gt; = the edge &lt;code&gt;xi&lt;/code&gt; in that equation, &lt;code&gt;e&amp;#39;&lt;/code&gt; = the edge xi = 0&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Rudrata cycle with paired edges -&amp;gt; Rudrata cycle&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Replace every pair &lt;code&gt;(e,e&amp;#39;)&lt;/code&gt; as &lt;code&gt;({a,b},{c,t})&lt;/code&gt;with:
+&lt;img src=&quot;http://i40.tinypic.com/1pfazb.png&quot; alt=&quot;gadget&quot;&gt;&lt;/li&gt;
+&lt;li&gt;Every other pair involving &lt;code&gt;{a,b}&lt;/code&gt;, set it to be &lt;code&gt;{a,f}&lt;/code&gt; and repeat the replacement&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;Rudrata Cycle -&amp;gt; TSP&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;V&lt;/code&gt; = set of cities&lt;/li&gt;
+&lt;li&gt;Distance between &lt;code&gt;u&lt;/code&gt; and &lt;code&gt;n&lt;/code&gt; is &lt;code&gt;1&lt;/code&gt; if &lt;code&gt;{u,v}&lt;/code&gt; is an edge; otherwise &lt;code&gt;1 + α&lt;/code&gt; for some &lt;code&gt;α &amp;gt; 1&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Budget = &lt;code&gt;|V|&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;α = 1&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;TSP satisfies triangle inequality &lt;code&gt;dij + djk ≥ dik&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Can be approximated&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;α&lt;/code&gt; is large
+
+&lt;ul&gt;
+&lt;li&gt;Solution either has cost &lt;code&gt;n&lt;/code&gt; or less, or has cost at least &lt;code&gt;n + α&lt;/code&gt; (&lt;strong&gt;gap property&lt;/strong&gt;)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;Any Problem in NP -&amp;gt; SAT&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Circuit SAT&lt;/p&gt;
+
+&lt;p&gt;Given a circuit, find a truth assignment for the unknown inputs s.t. the output gate evaluates to T, or report that no such assignment exists.  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;- AND/OR gates: indegree 2
+- NOT gates: indegree 1
+- Known input gates: no incoming edges, labeled F/T
+- Unknown input gates: no incoming edges, labeled '?'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;SAT -&amp;gt; Circuit SAT&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Clause: OR of literals&lt;/li&gt;
+&lt;li&gt;Joining clauses: AND of clauses&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Circuit SAT -&amp;gt; SAT&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;T: g
+F: ~g
+OR: (g v ~h1)(g v ~h2)(~g v h1 v h2)
+AND: (~g v h1)(~g v h2)(g v ~h1 v ~h2)
+NOT: (g v h)(~g v ~h)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Any Problem in NP -&amp;gt; Circuit SAT&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Problem in NP is a search problem &lt;code&gt;A&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Solution checking is polynomial-time&lt;/li&gt;
+&lt;li&gt;Polynomial algorithm can be rendered as a circuit&lt;/li&gt;
+&lt;li&gt;Given instance &lt;code&gt;I&lt;/code&gt; and solution &lt;code&gt;S&lt;/code&gt; of problem &lt;code&gt;A&lt;/code&gt;, construct a polynomial-time circuit with known inputs the bits of &lt;code&gt;I&lt;/code&gt;, unknown inputs the bits of &lt;code&gt;S&lt;/code&gt; s.t. output is T&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;Resources&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.fas.harvard.edu/%7Elibcs124/CS/lec7.pdf&quot;&gt;Harvard Notes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://stackoverflow.com/questions/1857244/what-are-the-differences-between-np-np-complete-and-np-hard&quot;&gt;What are the differences between NP, NP-complete, and NP-hard?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://mlnotes.com/2013/04/29/npc.html&quot;&gt;mlnotes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://staff.ustc.edu.cn/%7Ecsli/graduate/algorithms/book6/chap36.htm&quot;&gt;USTC Notes&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Sat, 26 Nov 2016 00:00:00 -0500</pubDate>
+        <link>/blog/notes/algorithm/2016/11/26/np-complete-problems.html</link>
+        <guid isPermaLink="true">/blog/notes/algorithm/2016/11/26/np-complete-problems.html</guid>
+        
+        <category>np-complete</category>
+        
+        <category>algorithm</category>
+        
+        <category>CSC373</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Algorithm</category>
+        
+      </item>
+    
+      <item>
+        <title>Linear Programming</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Linear Programming &amp;amp; Reduction Overview&lt;/li&gt;
+&lt;li&gt;Duality&lt;/li&gt;
+&lt;li&gt;Simplex Algorithm&lt;/li&gt;
+&lt;li&gt;Circuit Evaluation&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Linear Programming &amp;amp; Reduction Overview&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;LP &amp;amp; Reductions ---&amp;gt; Flows &amp;amp; matching
+                ---&amp;gt; Duality            ---&amp;gt; Games
+                ---&amp;gt; Simplex
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Linear Programming&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Objective function
+
+&lt;ul&gt;
+&lt;li&gt;Line&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Maximization&lt;/strong&gt; or &lt;strong&gt;minimization&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Constraints
+
+&lt;ul&gt;
+&lt;li&gt;Feasible region&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Equations&lt;/strong&gt; or &lt;strong&gt;inequalities&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Optimum achieved at a &lt;strong&gt;vertex of feasible region&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Simplex method&lt;/strong&gt;: &lt;em&gt;hill-climbing&lt;/em&gt; on vertices
+
+&lt;ul&gt;
+&lt;li&gt;Local = global optimality for linear functions&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Reduction&lt;/h4&gt;
+
+&lt;p&gt;If any subroutine for task Q can also be used to solve P, we say &lt;strong&gt;P reduces to Q&lt;/strong&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;x ---&amp;gt; Preprocess --y-&amp;gt; Algorithm for Q --Q(y)--&amp;gt; Postprocess ---&amp;gt; P(x)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Variants of Linear Programming&lt;/h4&gt;
+
+&lt;p&gt;Reduction of variants into &lt;em&gt;standard form&lt;/em&gt;:  &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Maximization to minimization:
+
+&lt;ul&gt;
+&lt;li&gt;Coefficients * (-1)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Inequality to equation:
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;sum_i_to_n(ai*xi) &amp;lt;= b&lt;/code&gt; &amp;lt;=&amp;gt; &lt;code&gt;sum_i_to_n(ai*xi) + s &amp;lt;= b &amp;amp;&amp;amp; s &amp;gt;= 0&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;s&lt;/code&gt; = slack variable&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Equation to inequality:
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ax = b&lt;/code&gt; &amp;lt;=&amp;gt; &lt;code&gt;ax &amp;lt;= b &amp;amp;&amp;amp; ax &amp;gt;= b&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Unsigned variables to signed:
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;x&lt;/code&gt; &amp;lt;=&amp;gt; &lt;code&gt;x+ - x-&lt;/code&gt; where &lt;code&gt;x+, x- &amp;gt;= 0&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code&gt;min cTx s.t. Ax = b and x ≥ 0&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4&gt;Matrix-Vector Notation&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Objective function:
+    c^Tx
+    c = [c1, c2, ...], x = [x1, x2, ...]
+Constraints:
+    Ax &amp;lt;= b
+    A = [[c11, c12, ...], [c21, c22, ...], ...], b = [b1, b2, ...]
+x &amp;gt;= 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Duality&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Primal LP:
+max cTx 
+Ax ≤ b 
+x ≥ 0
+
+# Dual LP:
+min yTb 
+yTA ≥ cT 
+y ≥ 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Primal LP:
+max c1x1 +···+cnxn 
+ai1x1+···+ainxn ≤ bi for i ∈ I (inequalities)
+ai1x1+···+ainxn = bi for i ∈ E (equalities)
+xj ≥ 0 for j ∈ N
+
+# Dual LP:
+min b1y1 +···+bmym 
+a1jy1+···+amjym ≥ cj for j ∈ N 
+a1jy1+···+amjym = cj for j !∈ N 
+yi ≥ 0 for i ∈ I # equalities can have unrestricted variables (signed)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Duality Theorm&lt;/h4&gt;
+
+&lt;p&gt;If a linear program has a bounded optimum, then so does its dual, and the two optimum values coincide.&lt;/p&gt;
+
+&lt;h4&gt;Duality in Shortest-Path Problem&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://math.stackexchange.com/questions/861079/shortest-path-problem-dual-formulation-and-proof-of-total-unimodularity&quot;&gt;StackExchange&lt;/a&gt;&lt;br&gt;
+&lt;a href=&quot;https://en.wikipedia.org/wiki/Shortest_path_problem#Linear_programming_formulation&quot;&gt;Wiki&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;max xs - xt
+|xu - xv| &amp;lt;= w_uv for all edges {u,v}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Simplex Algorithm&lt;/h2&gt;
+
+&lt;h4&gt;Visualization&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;let v be any vertex of the feasible region
+while there is a neighbor v' of v with better objective value:
+    set v = v'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;x1, ..., xn variables -&amp;gt; n-tuple in n-dimensional space
+A linear equation     -&amp;gt; hyperplane in R^n
+A linear inequality   -&amp;gt; half-space in R^n
+Linear program        -&amp;gt; convex polyhedron in R^n; intersection of all half-spaces
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Vertex: 
+    Pick a subset of the inequalities. A vertex is a unique point that satisfies them with equality, and this point happens to be feasible.
+
+Each vertex is specified by a set of n inequalities. (n linear equations to uniquely identify a point)
+
+Neighbor:
+    Two vertices are neighbors if they have n-1 defining inequalities in common.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Algorithm&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;max cTx 
+Ax ≤ b 
+x ≥ 0
+
+1. Set origin to be current vertex.
+2. Check whether the current vertex is optimal, i.e. coordinates of local cost vector (c) all &amp;lt;= 0.
+3. If so, halt. Else, determine where to move next by increasing some xi for which ci &amp;gt; 0 until we hit some other constraint.
+4. Transform the next vertex into origin and repeat.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h5&gt;Transformation into Origin&lt;/h5&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;For inequality ai*x ≤ bi, to turn into yi ≥ 0:
+    yi = bi - ai*x
+
+Cost function:
+    max cu + (c')^T y, cu = value of objective function at u, c' = transformed cost vector
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Issues&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;How to find the starting vertex?&lt;/p&gt;
+
+&lt;p&gt;General LPs won&amp;#39;t always have inequalities with positive right-hand sides.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;1. Rewrite LP into standard form:
+    min cTx s.t. Ax = b and x ≥ 0
+2. Make sure right-hand sides of equations are nonnegative:
+    if bi &amp;lt; 0, multiply both sides of the ith equation by -1
+3. Create new LP:
+    - Create m new artificial variables z1, ..., zm &amp;gt;= 0
+    - Add zi to left-hand side of the ith equation
+    - Objective function: minimize z1+...+zm
+4. Starting vertex for new LP:
+    zi = bi for all i, other variables 0
+5. Run simplex on new LP
+
+If zi+...+zm = 0:
+    Optimum vertex of new LP = starting feasible vertex of original LP
+Else:
+    Original LP not feasible
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Degeneracy?&lt;/p&gt;
+
+&lt;p&gt;An LP is &lt;strong&gt;degenerate&lt;/strong&gt; if in a basic feasible solution, one of the basic variables takes on a zero value.&lt;/p&gt;
+
+&lt;p&gt;In geometry, this means there is an intersection of more than &lt;code&gt;n&lt;/code&gt; faces of the polyhedron.  &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Problem:
+
+&lt;ul&gt;
+&lt;li&gt;May return &lt;strong&gt;suboptimal&lt;/strong&gt; degenerate vertex, because all neighbors are identical and no better objective&lt;/li&gt;
+&lt;li&gt;May &lt;strong&gt;loop forever&lt;/strong&gt;, bacause if modify simplex, continue to hop from vertex to vertex without improvement&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Perturbation&lt;/strong&gt;: change each &lt;code&gt;bi&lt;/code&gt; by a tiny random amount to &lt;code&gt;bi += εi&lt;/code&gt;&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Unboundedness?&lt;/p&gt;
+
+&lt;p&gt;Objective function can be arbitrarily large/small.  &lt;/p&gt;
+
+&lt;p&gt;Simplex will discover it: when exploring the neighborhood of a vertex, taking out an inequality and adding another leads to underdetermined system of equations that has infinite solutions.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;Running Time&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Generic LP:
+    max cTx s.t. Ax ≤ 0 and x ≥ 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;A vertex is where &lt;code&gt;n&lt;/code&gt; inequality constraints are satisfied with equality&lt;/li&gt;
+&lt;li&gt;Each of its neighbors shares &lt;code&gt;n-1&lt;/code&gt; inequalities =&amp;gt; &lt;code&gt;n * m&lt;/code&gt; neighbors&lt;/li&gt;
+&lt;li&gt;Finding cost &lt;code&gt;O(1)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Checking whether is a true vertex - solving &lt;code&gt;n&lt;/code&gt; equations in &lt;code&gt;n&lt;/code&gt; unknowns:
+
+&lt;ul&gt;
+&lt;li&gt;Gaussian elimination &lt;code&gt;O(n^3)&lt;/code&gt; =&amp;gt; total &lt;code&gt;O(nb^4)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Use &lt;strong&gt;move to origin&lt;/strong&gt;:
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;O((m+n)n)&lt;/code&gt; overhead to rewrite&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;max cu + (c&amp;#39;)^T y&lt;/code&gt;, pick any &lt;code&gt;c&amp;#39;i &amp;gt; 0&lt;/code&gt; to move to&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;O(mn)&lt;/code&gt; in total&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C(m+n,n)&lt;/code&gt; vertices =&amp;gt; upper bound on # of iterations&lt;/li&gt;
+&lt;li&gt;So &lt;strong&gt;simplex is exponential&lt;/strong&gt;; but in practice not exponential&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5&gt;Gaussian Elimination&lt;/h5&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Gauss(E,X):
+    # Input: A system E = {e1,...,en} of equations in n unknowns X = {x1,...,xn}:
+    e1: a11x1 + a12x2 +···+ a1nxn = b1; ···; en: an1x1 + an2x2 +···+ annxn = bn 
+    # Output: A solution of the system, if one exists
+
+    if all coefficients ai1 are zero:
+        halt with message &quot;either infeasible or not linearly independent&quot;
+    if n = 1: return b1/a11
+
+    choose the coefficient ap1 of largest magnitude, and swap equations e1, ep 
+    for i = 2 to n:
+        ei = ei  − (ai1/a11) * e1
+    (x2, . . . , xn) = Gauss(E − {e1}, X − {x1}) 
+    x1 = (b1 − sum_j&amp;gt;1(a1j * xj))/a11
+
+    return (x1,...,xn)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Circuit Evaluation&lt;/h2&gt;
+
+&lt;p&gt;The most general problem solvable in polynomial time.  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|true| xg = 1
+|false| xg = 0
+|OR|  &amp;lt;- h   xg &amp;gt;= xh, xg &amp;gt;= xh'
+      &amp;lt;- h'  xg &amp;lt;= xh + xh'
+|AND| &amp;lt;- h   xg &amp;lt;= xh, xg &amp;lt;= xh'
+      &amp;lt;- h'  xg &amp;gt;= xh + xh' - 1
+|NOT| &amp;lt;- h   xg = 1 - xh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Resources&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.utdallas.edu/%7Escniu/OPRE-6201/documents/LP4-Simplex.html&quot;&gt;The Simplex Method&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.cs.yale.edu/homes/aspnes/pinewiki/LinearProgramming.html&quot;&gt;Yale LP Notes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.pitt.edu/%7Ekaveh/Lin-programming-notes.pdf&quot;&gt;Pitt LP Notes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://courses.csail.mit.edu/6.854/06/scribe/s15.pdf&quot;&gt;MIT LP Notes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://home.ubalt.edu/ntsbarsh/opre640a/partIII.htm#rsppr&quot;&gt;UBalt Flow Notes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://neos-guide.org/content/diet-problem&quot;&gt;The Diet Problem&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Thu, 24 Nov 2016 00:00:00 -0500</pubDate>
+        <link>/blog/notes/algorithm/2016/11/24/linear-programming.html</link>
+        <guid isPermaLink="true">/blog/notes/algorithm/2016/11/24/linear-programming.html</guid>
+        
+        <category>linear programming</category>
+        
+        <category>algorithm</category>
+        
+        <category>CSC373</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Algorithm</category>
+        
+      </item>
+    
+      <item>
+        <title>Serverside Swift</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Basics
+
+&lt;ol&gt;
+&lt;li&gt;Terminologies&lt;/li&gt;
+&lt;li&gt;Commands&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Docker Images
+
+&lt;ol&gt;
+&lt;li&gt;Image Types&lt;/li&gt;
+&lt;li&gt;Create Images&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Docker Compose
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;docker-compose.yml&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Run Application&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Create Swift Package&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;swift package init&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;swift build&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;swift package generate-xcodeproj&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4&gt;Package.swift&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;name: name of package
+targets: binary files
+dependencies: [
+  .Package(url: &quot;url&quot;, majorVersion: version, minor: version)
+]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Swift Basics&lt;/h2&gt;
+
+&lt;h5&gt;Strongly-Typed&lt;/h5&gt;
+
+&lt;p&gt;&lt;code&gt;var myVar = &amp;quot;string&amp;quot;&lt;/code&gt; or &lt;code&gt;var myVar: String&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;var myInt = Int(myVar)&lt;/code&gt; or &lt;code&gt;var myInt = (myVar as NSString).integerValue&lt;/code&gt;  &lt;/p&gt;
+
+&lt;h5&gt;Constants &amp;amp; Variables&lt;/h5&gt;
+
+&lt;p&gt;&lt;code&gt;let const = value&lt;/code&gt; vs &lt;code&gt;var const = value&lt;/code&gt;&lt;/p&gt;
+
+&lt;h5&gt;Class&lt;/h5&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;MyClass&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;myName&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;name&quot;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;myFunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// unnamed parameter&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Hello &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;myName&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;myStaticFunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;default&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// named parameter&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Hello &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;myName&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;this&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;MyClass&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;myFunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;MyClass&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;myStaticFunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;Building Swift Applicstions&lt;/h2&gt;
+
+&lt;h4&gt;Targets&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Library&lt;/li&gt;
+&lt;li&gt;Executable (terminal-like icon)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;Settings&lt;/h4&gt;
+
+&lt;p&gt;Target &amp;gt; Edit Scheme &amp;gt; Run &amp;gt; Options &amp;gt; Use custom working directory: [project-directory]&lt;/p&gt;
+</description>
+        <pubDate>Thu, 24 Nov 2016 00:00:00 -0500</pubDate>
+        <link>/blog/notes/swift/2016/11/24/serverside-swift.html</link>
+        <guid isPermaLink="true">/blog/notes/swift/2016/11/24/serverside-swift.html</guid>
+        
+        <category>swift</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Swift</category>
+        
+      </item>
     
       <item>
         <title>Operating System - Paging</title>
@@ -18,6 +795,8 @@
 &lt;li&gt;Introduction to Virtual Memory&lt;/li&gt;
 &lt;li&gt;Paging MMU&lt;/li&gt;
 &lt;li&gt;Page Tables&lt;/li&gt;
+&lt;li&gt;Translation Lookaside Buffer (TLB)&lt;/li&gt;
+&lt;li&gt;Memory Protection&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;!--more--&gt;
@@ -137,6 +916,103 @@ Processor              MMU              Bus
 &lt;li&gt;Adjacent pages hashed to scattered locations&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;Sharing memory is complecated&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Translation Lookaside Buffer (TLB)&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;H/W cache of PTE
+
+&lt;ul&gt;
+&lt;li&gt;Small # of entries&lt;/li&gt;
+&lt;li&gt;Exploits locality (program uses small # of pages at a time)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|virtual page number (VPN)|...18 bits...|.7 bits.|C|D|R|W|V|
+                             frame num    unused
+|   key: page number      |             data: PTE          |
+
+V: valid, W: writable, R: referenced (H/W), D: dirty (H/W), C: cacheable
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;V: is the entry valid or not?&lt;br&gt;
+W: is the page writable?&lt;br&gt;
+C: is the page cacheable? when not cacheable, processor should bypass the cache when accessing the page, e.g., to access memory-mapped device registers&lt;br&gt;
+D: has a writable page been written to (is it dirty with respect to the data on disk)?&lt;br&gt;
+R: has a page been referenced?&lt;br&gt;
+unused: unused by hardware, can be used by OS  &lt;/p&gt;
+
+&lt;p&gt;H/W may or may not need execution bit, but instead use &lt;em&gt;read&lt;/em&gt; as &lt;em&gt;execute&lt;/em&gt;  &lt;/p&gt;
+
+&lt;h4&gt;TLB Operations&lt;/h4&gt;
+
+&lt;h5&gt;TLB Lookup&lt;/h5&gt;
+
+&lt;p&gt;Fully associative TLB example  &lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://www.cems.uwe.ac.uk/%7Ebr-gaster/courses/2015-2016/CNOS/lectures/reveal.js-jade/decks/cnos_lecture9/resources/tlb-lookup.png&quot; alt=&quot;TLB lookup&quot;&gt;&lt;/p&gt;
+
+&lt;h5&gt;TLB cache miss handling&lt;/h5&gt;
+
+&lt;ul&gt;
+&lt;li&gt;TLB lookup fails -&amp;gt; page table lookup -&amp;gt; TLB cache replaced (&lt;strong&gt;TLB replacement policy&lt;/strong&gt;)&lt;/li&gt;
+&lt;li&gt;Handled by H/W or OS
+
+&lt;ul&gt;
+&lt;li&gt;H/W managed TLB
+
+&lt;ul&gt;
+&lt;li&gt;H/W defines page table format &amp;amp; replacement policy&lt;/li&gt;
+&lt;li&gt;PTR to locate page table in physical memory&lt;/li&gt;
+&lt;li&gt;Fast miss handling&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;S/W managed TLB
+
+&lt;ul&gt;
+&lt;li&gt;H/W generates trap called &lt;strong&gt;TLB miss fault&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Read fault&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Write fault&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;OS handles TLB miss similar to exception handling&lt;/li&gt;
+&lt;li&gt;OS figures out correct PTE, add in TLB (CPU has instructions to modify TLB)&lt;/li&gt;
+&lt;li&gt;Page tables become entirely a OS data structure (no PTR in H/W, H/W doesn&amp;#39;t know about page table)&lt;/li&gt;
+&lt;li&gt;TLB replacement policy managed in S/W&lt;/li&gt;
+&lt;li&gt;Slower by more flexible miss handling&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5&gt;TLB cache invalidate&lt;/h5&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Adds cost to context switching
+
+&lt;ul&gt;
+&lt;li&gt;Changing PTR + invalidating TLB + TLB misses afterwards&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Invalidate options
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Clear TLB&lt;/strong&gt;: clearing valid bit of all entries&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Tagged TLB&lt;/strong&gt;: H/W maintains &lt;strong&gt;id tag&lt;/strong&gt; on each entry
+
+&lt;ul&gt;
+&lt;li&gt;Compare current thread id (stored in register) to the tag&lt;/li&gt;
+&lt;li&gt;No invalidation; enables space multiplexing of entries&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Memory Protection&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Generate &lt;strong&gt;protection fault&lt;/strong&gt; if memory access inconsistent with protection bits
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Read-only fault&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;No-execute fault&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h4&gt;Related Resources&lt;/h4&gt;
@@ -1570,721 +2446,6 @@ Union(i, j, k): # V[i] - V[j] = k
         <category>Notes</category>
         
         <category>Competition</category>
-        
-      </item>
-    
-      <item>
-        <title>Competition Cheatsheet</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;p&gt;Cheatsheet for coding competitions.&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Complexity Limit&lt;/h2&gt;
-
-&lt;h3&gt;TLE&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;10^8&lt;/code&gt; int operations/&lt;code&gt;10^7&lt;/code&gt; floating point operations in a for loop run in around &lt;strong&gt;1 sec&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;n = 20: exponential ok&lt;/li&gt;
-&lt;li&gt;n = 100: &lt;code&gt;O(n^3)&lt;/code&gt; ok&lt;/li&gt;
-&lt;li&gt;n = 1000: &lt;code&gt;O(n^2)&lt;/code&gt; ok&lt;/li&gt;
-&lt;li&gt;n = 10^4: &lt;code&gt;n*polylog(n)&lt;/code&gt; ^ &lt;code&gt;n*sqrt(n)&lt;/code&gt; ok&lt;/li&gt;
-&lt;li&gt;n = 10^5: &lt;code&gt;nlogn&lt;/code&gt; ok&lt;/li&gt;
-&lt;li&gt;n = 10^6: &lt;code&gt;O(n)&lt;/code&gt; ok&lt;/li&gt;
-&lt;li&gt;n = 10^9: &lt;code&gt;O(logn)&lt;/code&gt; ok&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;STL&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;vector&lt;/code&gt; in &lt;code&gt;&amp;lt;vector&amp;gt;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;priority_queue&lt;/code&gt; in &lt;code&gt;&amp;lt;queue&amp;gt;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;sort&lt;/code&gt; in &lt;code&gt;&amp;lt;algorithm&amp;gt;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;binary_search&lt;/code&gt; in &lt;code&gt;&amp;lt;algorithm&amp;gt;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;next_permutation&lt;/code&gt; in &lt;code&gt;&amp;lt;algorithm&amp;gt;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;lower_bound&lt;/code&gt;, &lt;code&gt;upper_bound&lt;/code&gt; in &lt;code&gt;&amp;lt;algorithm&amp;gt;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;set&lt;/code&gt;, &lt;code&gt;multiset&lt;/code&gt; in &lt;code&gt;&amp;lt;set&amp;gt;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;map&lt;/code&gt;, &lt;code&gt;multimap&lt;/code&gt; in &lt;code&gt;&amp;lt;map&amp;gt;&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Wed, 09 Nov 2016 00:00:00 -0500</pubDate>
-        <link>/blog/notes/competition/2016/11/09/competition-cheatsheet.html</link>
-        <guid isPermaLink="true">/blog/notes/competition/2016/11/09/competition-cheatsheet.html</guid>
-        
-        <category>competition</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>Competition</category>
-        
-      </item>
-    
-      <item>
-        <title>Dynamic Programming</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Shortest Paths in DAGs&lt;/li&gt;
-&lt;li&gt;Longest Increasing Subsequences&lt;/li&gt;
-&lt;li&gt;Edit Distance&lt;/li&gt;
-&lt;li&gt;Knapsack Problem&lt;/li&gt;
-&lt;li&gt;Chain Matrix Multiplication&lt;/li&gt;
-&lt;li&gt;Shortest Paths
-
-&lt;ol&gt;
-&lt;li&gt;Shortest Reliable Paths&lt;/li&gt;
-&lt;li&gt;All-Pairs Shortest Paths&lt;/li&gt;
-&lt;li&gt;The Traveling Salesman Problem&lt;/li&gt;
-&lt;li&gt;Independent Sets in Trees&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Comparison to &lt;em&gt;divide-and-conquer&lt;/em&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Divide-and-conquer&lt;/strong&gt;: subproblems &lt;em&gt;substantially smaller&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;DP&lt;/strong&gt;: subproblems &lt;em&gt;slightly smaller&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;So &lt;strong&gt;recursion&lt;/strong&gt; works well with &lt;em&gt;DAC&lt;/em&gt; but not &lt;em&gt;DP&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Define a collection of subproblems which follows:
-
-&lt;ul&gt;
-&lt;li&gt;There is an &lt;strong&gt;ordering&lt;/strong&gt; on the subproblems, and a &lt;strong&gt;relation&lt;/strong&gt; that shows how to solve a subproblem given the answers to &amp;quot;smaller&amp;quot; subproblems, that is, subproblems that appear earlier in the ordering.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Relation with DAGs
-
-&lt;ul&gt;
-&lt;li&gt;Node: subproblem&lt;/li&gt;
-&lt;li&gt;Incoming edges: subproblems needed to be pre-solved (precedence constraints)&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Common subproblems&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;1.  
-    O(n)
-    [x1, x2, ..., xi], ..., xn
-2. 
-    O(mn)
-    [x1, x2, ..., xi], ..., xn
-    [y1, y2, ..., yj], ..., ym
-3. 
-    O(n^2)
-    x1, ..., [xi, ..., xj], ..., xn
-4. 
-                x1
-               /  \
-              x2  x3
-             .       .
-            .         .
-           xi   ...   xn
-
-    Subproblem - rooted subtree
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Shortest Paths in DAGs&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;DAG&lt;/strong&gt;: directed acyclic graph&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Nodes can be &lt;strong&gt;linearized&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;    A -&amp;gt; B                  __________
-  ➚        ➘               ➚           ➘
-S   ↑    ↓   D      S -&amp;gt; C -&amp;gt; A -&amp;gt; B -&amp;gt; D -&amp;gt; E
-  ➘        ➚         ➘_______➚      ➘_______➚
-    C -&amp;gt; D
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Pseudocode&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;initialize all dist(·) values to ∞ 
-dist(s) = 0
-
-for each v ∈ V\{s}, in linearized order:
-    dist(v) = min_(u,v)∈E { dist(u) + l(u,v) }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Longest Increasing Subsequences&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;p&gt;Given a sequence of numbers, find a subset taken in order in which the numbers are getting strictly larger.&lt;/p&gt;
-
-&lt;h4&gt;Viewing LIS as DAG&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Node &lt;code&gt;i&lt;/code&gt;: element &lt;code&gt;i&lt;/code&gt; in the sequence&lt;/li&gt;
-&lt;li&gt;Directed edge &lt;code&gt;(i,j)&lt;/code&gt;: if element &lt;code&gt;j&lt;/code&gt; &amp;gt; element &lt;code&gt;i&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Subproblem:&lt;br&gt;
-&lt;code&gt;L(j) = length of LIS ending at j&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Solution to subproblems:&lt;br&gt;
-&lt;code&gt;L(j) = 1 + max{L(i): (i,j) ∈ E}&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Pseudocode&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;for j = 1..n:
-    L(j) = 1 + max{L(i): (i,j) ∈ E}
-return max_j L(j)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Runtime: &lt;code&gt;O(|E|) = O(n^2)&lt;/code&gt; &lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;O(nlogn) Implementation&lt;/h4&gt;
-
-&lt;p&gt;Binary search. Keep indices for reconstruction.  &lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://www.geeksforgeeks.org/longest-monotonically-increasing-subsequence-size-n-log-n/&quot;&gt;GeeksForGeeks&lt;/a&gt;&lt;br&gt;
-&lt;a href=&quot;http://stackoverflow.com/questions/2631726/how-to-determine-the-longest-increasing-subsequence-using-dynamic-programming&quot;&gt;StackOverflow&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3&gt;&lt;strong&gt;Edit Distance&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;p&gt;For 2 strings, the &lt;em&gt;cost&lt;/em&gt; of an alignment between them is the # of &lt;em&gt;edits&lt;/em&gt; (insertion, deletion, substitution) needed to transform string 1 to string 2. Find the &lt;em&gt;min&lt;/em&gt; cost.  &lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://web.stanford.edu/class/cs262/presentations/lecture3.pdf&quot;&gt;Hirscberg&amp;#39;s Algorithm&lt;/a&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Strings &lt;code&gt;x, y&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Subproblem:&lt;br&gt;
-&lt;code&gt;E(i,j) = edit distance between x[1..i] &amp;amp; y[1..j]&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Solution to subproblems:&lt;br&gt;
-&lt;code&gt;E(i,j) = min{ 1+E(i−1,j), 1+E(i,j−1), diff(i,j)+E(i−1,j−1) }&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Pseudocode&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;for i = 0..m: 
-    E(i,0) = i
-for j = 1..n: 
-    E(0,j) = j
-for i = 1..m: 
-    for j = 1..n:
-        E(i,j) = min{ E(i − 1,j) + 1, E(i,j − 1) + 1, E(i − 1,j − 1)+diff(i,j) }
-return E(m,n)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Runtime: &lt;code&gt;O(mn)&lt;/code&gt; &lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Space Efficient Algorithm&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# O(m) space
-Space-Efficient-Alignment(X,Y):
-    Array B[0...m,0...1]
-    Initialize B[i,0]=iδ for each i (just as in column 0 of A) 
-
-    For j = 1,...,n
-        B[0,1] = jδ # corresponds to entry A[0,j] 
-        For i = 1,...,m
-            B[i,1]= min[αxiyj+B[i−1, 0], δ+B[i−1,1], δ+B[i,0]]
-        Endfor
-        Move column 1 of B to column 0 to make room for next iteration:
-            Update B[i, 0]= B[i, 1] for each i 
-    Endfor
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;To backtrack:  &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;1. Let `f(i,j)` denote optimal path from `(0,0)` to `(i,j)`, `g(i,j)` denote optimal path from `(i,j)` to `(m,n)`
-2. Find index `q` that minimizes `f(q,k) + g(q,k)`
-3. Divide problem into `(0,0)` to `(q,n/2)` &amp;amp; `(q+1,n/2+1)` to `(m,n)`
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Backward-Space-Efficient-Alignment(X,Y):
-    # start from the opposite corner
-    # similar to Space-Efficient-Alignment, but now B[i,1]= min[αxiyj+B[i+1, 0], δ+B[i+1,1], δ+B[i,0]]
-
-Divide-and-Conquer-Alignment(X,Y):
-    Let m be the number of symbols in X 
-    Let n be the number of symbols in Y 
-    If m≤2 or n≤2 then
-        Compute optimal alignment using Alignment(X,Y) 
-
-    Call Space-Efficient-Alignment(X,Y[1:n/2])
-    Call Backward-Space-Efficient-Alignment(X,Y[n/2+1:n]) 
-
-    Let q be the index minimizing f(q,n/2)+g(q,n/2)
-    Add (q,n/2) to global list P 
-
-    Divide-and-Conquer-Alignment(X[1:q],Y[1:n/2]) 
-    Divide-and-Conquer-Alignment(X[q+1:m],Y[n/2+1:n]) 
-    Return P
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Knapsack Problem&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;n&lt;/code&gt; items of weight &lt;code&gt;w1, ..., wn&lt;/code&gt; and value &lt;code&gt;v1, ..., vn&lt;/code&gt;, what is the most valuable combination of items that the total weight is at most &lt;code&gt;W&lt;/code&gt; pounds?&lt;/p&gt;
-
-&lt;h4&gt;Allows Repetition&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Subproblem:&lt;br&gt;
-&lt;code&gt;K(w) = max value achievable with knapsack of capacity w&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Solution to subproblems:&lt;br&gt;
-&lt;code&gt;K(w) = max_i:wi&amp;lt;=w { K(w−wi)+vi }&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Pseudocode&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;K(0) = 0
-for w = 1 to W:
-    K(w) = max { K(w−wi)+vi: wi ≤w } 
-return K(W)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-&lt;h4&gt;Memoization&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;A hash table, initially empty, holds values of K(w) indexed by w
-function knapsack(w):
-  if w is in hash table: 
-      return K(w) 
-  K(w) = max { knapsack(w−wi) + vi: wi≤w } 
-  insert K(w) into hash table, with key w 
-  return K(w)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Only store information needed, unlike DP storing all&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h4&gt;No Repetition&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Subproblem:&lt;br&gt;
-&lt;code&gt;K(w,j) = max value achievable with knapsack of capacity w and items 1..j&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Solution to subproblems:&lt;br&gt;
-&lt;code&gt;K(w,j) = max { K(w−wj,j-1) + vj, K(w,j-1) }&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Pseudocode&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Initialize all K(0, j) = 0 and all K(w, 0) = 0 
-for j = 1 to n:
-    for w = 1 to W:
-        if wj &amp;gt; w: 
-            K(w,j) = K(w,j−1)
-        else: 
-            K(w,j) = max { K(w,j−1),K(w−wj,j−1) + vj }
-return K(W,n)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Chain Matrix Multiplication&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;p&gt;Four matrices &lt;code&gt;A x B x C x D&lt;/code&gt;, find the way of chaining that uses the least computations.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Abstraction&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Binary trees&lt;/strong&gt;: &lt;code&gt;node = product of children&lt;/code&gt;&lt;br&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Ex.
-        []
-       /  \
-      []   D
-     /  \
-    []   C
-   /  \
-  A    B    
-
-(((A x B) x C) x D)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Subproblem:&lt;br&gt;
-&lt;code&gt;C(i,j) = min cost of multiplying Ai..Aj&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Solution to subproblems:&lt;br&gt;
-&lt;code&gt;C(i,j) = min_i&amp;lt;=k&amp;lt;j { C(i,k) + C(k+1,j) + m_i-1 * mk * mj }&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Pseudocode&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;fori = 1 to n: 
-    C(i,i) = 0 
-for s=1 to n−1:
-    for i=1 to n−s: 
-        j = i + s
-        C(i,j) = min { C(i,k) + C(k+1,j) + m_i−1 * mk * mj: i ≤ k &amp;lt; j } 
-return C(1,n)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Runtime: &lt;code&gt;O(n^3)&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;&lt;strong&gt;Shortest Paths&lt;/strong&gt;&lt;/h3&gt;
-
-&lt;h4&gt;Shortest Reliable Paths&lt;/h4&gt;
-
-&lt;p&gt;Find the shortest path in a graph from &lt;code&gt;s&lt;/code&gt; to &lt;code&gt;t&lt;/code&gt; using at most &lt;code&gt;k&lt;/code&gt; edges.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Subproblem:&lt;br&gt;
-&lt;code&gt;dist(v,i) = length of shortest path from s to v using i edges&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Solution to subproblems:&lt;br&gt;
-&lt;code&gt;dist(v,i) = min_(u,v)∈E { dist(u,i−1) + l(u,v) }&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Initial values:&lt;br&gt;
-&lt;code&gt;dist(v, 0) = infinity, dist(s, 0) = 0&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;All-Pairs Shortest Paths&lt;/h4&gt;
-
-&lt;p&gt;&lt;em&gt;Floyd-Warshall algorithm&lt;/em&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Subproblem:&lt;br&gt;
-&lt;code&gt;dist(i,j,k) = length of shortest path from i to j using only nodes {1..k}&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Solution to subproblems:&lt;br&gt;
-&lt;code&gt;dist(i,j,k) = min { dist(i,k,k−1) + dist(k,j,k−1), dist(i,j,k−1) }&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Pseudocode  &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;for i = 1 to n: 
-    for j = 1 to n:
-        dist(i,j,0) = ∞
-for all (i,j) ∈ E: 
-    dist(i,j,0) = l(i,j)
-for k = 1 to n: 
-    for i = 1 to n:
-        for j = 1 to n:
-            dist(i,j,k) = min{ dist(i,k,k−1) + dist(k,j,k−1), dist(i,j,k−1) }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;The Traveling Salesman Problem&lt;/h4&gt;
-
-&lt;p&gt;Find a min cost path in a graph that starts and end at 1 and goes through all nodes exactly once.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Subproblem:&lt;br&gt;
-&lt;code&gt;C(S,j) = length of shortest path visiting nodes in S exactly once, starting at 1 and ending at j&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Solution to subproblems:&lt;br&gt;
-&lt;code&gt;C(S,j) = min_i∈S:i!=j { C(S-{j}, i) + dij }&lt;/code&gt;&lt;br&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Pseudocode&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;C({1},1) = 0
-for s = 2 to n:
-    for all subsets S ⊆ {1..n} of size s and containing 1: 
-        C(S,1) = ∞
-        for all j ∈ S, j != 1: 
-            C(S,j) = min { C(S−{j},i) + dij: i∈S,i!=j}
-return min_j { C({1..n},j) + dj1 }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Runtime: &lt;code&gt;O(n^2*2^n)&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;2^n*n&lt;/code&gt; subproblems, each &lt;code&gt;O(n)&lt;/code&gt; time&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Independent Sets in Trees&lt;/h4&gt;
-
-&lt;p&gt;&lt;em&gt;Independent sets&lt;/em&gt;: for graph &lt;code&gt;G = (V,E)&lt;/code&gt;, a subset of nodes &lt;code&gt;S ⊂ V&lt;/code&gt; is an independent set if there are no edges between them.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Subproblem:&lt;br&gt;
-&lt;code&gt;I(u) = size of largest independent set of subtree hanging from u&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Solution to subproblem:&lt;br&gt;
-&lt;code&gt;u&lt;/code&gt; is either included in the largest independent set or not&lt;br&gt;
-&lt;code&gt;I(u) = max { 1 + sum_grandchildren_w_of_u I(w), sum_children_w_of_u I(w) }&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Wed, 02 Nov 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/algorithm/2016/11/02/dynamic-programming.html</link>
-        <guid isPermaLink="true">/blog/notes/algorithm/2016/11/02/dynamic-programming.html</guid>
-        
-        <category>DP</category>
-        
-        <category>algorithm</category>
-        
-        <category>CSC373</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>Algorithm</category>
-        
-      </item>
-    
-      <item>
-        <title>Threads &amp; Parallel Programming</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Parallelism Overview
-
-&lt;ol&gt;
-&lt;li&gt;Standard Models of Parallelism&lt;/li&gt;
-&lt;li&gt;Speedup&lt;/li&gt;
-&lt;li&gt;Dependence&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Threads &amp;amp; Processes
-
-&lt;ol&gt;
-&lt;li&gt;Pthreads&lt;/li&gt;
-&lt;li&gt;Synchronization&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Data Parallelism
-
-&lt;ol&gt;
-&lt;li&gt;Matrix Multiplication (Regular)&lt;/li&gt;
-&lt;li&gt;SOR (Regular)&lt;/li&gt;
-&lt;li&gt;Molecular Dynamics (Irregular)&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Parallelism Overview&lt;/h2&gt;
-
-&lt;h3&gt;Standard Models of Parallelism&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Shared memory (pthreads)&lt;/li&gt;
-&lt;li&gt;Shared memory + data parallelism (OpenMP)&lt;/li&gt;
-&lt;li&gt;Message passing (MPI)&lt;/li&gt;
-&lt;li&gt;Transactional memory (TM)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Speedup&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;speedup on problem = sequential execution time of best known sequential algorithm / execution time on p processors&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Avoids picking easily parallelizable algorithm with poor sequential execution time&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Linear speedup is best to be achieved
-
-&lt;ul&gt;
-&lt;li&gt;Sub-linear speedup: due to overhead of &lt;em&gt;startup&lt;/em&gt;, &lt;em&gt;synchronization&lt;/em&gt;, &lt;em&gt;communication&lt;/em&gt;, ...&lt;/li&gt;
-&lt;li&gt;Super-linear speedup
-
-&lt;ul&gt;
-&lt;li&gt;Cache/memory effects&lt;/li&gt;
-&lt;li&gt;Nondeterminism in search problems&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Amdahl&amp;#39;s Law&lt;/strong&gt;: if &lt;code&gt;1/s&lt;/code&gt; of program is sequential, speedup will not be better than &lt;code&gt;s&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Dependence&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;True dependence&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;S2&lt;/code&gt; reads a value written by &lt;code&gt;S1&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Anti dependence&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;S2&lt;/code&gt; writes a value read by &lt;code&gt;S1&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Output dependence&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;S2&lt;/code&gt; writes a value written by &lt;code&gt;S1&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Loop carried dependence&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Statements are part of the execution of a loop&lt;/li&gt;
-&lt;li&gt;e.g. &lt;code&gt;a[i] = f(a[i-1]) + 1;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Prevents loop iteration parallelization&lt;/li&gt;
-&lt;li&gt;Level of loop carried dependence: nesting depth of loop that carries dependence&lt;/li&gt;
-&lt;li&gt;&amp;lt;-&amp;gt; &lt;strong&gt;Loop independent dependence&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Threads &amp;amp; Processes&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Similarities
-
-&lt;ul&gt;
-&lt;li&gt;Own logical control flow&lt;/li&gt;
-&lt;li&gt;Run concurrently with others&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Differences
-
-&lt;ul&gt;
-&lt;li&gt;Threads share code &amp;amp; data, processes don&amp;#39;t&lt;/li&gt;
-&lt;li&gt;Process control &amp;amp; context switches more expensive than thread control &amp;amp; thread switches&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Pthreads&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;User has to:
-
-&lt;ul&gt;
-&lt;li&gt;Decompose computation into parallel parts&lt;/li&gt;
-&lt;li&gt;Create/destroy threads&lt;/li&gt;
-&lt;li&gt;Add synchronization to ensure dependences covered&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Functions
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;pthread_create()&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;pthread_exit()&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;pthread_join()&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Synchronization&lt;/h3&gt;
-
-&lt;h4&gt;Parallelization Options&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Course-grained locking&lt;/strong&gt;: 1 big lock for critical section
-
-&lt;ul&gt;
-&lt;li&gt;Limited parallelism&lt;/li&gt;
-&lt;li&gt;Easy to implement&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Fine-grained locking&lt;/strong&gt;: 1 lock per variable used in critical section
-
-&lt;ul&gt;
-&lt;li&gt;Good parallelism: less dependencies&lt;/li&gt;
-&lt;li&gt;Hard to implement
-
-&lt;ul&gt;
-&lt;li&gt;Deadlock, fault tolerance, priority inversion, ...&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Semaphores&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Fork-Join&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Barriers&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Reductions&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Data Parallelism&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Processors do the same thing on different data
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Regular&lt;/strong&gt;: linear indexing
-
-&lt;ul&gt;
-&lt;li&gt;All arrays accessed through linear expressions of loop indices, known at compile time&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Irregular&lt;/strong&gt;: non-linear indexing
-
-&lt;ul&gt;
-&lt;li&gt;Some arrays accessed through non-linear expressions of loop indices, some only known at runtime&lt;/li&gt;
-&lt;li&gt;Difficult for parallelism based on &lt;em&gt;data distribution&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;Not difficult for parallelism based on &lt;em&gt;iteration distribution&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;v.s. &lt;strong&gt;Task Parallelism&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Processors do different tasks&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Matrix Multiplication (Regular)&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;for (i = 0; i &amp;lt; n; i++) 
-    for (j = 0; j &amp;lt; n; j++)
-        c[i][j] = 0.0; 
-for (i = 0; i &amp;lt; n; i++)
-    for (j = 0; j &amp;lt; n; j++)
-        for (k = 0; k &amp;lt; n; k++)
-            c[i][j] += a[i][k] * b[k][j];
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;No loop-carried dependences on i-/j- loop
-
-&lt;ul&gt;
-&lt;li&gt;Can run in parallel&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Loop-carried dependence&lt;/strong&gt; on k-loop&lt;/li&gt;
-&lt;li&gt;Data Distribution
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Block distribution&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Block distribution by row&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Block distribution by column&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Cyclic distrubution by column&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Block cyclic&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Combinations&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;SOR (Regular)&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;for some number of timesteps/iterations {
-    for (i = 1; i &amp;lt; n; i++)
-        for (j = 1; j &amp;lt; n; j++)
-            temp[i][j] = 0.25 *
-                (grid[i-1][j] + grid[i+1][j] + grid[i][j-1] + grid[i][j+1]);
-    for (i = 1; i &amp;lt; n; i++)
-        for (j = 1; j &amp;lt; n; j++)
-            grid[i][j] = temp[i][j];
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;No dependences between 1st &lt;code&gt;(i,j)&lt;/code&gt; loop nest
-
-&lt;ul&gt;
-&lt;li&gt;Can run in parallel&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;No dependences between 2nd &lt;code&gt;(i,j)&lt;/code&gt; loop nest
-
-&lt;ul&gt;
-&lt;li&gt;Can run in parallel&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Anti-dependence&lt;/strong&gt; between 1st &amp;amp; 2nd loop nest in the same timestep
-
-&lt;ul&gt;
-&lt;li&gt;Fork-join&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;True-dependence&lt;/strong&gt; between 2nd &amp;amp; 1st loop nest of next timestep
-
-&lt;ul&gt;
-&lt;li&gt;Fork-join&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Molecular Dynamics (Irregular)&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;for some number of timesteps { 
-    for all molecules i
-        for all nearby molecules j
-            force[i] += f(loc[i], loc[j]);
-    for all molecules i
-        loc[i] = g(loc[i], force[i]);
-}
-
-for each molecule i
-    number of nearby molecules count[i]
-    array of indices of nearby molecules index[j] // 0 &amp;lt;= j &amp;lt; count[i]
-
-for some number of timesteps { 
-    for (i = 0; i &amp;lt; num_mol; i++)
-        for (j = 0; j &amp;lt; count[i]; j++)
-            force[i] += f(loc[i], loc[index[j]]);
-    for (i = 0; i &amp;lt; num_mol; i++)
-        loc[i] = g(loc[i], force[i]);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;No loop-carried dependences in 1st i-loop
-
-&lt;ul&gt;
-&lt;li&gt;Can run in parallel&lt;/li&gt;
-&lt;li&gt;May have &lt;strong&gt;load balancing&lt;/strong&gt; problem&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Loop-carried dependence (reduction)&lt;/strong&gt; on j-loop&lt;/li&gt;
-&lt;li&gt;No loop-carried dependences in 2nd i-loop
-
-&lt;ul&gt;
-&lt;li&gt;Can run in parallel&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;True-dependence&lt;/strong&gt; between 1st &amp;amp; 2nd i-loop
-
-&lt;ul&gt;
-&lt;li&gt;Fork-join between loops&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Sun, 30 Oct 2016 00:00:00 -0400</pubDate>
-        <link>/blog/notes/optimization/2016/10/30/threads-and-parallel-programming.html</link>
-        <guid isPermaLink="true">/blog/notes/optimization/2016/10/30/threads-and-parallel-programming.html</guid>
-        
-        <category>Optimization</category>
-        
-        <category>ECE454</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>Optimization</category>
         
       </item>
     

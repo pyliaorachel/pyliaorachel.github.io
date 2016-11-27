@@ -54,7 +54,7 @@
 							<li class="category">
 								<a href="/blog/notes">
 									<span>Notes</span>
-									<span>23</span>
+									<span>26</span>
 								</a>
 							</li>
 						
@@ -116,6 +116,8 @@
 <li>Introduction to Virtual Memory</li>
 <li>Paging MMU</li>
 <li>Page Tables</li>
+<li>Translation Lookaside Buffer (TLB)</li>
+<li>Memory Protection</li>
 </ol>
 
 <!--more-->
@@ -235,6 +237,103 @@ Processor              MMU              Bus
 <li>Adjacent pages hashed to scattered locations</li>
 </ul></li>
 <li>Sharing memory is complecated</li>
+</ul>
+
+<h2>Translation Lookaside Buffer (TLB)</h2>
+
+<ul>
+<li>H/W cache of PTE
+
+<ul>
+<li>Small # of entries</li>
+<li>Exploits locality (program uses small # of pages at a time)</li>
+</ul></li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">|virtual page number (VPN)|...18 bits...|.7 bits.|C|D|R|W|V|
+                             frame num    unused
+|   key: page number      |             data: PTE          |
+
+V: valid, W: writable, R: referenced (H/W), D: dirty (H/W), C: cacheable
+</code></pre></div>
+<p>V: is the entry valid or not?<br>
+W: is the page writable?<br>
+C: is the page cacheable? when not cacheable, processor should bypass the cache when accessing the page, e.g., to access memory-mapped device registers<br>
+D: has a writable page been written to (is it dirty with respect to the data on disk)?<br>
+R: has a page been referenced?<br>
+unused: unused by hardware, can be used by OS  </p>
+
+<p>H/W may or may not need execution bit, but instead use <em>read</em> as <em>execute</em>  </p>
+
+<h4>TLB Operations</h4>
+
+<h5>TLB Lookup</h5>
+
+<p>Fully associative TLB example  </p>
+
+<p><img src="http://www.cems.uwe.ac.uk/%7Ebr-gaster/courses/2015-2016/CNOS/lectures/reveal.js-jade/decks/cnos_lecture9/resources/tlb-lookup.png" alt="TLB lookup"></p>
+
+<h5>TLB cache miss handling</h5>
+
+<ul>
+<li>TLB lookup fails -&gt; page table lookup -&gt; TLB cache replaced (<strong>TLB replacement policy</strong>)</li>
+<li>Handled by H/W or OS
+
+<ul>
+<li>H/W managed TLB
+
+<ul>
+<li>H/W defines page table format &amp; replacement policy</li>
+<li>PTR to locate page table in physical memory</li>
+<li>Fast miss handling</li>
+</ul></li>
+<li>S/W managed TLB
+
+<ul>
+<li>H/W generates trap called <strong>TLB miss fault</strong>
+
+<ul>
+<li><strong>Read fault</strong></li>
+<li><strong>Write fault</strong></li>
+</ul></li>
+<li>OS handles TLB miss similar to exception handling</li>
+<li>OS figures out correct PTE, add in TLB (CPU has instructions to modify TLB)</li>
+<li>Page tables become entirely a OS data structure (no PTR in H/W, H/W doesn&#39;t know about page table)</li>
+<li>TLB replacement policy managed in S/W</li>
+<li>Slower by more flexible miss handling</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h5>TLB cache invalidate</h5>
+
+<ul>
+<li>Adds cost to context switching
+
+<ul>
+<li>Changing PTR + invalidating TLB + TLB misses afterwards</li>
+</ul></li>
+<li>Invalidate options
+
+<ul>
+<li><strong>Clear TLB</strong>: clearing valid bit of all entries</li>
+<li><strong>Tagged TLB</strong>: H/W maintains <strong>id tag</strong> on each entry
+
+<ul>
+<li>Compare current thread id (stored in register) to the tag</li>
+<li>No invalidation; enables space multiplexing of entries</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Memory Protection</h2>
+
+<ul>
+<li>Generate <strong>protection fault</strong> if memory access inconsistent with protection bits
+
+<ul>
+<li><strong>Read-only fault</strong></li>
+<li><strong>No-execute fault</strong></li>
+</ul></li>
 </ul>
 
 <h4>Related Resources</h4>
