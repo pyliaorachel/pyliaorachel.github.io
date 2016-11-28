@@ -21,6 +21,9 @@ excerpt_separator: <!--more-->
 	1. Matrix Multiplication (Regular)
 	2. SOR (Regular)
 	3. Molecular Dynamics (Irregular)
+4. Task Parallelism
+	1. PIPE (Pipelines)
+	2. TSP (Task Queue)
 
 <!--more-->
 ---
@@ -97,15 +100,14 @@ excerpt_separator: <!--more-->
 
 ## Data Parallelism
 
-- Processors do the same thing on different data
-	- __Regular__: linear indexing
-		- All arrays accessed through linear expressions of loop indices, known at compile time
-	- __Irregular__: non-linear indexing
-		- Some arrays accessed through non-linear expressions of loop indices, some only known at runtime
-		- Difficult for parallelism based on _data distribution_
-		- Not difficult for parallelism based on _iteration distribution_
-- v.s. __Task Parallelism__
-	- Processors do different tasks
+Processors do the same thing on different data.  
+
+- __Regular__: linear indexing
+	- All arrays accessed through linear expressions of loop indices, known at compile time
+- __Irregular__: non-linear indexing
+	- Some arrays accessed through non-linear expressions of loop indices, some only known at runtime
+	- Difficult for parallelism based on _data distribution_
+	- Not difficult for parallelism based on _iteration distribution_
 
 ### Matrix Multiplication (Regular)
 
@@ -186,15 +188,119 @@ for some number of timesteps {
 - __True-dependence__ between 1st & 2nd i-loop
 	- Fork-join between loops
 
+## Task Parallelism
 
+Processors do different tasks.
 
+### PIPE (Pipelines)
 
+1. Case 1
 
+	```
+	for (i =0 ; i < num_pic, read(in_pic[i]); i++) { 	
+		int_pic_1[i] = trans1(in_pic[i]); 
+		int_pic_2[i] = trans2(int_pic_1[i]); 
+		int_pic_3[i] = trans3(int_pic_2[i]); 
+		out_pic[i] = trans4(int_pic_3[i]);
+	}
+	```
+	```
+	// Assign each transformation to a processor
+	// Processor 1
+	for (i = 0; i < num_pics, read(in_pic[i]); i++) { 
+		int_pic_1[i] = trans1(in_pic[i]); 
+		signal(event_1_2[i]);
+	}
+	// Processor 2
+	for (i = 0; i < num_pics; i++) {
+		wait(event_1_2[i]);
+		int_pic_2[i] = trans1(int_pic_1[i]);
+		signal(event_2_3[i]);
+	}
+	// Processor 3
+	...
+	// Processor 4
+	for (i = 0; i < num_pics; i++) {
+		wait(event_3_4[i]);
+		out_pic[i] = trans1(int_pic_3[i]); 
+	}
+	```
+	- Problem
+		- Each stage (transformation) may take different time to finish
+		- Stages take a variable amount of time
+	- Use __semaphore_wait/signal__ with `pthread`
 
+2. Case 2
 
+	```
+	for (i =0 ; i < num_pic, read(in_pic[i]); i++) { 	
+		int_pic_1 = trans1(in_pic); 
+		int_pic_2 = trans2(int_pic_1); 
+		int_pic_3 = trans3(int_pic_2); 
+		out_pic = trans4(int_pic_3);
+	}
+	```
+	- Anti-dependence between stages -> no parallelism
+		- __Privatization__
+		- __Buffer__ between stages; block when buffers are full/empty
 
+### TSP (Task Queue)
 
+```
+init_q(); init_best();
+while ((p = de_queue()) != NULL) {
+	for each expansion by one city { 
+		q = add_city(p);
+		if (complete(q)) { update_best(q) } 
+		else { en_queue(q) }
+	}
+}
+```
 
+Balance between __granularity for load balance__ and __overhead for synchronization__.
+
+1. Each process one expansion
+2. Each process do expansion of one partial path
+
+	```
+	en_queue()/de_queue() {
+		pthreads_mutex_lock(&queue);
+		...;
+		pthreads_mutex_unlock(&queue);
+	}
+	update_best() {
+		pthreads_mutex_lock(&best);
+		...;
+		pthreads_mutex_unlock(&best);
+	}
+	de_queue() {
+		while ((q is empty) and (not done)) {
+			waiting++;
+			if (waiting == p) {
+				done = true;
+				pthreads_cond_broadcast(&empty, &queue);
+			}
+			else {
+				pthreads_cond_wait(&empty, &queue);
+				waiting--; 
+			}
+		}
+		if (done) return null; 
+		else remove and return head of the queue; 
+	}
+	```
+
+3. Each process do expansion of multiple partial path
+
+#### Busy Waiting
+
+```
+initially: flag = 0;
+P1: produce data; flag = 1;
+P2: while (!flag); consume data;
+```
+
+Used when __few threads competing for core__ or __short critical sections__.
 
 
 
