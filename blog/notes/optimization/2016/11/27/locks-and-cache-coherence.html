@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Operating System - Scheduling</title>
+		<title>Locks & Cache Coherence</title>
 		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
 		<link rel="stylesheet" href="/css/main.css" type="text/css">
 		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
@@ -98,8 +98,8 @@
 	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
 
 		<header class="post-header">
-			<h1 class="post-title" itemprop="name headline">Operating System - Scheduling</h1>
-			<p class="post-meta">Oct 23, 2016
+			<h1 class="post-title" itemprop="name headline">Locks & Cache Coherence</h1>
+			<p class="post-meta">Nov 27, 2016
 				 • Notes
 				 • pyliaorachel
 			</p>
@@ -113,225 +113,223 @@
 			<h2>Content</h2>
 
 <ol>
-<li>Scheduling Overview</li>
-<li>Scheduling Policies</li>
-<li>Multiprocessor Scheduling</li>
+<li>Locks &amp; Cache Coherence
+
+<ol>
+<li>Atomic Operations</li>
+<li>Ticket Lock</li>
+<li>Array-Based Queueing Locks</li>
+<li>List-Based Queueing Locks (MCS Locks)</li>
+<li>Summary</li>
+</ol></li>
 </ol>
 
 <!--more-->
 
 <hr>
 
-<h2>Scheduling Overview</h2>
+<h2>Locks &amp; Cache Coherence</h2>
 
 <ul>
-<li>Prevent <code>thread starvation</code>, BUT <code>context switching</code> is expensive</li>
-<li>Runs another program when I/O performed</li>
-<li>Goals
+<li>Criteria for evaluating spin locks
 
 <ul>
-<li><strong>Batch systems</strong>: Long running, no interactive users, no time constraints
-
-<ul>
-<li><code>CPU utilization</code>
-
-<ul>
-<li>% of time CPU is busy</li>
-</ul></li>
-<li><code>Throughput</code>
-
-<ul>
-<li># of programs complete per unit time</li>
-</ul></li>
-<li><code>Turnaround time</code>
-
-<ul>
-<li>Total time to finish a program</li>
-<li><code>turnaround = processing + waiting</code></li>
-</ul></li>
-</ul></li>
-<li><strong>Interactive (general-purpose) systems</strong>: Short running, interactive suers, weak time constraints
-
-<ul>
-<li><code>Response time</code>
-
-<ul>
-<li>Time between <em>receiving request</em> &amp; starting to <em>produce output</em></li>
-</ul></li>
-</ul></li>
+<li>Scalability &amp; induced network load</li>
+<li>Single-processor latency</li>
+<li>Space requirements</li>
+<li>Fairness</li>
+<li>Implementability with available atomic operations</li>
 </ul></li>
 </ul>
 
-<h2>Scheduling Policies</h2>
+<h3>Atomic Operations</h3>
+
+<p>H/W support is required to implement synchronization primitives.</p>
 
 <ul>
-<li><strong>Batch systems</strong>
+<li><p>Test &amp; set</p>
 
 <ul>
-<li>Policies
+<li>Steps
+
+<ol>
+<li>Load old value to register</li>
+<li>Set value in memory to 1</li>
+<li>Return old value</li>
+</ol></li>
+<li><p>Lock implementation (TAS)</p>
+<div class="highlight"><pre><code class="language-" data-lang="">struct lock { 
+    int held = 0;
+}
+void acquire (lock) {
+    while (test-and-set(&amp;lock-&gt;held)); 
+}
+void release (lock) { 
+    lock-&gt;held = 0;
+}
+</code></pre></div></li>
+<li><p>Contentions</p>
 
 <ul>
-<li><code>FIFO</code> (non-preemptive)
-
-<ul>
-<li>In order of arrival time</li>
-<li>Run thread until completion</li>
+<li>2 threads contending to acquire lock &amp; modify lock to 1</li>
+<li>Caused by spinning on <em>global</em> variables</li>
+<li>Poor scalability</li>
 </ul></li>
-<li><code>Shortest job first</code> (non-preemptive)
+<li><p>Improved lock implementation (TATAS)</p>
+<div class="highlight"><pre><code class="language-" data-lang="">void test_and_test_and_set (lock) { 
+    do {
+        while (lock-&gt;held == 1) // only read
+            ; // spin 
+        }
+    } while (test_and_set(lock-&gt;held));
+}
+void release (lock) {
+    lock-&gt;held = 0; 
+}
+</code></pre></div></li>
+<li><p>Further improved lock implementation (TAS with backoff)</p>
+<div class="highlight"><pre><code class="language-" data-lang="">while test&amp;set (L) fails { 
+    pause (delay);
+    delay = delay * 2;
+}
+</code></pre></div></li>
+</ul></li>
+<li><p>Swap</p></li>
+<li><p>Fetch &amp; Op</p></li>
+<li><p>Compare &amp; swap</p></li>
+</ul>
+
+<h3>Ticket Lock</h3>
+<div class="highlight"><pre><code class="language-" data-lang="">my_ticket = fetch_and_increment(next_ticket); 
+while (my_ticket != now_serving)
+    pause(); //back-off
+</code></pre></div>
+<ul>
+<li>Improvements
 
 <ul>
-<li>In order of shortest running time</li>
-<li>Run thread until completion</li>
-<li>Starving long jobs</li>
+<li>Only 1 process try to get lock upon release</li>
+<li>Only 1 process have read miss upon release (not achieved)</li>
+<li>Locked acquired in FIFO (fairness)</li>
+<li>Further improvement: proportional backoff</li>
 </ul></li>
-<li><code>Shortest remaining time</code> (preemptive)
+<li>Components
 
 <ul>
-<li>In order of shortest remaining time</li>
-<li>Run thread until completion OR another thread arrives</li>
-<li>Preemptive version of <code>shortest job first</code></li>
-<li>Starving long jobs</li>
-<li>Optimal w.r.t. avg waiting time</li>
+<li>2 counters: <code>next_ticket</code>, <code>now_serving</code></li>
+<li>Lock acquire: <code>fetch-and-increment</code> on <code>next_ticket</code></li>
+<li>Lock release: increment on <code>now_serving</code> -&gt; cuases contention</li>
 </ul></li>
-</ul></li>
-<li>Properties
+</ul>
+
+<h3>Array-Based Queueing Locks</h3>
 
 <ul>
-<li>Some require estimate of preocessing time</li>
-<li>May starve long running threads</li>
-<li>Long response time</li>
-</ul></li>
-</ul></li>
-<li><strong>Interactive systems</strong>
+<li>Components
 
 <ul>
-<li>Policies
+<li>Queue <code>slots[N]</code>, each element lies in different cache line
 
 <ul>
-<li><code>Round-Robin</code>
-
-<ul>
-<li>Preemptive version of <code>FIFO</code></li>
-<li><code>Time slice</code>
-
-<ul>
-<li>Upper time bound each process runs </li>
-<li><code>time slice &gt;&gt; context switch time</code></li>
-<li><code>cs overhead = cs/(ts+cs)</code></li>
+<li>Has-lock (HL)</li>
+<li>Must-wait (MW)</li>
 </ul></li>
-<li>Run thread until <code>time slice</code> interrupt OR thread blocks</li>
-<li>Effectiveness:
-
-<ul>
-<li># of threads</li>
-<li>Size of <code>time slice</code><br>
-<strong>Long</strong> -&gt; slow response<br>
-<strong>Short</strong> -&gt; high overhead</li>
-</ul></li>
-<li>Does not require estimation of job processing time; no <code>starvation</code>; enables <code>interactivity</code> by limiting the amount of time each thread can run</li>
-<li>Reduces <code>throughtput</code> due to frequent <code>context switching</code></li>
-</ul></li>
-<li><code>Static priority</code>
-
-<ul>
-<li>In order of priority assigned</li>
-<li>Starving low prioriy threads</li>
-<li><em>Priority inversion</em>: low priority threads holding locks that high priority threads want</li>
-</ul></li>
-<li><code>Multi-level queue</code>
-
-<ul>
-<li>High, medium, &amp; low PQs</li>
-<li>Choose from high-priority PQ first (e.g. I/O threads)</li>
-<li>For each queue, <code>round-robin</code> scheduling</li>
-</ul></li>
-<li><code>Dynamic priority (feedback)</code>
-
-<ul>
-<li>Priority changed based on thread behavior; CPU-bound threads have priority reduced</li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li><code>Feedback scheduling</code>
-
-<ul>
-<li>Goals
-
-<ul>
-<li>Allocate CPU fairly</li>
-<li>I/O-bound threads receive higher priority</li>
-</ul></li>
-<li>Each thread:
-
-<ul>
-<li>CPU usage (C)</li>
-<li>Current priority (Pi)</li>
-<li>Initial priority (P0)</li>
-<li>Nice value (N)</li>
+<li><code>next_slot</code></li>
 </ul></li>
 <li>Steps
 
 <ol>
-<li>Scheduler chooses thread with the <strong>smallest</strong> Pi</li>
-<li>On timer interrupt, update CPU C of running thread <code>C = C + 1</code></li>
-<li>Every time slice, update Pi <code>Pi = Pi-1/2 + C + N</code></li>
-<li>Reset C for all threads</li>
+<li>Incoming processes enqueued (<code>my_place = fetch-and-inc(next_slot)</code>)</li>
+<li>Lock-acquire: <code>while(slots[my_place] == MW);</code></li>
+<li>Lock-release: <code>slots[(my_place+1)%N] = HL;</code></li>
 </ol></li>
-<li><code>Time slice</code>
+<li>Pros
 
 <ul>
-<li>Many interrupts in between <code>time slice</code> to avoid excessive <code>context switches</code></li>
-<li>A <code>thread</code> runs for a full <code>time slice</code> unless:
+<li>Atomic ops <code>fetch-and-inc</code> to obtain location to spin on</li>
+<li>Each CPU spins on different location in a distinct cache line</li>
+<li>Each CPU clears the lock for its successor (must-wait -&gt; has-lock)</li>
+</ul></li>
+<li>Cons
 
 <ul>
-<li>The <code>thread</code> blocks</li>
-<li>Some blocked <code>thread</code> wakesup</li>
-</ul></li>
-<li>Longer <code>time slice</code> improves throughput</li>
-</ul></li>
+<li>Space complexity <code>O(N)</code>(bounded by # of processors)</li>
+<li>Queue is static</li>
 </ul></li>
 </ul>
 
-<h2>Multiprocessor Scheduling</h2>
+<h3>List-Based Queueing Locks (MCS Locks)</h3>
 
 <ul>
-<li>Asymetric multiprocessing
+<li><p>Steps</p>
+
+<ol>
+<li>Incoming processes enqueued (<code>predecessor = fetch-and-store(L,me)</code>)</li>
+<li>Lock-acquire: wait for predecessor to signal</li>
+<li><p>Lock-release: remove <code>me</code> from <code>L</code> &amp; signal successor</p>
 
 <ul>
-<li>1 processor runs all OS code, I/O processing code, etc.</li>
-<li>Others run user code</li>
-<li>Simple implementation</li>
+<li><p>If no successor, spin on myself using <code>compare-and-swap(L,me,nil)</code></p>
+<div class="highlight"><pre><code class="language-" data-lang="">L -&gt; me
+     new
+
+# compare-and-swap fails
+L    me
+  ⬊  
+     new
+
+# spin on while I-&gt;next = nil
+L    me
+  ⬊   ↓
+     new
+</code></pre></div></li>
 </ul></li>
-<li>Symmetric multiprocessing (SMP)
+</ol></li>
+<li><p>Properties</p>
 
 <ul>
-<li>All processors fun OS &amp; user code</li>
-<li>Efficient</li>
-<li>Difficult implementation</li>
-<li>Scheduling issues
-
-<ul>
-<li><strong>Processor affinity</strong>
-
-<ul>
-<li>Cache issue, want to ensure <code>threads</code> run on the same <code>thread</code> before</li>
-<li><code>Hard affinity</code>: a <code>thread</code> specifies which processor it wants to use</li>
+<li>Lock points at tail of queue</li>
+<li><strong>Compare-and-swap</strong> for detection if it is the only processor in queue &amp; atomic removal of self from queue</li>
 </ul></li>
-<li><strong>Load balancing</strong>
+<li><p>Pros</p>
 
 <ul>
-<li>Single ready queue: easy BUT tends to bottleneck because each processor needs a spinlock for ready queue</li>
-<li>1 ready queue per processor: scalable BUT <em>task migration</em> &amp; <em>load balancing</em> tricky<br>
+<li>Spins on local flag variables only</li>
+<li>Requires a small constant amount of space per lock (bounded by # of requests)</li>
+</ul></li>
+</ul>
+
+<h3>Summary</h3>
 
 <ul>
-<li><em>task migration</em>  -<br>
-Deadlock?</li>
-<li><em>load balancing</em>  -<br>
-<code>Push migration</code>: thread find less-busy processors<br>
-<code>Pull migration</code>: idle processor find thread on busy processors</li>
+<li><strong>TAS</strong> with proper backoffs
+
+<ul>
+<li>Scale well</li>
+<li>More network load</li>
 </ul></li>
+<li><strong>Ticket lock</strong> with proper backoffs 
+
+<ul>
+<li>Scale well</li>
+<li>More network load</li>
 </ul></li>
+<li><strong>Array-based locks</strong>
+
+<ul>
+<li>Scales best</li>
+<li>Least interconnect contention</li>
+<li>High space requirement for large numbers of CPUs</li>
+<li>Fair</li>
 </ul></li>
+<li><strong>MCS</strong>
+
+<ul>
+<li>Scales best</li>
+<li>Least interconnect contention</li>
+<li>Low space requirement</li>
+<li>Fair</li>
+<li>Benefits from <strong>compare-and-swap</strong></li>
 </ul></li>
 </ul>
 
@@ -341,19 +339,13 @@ Deadlock?</li>
 			
 
 			<li class="tag">
-				OS
+				Optimization
 			</li>
 
 			
 
 			<li class="tag">
-				ECE344
-			</li>
-
-			
-
-			<li class="tag">
-				scheduling
+				ECE454
 			</li>
 
 			
@@ -366,7 +358,7 @@ Deadlock?</li>
 <script>
 	var disqus_config = function () {
 	    this.page.url = "https://pyliaorachel.github.io";
-	    this.page.identifier = "/blog/notes/os/2016/10/23/operating-system-scheduling.html";
+	    this.page.identifier = "/blog/notes/optimization/2016/11/27/locks-and-cache-coherence.html";
 	};
 	(function() {
 	    var d = document, s = d.createElement('script');

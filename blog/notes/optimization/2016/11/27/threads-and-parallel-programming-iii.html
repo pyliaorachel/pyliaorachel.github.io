@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Memory Optimization</title>
+		<title>Threads & Parallel Programming III</title>
 		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
 		<link rel="stylesheet" href="/css/main.css" type="text/css">
 		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
@@ -98,8 +98,8 @@
 	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
 
 		<header class="post-header">
-			<h1 class="post-title" itemprop="name headline">Memory Optimization</h1>
-			<p class="post-meta">Oct 30, 2016
+			<h1 class="post-title" itemprop="name headline">Threads & Parallel Programming III</h1>
+			<p class="post-meta">Nov 27, 2016
 				 • Notes
 				 • pyliaorachel
 			</p>
@@ -113,34 +113,28 @@
 			<h2>Content</h2>
 
 <ol>
-<li>Data Representation &amp; Alignment</li>
-<li>Cache Performance
+<li>Big Picture of Architecture &amp; Memory Access
 
 <ol>
-<li>Cache Organization</li>
-<li>Cache Performance Metrics</li>
-<li>Code Scheduling</li>
-<li>Blocking/Tiling</li>
-<li>The Memory Moutain</li>
-</ol></li>
 <li>Virtual Memory
 
-<ol>
-<li>Virtual Memory Access</li>
-<li>Page Table &amp; TLB</li>
+<ul>
+<li>Memory Access</li>
+</ul></li>
+<li>Multithreading Basics
+
+<ul>
+<li>Parallelism within Processor</li>
+</ul></li>
+<li>Connection between Memory Access, Memory Allocation and Cache Efficiency</li>
 </ol></li>
-<li>Prefetching
+<li>Cache Coherence
 
 <ol>
-<li>H/W Prefetching</li>
-<li>S/W Prefetching</li>
-</ol></li>
-<li>Machine-Dependent Optimizations
-
-<ol>
-<li>Pointer Code</li>
-<li>Instruction-Level Parallelism</li>
-<li>Parallel Loop Unrolling</li>
+<li>Cache Coherence Overview</li>
+<li>CC Protocols</li>
+<li>Locality in Parallel Programming</li>
+<li>True &amp; False Sharing</li>
 </ol></li>
 </ol>
 
@@ -148,209 +142,200 @@
 
 <hr>
 
-<h2>Data Representation &amp; Alignment</h2>
+<h2>Big Picture of Architecture &amp; Memory Access</h2>
+
+<h3>Virtual Memory</h3>
 
 <ul>
-<li>Primitive data type requires K bytes -&gt; address must be multiple of K</li>
-<li>Structures align with the <em>largest alignment requirement of any element</em></li>
+<li><strong>Protection</strong>: each process has its own private memory space</li>
+<li><strong>Sharing</strong>: processes can share physical memory frames</li>
+<li><strong>Hide fragmentation</strong>: can run if not enough total/contiguous memory</li>
 </ul>
 
-<h2>Cache Performance</h2>
+<h4>Memory Access</h4>
 
-<ul>
-<li>Keep working set small (temporal locality)</li>
-<li>Use small strides (spacial locality)</li>
-</ul>
-
-<h3>Cache Organization</h3>
-<div class="highlight"><pre><code class="language-" data-lang="">address: | tag | index | offset |
-cache block: | v | tag | data |
-S - 2^s sets
-E - 2^e blocks/lines per set
-B - 2^b bytes per cache block
-
-Cach size = S * E * B bytes
-</code></pre></div>
-<h3>Cache Performance Metrics</h3>
-
-<ul>
-<li>Miss rate</li>
-<li>Hit time
-
-<ul>
-<li>isLineInCache? + deliver block to CPU (+virtual memory translation)</li>
-</ul></li>
-<li>Miss penalty</li>
-</ul>
-
-<h3>Code Scheduling</h3>
-
-<ul>
-<li>Factors
-
-<ul>
-<li>Reordering of loops</li>
-<li># of read/write operations</li>
-</ul></li>
-</ul>
-
-<h3>Blocking/Tiling</h3>
-
-<ul>
-<li>Traverse array in blocks</li>
-<li>Imporves <strong>temporal locality</strong></li>
-</ul>
-
-<h3>The Memory Moutain</h3>
-
-<ul>
-<li>Measure <strong>read throughput</strong> as a function of <strong>spatial &amp; temporal locality</strong></li>
-</ul>
-
-<p><img src="http://cfile22.uf.tistory.com/image/112730164AC0AFAB36962C" alt="Memory Mountain"></p>
-
-<h2>Virtual Memory</h2>
-
-<ul>
-<li>Why virtual memory?
-
-<ul>
-<li>Capacity/Portability</li>
-<li>Security</li>
-<li>Sharing</li>
-</ul></li>
-</ul>
-
-<h3>Virtual Memory Access</h3>
-
-<ul>
-<li>Type of cache misses
-
-<ul>
-<li>Cold/compulsory miss</li>
-<li>Conflict miss
-
-<ul>
-<li>Avoided by <em>set-associative caches</em></li>
-</ul></li>
-<li>Capacity miss *
-
-<ul>
-<li>Keep working set within on-chip cache capacity</li>
-</ul></li>
-</ul></li>
-<li>Write
-
-<ul>
-<li>Write-back (on write-hit)</li>
-<li>Write-allocate (on write-miss)</li>
-<li>Write-through</li>
-</ul></li>
-</ul>
-
-<h3>Page Table &amp; TLB</h3>
-
-<ul>
-<li>MMU keep mapping of VA to PA in <strong>page table</strong>
-
-<ul>
-<li>Page table kept in main memory, can be cached</li>
-</ul></li>
-<li><strong>Translation lookaside buffer (TLB)</strong>: cache for page table
-
-<ul>
-<li>TLB hit: <code>CPU -&gt; MMU -&gt; TLB -&gt; MMU -&gt; Mem</code></li>
-<li>TLB miss: <code>CPU -&gt; MMU -&gt; TLB -&gt; Mem -&gt; TLB -&gt; MMU -&gt; Mem</code></li>
-<li>TLB reach: <code>(# TLB entries) * (page size)</code></li>
-</ul></li>
-<li><strong>Working set</strong> : a set of active virtual pages
-
-<ul>
-<li>Page miss: <code>(working set size) &gt; (main mem size)</code> -&gt; <strong>thrashing</strong></li>
-<li>TLB miss: <code>(# working set pages) &gt; (# TLB entries)</code></li>
-</ul></li>
-</ul>
-
-<h2>Prefetching</h2>
-
-<ul>
-<li>Bring into cache elements expected to be accessed in future</li>
-<li>Effective if:
-
-<ul>
-<li>Spare memory bandwidth</li>
-<li>Accurate</li>
-<li>Timely</li>
-<li>Doesn&#39;t displace other in-use data</li>
-<li>Latency hidden by prefetched outweighs their cost</li>
-</ul></li>
-</ul>
-
-<h3>H/W Prefetching</h3>
-
-<ul>
-<li>Prefetch adjacent block</li>
-<li>Recognize a <em>stream</em>: addresses separated by a <em>stride</em></li>
-<li>Prefetch within a page boundary</li>
-</ul>
-
-<h3>S/W Prefetching</h3>
-
-<ul>
-<li>Insert special <code>prefetch</code> instructions into code
-
-<ul>
-<li>Patterns that H/W wouldn&#39;t recognize e.g. linked list</li>
-</ul></li>
-</ul>
-
-<h2>Machine-Dependent Optimizations</h2>
-
-<h3>Pointer Code</h3>
-
-<ul>
-<li>Not necessarily better than array code; some compilers do better job optimizing array code</li>
-</ul>
-
-<h3>Instruction-Level Parallelism</h3>
-
-<ul>
-<li>Limiting factor
-
-<ul>
-<li>Latency of instructions</li>
-<li># of functional units available
-
-<ul>
-<li>1 load</li>
-<li>1 store</li>
-<li>2 int (1 may be branch)</li>
-<li>1 FP add</li>
-<li>1 FP mul/div</li>
-</ul></li>
-</ul></li>
-</ul>
-
-<h3>Parallel Loop Unrolling</h3>
+<p><img src="http://wdxtub.com/images/14583140218329.jpg" alt="memory access"></p>
 
 <ol>
-<li>Accumulate in 2 different products, combine at end
-
-<ul>
-<li><code>(1 * x2 * ... * xn) * (1 * x1 * ... * x_n-1)</code></li>
-</ul></li>
-<li>Dual product 
-
-<ul>
-<li><code>(1 * x1) * (x2 * x3) * ... * (x_n-1 * xn)</code></li>
-</ul></li>
+<li>Processor sends VA to MMU</li>
+<li>MMU fetches PTE from PT in memory</li>
+<li>PTE absent, MMU triggers <em>page fault exception</em></li>
+<li>Handler identifies victim page (if dirty, page it out to disk)</li>
+<li>Handler pages in new page; update PTE</li>
+<li>Handler returns to original process; restart faulting instruction</li>
 </ol>
 
+<h3>Multithreading Basics</h3>
+
+<p><img src="https://docs.adobe.com/content/docs/en/aem/6-0/manage/capacity-guide/capacity-guide/_jcr_content/par/image_7.img.png/1346079308000.png" alt="thread x throughput"></p>
+
+<p><code>linear increase -&gt; increase slowdown -&gt; degrade</code></p>
+
+<h4>Parallelism within Processor</h4>
+
 <ul>
+<li>Example
+<code>x = x * (data[i] * data[i+1])</code></li>
 <li>Limitations
 
 <ul>
-<li>Need lots of registers to hold sums/products</li>
+<li># of functional units</li>
+<li>Latency of operation causing dependency</li>
+<li># of registers to hold temporaries</li>
+</ul></li>
+</ul>
+
+<h3>Connection between Memory Access, Memory Allocation and Cache Efficiency</h3>
+
+<ul>
+<li>Dynamic memory allocation
+
+<ul>
+<li>Space utilization</li>
+<li>Time complexity on malloc/free</li>
+<li><strong>Memory-wall</strong>: growing desparity of CPU &amp; RAM speeds<br>
+
+<ul>
+<li>Caching effectiveness important</li>
+<li>Padding not cache-friendly: avoid internal fragmentation</li>
+</ul></li>
+</ul></li>
+<li><strong>False sharing</strong>: occurs when &gt;= 2 processors access different data in <em>same cache line</em>, and at least one of them writes
+
+<ul>
+<li><strong>Memory arenas</strong>: 1 thread only use memory from a single arena (continuous blocks of memory)</li>
+</ul></li>
+</ul>
+
+<h2>Cache Coherence</h2>
+
+<h3>Cache Coherence Overview</h3>
+
+<ul>
+<li>Shared memory machines
+
+<ul>
+<li>Small # of processors: shared memory with coherent caches (SMP)</li>
+<li>Large # of processors: distributed shared memory with coherent caches (CC-NUMA)</li>
+</ul></li>
+<li>Caches in multiprocessors
+
+<ul>
+<li>Same line appears in &gt;= 2 caches, one write, others read</li>
+</ul></li>
+</ul>
+
+<h3>CC Protocols</h3>
+
+<h4>MSI Protocol</h4>
+<div class="highlight"><pre><code class="language-" data-lang=""># Input/Action
+                PrWr/BuRdX
+    ⬈-----------------------------------⬊
+      PrRd/BuRd     PrRd/-  PrWr/BuRdX
+I ------------------&gt; S ------------------&gt; M
+  &lt;------------------   &lt;------------------
+      BuRdX/-       BuRd/-  BuRd/Flush
+    ⬉-----------------------------------⬋
+                BuRdX/Flush
+</code></pre></div>
+<ul>
+<li>Assumption: bus based architecture
+
+<ul>
+<li>Bus is reliable, ordered broadcast bus (snooping bus)</li>
+</ul></li>
+<li>States of a cache line
+
+<ul>
+<li><strong>Invalid</strong></li>
+<li><strong>Shared</strong>: one of many cached copies</li>
+<li><strong>Modified</strong>: sole valid copy</li>
+</ul></li>
+<li>Processor events
+
+<ul>
+<li><strong>PrRd</strong></li>
+<li><strong>PrWr</strong></li>
+</ul></li>
+<li>Bus Transactions
+
+<ul>
+<li><strong>BusRd</strong>: simply asks for copy</li>
+<li><strong>BusRdX</strong>: asks for copy to modify</li>
+<li><strong>Flush</strong>: updates memory</li>
+</ul></li>
+<li>Actions
+
+<ul>
+<li>Update state, perform bus transaction, flush value onto bus</li>
+</ul></li>
+<li>Problem
+
+<ul>
+<li>Reading &amp; modifying data is 2 bus xactions (BusRd(I-&gt;S) + BusRdX)</li>
+<li>A write to <em>shared</em>_ will generate invalidation request</li>
+</ul></li>
+</ul>
+
+<h4>MESI Protocol</h4>
+
+<ul>
+<li>One more state
+
+<ul>
+<li><strong>Exclusive/Exclusive-clean</strong>: only this cache has copy but not modified</li>
+<li>A write to <em>exclusive</em>_ will not generate invalidation request</li>
+</ul></li>
+<li>Typically built on write-back caches</li>
+</ul>
+
+<h3>Locality in Parallel Programming</h3>
+
+<ul>
+<li>Cache-aware access
+
+<ul>
+<li>Cache invalidation traffic important</li>
+</ul></li>
+<li>Awareness of data placement in memory
+
+<ul>
+<li>Important for CC-NUMA because long memory latencies for non-local memory access</li>
+</ul></li>
+<li>Awareness of data assignment to threads when load balancing</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">for (i = 0; i &lt; n; i++) 
+    a[i] = i;
+#pragma omp parallel for
+for (i = 0; i &lt; n; i++)
+    b[i] = f(a[i-1], a[i]);
+
+-&gt; better locality
+#pragma omp parallel for
+for (i = 0; i &lt; n; i++) 
+    a[i] = i;
+#pragma omp parallel for
+for (i = 0; i &lt; n; i++)
+    b[i] = f(a[i-1], a[i]);
+</code></pre></div>
+<h3>True &amp; False Sharing</h3>
+
+<ul>
+<li><strong>True sharing</strong>: 2 threads accessing <strong>same</strong> locations on one block</li>
+<li><p><strong>False sharing</strong>: 2 threads accessing <strong>distinct</strong> locations on one block</p>
+
+<ul>
+<li>Block will ping-pong
+
+<ul>
+<li>Ensure they map to separate cache blocks e.g. insert padding</li>
+</ul></li>
+<li><p>Example</p>
+<div class="highlight"><pre><code class="language-" data-lang=""># processor = 2, cache line fit 8 elements
+#pragma omp parallel for schedule(cyclic) 
+for (i = 0; i &lt; n; i++)
+    a[i] = b[i];
+</code></pre></div></li>
 </ul></li>
 </ul>
 
@@ -379,7 +364,7 @@ Cach size = S * E * B bytes
 <script>
 	var disqus_config = function () {
 	    this.page.url = "https://pyliaorachel.github.io";
-	    this.page.identifier = "/blog/notes/optimization/2016/10/30/memory-optimization.html";
+	    this.page.identifier = "/blog/notes/optimization/2016/11/27/threads-and-parallel-programming-iii.html";
 	};
 	(function() {
 	    var d = document, s = d.createElement('script');

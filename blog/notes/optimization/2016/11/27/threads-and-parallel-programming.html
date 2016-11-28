@@ -54,7 +54,7 @@
 							<li class="category">
 								<a href="/blog/notes">
 									<span>Notes</span>
-									<span>26</span>
+									<span>29</span>
 								</a>
 							</li>
 						
@@ -99,7 +99,7 @@
 
 		<header class="post-header">
 			<h1 class="post-title" itemprop="name headline">Threads & Parallel Programming</h1>
-			<p class="post-meta">Oct 30, 2016
+			<p class="post-meta">Nov 27, 2016
 				 • Notes
 				 • pyliaorachel
 			</p>
@@ -132,6 +132,12 @@
 <li>Matrix Multiplication (Regular)</li>
 <li>SOR (Regular)</li>
 <li>Molecular Dynamics (Irregular)</li>
+</ol></li>
+<li>Task Parallelism
+
+<ol>
+<li>PIPE (Pipelines)</li>
+<li>TSP (Task Queue)</li>
 </ol></li>
 </ol>
 
@@ -266,8 +272,7 @@
 
 <h2>Data Parallelism</h2>
 
-<ul>
-<li>Processors do the same thing on different data
+<p>Processors do the same thing on different data.  </p>
 
 <ul>
 <li><strong>Regular</strong>: linear indexing
@@ -281,12 +286,6 @@
 <li>Some arrays accessed through non-linear expressions of loop indices, some only known at runtime</li>
 <li>Difficult for parallelism based on <em>data distribution</em></li>
 <li>Not difficult for parallelism based on <em>iteration distribution</em></li>
-</ul></li>
-</ul></li>
-<li>v.s. <strong>Task Parallelism</strong>
-
-<ul>
-<li>Processors do different tasks</li>
 </ul></li>
 </ul>
 
@@ -393,6 +392,118 @@ for some number of timesteps {
 </ul></li>
 </ul>
 
+<h2>Task Parallelism</h2>
+
+<p>Processors do different tasks.</p>
+
+<h3>PIPE (Pipelines)</h3>
+
+<ol>
+<li><p>Case 1</p>
+<div class="highlight"><pre><code class="language-" data-lang="">for (i =0 ; i &lt; num_pic, read(in_pic[i]); i++) {    
+    int_pic_1[i] = trans1(in_pic[i]); 
+    int_pic_2[i] = trans2(int_pic_1[i]); 
+    int_pic_3[i] = trans3(int_pic_2[i]); 
+    out_pic[i] = trans4(int_pic_3[i]);
+}
+</code></pre></div><div class="highlight"><pre><code class="language-" data-lang="">// Assign each transformation to a processor
+// Processor 1
+for (i = 0; i &lt; num_pics, read(in_pic[i]); i++) { 
+    int_pic_1[i] = trans1(in_pic[i]); 
+    signal(event_1_2[i]);
+}
+// Processor 2
+for (i = 0; i &lt; num_pics; i++) {
+    wait(event_1_2[i]);
+    int_pic_2[i] = trans1(int_pic_1[i]);
+    signal(event_2_3[i]);
+}
+// Processor 3
+...
+// Processor 4
+for (i = 0; i &lt; num_pics; i++) {
+    wait(event_3_4[i]);
+    out_pic[i] = trans1(int_pic_3[i]); 
+}
+</code></pre></div>
+<ul>
+<li>Problem
+
+<ul>
+<li>Each stage (transformation) may take different time to finish</li>
+<li>Stages take a variable amount of time</li>
+</ul></li>
+<li>Use <strong>semaphore_wait/signal</strong> with <code>pthread</code></li>
+</ul></li>
+<li><p>Case 2</p>
+<div class="highlight"><pre><code class="language-" data-lang="">for (i =0 ; i &lt; num_pic, read(in_pic[i]); i++) {    
+    int_pic_1 = trans1(in_pic); 
+    int_pic_2 = trans2(int_pic_1); 
+    int_pic_3 = trans3(int_pic_2); 
+    out_pic = trans4(int_pic_3);
+}
+</code></pre></div>
+<ul>
+<li>Anti-dependence between stages -&gt; no parallelism
+
+<ul>
+<li><strong>Privatization</strong></li>
+<li><strong>Buffer</strong> between stages; block when buffers are full/empty</li>
+</ul></li>
+</ul></li>
+</ol>
+
+<h3>TSP (Task Queue)</h3>
+<div class="highlight"><pre><code class="language-" data-lang="">init_q(); init_best();
+while ((p = de_queue()) != NULL) {
+    for each expansion by one city { 
+        q = add_city(p);
+        if (complete(q)) { update_best(q) } 
+        else { en_queue(q) }
+    }
+}
+</code></pre></div>
+<p>Balance between <strong>granularity for load balance</strong> and <strong>overhead for synchronization</strong>.</p>
+
+<ol>
+<li>Each process one expansion</li>
+<li><p>Each process do expansion of one partial path</p>
+<div class="highlight"><pre><code class="language-" data-lang="">en_queue()/de_queue() {
+    pthreads_mutex_lock(&amp;queue);
+    ...;
+    pthreads_mutex_unlock(&amp;queue);
+}
+update_best() {
+    pthreads_mutex_lock(&amp;best);
+    ...;
+    pthreads_mutex_unlock(&amp;best);
+}
+de_queue() {
+    while ((q is empty) and (not done)) {
+        waiting++;
+        if (waiting == p) {
+            done = true;
+            pthreads_cond_broadcast(&amp;empty, &amp;queue);
+        }
+        else {
+            pthreads_cond_wait(&amp;empty, &amp;queue);
+            waiting--; 
+        }
+    }
+    if (done) return null; 
+    else remove and return head of the queue; 
+}
+</code></pre></div></li>
+<li><p>Each process do expansion of multiple partial path</p></li>
+</ol>
+
+<h4>Busy Waiting</h4>
+<div class="highlight"><pre><code class="language-" data-lang="">initially: flag = 0;
+P1: produce data; flag = 1;
+P2: while (!flag); consume data;
+</code></pre></div>
+<p>Used when <strong>few threads competing for core</strong> or <strong>short critical sections</strong>.</p>
+
 		</div>
 
 		<ul class="tag-list">
@@ -418,7 +529,7 @@ for some number of timesteps {
 <script>
 	var disqus_config = function () {
 	    this.page.url = "https://pyliaorachel.github.io";
-	    this.page.identifier = "/blog/notes/optimization/2016/10/30/threads-and-parallel-programming.html";
+	    this.page.identifier = "/blog/notes/optimization/2016/11/27/threads-and-parallel-programming.html";
 	};
 	(function() {
 	    var d = document, s = d.createElement('script');
