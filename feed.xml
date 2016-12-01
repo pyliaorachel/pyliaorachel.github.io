@@ -6,9 +6,209 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 27 Nov 2016 20:25:46 -0500</pubDate>
-    <lastBuildDate>Sun, 27 Nov 2016 20:25:46 -0500</lastBuildDate>
+    <pubDate>Thu, 01 Dec 2016 12:07:23 -0500</pubDate>
+    <lastBuildDate>Thu, 01 Dec 2016 12:07:23 -0500</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Coping with NP-Complete Problems</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Intelligent Exhaustive Search
+
+&lt;ol&gt;
+&lt;li&gt;Backtracking&lt;/li&gt;
+&lt;li&gt;Branch-and-Bound&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Approximation Algorithms
+
+&lt;ol&gt;
+&lt;li&gt;Vertex Cover&lt;/li&gt;
+&lt;li&gt;Clustering&lt;/li&gt;
+&lt;li&gt;TSP&lt;/li&gt;
+&lt;li&gt;Knapsack&lt;/li&gt;
+&lt;li&gt;Approximability Hierarchy
+&amp;lt;!--more--&amp;gt;
+---
+## Intelligent Exhaustive Search&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3&gt;Backtracking&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Start with some problem P0
+Let S = {P0}, the set of active subproblems 
+Repeat while S is nonempty:
+    choose a subproblem P ∈ S and remove it from S 
+    expand it into smaller subproblems P1, P2, ..., Pk 
+    For each Pi:
+        If test(Pi) succeeds: halt and announce this solution
+        If test(Pi) fails: discard Pi
+        Otherwise: add Pi to S # uncertainty
+Announce that there is no solution
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Branch-and-Bound&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Start with some problem P0
+Let S = {P0}, the set of active subproblems bestsofar = ∞
+Repeat while S is nonempty:
+    choose a subproblem (partial solution) P ∈ S and remove it from S 
+    expand it into smaller subproblems P1, P2, ..., Pk
+    For each Pi:
+        If Pi is a complete solution: update bestsofar
+        else if lowerbound(Pi) &amp;lt; bestsofar: add Pi to S
+return bestsofar
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.jot.fm/issues/issue_2003_05/column7/&quot;&gt;TSP example&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Approximation Algorithms&lt;/h2&gt;
+
+&lt;p&gt;Minimize &lt;code&gt;αA = max_I(A(I)/OPT(I))&lt;/code&gt;, where &lt;code&gt;αA&lt;/code&gt; is the &lt;strong&gt;approximation ratio&lt;/strong&gt; of algorithm &lt;code&gt;A&lt;/code&gt;.  &lt;/p&gt;
+
+&lt;h3&gt;Vertex Cover&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Input: undirected graph G = (V, E)
+Output: a subset of the vertices S ⊆ V that touches every edge
+Goal: Minimize |S|
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Greedy algorithm (used for &lt;strong&gt;set cover&lt;/strong&gt; problem)&lt;/p&gt;
+
+&lt;p&gt;Repeatedly include the highest degree in the vertex cover.&lt;br&gt;
+=&amp;gt; factor &lt;code&gt;O(logn)&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Matching&lt;/p&gt;
+
+&lt;p&gt;A subset of edges that have no vertices in common.&lt;br&gt;
+If &lt;code&gt;S&lt;/code&gt; is the set containing both endpoints of each edge in maximal matching &lt;code&gt;M&lt;/code&gt;, then &lt;code&gt;S&lt;/code&gt; is vertex cover.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Any matching is a &lt;strong&gt;lower bound&lt;/strong&gt; on &lt;code&gt;OPT&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Maximal matching with &lt;code&gt;M&lt;/code&gt; edges provides &lt;code&gt;2M&lt;/code&gt; &lt;strong&gt;upper bound&lt;/strong&gt; on &lt;code&gt;OPT&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Find a maximal matching M ⊆ E
+Return S = {all endpoints of edges in M }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;=&amp;gt; factor &lt;code&gt;2&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3&gt;Clustering&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Divide some data into groups. Distances between data points are defined:
+
+1. d(x,y) ≥ 0 for all x,y
+2. d(x,y) = 0 iff x = y
+3. d(x,y) = d(y,x)
+4. (Triangle inequality) d(x,y) ≤ d(x,z) + d(z,y)
+
+k-CLUSTER:
+
+Input: points X = {x1, ..., xn} with underlying distance metric d(·,·); integer k 
+Output: a partition of points into k clusters C1, ..., Ck
+Goal: minimize diameter of the clusters,
+        max_j(max_xa,xb∈Cj(d(xa,xb))
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Farthest-first traversal&lt;/p&gt;
+
+&lt;p&gt;Pick k of the data points as cluster centers one at a time and always pick the next center to be as far as possible from the centers chosen so far.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Pick any point μ1 ∈ X as the first cluster center 
+for i = 2 to k:
+    Let μi be the point in X that is farthest from μ1, ..., μi−1 (i.e. maximizes min_j&amp;lt;i(d(·,μj)))
+Create k clusters: Ci = {all x ∈ X whose closest center is μi}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;=&amp;gt; factor &lt;code&gt;2&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Argument
+
+1.
+Let x ∈ X be the point farthest from μ1, ..., μk
+Let r be its distance to closest center
+=&amp;gt; every point in X must be within distance r of its cluster center
+=&amp;gt; every cluster has diameter &amp;lt;= 2r
+
+2.
+{μ1, ..., μk, x} are all at distance &amp;gt;= r
+=&amp;gt; any partition into k clusters must put 2 of them in same cluster
+=&amp;gt; diameter at least r
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;TSP&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;MST for metric TSP&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;TSP cost ≥ cost of this path ≥ MST cost&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;From MST, going through each edge twice ends up with a TSP, so &lt;code&gt;length &amp;lt;= 2 * MST cost &amp;lt;= 2 * TSP cost&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Further skip any city about to revisit and instead move directly to the next new city.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;General TSP -&amp;gt; Rudrata Path&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;For an instance I(G, C) of the TSP:
+    If G has a Rudrata path, then OPT(I(G,C)) = n
+    If G has no Rudrata path, then OPT(I(G,C)) ≥ n + C
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Given any graph G:
+    compute I(G,C) (with C = n * αA)
+    run approximation algorithm A for TSP on it 
+    if the resulting tour has length ≤ nαA:
+        G has a Rudrata path 
+    else: 
+        G has no Rudrata path
+# can find the path by calling procedure polynomial number of times
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If TSP has a polynomial-time approximation algorithm, then there is a polynomial algorithm for Rudrata path problem. So unless P = NP, there cannot exist an efficient approximation algorithm for TSP.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Knapsack&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;1. Change O(nW) algorithm into O(nV)
+2. Scale v'i = ⌊vi * n/εvmax⌋
+3. Since rescaled values v'i are all at most n/ε, DP runs in O(n^3/ε)
+
+Discard any item with weight &amp;gt; W
+Let v_max = max_i(vi)
+Rescale values v'i = ⌊vi * n/εvmax⌋
+Run DP with values {v'i} 
+Output the resulting choice of items
+
+Let K* be the total value of the original optimal solution.
+
+sum_i∈S(v'i) = sum_i∈S(⌊vi * n/εvmax⌋) &amp;gt;= sum_i∈S(vi * n/εvmax - 1) &amp;gt;= K* * (n/εvmax) - n
+
+Scaling back:
+
+sum_i∈S'(vi) &amp;gt;= sum_i∈S'(v'i * εvmax/n) &amp;gt;= (K* * (n/εvmax) - n)* εvmax/n = K* - εvmax &amp;gt;= K* * (1-ε)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;Approximability Hierarchy&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;No finite approximation ratio possible (TSP)&lt;/li&gt;
+&lt;li&gt;Approximation ratio possible, but with limits (Vertex Cover, k-Cluster, Metric TSP)&lt;/li&gt;
+&lt;li&gt;Approximation ratio possible with no limits (Knapsack)&lt;/li&gt;
+&lt;li&gt;Approximation ration about &lt;code&gt;logn&lt;/code&gt; (Set Cover)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;Resources&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://cseweb.ucsd.edu/%7Edasgupta/291-geom/kcenter.pdf&quot;&gt;UCSD Notes on Clustering&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Mon, 28 Nov 2016 00:00:00 -0500</pubDate>
+        <link>/blog/notes/algorithm/2016/11/28/coping-with-np-complete-problems.html</link>
+        <guid isPermaLink="true">/blog/notes/algorithm/2016/11/28/coping-with-np-complete-problems.html</guid>
+        
+        <category>np-complete</category>
+        
+        <category>algorithm</category>
+        
+        <category>CSC373</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>Algorithm</category>
+        
+      </item>
     
       <item>
         <title>Threads &amp; Parallel Programming</title>
@@ -1941,18 +2141,50 @@ dependencies: [
         <description>&lt;h2&gt;Content&lt;/h2&gt;
 
 &lt;ol&gt;
+&lt;li&gt;Paging Overview
+
+&lt;ol&gt;
 &lt;li&gt;Introduction to Virtual Memory&lt;/li&gt;
 &lt;li&gt;Paging MMU&lt;/li&gt;
 &lt;li&gt;Page Tables&lt;/li&gt;
-&lt;li&gt;Translation Lookaside Buffer (TLB)&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Translation Lookaside Buffer (TLB)
+
+&lt;ol&gt;
+&lt;li&gt;TLB Basics&lt;/li&gt;
 &lt;li&gt;Memory Protection&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Demand Paging
+
+&lt;ol&gt;
+&lt;li&gt;Demand Paging Overview&lt;/li&gt;
+&lt;li&gt;Virtual Memory Hierarchy&lt;/li&gt;
+&lt;li&gt;Managing Virtual Address Space&lt;/li&gt;
+&lt;li&gt;Managing Physical Memory&lt;/li&gt;
+&lt;li&gt;Managing Swap Area&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Processes &amp;amp; Virtual Memory
+
+&lt;ol&gt;
+&lt;li&gt;Interaction of Processes with VM System&lt;/li&gt;
+&lt;li&gt;Page Sharing &amp;amp; Memory-Mapped Files&lt;/li&gt;
+&lt;li&gt;Kernal Address Space&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Page Replacement Algorithms
+
+&lt;ol&gt;
+&lt;li&gt;Page Replacement Algorithms Overview&lt;/li&gt;
+&lt;li&gt;Paging Issues&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;!--more--&gt;
 
 &lt;hr&gt;
 
-&lt;h2&gt;Introduction to Virtual Memory&lt;/h2&gt;
+&lt;h2&gt;Paging Overview&lt;/h2&gt;
+
+&lt;h3&gt;Introduction to Virtual Memory&lt;/h3&gt;
 
 &lt;h4&gt;Problems with Contiguous Memory&lt;/h4&gt;
 
@@ -1963,7 +2195,7 @@ dependencies: [
 &lt;li&gt;Max program size limited by memory size&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2&gt;Paging MMU&lt;/h2&gt;
+&lt;h3&gt;Paging MMU&lt;/h3&gt;
 
 &lt;h4&gt;Pages &amp;amp; Frames&lt;/h4&gt;
 
@@ -1998,7 +2230,7 @@ Processor              MMU              Bus
 &lt;li&gt;Max program size limited by disk size&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2&gt;Page Tables&lt;/h2&gt;
+&lt;h3&gt;Page Tables&lt;/h3&gt;
 
 &lt;p&gt;Mapping information maintained by MMU.&lt;/p&gt;
 
@@ -2068,6 +2300,8 @@ Processor              MMU              Bus
 &lt;/ul&gt;
 
 &lt;h2&gt;Translation Lookaside Buffer (TLB)&lt;/h2&gt;
+
+&lt;h3&gt;TLB Basics&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;H/W cache of PTE
@@ -2153,7 +2387,7 @@ unused: unused by hardware, can be used by OS  &lt;/p&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2&gt;Memory Protection&lt;/h2&gt;
+&lt;h3&gt;Memory Protection&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Generate &lt;strong&gt;protection fault&lt;/strong&gt; if memory access inconsistent with protection bits
@@ -2164,10 +2398,508 @@ unused: unused by hardware, can be used by OS  &lt;/p&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4&gt;Related Resources&lt;/h4&gt;
+&lt;h2&gt;Demand Paging&lt;/h2&gt;
+
+&lt;h3&gt;Demand Paging Overview&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Motivation: program size/# of running programs limited by physical memory
+
+&lt;ul&gt;
+&lt;li&gt;Make memory a cache for data on disk&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Basic Mechanism
+
+&lt;ul&gt;
+&lt;li&gt;PTE unset for invalid page&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Cache miss&lt;/strong&gt; when program accesses invalid page&lt;/li&gt;
+&lt;li&gt;Generates &lt;strong&gt;page fault&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;OS &lt;strong&gt;page fault handler&lt;/strong&gt; performs miss handling: allocate frame, update PTE, set valid bit, restart instruction&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Benefits
+
+&lt;ul&gt;
+&lt;li&gt;Allows programs run to exceed available memory (limited by VA space (processor architecture) or disk)&lt;/li&gt;
+&lt;li&gt;Faster startup programs (no need to load entire program)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Virtual Memory Hierarchy&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://images.slideplayer.com/27/9050102/slides/slide_8.jpg&quot; alt=&quot;VM hierarchy&quot;&gt;&lt;/p&gt;
+
+&lt;h4&gt;Swap Handler&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Chooses a page to evict using page replacement algorithm&lt;/li&gt;
+&lt;li&gt;If page modified, write to a free location on &lt;strong&gt;swap&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Find pages that map to the evicted frame
+
+&lt;ul&gt;
+&lt;li&gt;Need frame-to-page mapping (coremap)&lt;/li&gt;
+&lt;li&gt;Change all PTEs to invalid&lt;/li&gt;
+&lt;li&gt;Keep track of the evicted frame location in swap&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Return newly freed frame to page fault handler&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;Other Notes&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;If &lt;em&gt;TLB miss handling&lt;/em&gt; is performed by H/W, no &lt;em&gt;TLB miss fault&lt;/em&gt; generated; if by S/W, H/W doesn&amp;#39;t access PT&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Page fault handler&lt;/strong&gt;: 
+
+&lt;ul&gt;
+&lt;li&gt;checks &lt;strong&gt;segmentation fault&lt;/strong&gt;, &lt;strong&gt;protection fault&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;allocates frame, PTE&lt;/li&gt;
+&lt;li&gt;loads data from disk into frame&lt;/li&gt;
+&lt;li&gt;maps page to frame by updating PTE&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Page contents may:
+
+&lt;ul&gt;
+&lt;li&gt;be all 0&lt;/li&gt;
+&lt;li&gt;in &lt;strong&gt;swap&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;in &lt;strong&gt;executable&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;OS accesses PT when:
+
+&lt;ul&gt;
+&lt;li&gt;on TLB-miss fault (for h/w managed TLB), it reads the page table&lt;/li&gt;
+&lt;li&gt;on page fault, it allocates frame and updates page table&lt;/li&gt;
+&lt;li&gt;whenever address space of current process is modified, (frame is allocated/deallocated, context switch), it updates page table&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3&gt;Managing Virtual Address Space&lt;/h3&gt;
+
+&lt;h4&gt;Address Space&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Broken into &lt;strong&gt;regions&lt;/strong&gt; or &lt;strong&gt;segments&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;OS must track the regions within an address space &amp;amp; PT holding translations&lt;/li&gt;
+&lt;li&gt;API
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;id = as_create()&lt;/code&gt; create empty address space, allocate new PT with no pages mapped to frames&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;as_destroy(id)&lt;/code&gt; destroy as, free PT&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;as_define_region(id,...)&lt;/code&gt; add new region&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;as_modify_region(id,...)&lt;/code&gt; change size (e.g. heap, stack)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;as_find_region(id,va)&lt;/code&gt; find valid region or give seg fault&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;as_load_page(id,...)&lt;/code&gt; load page from file into memory&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;new_id = as_copy(id)&lt;/code&gt; create copy of as &amp;amp; PT (actually copy data to other frames)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;as_switch(id)&lt;/code&gt; mappings in TLB must be removed&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Managing Physical Memory&lt;/h3&gt;
+
+&lt;h4&gt;Coremap&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Array of structures, one per frame&lt;/li&gt;
+&lt;li&gt;Tracks:
+
+&lt;ul&gt;
+&lt;li&gt;whether frame allocated&lt;/li&gt;
+&lt;li&gt;address spaces &amp;amp; pages map to this frame (list of (pid, page_id))&lt;/li&gt;
+&lt;li&gt;kernel or user&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;API
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;frame = allocate_frame(n)&lt;/code&gt; alloc n free contiguous frames (user needs 1 frame; kernel needs more)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;free_frame(frame)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;map(id,page_nr,frame)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;unamp(id,page_nr)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;evict(frame)&lt;/code&gt; for swap handler to unmap pages associated with frame&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Managing Swap Area&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Dirty pages need to be placed in swap&lt;/li&gt;
+&lt;li&gt;Bitmap or linked list of &lt;strong&gt;swap frames&lt;/strong&gt; on disk; keep location in invalid PTE&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If loading shared frame from swap and needs to write to it:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;allocate a frame and keep the swap frame&lt;/li&gt;
+&lt;li&gt;next time allocate another frame and free the swap frame&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# PTE
+|frame number|unused|R|D|C|W|1| virtual page in memory
+|000.......................0|0| invalid PTE
+|index in swap area.........|0| virtual page in swap
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Processes &amp;amp; Virtual Memory&lt;/h2&gt;
+
+&lt;h3&gt;Interaction of Processes with VM System&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;OS implements VM system using 3 abstractions: address space, physical memory, &amp;amp; swap management&lt;/li&gt;
+&lt;li&gt;Rest of OS invokes the VM systems when &lt;strong&gt;address space of current process changes&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Process creation &lt;code&gt;fork&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Create new PT &amp;amp; copy content from parent&amp;#39;s regions&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Process execution &lt;code&gt;execv&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Destroy old address space structure &amp;amp; create new one&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Process termination &lt;code&gt;exit&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Context switch
+
+&lt;ul&gt;
+&lt;li&gt;H/W managed TLB: change PTR, flush TLB&lt;/li&gt;
+&lt;li&gt;S/W managed TLB: flush TLB&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Memory allocation/deallocation &lt;code&gt;sbrk, stack&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Heap: system call (&lt;code&gt;sbrk&lt;/code&gt;) to grow; allows OS to &lt;strong&gt;detect errors&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Stack: when faulting address &lt;em&gt;clost&lt;/em&gt; to stack, extend stack region running standard page fault handler&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Page Sharing &amp;amp; Memory-Mapped Files&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Benefits
+
+&lt;ul&gt;
+&lt;li&gt;Fast communication between processes&lt;/li&gt;
+&lt;li&gt;Good isolation (only share when needed)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Applications
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Sharing text regions&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;e.g. dynamically loaded libraries&lt;/li&gt;
+&lt;li&gt;Must update all pages when frame evicted&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Copy-on-write pages&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Child shares pages with parent until pages modified&lt;/li&gt;
+&lt;li&gt;PTE marks &lt;strong&gt;COW &amp;amp; read-only&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;On protection fault: allocate new frame, copy, remap, make writable, update TLB, resume&lt;/li&gt;
+&lt;li&gt;Must update all pages when frame evicted&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Memory-mapped files&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Threads r/w files using load/store instead of system calls&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;mmap(addr,length,prot_flags,fd,offset)&lt;/code&gt; maps a file at given offset contiguously within address space
+
+&lt;ul&gt;
+&lt;li&gt;Storing &lt;code&gt;offset&lt;/code&gt; to provide flexibility since different processes may have different addresses of shared memory&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;File data loaded on page fault&lt;/li&gt;
+&lt;li&gt;Instead of swap area, use file itself as backing store&lt;/li&gt;
+&lt;li&gt;More efficient than r/w system calls because system calls need buffer in kernel to transfer data&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Shared memory
+
+&lt;ul&gt;
+&lt;li&gt;Threads r/w to mapped memory region&lt;/li&gt;
+&lt;li&gt;PTE can have different protections for different threads&lt;/li&gt;
+&lt;li&gt;Memory can be mapped at same or different VA in each process&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Kernal Address Space&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;OS typically lies in &lt;em&gt;low physical memory&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;Options
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Paging turned off&lt;/strong&gt; in kernel mode, OS access physical memory directly
+
+&lt;ul&gt;
+&lt;li&gt;OS needs to simulate paging, i.e. do address translation in software, to copy in or out user parameters on a system call, deal with dirty bit, etc.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;OS uses &lt;strong&gt;separate address space&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Pros
+
+&lt;ul&gt;
+&lt;li&gt;Clean isolation&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Cons
+
+&lt;ul&gt;
+&lt;li&gt;System call requires switching MMU -&amp;gt; TLB flush&lt;/li&gt;
+&lt;li&gt;Copy in/out of system call parameters requires traversing PT in S/W&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;OS maps to &lt;strong&gt;address space of each thread&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Typically mapped to high addresses&lt;/li&gt;
+&lt;li&gt;Pros
+
+&lt;ul&gt;
+&lt;li&gt;No system call&lt;/li&gt;
+&lt;li&gt;Copy in/out of system call parameters can reuse paging H/W&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Cons
+
+&lt;ul&gt;
+&lt;li&gt;Address space of processes reduces&lt;/li&gt;
+&lt;li&gt;PT needs to be setup to access OS code
+
+&lt;ul&gt;
+&lt;li&gt;H/W may allow OS to bypass PT&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Page Replacement Algorithms&lt;/h2&gt;
+
+&lt;h3&gt;Page Replacement Algorithms Overview&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;When will paging work?
+
+&lt;ul&gt;
+&lt;li&gt;If occurs rarely&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Spatial locality&lt;/strong&gt; &amp;amp; &lt;strong&gt;temporal locality&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Algorithms&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Optimal algorithm&lt;/strong&gt;: page that will not be needed for longest time
+
+&lt;ul&gt;
+&lt;li&gt;Need to know the future&lt;/li&gt;
+&lt;li&gt;Can be used to compare performance
+
+&lt;ul&gt;
+&lt;li&gt;Generate a log of VM accesses (&lt;strong&gt;reference string&lt;/strong&gt;); use log to simulate various replacement policies&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;FIFO&lt;/strong&gt;: oldest page
+
+&lt;ul&gt;
+&lt;li&gt;Oldest page may be needed soon&lt;/li&gt;
+&lt;li&gt;Faults may increase if given more memory (&lt;a href=&quot;http://stackoverflow.com/questions/4800285/cant-understand-beladys-anomaly&quot;&gt;Belady&amp;#39;s Anomaly&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Clock&lt;/strong&gt;: FIFO giving second chance to referenced pages&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Referenced bit&lt;/strong&gt;: set by processor when page read/written; cleared by OS/software&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Dirty bit&lt;/strong&gt;: set by processor when page written; cleared by OS/software&lt;/li&gt;
+&lt;li&gt;OS synchronizes R/D bits in TLB with PTE (H/W: write-through or write-back; S/W: needs to implement synchronization)&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;OS simulates the bits if H/W doesn&amp;#39;t maintain&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;When TLB read fault: 
+
+&lt;ul&gt;
+&lt;li&gt;Set referenced bit; make page read-only&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;When TLB read-only protection fault/write fault: 
+
+&lt;ul&gt;
+&lt;li&gt;Set referenced &amp;amp; dirty bits; make page writeable&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Algorithm&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Choose page starting from clock hand:
+    if referenced bit set:
+        unset, goto next
+    else:
+        if page dirty:
+            schedule page write, goto next
+        else:
+            select for replacement
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;LRU&lt;/strong&gt;: page used least recently&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Updating LRU on each memory access is expensive&lt;/li&gt;
+&lt;li&gt;If MMU maintains a counter incremented at each clock cycle:
+
+&lt;ul&gt;
+&lt;li&gt;When page accessed: 
+
+&lt;ul&gt;
+&lt;li&gt;Writes counter value to PTE&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;On page fault: 
+
+&lt;ul&gt;
+&lt;li&gt;S/W looks through PT, identifies entry with oldest timestamp&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;If MMU doesn&amp;#39;t provide such counter, OS maintains it in S/W (&lt;strong&gt;LRU aprroximation&lt;/strong&gt;):
+
+&lt;ul&gt;
+&lt;li&gt;Periodically (timer interrupt) increment counter; granularity depends on timer interrupt&lt;/li&gt;
+&lt;li&gt;If referenced bit set:
+
+&lt;ul&gt;
+&lt;li&gt;Write counter value&lt;/li&gt;
+&lt;li&gt;Clear referenced bit&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;On page fault:
+
+&lt;ul&gt;
+&lt;li&gt;S/W looks through PT &amp;amp; identify the oldest timestamp&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Working set clock&lt;/strong&gt;: keep working set in memory&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Working set&lt;/strong&gt;: set of pages a program needs currently
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Working set interval &lt;code&gt;T&lt;/code&gt;&lt;/strong&gt;: &lt;code&gt;WS(T) = {pages accessed in interval (now, now-T)}&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Max WS&lt;/strong&gt;: how much memory a program needs&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Algorithm&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Choose page starting from clock hand:
+    if referenced bit set:
+        update time-of-last-use to current virtual time
+        unset, goto next
+    else:
+        if (current time - time-of-last-use) &amp;lt; T:
+            continue
+        else:
+            if page dirty:
+                schedule page write, goto next
+            else:
+                select for replacement
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Page fault frequency&lt;/strong&gt;: estimate of working set needs of a program&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Measurements&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;For each thread:
+    On fault:
+        f = f + 1
+    Every second, update faults/sec (fe) via aging:
+        fe = (1-a) * fe + a * f, f = 0
+        # 0 &amp;lt; a &amp;lt; 1, weighting factor; a -&amp;gt; 1 means history ignored
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Allocate frames s.t. &lt;strong&gt;PFF is equal for programs&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Global replacement&lt;/strong&gt;: victim process has lowest PFF&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Local replacement&lt;/strong&gt;: use algorithms above (clock, LRU, etc.) to evict a page within the victim process&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Comparison&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;Algorithm&lt;/th&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;Comment&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Optimal&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Not implementable; useful as benchmark&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;FIFO&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Might throw out important pages&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Clock&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Realistic&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;LRU&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Excellent; difficult to implement efficiently&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;WSC&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Efficient working set algorithm&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;PFF&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Fairness in working set allocation&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Paging Issues&lt;/h3&gt;
+
+&lt;h4&gt;Paging &amp;amp; I/O Interaction&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Problem: a frame waiting for I/O may be selected for eviction&lt;/li&gt;
+&lt;li&gt;Solution: each frame has &lt;strong&gt;do not evict&lt;/strong&gt; flag called &lt;strong&gt;pinned page&lt;/strong&gt;; un-pin after I/O completes&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Paging Performance&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Paging works best if many free frames&lt;/li&gt;
+&lt;li&gt;If pages full of dirty pages, 2 disk operations (swap in/out) needed on each page fault&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Paging daemon&lt;/strong&gt;: swap out in advance
+
+&lt;ul&gt;
+&lt;li&gt;OS maintains a pool of free frames using &lt;strong&gt;paging thread/daemon&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Daemon runs replacement algorithm periodically or when pool reaches &lt;strong&gt;low watermark&lt;/strong&gt;:
+
+&lt;ul&gt;
+&lt;li&gt;Writes out dirty pages&lt;/li&gt;
+&lt;li&gt;Frees enough pages until pool reaches &lt;strong&gt;high watermark&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Frames can be &lt;strong&gt;rescued&lt;/strong&gt; if page referenced before realocation, because previous content still holds&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Prefetching&lt;/strong&gt;: swap in in advance
+
+&lt;ul&gt;
+&lt;li&gt;Predict future page usage at current faults&lt;/li&gt;
+&lt;li&gt;Works well when pages read sequentially&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Thrashing&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Livelock&lt;/strong&gt;: OS spends time paging data from disk, programs not making progress&lt;/li&gt;
+&lt;li&gt;Causes
+
+&lt;ol&gt;
+&lt;li&gt;Pages replacement algorithm not working&lt;/li&gt;
+&lt;li&gt;Not enough memory to hold working set of all running programs&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Solutions
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Swapping&lt;/strong&gt;: suspend some programs for a while&lt;/li&gt;
+&lt;li&gt;Buy more memory&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Resources&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;https://www.quora.com/What-is-the-differences-between-a-page-table-and-an-inverted-page-table&quot;&gt;What are the differences between a page table and an inverted page table?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://f.osdev.org/viewtopic.php?f=1&amp;amp;t=15321&quot;&gt;Can I turn off paging in kernel mode?&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Tue, 22 Nov 2016 00:00:00 -0500</pubDate>
@@ -2375,232 +3107,6 @@ Parse categories as &lt;code&gt;label&lt;/code&gt; and values as &lt;code&gt;val
         <category>Tech</category>
         
         <category>ReactJS</category>
-        
-      </item>
-    
-      <item>
-        <title>Docker Beginner</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Basics
-
-&lt;ol&gt;
-&lt;li&gt;Terminologies&lt;/li&gt;
-&lt;li&gt;Commands&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Docker Images
-
-&lt;ol&gt;
-&lt;li&gt;Image Types&lt;/li&gt;
-&lt;li&gt;Create Images&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Docker Compose
-
-&lt;ol&gt;
-&lt;li&gt;&lt;code&gt;docker-compose.yml&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Run Application&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Basics&lt;/h2&gt;
-
-&lt;h3&gt;Terminologies&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Images&lt;/strong&gt;: the &lt;strong&gt;file system and configuration of an application&lt;/strong&gt; used to &lt;strong&gt;create containers&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;docker inspect image-name&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Containers&lt;/strong&gt;: &lt;strong&gt;running instances of Docker images&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Run the actual applications; includes an application and all of its dependencies &lt;/li&gt;
-&lt;li&gt;Share the kernel with other containers&lt;/li&gt;
-&lt;li&gt;Run as an isolated process in user space on the host OS &lt;/li&gt;
-&lt;li&gt;A container created by &lt;code&gt;docker run&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Docker daemon&lt;/strong&gt;: the background service running on the host that &lt;strong&gt;manages building, running and distributing Docker containers&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Docker client&lt;/strong&gt;: the command line tool that allows the user to interact with the Docker daemon&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Docker Hub&lt;/strong&gt;: a registry of Docker images&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Commands&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;docker login&lt;/code&gt; login to docker hub&lt;br&gt;
-&lt;code&gt;docker ps&lt;/code&gt; list current running containers&lt;br&gt;
-    - &lt;code&gt;docker ps -a&lt;/code&gt; list containers ran before&lt;br&gt;
-&lt;code&gt;docker images&lt;/code&gt; list images&lt;br&gt;
-&lt;code&gt;docker pull image-name&lt;/code&gt; pull image from hub&lt;br&gt;
-    - &lt;code&gt;image-name:version&lt;/code&gt; specify version e.g. &lt;code&gt;ubuntu:12.04&lt;/code&gt;, &lt;code&gt;ubuntu:latest&lt;/code&gt;
-&lt;code&gt;docker push USERNAME/image-name&lt;/code&gt; push image to hub&lt;br&gt;
-&lt;code&gt;docker run image-name [command]&lt;/code&gt; executes commands in container&lt;br&gt;
-    - &lt;code&gt;docker pull&lt;/code&gt; if image not exists
-    - &lt;code&gt;-it&lt;/code&gt; iterative mode; will not exit container&lt;br&gt;
-    - &lt;code&gt;-d&lt;/code&gt; detached mode; detach running container from terminal
-    - &lt;code&gt;-P&lt;/code&gt; publish all the exposed container ports to random ports on the Docker host
-    - &lt;code&gt;-p&lt;/code&gt; specify port number e.g. &lt;code&gt;-p 8888:80&lt;/code&gt; link 8888 on container to 80 on host
-    - &lt;code&gt;-e&lt;/code&gt; pass environment variables
-        - e.g. &lt;code&gt;-e AUTHOR=&amp;quot;name&amp;quot;&lt;/code&gt;
-    - &lt;code&gt;--name&lt;/code&gt; specify container name
-&lt;code&gt;docker stop container-name&lt;/code&gt; stop running container&lt;br&gt;
-&lt;code&gt;docker rm container1-name container2-name ...&lt;/code&gt; remove containers&lt;br&gt;
-    - &lt;code&gt;-f&lt;/code&gt; remove running containers 
-&lt;code&gt;docker port container-name&lt;/code&gt; port of running container
-&lt;code&gt;docker search image-name&lt;/code&gt; search for images  &lt;/p&gt;
-
-&lt;h2&gt;Docker Images&lt;/h2&gt;
-
-&lt;h3&gt;Image Types&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Base images v.s. child images
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Base image&lt;/strong&gt;: no parent images, usually images with an OS&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Child image&lt;/strong&gt;: build on base images and add additional functionality&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Official images v.s. user images
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Official image&lt;/strong&gt;: no prefix&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;User image&lt;/strong&gt;: &lt;code&gt;user/image-name&lt;/code&gt;; based on &lt;em&gt;base image&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Create Images&lt;/h3&gt;
-
-&lt;h4&gt;Steps&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Create an app&lt;/li&gt;
-&lt;li&gt;Write a Dockerfile&lt;/li&gt;
-&lt;li&gt;Build the image&lt;/li&gt;
-&lt;li&gt;Run your image&lt;/li&gt;
-&lt;li&gt;Dockerfile commands summary&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;Dockerfile&lt;/h4&gt;
-
-&lt;p&gt;List of commands the Docker daemon calls while creating an image.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Base Docker image to run from&lt;/li&gt;
-&lt;li&gt;Location of your project code&lt;/li&gt;
-&lt;li&gt;Dependencies&lt;/li&gt;
-&lt;li&gt;Commands to run at start-up&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# specify base image
-FROM alpine:latest # username/imagename:version
-
-# copying files &amp;amp; installing dependencies
-RUN apk add --update py-pip # install Python pip package to the alpine linux distribution # RUN add new layers
-
-# install required Python packages &amp;amp; copy files
-COPY requirements.txt /usr/src/app/
-RUN pip install --no-cache-dir -r /usr/src/app/requirements.txt
-COPY app.py /usr/src/app/
-COPY templates/index.html /usr/src/app/templates/
-
-# specify port number
-EXPOSE 5000
-
-# run application; one CMD per Dockerfile/Image
-CMD [&quot;python&quot;, &quot;/usr/src/app/app.py&quot;] # which command to run by default when started
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4&gt;Build Images&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;docker build -t &amp;lt;USERNAME&amp;gt;/appname [path-to-dockerfile]&lt;/code&gt;&lt;br&gt;
-    - &lt;code&gt;-t&lt;/code&gt; optional tag name&lt;/p&gt;
-
-&lt;h2&gt;Docker Compose&lt;/h2&gt;
-
-&lt;p&gt;Define &amp;amp; run multi-container apps.&lt;/p&gt;
-
-&lt;h3&gt;&lt;code&gt;docker-compose.yml&lt;/code&gt;&lt;/h3&gt;
-
-&lt;p&gt;Describe containers &amp;amp; volumes you want.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yml&quot; data-lang=&quot;yml&quot;&gt;&lt;span class=&quot;s&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;2&quot;&lt;/span&gt;
-
-&lt;span class=&quot;s&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;vote&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;./vote&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;python app.py&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-     &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;./vote:/app&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;5000:80&quot;&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;front-tier&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;
-
-  &lt;span class=&quot;s&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;./result&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;nodemon --debug server.js&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;./result:/app&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;5001:80&quot;&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;5858:5858&quot;&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;front-tier&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;
-
-  &lt;span class=&quot;s&quot;&gt;worker&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;./worker&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;
-
-  &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis:alpine&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;6379&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;
-
-  &lt;span class=&quot;s&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;postgres:9.4&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;db&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;db-data:/var/lib/postgresql/data&quot;&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;
-
-&lt;span class=&quot;s&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;db-data&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-
-&lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;front-tier&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Networks&lt;/strong&gt;: containers can communicate with others in the same network&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Run Application&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;docker-compose up -d&lt;/code&gt; start all containers in &lt;code&gt;docker-compose.yml&lt;/code&gt;&lt;br&gt;
-    - &lt;code&gt;-d&lt;/code&gt; run in daemon mode in background&lt;/p&gt;
-
-&lt;p&gt;Then build &amp;amp; push to hub.&lt;/p&gt;
-</description>
-        <pubDate>Thu, 17 Nov 2016 00:00:00 -0500</pubDate>
-        <link>/blog/notes/docker/2016/11/17/docker-beginner.html</link>
-        <guid isPermaLink="true">/blog/notes/docker/2016/11/17/docker-beginner.html</guid>
-        
-        <category>docker</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>Docker</category>
         
       </item>
     
