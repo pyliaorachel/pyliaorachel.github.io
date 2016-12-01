@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 01 Dec 2016 12:07:23 -0500</pubDate>
-    <lastBuildDate>Thu, 01 Dec 2016 12:07:23 -0500</lastBuildDate>
+    <pubDate>Thu, 01 Dec 2016 14:44:18 -0500</pubDate>
+    <lastBuildDate>Thu, 01 Dec 2016 14:44:18 -0500</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -28,12 +28,22 @@
 &lt;li&gt;Clustering&lt;/li&gt;
 &lt;li&gt;TSP&lt;/li&gt;
 &lt;li&gt;Knapsack&lt;/li&gt;
-&lt;li&gt;Approximability Hierarchy
-&amp;lt;!--more--&amp;gt;
----
-## Intelligent Exhaustive Search&lt;/li&gt;
+&lt;li&gt;Approximability Hierarchy&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Local Search Heuristics
+
+&lt;ol&gt;
+&lt;li&gt;TSP&lt;/li&gt;
+&lt;li&gt;Graph Partitioning&lt;/li&gt;
+&lt;li&gt;Dealing with Local Optima&lt;/li&gt;
 &lt;/ol&gt;&lt;/li&gt;
 &lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Intelligent Exhaustive Search&lt;/h2&gt;
 
 &lt;h3&gt;Backtracking&lt;/h3&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Start with some problem P0
@@ -185,10 +195,111 @@ sum_i∈S'(vi) &amp;gt;= sum_i∈S'(v'i * εvmax/n) &amp;gt;= (K* * (n/εvmax) -
 &lt;li&gt;Approximation ration about &lt;code&gt;logn&lt;/code&gt; (Set Cover)&lt;/li&gt;
 &lt;/ol&gt;
 
+&lt;h2&gt;Local Search Heuristics&lt;/h2&gt;
+
+&lt;p&gt;Introduce small mutations, try them out, keep them if work well.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;let s be any initial solution
+while there is some solution s' in the neighborhood of s
+for which cost(s′) &amp;lt; cost(s): 
+    replace s by s' 
+return s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;TSP&lt;/h3&gt;
+
+&lt;h4&gt;2-Change Neighborhood&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;o---o  o---o        o---o--o---o
+|    \/    |    -&amp;gt;  |          |
+|    /\    |        |          |
+o---o  o---o        o---o--o---o
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Runtime
+
+&lt;ul&gt;
+&lt;li&gt;A tour has &lt;code&gt;O(n^2)&lt;/code&gt; neighbors&lt;/li&gt;
+&lt;li&gt;# of iterations unknown&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Optimality
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Locally optimal&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Efficiency &amp;amp; Tradeoffs&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Less neighbors -&amp;gt; searched quickly -&amp;gt; efficient
+
+&lt;ul&gt;
+&lt;li&gt;Higher chance of low-quality local optima&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Graph Partitioning&lt;/h3&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Input: undirected graph with nonnegative edge weights; a real number α ∈ (0, 1/2]
+# Output: a partition of vertices into groups A &amp;amp; B, each of size &amp;gt;= α|V|
+# Goal: minimize capacity of cut (A, B)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;If no restriction on size, then &lt;strong&gt;min cut problem&lt;/strong&gt; -&amp;gt; can be solved efficiently&lt;/li&gt;
+&lt;li&gt;Suppose &lt;code&gt;α = 1/2&lt;/code&gt;:
+
+&lt;ul&gt;
+&lt;li&gt;Randomly choose a partition &lt;code&gt;(A,B)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Neighbor: &lt;code&gt;(A-{a}+{b}, B-{b}+{a})&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Dealing with Local Optima&lt;/h3&gt;
+
+&lt;h4&gt;Randomization &amp;amp; Restarts&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If probability of reaching a gool local optimum on any given run is &lt;code&gt;p&lt;/code&gt;, then within &lt;code&gt;O(1/p)&lt;/code&gt; runs, such a solution is likely to be found&lt;/li&gt;
+&lt;li&gt;Problem
+
+&lt;ul&gt;
+&lt;li&gt;As problem size grows, the ratio of bad to good local optima often increases&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Simulated annealing&lt;/h4&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Start with large temperature T (probability big), gradually reduce to 0 (probability small)
+
+let s be any starting solution repeat
+randomly choose a solution s' in the neighborhood of s if ∆ = cost(s') − cost(s) is negative:
+    replace s by s' 
+else:
+    replace s by s' with probability e^(−∆/T)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Initially: 
+
+&lt;ul&gt;
+&lt;li&gt;Local search wanders around freely&lt;/li&gt;
+&lt;li&gt;Mild preference for low-cost solutions&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;As time goes on: 
+
+&lt;ul&gt;
+&lt;li&gt;Preference becomes stronger and sticks to lower-cost region&lt;/li&gt;
+&lt;li&gt;Random excursions to escape local optima&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Cost
+
+&lt;ul&gt;
+&lt;li&gt;More local moves needed until convergence due to initial freedom&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Annealing schedule&lt;/strong&gt;: timetable to decrease temperature&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;h4&gt;Resources&lt;/h4&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;https://cseweb.ucsd.edu/%7Edasgupta/291-geom/kcenter.pdf&quot;&gt;UCSD Notes on Clustering&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://mathworld.wolfram.com/SimulatedAnnealing.html&quot;&gt;Wolfram - Simulated Annealing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://artint.info/html/ArtInt_89.html&quot;&gt;Simulated Annealing&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Mon, 28 Nov 2016 00:00:00 -0500</pubDate>

@@ -126,12 +126,22 @@
 <li>Clustering</li>
 <li>TSP</li>
 <li>Knapsack</li>
-<li>Approximability Hierarchy
-&lt;!--more--&gt;
----
-## Intelligent Exhaustive Search</li>
+<li>Approximability Hierarchy</li>
+</ol></li>
+<li>Local Search Heuristics
+
+<ol>
+<li>TSP</li>
+<li>Graph Partitioning</li>
+<li>Dealing with Local Optima</li>
 </ol></li>
 </ol>
+
+<!--more-->
+
+<hr>
+
+<h2>Intelligent Exhaustive Search</h2>
 
 <h3>Backtracking</h3>
 <div class="highlight"><pre><code class="language-" data-lang="">Start with some problem P0
@@ -283,10 +293,111 @@ sum_i∈S'(vi) &gt;= sum_i∈S'(v'i * εvmax/n) &gt;= (K* * (n/εvmax) - n)* εv
 <li>Approximation ration about <code>logn</code> (Set Cover)</li>
 </ol>
 
+<h2>Local Search Heuristics</h2>
+
+<p>Introduce small mutations, try them out, keep them if work well.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">let s be any initial solution
+while there is some solution s' in the neighborhood of s
+for which cost(s′) &lt; cost(s): 
+    replace s by s' 
+return s
+</code></pre></div>
+<h3>TSP</h3>
+
+<h4>2-Change Neighborhood</h4>
+<div class="highlight"><pre><code class="language-" data-lang="">o---o  o---o        o---o--o---o
+|    \/    |    -&gt;  |          |
+|    /\    |        |          |
+o---o  o---o        o---o--o---o
+</code></pre></div>
+<ul>
+<li>Runtime
+
+<ul>
+<li>A tour has <code>O(n^2)</code> neighbors</li>
+<li># of iterations unknown</li>
+</ul></li>
+<li>Optimality
+
+<ul>
+<li><strong>Locally optimal</strong></li>
+</ul></li>
+</ul>
+
+<h4>Efficiency &amp; Tradeoffs</h4>
+
+<ul>
+<li>Less neighbors -&gt; searched quickly -&gt; efficient
+
+<ul>
+<li>Higher chance of low-quality local optima</li>
+</ul></li>
+</ul>
+
+<h3>Graph Partitioning</h3>
+<div class="highlight"><pre><code class="language-" data-lang=""># Input: undirected graph with nonnegative edge weights; a real number α ∈ (0, 1/2]
+# Output: a partition of vertices into groups A &amp; B, each of size &gt;= α|V|
+# Goal: minimize capacity of cut (A, B)
+</code></pre></div>
+<ul>
+<li>If no restriction on size, then <strong>min cut problem</strong> -&gt; can be solved efficiently</li>
+<li>Suppose <code>α = 1/2</code>:
+
+<ul>
+<li>Randomly choose a partition <code>(A,B)</code></li>
+<li>Neighbor: <code>(A-{a}+{b}, B-{b}+{a})</code></li>
+</ul></li>
+</ul>
+
+<h3>Dealing with Local Optima</h3>
+
+<h4>Randomization &amp; Restarts</h4>
+
+<ul>
+<li>If probability of reaching a gool local optimum on any given run is <code>p</code>, then within <code>O(1/p)</code> runs, such a solution is likely to be found</li>
+<li>Problem
+
+<ul>
+<li>As problem size grows, the ratio of bad to good local optima often increases</li>
+</ul></li>
+</ul>
+
+<h4>Simulated annealing</h4>
+<div class="highlight"><pre><code class="language-" data-lang=""># Start with large temperature T (probability big), gradually reduce to 0 (probability small)
+
+let s be any starting solution repeat
+randomly choose a solution s' in the neighborhood of s if ∆ = cost(s') − cost(s) is negative:
+    replace s by s' 
+else:
+    replace s by s' with probability e^(−∆/T)
+</code></pre></div>
+<ul>
+<li>Initially: 
+
+<ul>
+<li>Local search wanders around freely</li>
+<li>Mild preference for low-cost solutions</li>
+</ul></li>
+<li>As time goes on: 
+
+<ul>
+<li>Preference becomes stronger and sticks to lower-cost region</li>
+<li>Random excursions to escape local optima</li>
+</ul></li>
+<li>Cost
+
+<ul>
+<li>More local moves needed until convergence due to initial freedom</li>
+</ul></li>
+<li><strong>Annealing schedule</strong>: timetable to decrease temperature</li>
+</ul>
+
 <h4>Resources</h4>
 
 <ul>
 <li><a href="https://cseweb.ucsd.edu/%7Edasgupta/291-geom/kcenter.pdf">UCSD Notes on Clustering</a></li>
+<li><a href="http://mathworld.wolfram.com/SimulatedAnnealing.html">Wolfram - Simulated Annealing</a></li>
+<li><a href="http://artint.info/html/ArtInt_89.html">Simulated Annealing</a></li>
 </ul>
 
 		</div>
