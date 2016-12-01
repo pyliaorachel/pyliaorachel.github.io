@@ -19,6 +19,11 @@ excerpt_separator: <!--more-->
 	3. TSP
 	4. Knapsack
 	5. Approximability Hierarchy
+3. Local Search Heuristics
+	1. TSP
+	2. Graph Partitioning
+	3. Dealing with Local Optima
+
 <!--more-->
 ---
 ## Intelligent Exhaustive Search
@@ -190,10 +195,87 @@ sum_i∈S'(vi) >= sum_i∈S'(v'i * εvmax/n) >= (K* * (n/εvmax) - n)* εvmax/n 
 3. Approximation ratio possible with no limits (Knapsack)
 4. Approximation ration about `logn` (Set Cover)
 
+## Local Search Heuristics
+
+Introduce small mutations, try them out, keep them if work well.
+
+```
+let s be any initial solution
+while there is some solution s' in the neighborhood of s
+for which cost(s′) < cost(s): 
+	replace s by s' 
+return s
+```
+
+### TSP
+
+#### 2-Change Neighborhood
+
+```
+o---o  o---o		o---o--o---o
+|	 \/	   |	-> 	|		   |
+|	 /\	   |		|		   |
+o---o  o---o		o---o--o---o
+```
+
+- Runtime
+	- A tour has `O(n^2)` neighbors
+	- # of iterations unknown
+- Optimality
+	- __Locally optimal__
+
+#### Efficiency & Tradeoffs
+
+- Less neighbors -> searched quickly -> efficient
+	- Higher chance of low-quality local optima
+
+### Graph Partitioning
+
+```
+# Input: undirected graph with nonnegative edge weights; a real number α ∈ (0, 1/2]
+# Output: a partition of vertices into groups A & B, each of size >= α|V|
+# Goal: minimize capacity of cut (A, B)
+```
+
+- If no restriction on size, then __min cut problem__ -> can be solved efficiently
+- Suppose `α = 1/2`:
+	- Randomly choose a partition `(A,B)`
+	- Neighbor: `(A-{a}+{b}, B-{b}+{a})`
+
+### Dealing with Local Optima
+
+#### Randomization & Restarts
+
+- If probability of reaching a gool local optimum on any given run is `p`, then within `O(1/p)` runs, such a solution is likely to be found
+- Problem
+	- As problem size grows, the ratio of bad to good local optima often increases
+
+#### Simulated annealing
+
+```
+# Start with large temperature T (probability big), gradually reduce to 0 (probability small)
+
+let s be any starting solution repeat
+randomly choose a solution s' in the neighborhood of s if ∆ = cost(s') − cost(s) is negative:
+	replace s by s' 
+else:
+	replace s by s' with probability e^(−∆/T)
+```
+
+- Initially: 
+	- Local search wanders around freely
+	- Mild preference for low-cost solutions
+- As time goes on: 
+	- Preference becomes stronger and sticks to lower-cost region
+	- Random excursions to escape local optima
+- Cost
+	- More local moves needed until convergence due to initial freedom
+- __Annealing schedule__: timetable to decrease temperature
+
 #### Resources
 * [UCSD Notes on Clustering](https://cseweb.ucsd.edu/~dasgupta/291-geom/kcenter.pdf)
-
-
+* [Wolfram - Simulated Annealing](http://mathworld.wolfram.com/SimulatedAnnealing.html)
+* [Simulated Annealing](http://artint.info/html/ArtInt_89.html)
 
 
 
