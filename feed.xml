@@ -6,9 +6,779 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 01 Dec 2016 14:44:18 -0500</pubDate>
-    <lastBuildDate>Thu, 01 Dec 2016 14:44:18 -0500</lastBuildDate>
+    <pubDate>Fri, 02 Dec 2016 18:43:10 -0500</pubDate>
+    <lastBuildDate>Fri, 02 Dec 2016 18:43:10 -0500</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Operating System - File Systems</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Overview of File Systems&lt;/li&gt;
+&lt;li&gt;File System Design&lt;/li&gt;
+&lt;li&gt;Sharing Files&lt;/li&gt;
+&lt;li&gt;Unix File System&lt;/li&gt;
+&lt;li&gt;Consistency &amp;amp; Crash Recovery&lt;/li&gt;
+&lt;li&gt;Journaling File Systems&lt;/li&gt;
+&lt;li&gt;Log-Structured File Systems (LFS)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Overview of File Systems&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Abstraction for storing, organizing, &amp;amp; accessing &lt;strong&gt;persistent data&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Data organized as objects called &lt;strong&gt;files&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Files accessed via &lt;strong&gt;system calls&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Basic File-Related Calls&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Open&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Program can keep the &lt;strong&gt;file description&lt;/strong&gt; returned to imporve file access efficiency&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Read/Write&lt;/strong&gt;: r/w bytes from/to current position; update position&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Seek&lt;/strong&gt;: move to new position&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Close&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Create&lt;/strong&gt;, &lt;strong&gt;rename&lt;/strong&gt;, &lt;strong&gt;delete&lt;/strong&gt;, &lt;strong&gt;get/set attributes&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Basic Directory-Related Calls&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Open&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Readdir&lt;/strong&gt;: read entries in a directory
+
+&lt;ul&gt;
+&lt;li&gt;No &lt;strong&gt;writedir&lt;/strong&gt; to avoid dir metadata corruption&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Seekdir&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Close&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Create&lt;/strong&gt;, &lt;strong&gt;rename&lt;/strong&gt;, &lt;strong&gt;delete&lt;/strong&gt;, &lt;strong&gt;get/set attributes&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Link/Unlink&lt;/strong&gt;: add/remove a name for an existing file
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Hard link&lt;/strong&gt;: different directory entries have same inode number
+
+&lt;ul&gt;
+&lt;li&gt;Inodes maintains reference count&lt;/li&gt;
+&lt;li&gt;Points to files not directories to avoid cycles (ensure directory deletion ok)&lt;/li&gt;
+&lt;li&gt;Becomes &lt;strong&gt;DAG&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Symbolic link (short cut)&lt;/strong&gt;: a file containing data of another file&amp;#39;s name (redirect)
+
+&lt;ul&gt;
+&lt;li&gt;File type: shortcut (l)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;File System Design&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;OS needs to:
+
+&lt;ul&gt;
+&lt;li&gt;maintain information about files &amp;amp; directories&lt;/li&gt;
+&lt;li&gt;store files durably&lt;/li&gt;
+&lt;li&gt;handle machine crashes e.g. recover data&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Disk Blocks&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Disks are accessed at the granularity of sectors; a file system allocates data in &lt;strong&gt;blocks&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Reduces overhead managing individual blocks&lt;/li&gt;
+&lt;li&gt;Increase internal fragmentation&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;File System Tasks&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Free block management&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Bitmap&lt;/strong&gt;: separate area on disk
+
+&lt;ul&gt;
+&lt;li&gt;Allows allocating contiguous blocks to file easily&lt;/li&gt;
+&lt;li&gt;Only need 1 bitmap block in memory at a time&lt;/li&gt;
+&lt;li&gt;Extra space for bitmap&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Block allocation &amp;amp; replacement&lt;/strong&gt;: maps (potentially non-contiguous) blocks to file&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Contiguous allocation&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Good performance for sequential reading&lt;/li&gt;
+&lt;li&gt;File growth requires copying&lt;/li&gt;
+&lt;li&gt;Fragmentation; need periodic compaction&lt;/li&gt;
+&lt;li&gt;Good for &lt;strong&gt;CD-ROMS&lt;/strong&gt;: file sizes known, files never deleted&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Linked list allocation&lt;/strong&gt;: first word in block points to next block
+
+&lt;ul&gt;
+&lt;li&gt;Random accesses slow&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;File allocation table (FAT)&lt;/strong&gt;: keep linked list information in memory
+
+&lt;ul&gt;
+&lt;li&gt;Random accesses faster&lt;/li&gt;
+&lt;li&gt;Entire table in memory, poor scalibility of file system&lt;/li&gt;
+&lt;li&gt;More efficient than i-node on small files&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;I-node based allocation&lt;/strong&gt;: tree to store index information&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Allows growth of index information without spreading this information too much&lt;/li&gt;
+&lt;li&gt;Optimized for small files&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Root of tree: &lt;strong&gt;inode&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;12 &lt;strong&gt;direct block pointers&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;1 &lt;strong&gt;indirect pointer&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;1 &lt;strong&gt;double indirect pointer&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;1 &lt;strong&gt;triple indirect pointer&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;                    disk partitions
+|MBR||||    |                                  |    |   |
+            /                                   \
+           |Super|Inode |Block |Inode |File &amp;amp; dir|
+           |block|bitmap|bitmap|blocks|blocks    |
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Block placement&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Problems
+
+&lt;ul&gt;
+&lt;li&gt;Data blocks scatter across disk in &lt;em&gt;aging&lt;/em&gt; file systems -&amp;gt; long seeks&lt;/li&gt;
+&lt;li&gt;Inodes at beginning of disk, far from data -&amp;gt; going back and forth -&amp;gt; long seeks&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;BSD Fast File System&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Disk partitioned into groups of cylinders&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Superblocks&lt;/strong&gt; placed in every group &amp;amp; in offset manner to recover from damage&lt;/li&gt;
+&lt;li&gt;Place these in same cylinder group:
+
+&lt;ul&gt;
+&lt;li&gt;Inode, data blocks in a file&lt;/li&gt;
+&lt;li&gt;Files in a directory&lt;/li&gt;
+&lt;li&gt;Place in nearby group if group full&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Directory management&lt;/strong&gt;: map file names to location of starting block of file&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|file name|file attributes|starting block #|
+...
+
+# Unix
+|file name|i-node #| # i-node contains file attributes
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;File names&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Short, fixed length names&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Variable length names&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Size of directory entry variable&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Options&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Entries allocated contiguously: &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|len|name|inode|len|name|inode|...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;-&amp;gt; Inefficient for search; fragmentation  &lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Allocate pointers to file names in the beginning of directory; heap at end to store names&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|p1|hash of name1| # fixed size
+|p2|hash of name2|
+...
+p1-&amp;gt; |name1|inode| # variable size
+p2-&amp;gt; |name2|inode|name3|inode|
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;File deletion&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Directory entry removed from directory&lt;/li&gt;
+&lt;li&gt;All blocks in file returned to free list&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Path lookup: e.g. &lt;code&gt;/D1/D2/F&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Super block (locatin of inode blocks area; typically already cached in memory)&lt;/li&gt;
+&lt;li&gt;Inode of &lt;code&gt;/&lt;/code&gt; -&amp;gt; data blocks of &lt;code&gt;/&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Inode of &lt;code&gt;D1&lt;/code&gt; -&amp;gt; data blocks of &lt;code&gt;D1&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Inode of &lt;code&gt;D2&lt;/code&gt; -&amp;gt; data blocks of &lt;code&gt;D2&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Inode of &lt;code&gt;F&lt;/code&gt; (returned in &lt;code&gt;open&lt;/code&gt;) -&amp;gt; data blocks of &lt;code&gt;F&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Buffer cache management&lt;/strong&gt;: cache disk block in memory&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Operations&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Block lookup&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# hash table to lookup blocks in memory
+
+      key
+|device|block #| -&amp;gt; |disk block in memory| -&amp;gt; ...
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Block miss&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Block flush&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Issues&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Limited size: need replacement algorithms&lt;/li&gt;
+&lt;li&gt;Competes with VM system about frames
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Separate cache&lt;/strong&gt;: inefficient use of cache if not doing file I/O&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Unified cache&lt;/strong&gt;: large file I/O affects performance of other programs&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Read ahead&lt;/strong&gt;: prefetch next block from disk&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Sharing Files&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Issues
+
+&lt;ul&gt;
+&lt;li&gt;Concurrent access
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Sequential consistency&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A &lt;code&gt;read&lt;/code&gt; call sees data from most recently &lt;strong&gt;finished&lt;/strong&gt; &lt;code&gt;write&lt;/code&gt; call&lt;/li&gt;
+&lt;li&gt;All processors see same order of writes&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Protection
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Subject&lt;/strong&gt;: &lt;strong&gt;who&lt;/strong&gt; can access a file&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Object&lt;/strong&gt;: the file&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Action&lt;/strong&gt;: how can they access a file
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;read&lt;/code&gt;, &lt;code&gt;write&lt;/code&gt;, &lt;code&gt;execute&lt;/code&gt;, &lt;code&gt;append&lt;/code&gt;, &lt;code&gt;change protection&lt;/code&gt;, &lt;code&gt;delete&lt;/code&gt;, etc.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Mechanisms
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Access control lists (ACL)&lt;/strong&gt;: object -&amp;gt; subjects &amp;amp; actions
+
+&lt;ul&gt;
+&lt;li&gt;Easy to grant, revoke&lt;/li&gt;
+&lt;li&gt;Becomes large when heavily shared -&amp;gt; use &lt;strong&gt;groups&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Capabilities&lt;/strong&gt;: subject -&amp;gt; objects &amp;amp; actions
+
+&lt;ul&gt;
+&lt;li&gt;Easy to transfer&lt;/li&gt;
+&lt;li&gt;Hard to revoke&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Unix File System&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# In memory
+
+Parent's fd table   Open file table
+-----------         |File position|
+-----------         |R/W          |
+----------- ------&amp;gt; |Ptr to i-node|
+...                 ---------------
+                    |             |
+Child's fd table  / |             |
+-----------      /  ...
+----------- -----
+-----------
+...
+
+# Child can copy parent's fd table when forked
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;File-Related System Calls&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;fd = open(name,mode)&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Path lookup: find inode of file&lt;/li&gt;
+&lt;li&gt;Cache inode in buffer cache&lt;/li&gt;
+&lt;li&gt;Check permissions&lt;/li&gt;
+&lt;li&gt;Set up entry in open file table&lt;/li&gt;
+&lt;li&gt;Set up entry in fd table&lt;/li&gt;
+&lt;li&gt;Return fd&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;byte_count = read(fd, buffer, buffer_size)&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt; Figure out data/indirect blocks to read&lt;/li&gt;
+&lt;li&gt;Read from disk into buffer cache&lt;/li&gt;
+&lt;li&gt;Copy data to user buffer&lt;/li&gt;
+&lt;li&gt;Update file position&lt;/li&gt;
+&lt;li&gt;Return # of bytes read&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;byte_count = write(fd, buffer, num_bytes)&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt; Figure out data/indirect blocks to write&lt;/li&gt;
+&lt;li&gt;Read from disk into buffer cache&lt;/li&gt;
+&lt;li&gt;Copy data from user buffer to buffer cache&lt;/li&gt;
+&lt;li&gt;Update i-node&lt;/li&gt;
+&lt;li&gt;Mark modified buffers dirty (inode, free maps, indirect, data blocks, etc.)&lt;/li&gt;
+&lt;li&gt;Schedule writing dirty buffers to disk&lt;/li&gt;
+&lt;li&gt;Update file position&lt;/li&gt;
+&lt;li&gt;Return # of bytes written&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;close(fd)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Mounting File Systems&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;File system namespace&lt;/strong&gt;: set of names for all files in a file system&lt;/li&gt;
+&lt;li&gt;File system &lt;strong&gt;mounting&lt;/strong&gt; glues a file system namespace into the namespace of another file system&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Consistency &amp;amp; Crash Recovery&lt;/h2&gt;
+
+&lt;h4&gt;Deleting a Unix File&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Remove file&amp;#39;s directory entry in directory data block&lt;/li&gt;
+&lt;li&gt;Mark inode of file as free in inode bitmap; mark file blocks as free in block bitmap; update metadata in inode of directory&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Crash in between leads to &lt;strong&gt;storage leak&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Switch steps. Crash in between leads to &lt;strong&gt;dangling pointer&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h4&gt;Reducing File System Inconsistency&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Write-through metadata blocks
+
+&lt;ul&gt;
+&lt;li&gt;Avoid dangling pointers&lt;/li&gt;
+&lt;li&gt;Still inconsistent for the last file system operation before a crash&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Write-back data blocks
+
+&lt;ul&gt;
+&lt;li&gt;Most blocks are data blocks, improves file system performance&lt;/li&gt;
+&lt;li&gt;Data blocks can be lost without affecting file system consistency&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Crash recovery&lt;/strong&gt;: restore file system consistency
+    - Full scan of file system to recover inconsistent states
+    - Long time since disk capacities increase faster than disk throughput&lt;/li&gt;
+&lt;li&gt;Avoid crash recovery:
+
+&lt;ul&gt;
+&lt;li&gt;Use &lt;strong&gt;battery-backed RAM&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Ensure enough power to write all dirty blocks to disk&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Failure atomicity&lt;/strong&gt;: a file system operation either doesn&amp;#39;t happen at all or happens completely
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Undo recovery&lt;/strong&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Copy old block on disk to spare block on disk (mark done)&lt;/li&gt;
+&lt;li&gt;Copy new block in memory to block on disk&lt;/li&gt;
+&lt;li&gt;Remove spare block&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Redo recovery&lt;/strong&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Copy new block in memory to spare block on disk (mark done)&lt;/li&gt;
+&lt;li&gt;Copy new block in memory to old block on disk&lt;/li&gt;
+&lt;li&gt;Remove spare block&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Journaling File Systems&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Write-ahead logging&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Write new versions of blocks in a &lt;strong&gt;journal&lt;/strong&gt; (circular log)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Commit&lt;/strong&gt; when done&lt;/li&gt;
+&lt;li&gt;File system then updates asynchronously&lt;/li&gt;
+&lt;li&gt;Copy journal blocks to file system on crash where commit is present&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Steps&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Write blocks (e.g. B,I,D) to journal &lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Write commit block to journal&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|...|TransactionHeaderBlock|B'|I'|D'|Commit|
+
+# TransactionHeaderBlock contains block # of the following blocks
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Install: copy updated B,I,D to file system&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Free transaction in journal&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Observation based on FFS&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;As memory gets larger, need to &lt;strong&gt;optimize for writes&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Reads: read from buffer cache, less of performance problem&lt;/li&gt;
+&lt;li&gt;Writes: becomes heavy for synchronous operations &amp;amp; data integrity
+
+&lt;ul&gt;
+&lt;li&gt;Also, writes are not well clustered i.e. directory, inodes, data are scattered&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Log-Structured File Systems (LFS)&lt;/h2&gt;
+
+&lt;p&gt;Write all file system data &amp;amp; metadata in a contiguous log.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;LFS reads&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;When inodes updated, written in log (scattered in log)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Inode-map&lt;/strong&gt;: an array in memory to locate inodes
+
+&lt;ul&gt;
+&lt;li&gt;Inode # -&amp;gt; inode location in log&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;LFS writes&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;When inodes updated, inode-map has to be updated &amp;amp; stored on disk (inode-map itself stored in the log)&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Uses &lt;strong&gt;checkpoint region&lt;/strong&gt; in a fixed area on disk&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Locates inode-map blocks in log&lt;/li&gt;
+&lt;li&gt;Serves as a commit point&lt;/li&gt;
+&lt;li&gt;Region updated when inode-map blocks written&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|superblock|checkpoint region|      segment       |segment|...|
+                            /                      \
+                            |segment|inode|inode|...|
+                            |header |     |map  |...|
+
+# Checkpoint region -&amp;gt; inode map -&amp;gt; inode -&amp;gt; data
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Kepp 2 checkpoint regions to ensure faulure atomicity on checkpoint region itself&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Log space reclamation&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Reclaim segments when:
+
+&lt;ul&gt;
+&lt;li&gt;blocks overwritten&lt;/li&gt;
+&lt;li&gt;blocks deleted&lt;/li&gt;
+&lt;li&gt;live blocks have to be copied out of segments&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Wear leveling&lt;/strong&gt;: writing to SSD in log fashion&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Since each block in SSD has limited endurance, log fashion ensures writes to be spread evenly on disk&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Comparison on Journaling File Systems &amp;amp; Log-Structured File Systems&lt;/h3&gt;
+
+&lt;h4&gt;Journaling&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Motivation: speed up crash recovery&lt;/li&gt;
+&lt;li&gt;Benefit: speeds up crash recovery&lt;/li&gt;
+&lt;li&gt;Drawback: every block write becomes two block writes&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Log-Structured&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Motivation: reads will be absorbed by buffer cache, optimize for writes by issuing all writes sequentially&lt;/li&gt;
+&lt;li&gt;Drawback: 
+
+&lt;ol&gt;
+&lt;li&gt;Reads not sequential if file created sequentially&lt;/li&gt;
+&lt;li&gt;Need garbage collection -&amp;gt; affect normal I/O performance&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Writes: 1 or more; 1 for writing to log, more for cleaning process&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Resources&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://pages.cs.wisc.edu/%7Eremzi/OSTEP/file-lfs.pdf&quot;&gt;Log-structured File Systems&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 02 Dec 2016 00:00:00 -0500</pubDate>
+        <link>/blog/notes/os/2016/12/02/operating-system-file-systems.html</link>
+        <guid isPermaLink="true">/blog/notes/os/2016/12/02/operating-system-file-systems.html</guid>
+        
+        <category>OS</category>
+        
+        <category>ECE344</category>
+        
+        <category>file system</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>OS</category>
+        
+      </item>
+    
+      <item>
+        <title>Operating System - Disk &amp; RAID</title>
+        <description>&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Disks
+
+&lt;ul&gt;
+&lt;li&gt;Disk Scheduling Algorithms&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Redundant Array of Inexpensive Disks (RAID)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;Disks&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Structure
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Disk&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Platters&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1 &lt;strong&gt;arm&lt;/strong&gt;: move together&lt;/li&gt;
+&lt;li&gt;1 &lt;strong&gt;head&lt;/strong&gt;: access data in parallel&lt;/li&gt;
+&lt;li&gt;Concentric &lt;strong&gt;tracks&lt;/strong&gt;: same track across different platters
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Sectors&lt;/strong&gt;: preamble + data + 16B of ECC&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Disk access delays
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Seek time&lt;/strong&gt;: move head to correct track&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Rotational delay&lt;/strong&gt;: rotate to correct sector&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Transfer time&lt;/strong&gt;: r/w bits of sector (fastest among all)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Disk performance trends
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Capacity&lt;/strong&gt;: 2x every 2 years&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Transfer rate (BW)&lt;/strong&gt;: 2x every 2 years&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Seek &amp;amp; rotation time&lt;/strong&gt;: 1/2 every 10 years&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Disk performance
+
+&lt;ul&gt;
+&lt;li&gt;Highest bandwidth for sequential access&lt;/li&gt;
+&lt;li&gt;Worst bandwidth for random access&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Disk scheduling
+
+&lt;ul&gt;
+&lt;li&gt;Aims to minimize &lt;strong&gt;seek time&lt;/strong&gt; (&lt;strong&gt;rotational delay&lt;/strong&gt; hard to control)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Addressing disks
+
+&lt;ul&gt;
+&lt;li&gt;Older disks: require OS to specify all parameters e.g. cylinder, track, sector, transfer size, etc.&lt;/li&gt;
+&lt;li&gt;Modern disks: complicated e.g. not all sectors the same size, sectors are remapped, etc.&lt;/li&gt;
+&lt;li&gt;Current disks: higher-level interface, exports data as logical array of sectors &amp;amp; maps logical sectors to its surface&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Disk errors
+
+&lt;ul&gt;
+&lt;li&gt;Latent sector errors, mis-directed writes&lt;/li&gt;
+&lt;li&gt;Transient v.s. hard errors&lt;/li&gt;
+&lt;li&gt;Some errors can be masked by &lt;strong&gt;ECC&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Bad sectors&lt;/strong&gt;: physical damage; mapped to spare in factory, by disk controller&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;Disk Scheduling Algorithms&lt;/h3&gt;
+
+&lt;p&gt;Aims to minimize &lt;strong&gt;seek time&lt;/strong&gt; (&lt;strong&gt;rotational delay&lt;/strong&gt; hard to control).&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;2 methods
+
+&lt;ul&gt;
+&lt;li&gt;Reduce seek &amp;amp; rotation&lt;/li&gt;
+&lt;li&gt;Read several sectors at once&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Algorithms
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;FCFS&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Simple, fair, slow&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Shortest seek time first (SSF)&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Starvation&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;SCAN (elevator)&lt;/strong&gt;: serve next request in same direction (a bit to track arm direction)
+
+&lt;ul&gt;
+&lt;li&gt;Benefits tracks in the middle more&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;C-SCAN&lt;/strong&gt;: SCAN in one direction&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Redundant Array of Inexpensive Disks (RAID)&lt;/h2&gt;
+
+&lt;p&gt;Use many disks in parallel; increases storage bandwidth, improves reliability.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Stripe&lt;/strong&gt;: unit of r/w to RAID
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Chunks/Strips&lt;/strong&gt;: unit of r/w to a single disk&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Improving storage bandwidth
+
+&lt;ul&gt;
+&lt;li&gt;Chunks on different disks can be r/w in parallel&lt;/li&gt;
+&lt;li&gt;Large chunk size:
+
+&lt;ul&gt;
+&lt;li&gt;Fewer seeks across disks -&amp;gt; better throughput&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;More disks:
+
+&lt;ul&gt;
+&lt;li&gt;Bandwidth increases&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Large stripe size:
+
+&lt;ul&gt;
+&lt;li&gt;Internal fragmentation&lt;/li&gt;
+&lt;li&gt;Should be based on average file size&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3&gt;RAID Level 0: Disk Striping&lt;/h3&gt;
+
+&lt;p&gt;Distributes data across several disks for speed. No redundancy.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;| Strip 0 | | Strip 1 | | Strip 2 | | Strip 3 |
+| Strip 4 | | Strip 5 | | Strip 6 | | Strip 7 |
+| Strip 8 | | Strip 9 | | Strip 10| | Strip 11|
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;RAID Level 1: Mirroring&lt;/h3&gt;
+
+&lt;p&gt;Backup. Write both, read either.&lt;br&gt;
+Utilization: 50%&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;| Strip 0 | | Strip 1 | | Strip 2 | | Strip 3 | | Strip 0 | | Strip 1 | | Strip 2 | | Strip 3 |
+| Strip 4 | | Strip 5 | | Strip 6 | | Strip 7 | | Strip 4 | | Strip 5 | | Strip 6 | | Strip 7 |
+| Strip 8 | | Strip 9 | | Strip 10| | Strip 11| | Strip 8 | | Strip 9 | | Strip 10| | Strip 11|
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;RAID Level 4: Dedicated Parity Disk&lt;/h3&gt;
+
+&lt;p&gt;Calculate XOR value of chunks and store on parity disk.
+Utilization: (N-1)/N&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# P0-3 = S0 ^ S1 ^ S2 ^ S3
+# P'0-3 = S'0 ^ S1 ^ S2 ^ S3 = S'0 ^ S0 ^ P0-3
+
+| Strip 0 | | Strip 1 | | Strip 2 | | Strip 3 | | P0-3 |
+| Strip 4 | | Strip 5 | | Strip 6 | | Strip 7 | | P4-7 |
+| Strip 8 | | Strip 9 | | Strip 10| | Strip 11| | P8-11|
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;RAID Level 5: Distributed Parity&lt;/h3&gt;
+
+&lt;p&gt;Parity information distributed across all disks. Avoids bottleneck for parity disk.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;| Strip 0 | | Strip 1 | | Strip 2 | | Strip 3 | | P0-3    |
+| Strip 4 | | Strip 5 | | Strip 6 | | P4-7    | | Strip 7 |
+| Strip 8 | | Strip 9 | | P8-11   | | Strip 10| | Strip 11|
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Resources&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.zdnet.com/article/chunks-the-hidden-key-to-raid-performance/&quot;&gt;Chunks: the hidden key to RAID performance&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.pcguide.com/ref/hdd/perf/raid/concepts/perfStripe-c.html&quot;&gt;Stripe Width and Stripe Size&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Thu, 01 Dec 2016 00:00:00 -0500</pubDate>
+        <link>/blog/notes/os/2016/12/01/operating-system-disk-and-raid.html</link>
+        <guid isPermaLink="true">/blog/notes/os/2016/12/01/operating-system-disk-and-raid.html</guid>
+        
+        <category>OS</category>
+        
+        <category>ECE344</category>
+        
+        <category>disk</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Notes</category>
+        
+        <category>OS</category>
+        
+      </item>
     
       <item>
         <title>Coping with NP-Complete Problems</title>
@@ -2244,980 +3014,6 @@ dependencies: [
         <category>Notes</category>
         
         <category>Swift</category>
-        
-      </item>
-    
-      <item>
-        <title>Operating System - Paging</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Paging Overview
-
-&lt;ol&gt;
-&lt;li&gt;Introduction to Virtual Memory&lt;/li&gt;
-&lt;li&gt;Paging MMU&lt;/li&gt;
-&lt;li&gt;Page Tables&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Translation Lookaside Buffer (TLB)
-
-&lt;ol&gt;
-&lt;li&gt;TLB Basics&lt;/li&gt;
-&lt;li&gt;Memory Protection&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Demand Paging
-
-&lt;ol&gt;
-&lt;li&gt;Demand Paging Overview&lt;/li&gt;
-&lt;li&gt;Virtual Memory Hierarchy&lt;/li&gt;
-&lt;li&gt;Managing Virtual Address Space&lt;/li&gt;
-&lt;li&gt;Managing Physical Memory&lt;/li&gt;
-&lt;li&gt;Managing Swap Area&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Processes &amp;amp; Virtual Memory
-
-&lt;ol&gt;
-&lt;li&gt;Interaction of Processes with VM System&lt;/li&gt;
-&lt;li&gt;Page Sharing &amp;amp; Memory-Mapped Files&lt;/li&gt;
-&lt;li&gt;Kernal Address Space&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Page Replacement Algorithms
-
-&lt;ol&gt;
-&lt;li&gt;Page Replacement Algorithms Overview&lt;/li&gt;
-&lt;li&gt;Paging Issues&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Paging Overview&lt;/h2&gt;
-
-&lt;h3&gt;Introduction to Virtual Memory&lt;/h3&gt;
-
-&lt;h4&gt;Problems with Contiguous Memory&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Growing program requires copying entire program&lt;/li&gt;
-&lt;li&gt;Wasted memory due to &lt;strong&gt;internal &amp;amp; external fragmentation&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;Running program requires loading entire program&lt;/li&gt;
-&lt;li&gt;Max program size limited by memory size&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Paging MMU&lt;/h3&gt;
-
-&lt;h4&gt;Pages &amp;amp; Frames&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Page&lt;/strong&gt;: contiguous, fixed size chunks in virtual address space&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Frame&lt;/strong&gt;: physical memory mapped from a page&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Virtual &amp;amp; Physical Addresses&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# 32-bit machine, virtual address space 2^32 B
-# page size 2^12, # of pages 2^20
-|...20 bits...|.12 bits.|
-    page num     offset
-
-# e.g. physical address space 2^30 B
-# frame size 2^12, # of frames 2^18
-|...18 bits...|.12 bits.|
-    page num     offset
-
-               VA               PA
-          -----------&amp;gt;     -----------&amp;gt;
-Processor              MMU              Bus
-          &amp;lt;----------------------------
-                       data
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4&gt;Benefits of Paging&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Growing program requires allocating a page at a time&lt;/li&gt;
-&lt;li&gt;No external fragmentation (page granularity); internal fragmentation 1/2 page per region&lt;/li&gt;
-&lt;li&gt;Pages can be loaded in memory as program runs&lt;/li&gt;
-&lt;li&gt;Max program size limited by disk size&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Page Tables&lt;/h3&gt;
-
-&lt;p&gt;Mapping information maintained by MMU.&lt;/p&gt;
-
-&lt;h4&gt;Page Table Entries (PTE)&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|...18 bits...|.7 bits.|C|D|R|W|V|
-   frame num    unused
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4&gt;Storing Page Table&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Stored in memory
-
-&lt;ul&gt;
-&lt;li&gt;Each memory access requires 2 memory accesses: PTE &amp;amp; PA&lt;/li&gt;
-&lt;li&gt;Solution: Cache PTE in TLB&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Page table register (PTR)&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;For MMU to store the location of start of page table&lt;/li&gt;
-&lt;li&gt;OS associates a seperate page table for each process&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Address space switch&lt;/strong&gt; switches PTR&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Page Table Size&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;#pages * PTE size (typically word size)
-= (va_size / page_size) * PTE size
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;Smaller page size: lower internal fragmentation&lt;/li&gt;
-&lt;li&gt;Larger page size: fewer PTE &amp;amp; memory overhead&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Multi-Level Page Table&lt;/h4&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|.10 bits.|.10 bits.|.12 bits.|
-    PT1       PT2      offset
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;Slower than &lt;em&gt;single-level page table&lt;/em&gt; because more memory accesses&lt;/li&gt;
-&lt;li&gt;Saves space&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Inverted Page Table&lt;/h4&gt;
-
-&lt;p&gt;Maps &lt;strong&gt;frame num -&amp;gt; (thread id, page num)&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|....|...52 bits...|.12 bits.|
- TID    page num     offset
-  |         |
-  -----------
-       |
-   hash func ----&amp;gt; index into page table
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;Exhaustive search is slow
-
-&lt;ul&gt;
-&lt;li&gt;Use hash table indexed by page number&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Hashing function needs to be good&lt;/li&gt;
-&lt;li&gt;Poor cache locality
-
-&lt;ul&gt;
-&lt;li&gt;Adjacent pages hashed to scattered locations&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Sharing memory is complecated&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Translation Lookaside Buffer (TLB)&lt;/h2&gt;
-
-&lt;h3&gt;TLB Basics&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;H/W cache of PTE
-
-&lt;ul&gt;
-&lt;li&gt;Small # of entries&lt;/li&gt;
-&lt;li&gt;Exploits locality (program uses small # of pages at a time)&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;|virtual page number (VPN)|...18 bits...|.7 bits.|C|D|R|W|V|
-                             frame num    unused
-|   key: page number      |             data: PTE          |
-
-V: valid, W: writable, R: referenced (H/W), D: dirty (H/W), C: cacheable
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;V: is the entry valid or not?&lt;br&gt;
-W: is the page writable?&lt;br&gt;
-C: is the page cacheable? when not cacheable, processor should bypass the cache when accessing the page, e.g., to access memory-mapped device registers&lt;br&gt;
-D: has a writable page been written to (is it dirty with respect to the data on disk)?&lt;br&gt;
-R: has a page been referenced?&lt;br&gt;
-unused: unused by hardware, can be used by OS  &lt;/p&gt;
-
-&lt;p&gt;H/W may or may not need execution bit, but instead use &lt;em&gt;read&lt;/em&gt; as &lt;em&gt;execute&lt;/em&gt;  &lt;/p&gt;
-
-&lt;h4&gt;TLB Operations&lt;/h4&gt;
-
-&lt;h5&gt;TLB Lookup&lt;/h5&gt;
-
-&lt;p&gt;Fully associative TLB example  &lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://www.cems.uwe.ac.uk/%7Ebr-gaster/courses/2015-2016/CNOS/lectures/reveal.js-jade/decks/cnos_lecture9/resources/tlb-lookup.png&quot; alt=&quot;TLB lookup&quot;&gt;&lt;/p&gt;
-
-&lt;h5&gt;TLB cache miss handling&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;TLB lookup fails -&amp;gt; page table lookup -&amp;gt; TLB cache replaced (&lt;strong&gt;TLB replacement policy&lt;/strong&gt;)&lt;/li&gt;
-&lt;li&gt;Handled by H/W or OS
-
-&lt;ul&gt;
-&lt;li&gt;H/W managed TLB
-
-&lt;ul&gt;
-&lt;li&gt;H/W defines page table format &amp;amp; replacement policy&lt;/li&gt;
-&lt;li&gt;PTR to locate page table in physical memory&lt;/li&gt;
-&lt;li&gt;Fast miss handling&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;S/W managed TLB
-
-&lt;ul&gt;
-&lt;li&gt;H/W generates trap called &lt;strong&gt;TLB miss fault&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Read fault&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Write fault&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;OS handles TLB miss similar to exception handling&lt;/li&gt;
-&lt;li&gt;OS figures out correct PTE, add in TLB (CPU has instructions to modify TLB)&lt;/li&gt;
-&lt;li&gt;Page tables become entirely a OS data structure (no PTR in H/W, H/W doesn&amp;#39;t know about page table)&lt;/li&gt;
-&lt;li&gt;TLB replacement policy managed in S/W&lt;/li&gt;
-&lt;li&gt;Slower by more flexible miss handling&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h5&gt;TLB cache invalidate&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Adds cost to context switching
-
-&lt;ul&gt;
-&lt;li&gt;Changing PTR + invalidating TLB + TLB misses afterwards&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Invalidate options
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Clear TLB&lt;/strong&gt;: clearing valid bit of all entries&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Tagged TLB&lt;/strong&gt;: H/W maintains &lt;strong&gt;id tag&lt;/strong&gt; on each entry
-
-&lt;ul&gt;
-&lt;li&gt;Compare current thread id (stored in register) to the tag&lt;/li&gt;
-&lt;li&gt;No invalidation; enables space multiplexing of entries&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Memory Protection&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Generate &lt;strong&gt;protection fault&lt;/strong&gt; if memory access inconsistent with protection bits
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Read-only fault&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;No-execute fault&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Demand Paging&lt;/h2&gt;
-
-&lt;h3&gt;Demand Paging Overview&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Motivation: program size/# of running programs limited by physical memory
-
-&lt;ul&gt;
-&lt;li&gt;Make memory a cache for data on disk&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Basic Mechanism
-
-&lt;ul&gt;
-&lt;li&gt;PTE unset for invalid page&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Cache miss&lt;/strong&gt; when program accesses invalid page&lt;/li&gt;
-&lt;li&gt;Generates &lt;strong&gt;page fault&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;OS &lt;strong&gt;page fault handler&lt;/strong&gt; performs miss handling: allocate frame, update PTE, set valid bit, restart instruction&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Benefits
-
-&lt;ul&gt;
-&lt;li&gt;Allows programs run to exceed available memory (limited by VA space (processor architecture) or disk)&lt;/li&gt;
-&lt;li&gt;Faster startup programs (no need to load entire program)&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Virtual Memory Hierarchy&lt;/h3&gt;
-
-&lt;p&gt;&lt;img src=&quot;http://images.slideplayer.com/27/9050102/slides/slide_8.jpg&quot; alt=&quot;VM hierarchy&quot;&gt;&lt;/p&gt;
-
-&lt;h4&gt;Swap Handler&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Chooses a page to evict using page replacement algorithm&lt;/li&gt;
-&lt;li&gt;If page modified, write to a free location on &lt;strong&gt;swap&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;Find pages that map to the evicted frame
-
-&lt;ul&gt;
-&lt;li&gt;Need frame-to-page mapping (coremap)&lt;/li&gt;
-&lt;li&gt;Change all PTEs to invalid&lt;/li&gt;
-&lt;li&gt;Keep track of the evicted frame location in swap&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Return newly freed frame to page fault handler&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;Other Notes&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;If &lt;em&gt;TLB miss handling&lt;/em&gt; is performed by H/W, no &lt;em&gt;TLB miss fault&lt;/em&gt; generated; if by S/W, H/W doesn&amp;#39;t access PT&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Page fault handler&lt;/strong&gt;: 
-
-&lt;ul&gt;
-&lt;li&gt;checks &lt;strong&gt;segmentation fault&lt;/strong&gt;, &lt;strong&gt;protection fault&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;allocates frame, PTE&lt;/li&gt;
-&lt;li&gt;loads data from disk into frame&lt;/li&gt;
-&lt;li&gt;maps page to frame by updating PTE&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Page contents may:
-
-&lt;ul&gt;
-&lt;li&gt;be all 0&lt;/li&gt;
-&lt;li&gt;in &lt;strong&gt;swap&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;in &lt;strong&gt;executable&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;OS accesses PT when:
-
-&lt;ul&gt;
-&lt;li&gt;on TLB-miss fault (for h/w managed TLB), it reads the page table&lt;/li&gt;
-&lt;li&gt;on page fault, it allocates frame and updates page table&lt;/li&gt;
-&lt;li&gt;whenever address space of current process is modified, (frame is allocated/deallocated, context switch), it updates page table&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3&gt;Managing Virtual Address Space&lt;/h3&gt;
-
-&lt;h4&gt;Address Space&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Broken into &lt;strong&gt;regions&lt;/strong&gt; or &lt;strong&gt;segments&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;OS must track the regions within an address space &amp;amp; PT holding translations&lt;/li&gt;
-&lt;li&gt;API
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;id = as_create()&lt;/code&gt; create empty address space, allocate new PT with no pages mapped to frames&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;as_destroy(id)&lt;/code&gt; destroy as, free PT&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;as_define_region(id,...)&lt;/code&gt; add new region&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;as_modify_region(id,...)&lt;/code&gt; change size (e.g. heap, stack)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;as_find_region(id,va)&lt;/code&gt; find valid region or give seg fault&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;as_load_page(id,...)&lt;/code&gt; load page from file into memory&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;new_id = as_copy(id)&lt;/code&gt; create copy of as &amp;amp; PT (actually copy data to other frames)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;as_switch(id)&lt;/code&gt; mappings in TLB must be removed&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Managing Physical Memory&lt;/h3&gt;
-
-&lt;h4&gt;Coremap&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Array of structures, one per frame&lt;/li&gt;
-&lt;li&gt;Tracks:
-
-&lt;ul&gt;
-&lt;li&gt;whether frame allocated&lt;/li&gt;
-&lt;li&gt;address spaces &amp;amp; pages map to this frame (list of (pid, page_id))&lt;/li&gt;
-&lt;li&gt;kernel or user&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;API
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;frame = allocate_frame(n)&lt;/code&gt; alloc n free contiguous frames (user needs 1 frame; kernel needs more)&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;free_frame(frame)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;map(id,page_nr,frame)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;unamp(id,page_nr)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;evict(frame)&lt;/code&gt; for swap handler to unmap pages associated with frame&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Managing Swap Area&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Dirty pages need to be placed in swap&lt;/li&gt;
-&lt;li&gt;Bitmap or linked list of &lt;strong&gt;swap frames&lt;/strong&gt; on disk; keep location in invalid PTE&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;If loading shared frame from swap and needs to write to it:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;allocate a frame and keep the swap frame&lt;/li&gt;
-&lt;li&gt;next time allocate another frame and free the swap frame&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# PTE
-|frame number|unused|R|D|C|W|1| virtual page in memory
-|000.......................0|0| invalid PTE
-|index in swap area.........|0| virtual page in swap
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Processes &amp;amp; Virtual Memory&lt;/h2&gt;
-
-&lt;h3&gt;Interaction of Processes with VM System&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;OS implements VM system using 3 abstractions: address space, physical memory, &amp;amp; swap management&lt;/li&gt;
-&lt;li&gt;Rest of OS invokes the VM systems when &lt;strong&gt;address space of current process changes&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Process creation &lt;code&gt;fork&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Create new PT &amp;amp; copy content from parent&amp;#39;s regions&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Process execution &lt;code&gt;execv&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Destroy old address space structure &amp;amp; create new one&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Process termination &lt;code&gt;exit&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Context switch
-
-&lt;ul&gt;
-&lt;li&gt;H/W managed TLB: change PTR, flush TLB&lt;/li&gt;
-&lt;li&gt;S/W managed TLB: flush TLB&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Memory allocation/deallocation &lt;code&gt;sbrk, stack&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Heap: system call (&lt;code&gt;sbrk&lt;/code&gt;) to grow; allows OS to &lt;strong&gt;detect errors&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;Stack: when faulting address &lt;em&gt;clost&lt;/em&gt; to stack, extend stack region running standard page fault handler&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Page Sharing &amp;amp; Memory-Mapped Files&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Benefits
-
-&lt;ul&gt;
-&lt;li&gt;Fast communication between processes&lt;/li&gt;
-&lt;li&gt;Good isolation (only share when needed)&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Applications
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Sharing text regions&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;e.g. dynamically loaded libraries&lt;/li&gt;
-&lt;li&gt;Must update all pages when frame evicted&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Copy-on-write pages&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Child shares pages with parent until pages modified&lt;/li&gt;
-&lt;li&gt;PTE marks &lt;strong&gt;COW &amp;amp; read-only&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;On protection fault: allocate new frame, copy, remap, make writable, update TLB, resume&lt;/li&gt;
-&lt;li&gt;Must update all pages when frame evicted&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Memory-mapped files&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Threads r/w files using load/store instead of system calls&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;mmap(addr,length,prot_flags,fd,offset)&lt;/code&gt; maps a file at given offset contiguously within address space
-
-&lt;ul&gt;
-&lt;li&gt;Storing &lt;code&gt;offset&lt;/code&gt; to provide flexibility since different processes may have different addresses of shared memory&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;File data loaded on page fault&lt;/li&gt;
-&lt;li&gt;Instead of swap area, use file itself as backing store&lt;/li&gt;
-&lt;li&gt;More efficient than r/w system calls because system calls need buffer in kernel to transfer data&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Shared memory
-
-&lt;ul&gt;
-&lt;li&gt;Threads r/w to mapped memory region&lt;/li&gt;
-&lt;li&gt;PTE can have different protections for different threads&lt;/li&gt;
-&lt;li&gt;Memory can be mapped at same or different VA in each process&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Kernal Address Space&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;OS typically lies in &lt;em&gt;low physical memory&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;Options
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Paging turned off&lt;/strong&gt; in kernel mode, OS access physical memory directly
-
-&lt;ul&gt;
-&lt;li&gt;OS needs to simulate paging, i.e. do address translation in software, to copy in or out user parameters on a system call, deal with dirty bit, etc.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;OS uses &lt;strong&gt;separate address space&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Pros
-
-&lt;ul&gt;
-&lt;li&gt;Clean isolation&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Cons
-
-&lt;ul&gt;
-&lt;li&gt;System call requires switching MMU -&amp;gt; TLB flush&lt;/li&gt;
-&lt;li&gt;Copy in/out of system call parameters requires traversing PT in S/W&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;OS maps to &lt;strong&gt;address space of each thread&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Typically mapped to high addresses&lt;/li&gt;
-&lt;li&gt;Pros
-
-&lt;ul&gt;
-&lt;li&gt;No system call&lt;/li&gt;
-&lt;li&gt;Copy in/out of system call parameters can reuse paging H/W&lt;br&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Cons
-
-&lt;ul&gt;
-&lt;li&gt;Address space of processes reduces&lt;/li&gt;
-&lt;li&gt;PT needs to be setup to access OS code
-
-&lt;ul&gt;
-&lt;li&gt;H/W may allow OS to bypass PT&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Page Replacement Algorithms&lt;/h2&gt;
-
-&lt;h3&gt;Page Replacement Algorithms Overview&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;When will paging work?
-
-&lt;ul&gt;
-&lt;li&gt;If occurs rarely&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Spatial locality&lt;/strong&gt; &amp;amp; &lt;strong&gt;temporal locality&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Algorithms&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Optimal algorithm&lt;/strong&gt;: page that will not be needed for longest time
-
-&lt;ul&gt;
-&lt;li&gt;Need to know the future&lt;/li&gt;
-&lt;li&gt;Can be used to compare performance
-
-&lt;ul&gt;
-&lt;li&gt;Generate a log of VM accesses (&lt;strong&gt;reference string&lt;/strong&gt;); use log to simulate various replacement policies&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;FIFO&lt;/strong&gt;: oldest page
-
-&lt;ul&gt;
-&lt;li&gt;Oldest page may be needed soon&lt;/li&gt;
-&lt;li&gt;Faults may increase if given more memory (&lt;a href=&quot;http://stackoverflow.com/questions/4800285/cant-understand-beladys-anomaly&quot;&gt;Belady&amp;#39;s Anomaly&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Clock&lt;/strong&gt;: FIFO giving second chance to referenced pages&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Referenced bit&lt;/strong&gt;: set by processor when page read/written; cleared by OS/software&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Dirty bit&lt;/strong&gt;: set by processor when page written; cleared by OS/software&lt;/li&gt;
-&lt;li&gt;OS synchronizes R/D bits in TLB with PTE (H/W: write-through or write-back; S/W: needs to implement synchronization)&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;OS simulates the bits if H/W doesn&amp;#39;t maintain&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;When TLB read fault: 
-
-&lt;ul&gt;
-&lt;li&gt;Set referenced bit; make page read-only&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;When TLB read-only protection fault/write fault: 
-
-&lt;ul&gt;
-&lt;li&gt;Set referenced &amp;amp; dirty bits; make page writeable&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Algorithm&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Choose page starting from clock hand:
-    if referenced bit set:
-        unset, goto next
-    else:
-        if page dirty:
-            schedule page write, goto next
-        else:
-            select for replacement
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;LRU&lt;/strong&gt;: page used least recently&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Updating LRU on each memory access is expensive&lt;/li&gt;
-&lt;li&gt;If MMU maintains a counter incremented at each clock cycle:
-
-&lt;ul&gt;
-&lt;li&gt;When page accessed: 
-
-&lt;ul&gt;
-&lt;li&gt;Writes counter value to PTE&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;On page fault: 
-
-&lt;ul&gt;
-&lt;li&gt;S/W looks through PT, identifies entry with oldest timestamp&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;If MMU doesn&amp;#39;t provide such counter, OS maintains it in S/W (&lt;strong&gt;LRU aprroximation&lt;/strong&gt;):
-
-&lt;ul&gt;
-&lt;li&gt;Periodically (timer interrupt) increment counter; granularity depends on timer interrupt&lt;/li&gt;
-&lt;li&gt;If referenced bit set:
-
-&lt;ul&gt;
-&lt;li&gt;Write counter value&lt;/li&gt;
-&lt;li&gt;Clear referenced bit&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;On page fault:
-
-&lt;ul&gt;
-&lt;li&gt;S/W looks through PT &amp;amp; identify the oldest timestamp&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Working set clock&lt;/strong&gt;: keep working set in memory&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Working set&lt;/strong&gt;: set of pages a program needs currently
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Working set interval &lt;code&gt;T&lt;/code&gt;&lt;/strong&gt;: &lt;code&gt;WS(T) = {pages accessed in interval (now, now-T)}&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Max WS&lt;/strong&gt;: how much memory a program needs&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Algorithm&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Choose page starting from clock hand:
-    if referenced bit set:
-        update time-of-last-use to current virtual time
-        unset, goto next
-    else:
-        if (current time - time-of-last-use) &amp;lt; T:
-            continue
-        else:
-            if page dirty:
-                schedule page write, goto next
-            else:
-                select for replacement
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Page fault frequency&lt;/strong&gt;: estimate of working set needs of a program&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Measurements&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;For each thread:
-    On fault:
-        f = f + 1
-    Every second, update faults/sec (fe) via aging:
-        fe = (1-a) * fe + a * f, f = 0
-        # 0 &amp;lt; a &amp;lt; 1, weighting factor; a -&amp;gt; 1 means history ignored
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Allocate frames s.t. &lt;strong&gt;PFF is equal for programs&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Global replacement&lt;/strong&gt;: victim process has lowest PFF&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Local replacement&lt;/strong&gt;: use algorithms above (clock, LRU, etc.) to evict a page within the victim process&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Comparison&lt;/p&gt;
-
-&lt;table&gt;&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;Algorithm&lt;/th&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;Comment&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Optimal&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Not implementable; useful as benchmark&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;FIFO&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Might throw out important pages&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Clock&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Realistic&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;LRU&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Excellent; difficult to implement efficiently&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;WSC&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Efficient working set algorithm&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;PFF&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Fairness in working set allocation&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;&lt;/table&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Paging Issues&lt;/h3&gt;
-
-&lt;h4&gt;Paging &amp;amp; I/O Interaction&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Problem: a frame waiting for I/O may be selected for eviction&lt;/li&gt;
-&lt;li&gt;Solution: each frame has &lt;strong&gt;do not evict&lt;/strong&gt; flag called &lt;strong&gt;pinned page&lt;/strong&gt;; un-pin after I/O completes&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Paging Performance&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Paging works best if many free frames&lt;/li&gt;
-&lt;li&gt;If pages full of dirty pages, 2 disk operations (swap in/out) needed on each page fault&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Paging daemon&lt;/strong&gt;: swap out in advance
-
-&lt;ul&gt;
-&lt;li&gt;OS maintains a pool of free frames using &lt;strong&gt;paging thread/daemon&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;Daemon runs replacement algorithm periodically or when pool reaches &lt;strong&gt;low watermark&lt;/strong&gt;:
-
-&lt;ul&gt;
-&lt;li&gt;Writes out dirty pages&lt;/li&gt;
-&lt;li&gt;Frees enough pages until pool reaches &lt;strong&gt;high watermark&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Frames can be &lt;strong&gt;rescued&lt;/strong&gt; if page referenced before realocation, because previous content still holds&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Prefetching&lt;/strong&gt;: swap in in advance
-
-&lt;ul&gt;
-&lt;li&gt;Predict future page usage at current faults&lt;/li&gt;
-&lt;li&gt;Works well when pages read sequentially&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Thrashing&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Livelock&lt;/strong&gt;: OS spends time paging data from disk, programs not making progress&lt;/li&gt;
-&lt;li&gt;Causes
-
-&lt;ol&gt;
-&lt;li&gt;Pages replacement algorithm not working&lt;/li&gt;
-&lt;li&gt;Not enough memory to hold working set of all running programs&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Solutions
-
-&lt;ol&gt;
-&lt;li&gt;&lt;strong&gt;Swapping&lt;/strong&gt;: suspend some programs for a while&lt;/li&gt;
-&lt;li&gt;Buy more memory&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Resources&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.quora.com/What-is-the-differences-between-a-page-table-and-an-inverted-page-table&quot;&gt;What are the differences between a page table and an inverted page table?&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://f.osdev.org/viewtopic.php?f=1&amp;amp;t=15321&quot;&gt;Can I turn off paging in kernel mode?&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Tue, 22 Nov 2016 00:00:00 -0500</pubDate>
-        <link>/blog/notes/os/2016/11/22/operating-system-paging.html</link>
-        <guid isPermaLink="true">/blog/notes/os/2016/11/22/operating-system-paging.html</guid>
-        
-        <category>OS</category>
-        
-        <category>ECE344</category>
-        
-        <category>paging</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>OS</category>
-        
-      </item>
-    
-      <item>
-        <title>ReactJS Data Visualization Libraries in a Hack Night</title>
-        <description>&lt;p&gt;At the hackathon last night, we were given a bunch of advertising data to work with so that data can be more understandable. I experimented with several React data visualization libraries, out of which I couldn&amp;#39;t really find a perfect one. I will share the experience working with the libraries, and what pros and cons I found.&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;p&gt;&lt;em&gt;All versions of implementation and final demo can be found &lt;a href=&quot;https://github.com/pyliaorachel/hack-with-ix/tree/master&quot;&gt;here&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Basically, below is just some subjective observations in a hack night, so there may be many mistakes in the description. I do appreciate any corrections!&lt;/p&gt;
-
-&lt;h3&gt;react-chartjs&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/reactjs/react-chartjs&quot;&gt;react-chartjs&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://github.com/pyliaorachel/hack-with-ix/blob/demo/ui/src/assets/react-chartjs.png?raw=true&quot; alt=&quot;react-chartjs&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;The main problem is in its documentation, which seems to be fancy but are actually including too many information which is loosely distributed throughout the entire doc.&lt;/p&gt;
-
-&lt;p&gt;Especially the &lt;code&gt;options&lt;/code&gt;, which determines the settings, style, scale, and all other important stuffs, are really messy and not working as expected. I searched through many examples but simply cannot get rid of the gray color in my chart. Discarded it because nobody wants such a chart with not-very-appealing look.&lt;/p&gt;
-
-&lt;p&gt;But I really like that I can work out a formatted x-axis display value. This should be a basic functionality, but surprisingly not many libraries get this well.&lt;/p&gt;
-
-&lt;h5&gt;Data Parsing&lt;/h5&gt;
-
-&lt;p&gt;Use &lt;code&gt;labels&lt;/code&gt; as x-axis or categories, &lt;code&gt;data&lt;/code&gt; in &lt;code&gt;datasets&lt;/code&gt; as y-axis or values.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;chartData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;datasets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;45&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-        &lt;span class=&quot;c1&quot;&gt;// other options&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}],&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;labels&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Red'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Blue'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Purple'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Yellow'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h5&gt;Pros&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Use &lt;code&gt;labels&lt;/code&gt; to represent x-axis, which is great that I can customize&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h5&gt;Cons&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Not providing a clear react version documentation but uses &lt;a href=&quot;http://www.chartjs.org/docs/&quot;&gt;chartjs&lt;/a&gt;&amp;#39;s instead, which I don&amp;#39;t really like because of the extensive information&lt;/li&gt;
-&lt;li&gt;Demonstration page not clear with how the data look like&lt;/li&gt;
-&lt;li&gt;Don&amp;#39;t know why, but some of the &lt;code&gt;options&lt;/code&gt; are not working, and I can&amp;#39;t do the styling because of this&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;react-d3&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/esbullington/react-d3&quot;&gt;react-d3&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://github.com/pyliaorachel/hack-with-ix/blob/demo/ui/src/assets/react-d3.png?raw=true&quot; alt=&quot;react-d3&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;The main problem is in data parsing.&lt;/p&gt;
-
-&lt;p&gt;You need to go through the whole data and explicitly parse out the &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; in a &lt;code&gt;values&lt;/code&gt; array, which is most commonly done by simply setting the &lt;code&gt;field&lt;/code&gt; key in other libraries. This can be helpful if you want even more flexibility, but this is seldom the case.&lt;/p&gt;
-
-&lt;p&gt;And again, where can I easily find the styling instructions? Miserable.&lt;/p&gt;
-
-&lt;h5&gt;Data Parsing&lt;/h5&gt;
-
-&lt;p&gt;Parse points as &lt;code&gt;x-y&lt;/code&gt; pairs in a &lt;code&gt;values&lt;/code&gt; array for coordinate charts.&lt;br&gt;
-Parse categories as &lt;code&gt;label&lt;/code&gt; and values as &lt;code&gt;value&lt;/code&gt; for category charts.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;lineData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;series1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;values&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;24&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;strokeWidth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;strokeDashArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;5,5&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;....&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nl&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;series2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;values&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;70&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;82&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;76&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;82&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;pieData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Margarita'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;20.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'John'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;55.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Tim'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;25.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h5&gt;Pros&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Nice demonstration page, simple and clear&lt;/li&gt;
-&lt;li&gt;Parse the x/y coordinates ourselves, which can be more flexible (but also a con)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h5&gt;Cons&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The styling instructions are somehow hidden deep in the documentation&lt;/li&gt;
-&lt;li&gt;Need to parse the x/y coordinates ourselves, which is more tedious (but also a pro)&lt;/li&gt;
-&lt;li&gt;Customize displayed x-/y-axis is not flexible enough (only found time on x-axis to be formattable, but the instructions are not clear)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;react-d3-basic&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/react-d3/react-d3-basic&quot;&gt;react-d3-basic&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://github.com/pyliaorachel/hack-with-ix/blob/demo/ui/src/assets/react-d3-basic.png?raw=true&quot; alt=&quot;react-d3-basic&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;To be honest, I choose this as the final working version simply because I KNOW HOW TO STYLE IT. The documentation is the nice ever.&lt;/p&gt;
-
-&lt;p&gt;The main problem is still in data parsing and non-customizable x-axis display value.&lt;/p&gt;
-
-&lt;p&gt;Although the doc is nice, but the data are not especially shown, so I have to look for the &lt;code&gt;.csv&lt;/code&gt; files on github and found some missing. Not a big problem though, but a problem to hackers in hackathons.&lt;/p&gt;
-
-&lt;p&gt;For the x-axis display values, it provides an &lt;code&gt;x&lt;/code&gt; function for you to map. But they are not actually intended for you to map displayed values but only actual values. So if you want the function to return a string representation of a date, it fails because only number values are allowed.&lt;/p&gt;
-
-&lt;p&gt;And the bar-type charts yelled to me miserable errors for a missing &lt;code&gt;bandwidth&lt;/code&gt; function deep in the &lt;code&gt;chartjs&lt;/code&gt; package, probably because I used the bar charts to build some streaming charts. So be careful when implementing them.&lt;/p&gt;
-
-&lt;h5&gt;Data Parsing&lt;/h5&gt;
-
-&lt;p&gt;Use &lt;code&gt;field&lt;/code&gt; for the y-axis filter. Argument in &lt;code&gt;x&lt;/code&gt; function is the data object itself, so be sure the datum is parsed in a way that have both &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; values.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;// sample data
-[
-  {
-    total: 1,
-    incineration: 1,
-    garbageBury: 1,
-    month: 1,
-  },
-  {
-    total: 2,
-    incineration: 2,
-    garbageBury: 2,
-    month: 2,
-  },
-  ...
-]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;chartSeries&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;chartSeries&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;field&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'total'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Total'&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;field&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'incineration'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Incineration'&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;field&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'garbageBury'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Garbage Bury'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;area&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;parseDate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;month&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h5&gt;Pros&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Nice documentation, simple and clear&lt;/li&gt;
-&lt;li&gt;Easy to style&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h5&gt;Cons&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Need more examples on how to parse the data for different charts&lt;/li&gt;
-&lt;li&gt;Customized x-/y-axis is not flexible enough&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Mon, 21 Nov 2016 00:00:00 -0500</pubDate>
-        <link>/blog/tech/reactjs/2016/11/21/reactjs-data-visualization-libraries-in-a-hack-night.html</link>
-        <guid isPermaLink="true">/blog/tech/reactjs/2016/11/21/reactjs-data-visualization-libraries-in-a-hack-night.html</guid>
-        
-        <category>react</category>
-        
-        <category>react-chartjs</category>
-        
-        <category>react-d3</category>
-        
-        <category>react-d3-basic</category>
-        
-        <category>data visualization</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Tech</category>
-        
-        <category>ReactJS</category>
         
       </item>
     

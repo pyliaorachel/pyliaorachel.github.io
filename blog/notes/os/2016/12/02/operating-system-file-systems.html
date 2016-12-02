@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Operating System - File Systems</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="/css/main.css" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
+		<link rel="stylesheet" href="/css/github-markdown.css">
+
+		<!-- Place jquery before bootstrap -->
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">MyCoon</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+
+			<form class="navbar-form navbar-left">
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Search">
+				</div>
+				<button type="submit" class="btn btn-default">Submit</button>
+			</form>
+
+			<ul class="nav navbar-nav navbar-right" id="nav-links">
+				<li class="nav-home"><a href="/">Home</a></li>
+				<li class="dropdown nav-blog">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Blog<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/blog">MyCoon Blog</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/blog/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/blog/notes">
+									<span>Notes</span>
+									<span>32</span>
+								</a>
+							</li>
+						
+							
+							
+							<li class="category">
+								<a href="/blog/tech">
+									<span>Tech</span>
+									<span>3</span>
+								</a>
+							</li>
+						
+						<li><a href="/blog/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li class="dropdown nav-tutorial">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Tutorials<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/tutorial">MyCoon Tutorial</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/tutorial/categories">Categories</a></li>
+						
+							
+						
+
+						
+						<li><a href="/tutorial/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li  class="nav-project"><a href="/project">Projects</a></li>
+				<li class="nav-special" id="special"><a href="#">?</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+		<main class="page-content post" aria-label="Content">
+	<div class="post-wrapper">
+		<div class="wrapper">
+	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
+
+		<header class="post-header">
+			<h1 class="post-title" itemprop="name headline">Operating System - File Systems</h1>
+			<p class="post-meta">Dec 2, 2016
+				 • Notes
+				 • pyliaorachel
+			</p>
+		</header>
+
+		
+
+		<span class="separator"> • • • </span>
+
+		<div class="post-content" itemprop="articleBody">
+			<h2>Content</h2>
+
+<ol>
+<li>Overview of File Systems</li>
+<li>File System Design</li>
+<li>Sharing Files</li>
+<li>Unix File System</li>
+<li>Consistency &amp; Crash Recovery</li>
+<li>Journaling File Systems</li>
+<li>Log-Structured File Systems (LFS)</li>
+</ol>
+
+<!--more-->
+
+<hr>
+
+<h2>Overview of File Systems</h2>
+
+<ul>
+<li>Abstraction for storing, organizing, &amp; accessing <strong>persistent data</strong>
+
+<ul>
+<li>Data organized as objects called <strong>files</strong></li>
+<li>Files accessed via <strong>system calls</strong></li>
+</ul></li>
+</ul>
+
+<h4>Basic File-Related Calls</h4>
+
+<ul>
+<li><strong>Open</strong>
+
+<ul>
+<li>Program can keep the <strong>file description</strong> returned to imporve file access efficiency</li>
+</ul></li>
+<li><strong>Read/Write</strong>: r/w bytes from/to current position; update position</li>
+<li><strong>Seek</strong>: move to new position</li>
+<li><strong>Close</strong></li>
+<li><strong>Create</strong>, <strong>rename</strong>, <strong>delete</strong>, <strong>get/set attributes</strong></li>
+</ul>
+
+<h4>Basic Directory-Related Calls</h4>
+
+<ul>
+<li><strong>Open</strong></li>
+<li><strong>Readdir</strong>: read entries in a directory
+
+<ul>
+<li>No <strong>writedir</strong> to avoid dir metadata corruption</li>
+</ul></li>
+<li><strong>Seekdir</strong></li>
+<li><strong>Close</strong></li>
+<li><strong>Create</strong>, <strong>rename</strong>, <strong>delete</strong>, <strong>get/set attributes</strong></li>
+<li><strong>Link/Unlink</strong>: add/remove a name for an existing file
+
+<ul>
+<li><strong>Hard link</strong>: different directory entries have same inode number
+
+<ul>
+<li>Inodes maintains reference count</li>
+<li>Points to files not directories to avoid cycles (ensure directory deletion ok)</li>
+<li>Becomes <strong>DAG</strong></li>
+</ul></li>
+<li><strong>Symbolic link (short cut)</strong>: a file containing data of another file&#39;s name (redirect)
+
+<ul>
+<li>File type: shortcut (l)</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>File System Design</h2>
+
+<ul>
+<li>OS needs to:
+
+<ul>
+<li>maintain information about files &amp; directories</li>
+<li>store files durably</li>
+<li>handle machine crashes e.g. recover data</li>
+</ul></li>
+</ul>
+
+<h4>Disk Blocks</h4>
+
+<ul>
+<li>Disks are accessed at the granularity of sectors; a file system allocates data in <strong>blocks</strong>
+
+<ul>
+<li>Reduces overhead managing individual blocks</li>
+<li>Increase internal fragmentation</li>
+</ul></li>
+</ul>
+
+<h4>File System Tasks</h4>
+
+<ul>
+<li><strong>Free block management</strong>
+
+<ul>
+<li><strong>Bitmap</strong>: separate area on disk
+
+<ul>
+<li>Allows allocating contiguous blocks to file easily</li>
+<li>Only need 1 bitmap block in memory at a time</li>
+<li>Extra space for bitmap</li>
+</ul></li>
+</ul></li>
+<li><p><strong>Block allocation &amp; replacement</strong>: maps (potentially non-contiguous) blocks to file</p>
+
+<ul>
+<li><strong>Contiguous allocation</strong>
+
+<ul>
+<li>Good performance for sequential reading</li>
+<li>File growth requires copying</li>
+<li>Fragmentation; need periodic compaction</li>
+<li>Good for <strong>CD-ROMS</strong>: file sizes known, files never deleted</li>
+</ul></li>
+<li><strong>Linked list allocation</strong>: first word in block points to next block
+
+<ul>
+<li>Random accesses slow</li>
+</ul></li>
+<li><strong>File allocation table (FAT)</strong>: keep linked list information in memory
+
+<ul>
+<li>Random accesses faster</li>
+<li>Entire table in memory, poor scalibility of file system</li>
+<li>More efficient than i-node on small files</li>
+</ul></li>
+<li><p><strong>I-node based allocation</strong>: tree to store index information</p>
+
+<ul>
+<li>Allows growth of index information without spreading this information too much</li>
+<li>Optimized for small files</li>
+<li><p>Root of tree: <strong>inode</strong></p>
+
+<ul>
+<li>12 <strong>direct block pointers</strong></li>
+<li>1 <strong>indirect pointer</strong></li>
+<li>1 <strong>double indirect pointer</strong></li>
+<li>1 <strong>triple indirect pointer</strong></li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">                    disk partitions
+|MBR||||    |                                  |    |   |
+            /                                   \
+           |Super|Inode |Block |Inode |File &amp; dir|
+           |block|bitmap|bitmap|blocks|blocks    |
+</code></pre></div></li>
+<li><p>Block placement</p>
+
+<ul>
+<li>Problems
+
+<ul>
+<li>Data blocks scatter across disk in <em>aging</em> file systems -&gt; long seeks</li>
+<li>Inodes at beginning of disk, far from data -&gt; going back and forth -&gt; long seeks</li>
+</ul></li>
+</ul></li>
+<li><p><strong>BSD Fast File System</strong></p>
+
+<ul>
+<li>Disk partitioned into groups of cylinders</li>
+<li><strong>Superblocks</strong> placed in every group &amp; in offset manner to recover from damage</li>
+<li>Place these in same cylinder group:
+
+<ul>
+<li>Inode, data blocks in a file</li>
+<li>Files in a directory</li>
+<li>Place in nearby group if group full</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><p><strong>Directory management</strong>: map file names to location of starting block of file</p>
+<div class="highlight"><pre><code class="language-" data-lang="">|file name|file attributes|starting block #|
+...
+
+# Unix
+|file name|i-node #| # i-node contains file attributes
+...
+</code></pre></div>
+<ul>
+<li><p>File names</p>
+
+<ul>
+<li>Short, fixed length names</li>
+<li><p>Variable length names</p>
+
+<ul>
+<li>Size of directory entry variable</li>
+<li><p>Options</p>
+
+<ul>
+<li><p>Entries allocated contiguously: </p>
+<div class="highlight"><pre><code class="language-" data-lang="">|len|name|inode|len|name|inode|...
+</code></pre></div>
+<p>-&gt; Inefficient for search; fragmentation  </p></li>
+<li><p>Allocate pointers to file names in the beginning of directory; heap at end to store names</p>
+<div class="highlight"><pre><code class="language-" data-lang="">|p1|hash of name1| # fixed size
+|p2|hash of name2|
+...
+p1-&gt; |name1|inode| # variable size
+p2-&gt; |name2|inode|name3|inode|
+</code></pre></div></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><p>File deletion</p>
+
+<ul>
+<li>Directory entry removed from directory</li>
+<li>All blocks in file returned to free list</li>
+</ul></li>
+<li><p>Path lookup: e.g. <code>/D1/D2/F</code></p>
+
+<ul>
+<li>Super block (locatin of inode blocks area; typically already cached in memory)</li>
+<li>Inode of <code>/</code> -&gt; data blocks of <code>/</code></li>
+<li>Inode of <code>D1</code> -&gt; data blocks of <code>D1</code></li>
+<li>Inode of <code>D2</code> -&gt; data blocks of <code>D2</code></li>
+<li>Inode of <code>F</code> (returned in <code>open</code>) -&gt; data blocks of <code>F</code></li>
+</ul></li>
+</ul></li>
+<li><p><strong>Buffer cache management</strong>: cache disk block in memory</p>
+
+<ul>
+<li><p>Operations</p>
+
+<ul>
+<li><p><strong>Block lookup</strong></p>
+<div class="highlight"><pre><code class="language-" data-lang=""># hash table to lookup blocks in memory
+
+      key
+|device|block #| -&gt; |disk block in memory| -&gt; ...
+...
+</code></pre></div></li>
+<li><p><strong>Block miss</strong></p></li>
+<li><p><strong>Block flush</strong></p></li>
+</ul></li>
+<li><p>Issues</p>
+
+<ul>
+<li>Limited size: need replacement algorithms</li>
+<li>Competes with VM system about frames
+
+<ul>
+<li><strong>Separate cache</strong>: inefficient use of cache if not doing file I/O</li>
+<li><strong>Unified cache</strong>: large file I/O affects performance of other programs</li>
+</ul></li>
+</ul></li>
+<li><p><strong>Read ahead</strong>: prefetch next block from disk</p></li>
+</ul></li>
+</ul>
+
+<h2>Sharing Files</h2>
+
+<ul>
+<li>Issues
+
+<ul>
+<li>Concurrent access
+
+<ul>
+<li><strong>Sequential consistency</strong>
+
+<ul>
+<li>A <code>read</code> call sees data from most recently <strong>finished</strong> <code>write</code> call</li>
+<li>All processors see same order of writes</li>
+</ul></li>
+</ul></li>
+<li>Protection
+
+<ul>
+<li><strong>Subject</strong>: <strong>who</strong> can access a file</li>
+<li><strong>Object</strong>: the file</li>
+<li><strong>Action</strong>: how can they access a file
+
+<ul>
+<li><code>read</code>, <code>write</code>, <code>execute</code>, <code>append</code>, <code>change protection</code>, <code>delete</code>, etc.</li>
+</ul></li>
+<li>Mechanisms
+
+<ul>
+<li><strong>Access control lists (ACL)</strong>: object -&gt; subjects &amp; actions
+
+<ul>
+<li>Easy to grant, revoke</li>
+<li>Becomes large when heavily shared -&gt; use <strong>groups</strong></li>
+</ul></li>
+<li><strong>Capabilities</strong>: subject -&gt; objects &amp; actions
+
+<ul>
+<li>Easy to transfer</li>
+<li>Hard to revoke</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Unix File System</h2>
+<div class="highlight"><pre><code class="language-" data-lang=""># In memory
+
+Parent's fd table   Open file table
+-----------         |File position|
+-----------         |R/W          |
+----------- ------&gt; |Ptr to i-node|
+...                 ---------------
+                    |             |
+Child's fd table  / |             |
+-----------      /  ...
+----------- -----
+-----------
+...
+
+# Child can copy parent's fd table when forked
+</code></pre></div>
+<h3>File-Related System Calls</h3>
+
+<ul>
+<li><code>fd = open(name,mode)</code>
+
+<ul>
+<li>Path lookup: find inode of file</li>
+<li>Cache inode in buffer cache</li>
+<li>Check permissions</li>
+<li>Set up entry in open file table</li>
+<li>Set up entry in fd table</li>
+<li>Return fd</li>
+</ul></li>
+<li><code>byte_count = read(fd, buffer, buffer_size)</code>
+
+<ul>
+<li> Figure out data/indirect blocks to read</li>
+<li>Read from disk into buffer cache</li>
+<li>Copy data to user buffer</li>
+<li>Update file position</li>
+<li>Return # of bytes read</li>
+</ul></li>
+<li><code>byte_count = write(fd, buffer, num_bytes)</code>
+
+<ul>
+<li> Figure out data/indirect blocks to write</li>
+<li>Read from disk into buffer cache</li>
+<li>Copy data from user buffer to buffer cache</li>
+<li>Update i-node</li>
+<li>Mark modified buffers dirty (inode, free maps, indirect, data blocks, etc.)</li>
+<li>Schedule writing dirty buffers to disk</li>
+<li>Update file position</li>
+<li>Return # of bytes written</li>
+</ul></li>
+<li><code>close(fd)</code></li>
+</ul>
+
+<h3>Mounting File Systems</h3>
+
+<ul>
+<li><strong>File system namespace</strong>: set of names for all files in a file system</li>
+<li>File system <strong>mounting</strong> glues a file system namespace into the namespace of another file system</li>
+</ul>
+
+<h2>Consistency &amp; Crash Recovery</h2>
+
+<h4>Deleting a Unix File</h4>
+
+<ol>
+<li>Remove file&#39;s directory entry in directory data block</li>
+<li>Mark inode of file as free in inode bitmap; mark file blocks as free in block bitmap; update metadata in inode of directory</li>
+</ol>
+
+<p>Crash in between leads to <strong>storage leak</strong>.</p>
+
+<p>Switch steps. Crash in between leads to <strong>dangling pointer</strong>.</p>
+
+<h4>Reducing File System Inconsistency</h4>
+
+<ul>
+<li>Write-through metadata blocks
+
+<ul>
+<li>Avoid dangling pointers</li>
+<li>Still inconsistent for the last file system operation before a crash</li>
+</ul></li>
+<li>Write-back data blocks
+
+<ul>
+<li>Most blocks are data blocks, improves file system performance</li>
+<li>Data blocks can be lost without affecting file system consistency</li>
+</ul></li>
+<li><strong>Crash recovery</strong>: restore file system consistency
+    - Full scan of file system to recover inconsistent states
+    - Long time since disk capacities increase faster than disk throughput</li>
+<li>Avoid crash recovery:
+
+<ul>
+<li>Use <strong>battery-backed RAM</strong>
+
+<ul>
+<li>Ensure enough power to write all dirty blocks to disk</li>
+</ul></li>
+<li><strong>Failure atomicity</strong>: a file system operation either doesn&#39;t happen at all or happens completely
+
+<ul>
+<li><strong>Undo recovery</strong>
+
+<ol>
+<li>Copy old block on disk to spare block on disk (mark done)</li>
+<li>Copy new block in memory to block on disk</li>
+<li>Remove spare block</li>
+</ol></li>
+<li><strong>Redo recovery</strong>
+
+<ol>
+<li>Copy new block in memory to spare block on disk (mark done)</li>
+<li>Copy new block in memory to old block on disk</li>
+<li>Remove spare block</li>
+</ol></li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Journaling File Systems</h2>
+
+<ul>
+<li><strong>Write-ahead logging</strong>
+
+<ul>
+<li>Write new versions of blocks in a <strong>journal</strong> (circular log)</li>
+<li><strong>Commit</strong> when done</li>
+<li>File system then updates asynchronously</li>
+<li>Copy journal blocks to file system on crash where commit is present</li>
+</ul></li>
+<li><p>Steps</p>
+
+<ol>
+<li>Write blocks (e.g. B,I,D) to journal </li>
+<li><p>Write commit block to journal</p>
+<div class="highlight"><pre><code class="language-" data-lang="">|...|TransactionHeaderBlock|B'|I'|D'|Commit|
+
+# TransactionHeaderBlock contains block # of the following blocks
+</code></pre></div></li>
+<li><p>Install: copy updated B,I,D to file system</p></li>
+<li><p>Free transaction in journal</p></li>
+</ol></li>
+<li><p>Observation based on FFS</p>
+
+<ul>
+<li>As memory gets larger, need to <strong>optimize for writes</strong></li>
+<li>Reads: read from buffer cache, less of performance problem</li>
+<li>Writes: becomes heavy for synchronous operations &amp; data integrity
+
+<ul>
+<li>Also, writes are not well clustered i.e. directory, inodes, data are scattered</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Log-Structured File Systems (LFS)</h2>
+
+<p>Write all file system data &amp; metadata in a contiguous log.</p>
+
+<ul>
+<li><strong>LFS reads</strong>
+
+<ul>
+<li>When inodes updated, written in log (scattered in log)</li>
+<li><strong>Inode-map</strong>: an array in memory to locate inodes
+
+<ul>
+<li>Inode # -&gt; inode location in log</li>
+</ul></li>
+</ul></li>
+<li><p><strong>LFS writes</strong></p>
+
+<ul>
+<li>When inodes updated, inode-map has to be updated &amp; stored on disk (inode-map itself stored in the log)</li>
+<li><p>Uses <strong>checkpoint region</strong> in a fixed area on disk</p>
+
+<ul>
+<li>Locates inode-map blocks in log</li>
+<li>Serves as a commit point</li>
+<li>Region updated when inode-map blocks written</li>
+</ul>
+<div class="highlight"><pre><code class="language-" data-lang="">|superblock|checkpoint region|      segment       |segment|...|
+                            /                      \
+                            |segment|inode|inode|...|
+                            |header |     |map  |...|
+
+# Checkpoint region -&gt; inode map -&gt; inode -&gt; data
+</code></pre></div>
+<ul>
+<li>Kepp 2 checkpoint regions to ensure faulure atomicity on checkpoint region itself</li>
+</ul></li>
+</ul></li>
+<li><p>Log space reclamation</p>
+
+<ul>
+<li>Reclaim segments when:
+
+<ul>
+<li>blocks overwritten</li>
+<li>blocks deleted</li>
+<li>live blocks have to be copied out of segments</li>
+</ul></li>
+</ul></li>
+<li><p><strong>Wear leveling</strong>: writing to SSD in log fashion</p>
+
+<ul>
+<li>Since each block in SSD has limited endurance, log fashion ensures writes to be spread evenly on disk</li>
+</ul></li>
+</ul>
+
+<h3>Comparison on Journaling File Systems &amp; Log-Structured File Systems</h3>
+
+<h4>Journaling</h4>
+
+<ul>
+<li>Motivation: speed up crash recovery</li>
+<li>Benefit: speeds up crash recovery</li>
+<li>Drawback: every block write becomes two block writes</li>
+</ul>
+
+<h4>Log-Structured</h4>
+
+<ul>
+<li>Motivation: reads will be absorbed by buffer cache, optimize for writes by issuing all writes sequentially</li>
+<li>Drawback: 
+
+<ol>
+<li>Reads not sequential if file created sequentially</li>
+<li>Need garbage collection -&gt; affect normal I/O performance</li>
+</ol></li>
+<li>Writes: 1 or more; 1 for writing to log, more for cleaning process</li>
+</ul>
+
+<h4>Resources</h4>
+
+<ul>
+<li><a href="http://pages.cs.wisc.edu/%7Eremzi/OSTEP/file-lfs.pdf">Log-structured File Systems</a></li>
+</ul>
+
+		</div>
+
+		<ul class="tag-list">
+			
+
+			<li class="tag">
+				OS
+			</li>
+
+			
+
+			<li class="tag">
+				ECE344
+			</li>
+
+			
+
+			<li class="tag">
+				file system
+			</li>
+
+			
+		</ul>
+
+	</article>
+
+	
+		<div id="disqus_thread"></div>
+<script>
+	var disqus_config = function () {
+	    this.page.url = "https://pyliaorachel.github.io";
+	    this.page.identifier = "/blog/notes/os/2016/12/02/operating-system-file-systems.html";
+	};
+	(function() {
+	    var d = document, s = d.createElement('script');
+	    s.src = '//pyliaorachel.disqus.com/embed.js';
+	    s.setAttribute('data-timestamp', +new Date());
+	    (d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	
+</div>
+	</div>
+</main>
+		<footer>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4 footer-link">
+				<a href="mailto:rachel5566kk@gmail.com">
+					<span class="icon icon-email">
+						<img src="/assets/svg/email-logo.svg" alt="Email Logo">
+					</span>
+					<span class="username">rachel5566kk@gmail.com</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://github.com/pyliaorachel"  target="_blank">
+					<span class="icon icon-github">
+						<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+					</span>
+					<span class="username">pyliaorachel</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://tw.linkedin.com/in/peiyu-liao" target="_blank">
+					<span class="icon icon-linkedin">
+						<img src="/assets/svg/linkedin-logo.svg" alt="LinkedIn Logo">
+					</span>
+					<span class="username">Peiyu Liao</span>
+				</a>
+			</div>
+		</div><!-- /.row -->
+		<div class="row">
+			<div class="footer-copy-right">
+				<p>2016	&copy; Liao Peiyu</p>
+			</div >
+		</div><!-- /.row -->
+	</div><!-- /.container-fluid -->
+</footer>
+		<script type="text/javascript" src="/js/main.js"></script>
+		<script type="text/javascript" src="/js/home.js"></script>
+		<script id="dsq-count-scr" src="//pyliaorachel.disqus.com/count.js" async></script>
+	</body>
+</html>

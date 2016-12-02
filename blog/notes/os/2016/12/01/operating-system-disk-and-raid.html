@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Game Tree Search</title>
+		<title>Operating System - Disk & RAID</title>
 		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
 		<link rel="stylesheet" href="/css/main.css" type="text/css">
 		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
@@ -98,8 +98,8 @@
 	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
 
 		<header class="post-header">
-			<h1 class="post-title" itemprop="name headline">Game Tree Search</h1>
-			<p class="post-meta">Oct 29, 2016
+			<h1 class="post-title" itemprop="name headline">Operating System - Disk & RAID</h1>
+			<p class="post-meta">Dec 1, 2016
 				 • Notes
 				 • pyliaorachel
 			</p>
@@ -113,180 +113,187 @@
 			<h2>Content</h2>
 
 <ol>
-<li>Game Overview
+<li>Disks
 
-<ol>
-<li>Game Properties</li>
-</ol></li>
-<li>Two-Player Zero-Sum Game
-
-<ol>
-<li>Definition</li>
-<li>Intuition</li>
-<li>MiniMax Strategy</li>
-<li>Real-Time/Online search</li>
-</ol></li>
+<ul>
+<li>Disk Scheduling Algorithms</li>
+</ul></li>
+<li>Redundant Array of Inexpensive Disks (RAID)</li>
 </ol>
 
 <!--more-->
 
 <hr>
 
-<h2>Game Overview</h2>
+<h2>Disks</h2>
 
 <ul>
-<li>Generalization of Search Problems
+<li>Structure
 
 <ul>
-<li><strong>Game tree</strong>: actions of &gt;= 1 players/agents</li>
-<li>Agents acting to <strong>maximize their profits</strong></li>
-<li>Others&#39; profits might not have positive effect on yours</li>
+<li><strong>Disk</strong>
+
+<ul>
+<li><strong>Platters</strong>
+
+<ul>
+<li>1 <strong>arm</strong>: move together</li>
+<li>1 <strong>head</strong>: access data in parallel</li>
+<li>Concentric <strong>tracks</strong>: same track across different platters
+
+<ul>
+<li><strong>Sectors</strong>: preamble + data + 16B of ECC</li>
 </ul></li>
-<li>Key Features of Game
+</ul></li>
+</ul></li>
+</ul></li>
+<li>Disk access delays
 
 <ul>
-<li>Each player has different goal</li>
-<li>Different paths/states assigned different costs</li>
-<li>Each player tries to alter the world to best benefit itself</li>
+<li><strong>Seek time</strong>: move head to correct track</li>
+<li><strong>Rotational delay</strong>: rotate to correct sector</li>
+<li><strong>Transfer time</strong>: r/w bits of sector (fastest among all)</li>
+</ul></li>
+<li>Disk performance trends
+
+<ul>
+<li><strong>Capacity</strong>: 2x every 2 years</li>
+<li><strong>Transfer rate (BW)</strong>: 2x every 2 years</li>
+<li><strong>Seek &amp; rotation time</strong>: 1/2 every 10 years</li>
+</ul></li>
+<li>Disk performance
+
+<ul>
+<li>Highest bandwidth for sequential access</li>
+<li>Worst bandwidth for random access</li>
+</ul></li>
+<li>Disk scheduling
+
+<ul>
+<li>Aims to minimize <strong>seek time</strong> (<strong>rotational delay</strong> hard to control)</li>
+</ul></li>
+<li>Addressing disks
+
+<ul>
+<li>Older disks: require OS to specify all parameters e.g. cylinder, track, sector, transfer size, etc.</li>
+<li>Modern disks: complicated e.g. not all sectors the same size, sectors are remapped, etc.</li>
+<li>Current disks: higher-level interface, exports data as logical array of sectors &amp; maps logical sectors to its surface</li>
+</ul></li>
+<li>Disk errors
+
+<ul>
+<li>Latent sector errors, mis-directed writes</li>
+<li>Transient v.s. hard errors</li>
+<li>Some errors can be masked by <strong>ECC</strong></li>
+<li><strong>Bad sectors</strong>: physical damage; mapped to spare in factory, by disk controller</li>
 </ul></li>
 </ul>
 
-<h3>Game Properties</h3>
+<h3>Disk Scheduling Algorithms</h3>
+
+<p>Aims to minimize <strong>seek time</strong> (<strong>rotational delay</strong> hard to control).</p>
 
 <ul>
-<li>Two-player</li>
-<li>Discrete: game states or decision can be mapped on discrete values</li>
-<li>Finite: a finite # of states/decisions can be made</li>
-<li>Zero-sum (Fully Competitive): A gains = B loses
+<li>2 methods
 
 <ul>
-<li>Strategic/normal form game: one shot e.g. rock-paper-scissors</li>
-<li>Extensive form game: turn-taking, multiple moves</li>
+<li>Reduce seek &amp; rotation</li>
+<li>Read several sectors at once</li>
 </ul></li>
-<li>Deterministic: no chance involved</li>
-<li>Perfect Information: all aspects of the state are fully observable</li>
-</ul>
-
-<h2>Two-Player Zero-Sum Game</h2>
-
-<h3>Definition</h3>
+<li>Algorithms
 
 <ul>
-<li>2 players: <code>A</code>(Max), <code>B</code>(Min)</li>
-<li>States <code>S</code></li>
-<li>Initial state <code>I</code></li>
-<li>Terminal positions <code>T</code></li>
-<li>Successor functions
+<li><strong>FCFS</strong>
 
 <ul>
-<li>Input: a state</li>
-<li>Return: a set of possible next states</li>
+<li>Simple, fair, slow</li>
 </ul></li>
-<li>Utility/Payoff function <code>V: T -&gt; R</code>
+<li><strong>Shortest seek time first (SSF)</strong>
 
 <ul>
-<li>Mapping showing how good each terminal state is for A/how bad for B</li>
+<li>Starvation</li>
+</ul></li>
+<li><strong>SCAN (elevator)</strong>: serve next request in same direction (a bit to track arm direction)
+
+<ul>
+<li>Benefits tracks in the middle more</li>
+</ul></li>
+<li><strong>C-SCAN</strong>: SCAN in one direction</li>
 </ul></li>
 </ul>
 
-<h3>Intuition</h3>
+<h2>Redundant Array of Inexpensive Disks (RAID)</h2>
+
+<p>Use many disks in parallel; increases storage bandwidth, improves reliability.</p>
 
 <ul>
-<li>Game ends when terminal <code>t ∊ T</code> reached</li>
-<li>Game state: state-player pair</li>
-<li><code>A</code> gets <code>V(t)</code>, <code>B</code> gets <code>-V(t)</code></li>
-</ul>
-
-<h3>MiniMax Strategy</h3>
-
-<ol>
-<li>Build full game tree
+<li><strong>Stripe</strong>: unit of r/w to RAID
 
 <ul>
-<li>Root: start state</li>
-<li>Edges: possible moves</li>
-<li>Leaves: terminals (utilities U(t) labeled)</li>
+<li><strong>Chunks/Strips</strong>: unit of r/w to a single disk</li>
 </ul></li>
-<li>Back balues up the tree
+<li>Improving storage bandwidth
 
 <ul>
-<li><code>U(n) = min{ U(c): c is a child of n if n is Min node }</code></li>
-<li><code>U(n) = max{ U(c): c is a child of n if n is Max node }</code></li>
+<li>Chunks on different disks can be r/w in parallel</li>
+<li>Large chunk size:
+
+<ul>
+<li>Fewer seeks across disks -&gt; better throughput</li>
 </ul></li>
-</ol>
+<li>More disks:
 
 <ul>
-<li><code>O(b^d)</code> space</li>
-</ul>
-
-<h4>Depth-First Implementation</h4>
+<li>Bandwidth increases</li>
+</ul></li>
+<li>Large stripe size:
 
 <ul>
-<li>To avoid expanding the tree exponentially in size</li>
-<li>Need <strong>finite depth</strong></li>
+<li>Internal fragmentation</li>
+<li>Should be based on average file size</li>
+</ul></li>
+</ul></li>
 </ul>
-<div class="highlight"><pre><code class="language-" data-lang="">DFMiniMax(n, Player): //return Utility of state n given that Player is MIN or MAX
 
-    If n is TERMINAL:
-        Return V(n) //Return terminal states utility (V is specified as part of game)
+<h3>RAID Level 0: Disk Striping</h3>
 
-    //Apply Player s moves to get successor states. 
-    ChildList = n.Successors(Player)
-
-    If Player == MIN:
-        return minimum of DFMiniMax(c, MAX) over c ∈ ChildList
-    Else: //Player is MAX
-        return maximum of DFMiniMax(c, MIN) over c ∈ ChildList
+<p>Distributes data across several disks for speed. No redundancy.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">| Strip 0 | | Strip 1 | | Strip 2 | | Strip 3 |
+| Strip 4 | | Strip 5 | | Strip 6 | | Strip 7 |
+| Strip 8 | | Strip 9 | | Strip 10| | Strip 11|
 </code></pre></div>
-<h4>Pruning</h4>
+<h3>RAID Level 1: Mirroring</h3>
 
-<ul>
-<li>α-cuts(max node) &amp; β-cuts(min node)</li>
-</ul>
-<div class="highlight"><pre><code class="language-" data-lang="">AlphaBeta(n,Player,alpha,beta): //return Utility of state 
-
-    If n is TERMINAL:
-        return V(n) //Return terminal states utility 
-
-    ChildList = n.Successors(Player)
-
-    If Player == MAX:
-        v = -infinity
-        for c in ChildList:
-            v = max(v, AlphaBeta(c,MIN,alpha,beta)) 
-            alpha = max(v, alpha)
-            If beta &lt;= alpha:
-                break 
-        return v
-
-    Else: //Player == MIN 
-        v = infinity
-        for c in ChildList:
-            v = min(v, AlphaBeta(c,MAX,alpha,beta)) 
-            beta = min(v, beta)
-            If beta &lt;= alpha:
-                break 
-        return v
-
-// Initial call: AlphaBeta(START_NODE, PLAYER, -infinity, infinity)
+<p>Backup. Write both, read either.<br>
+Utilization: 50%</p>
+<div class="highlight"><pre><code class="language-" data-lang="">| Strip 0 | | Strip 1 | | Strip 2 | | Strip 3 | | Strip 0 | | Strip 1 | | Strip 2 | | Strip 3 |
+| Strip 4 | | Strip 5 | | Strip 6 | | Strip 7 | | Strip 4 | | Strip 5 | | Strip 6 | | Strip 7 |
+| Strip 8 | | Strip 9 | | Strip 10| | Strip 11| | Strip 8 | | Strip 9 | | Strip 10| | Strip 11|
 </code></pre></div>
-<ul>
-<li><code>O(b^d)</code> space if no pruning, <code>O(b^(d/2))</code> if optimal pruning
+<h3>RAID Level 4: Dedicated Parity Disk</h3>
+
+<p>Calculate XOR value of chunks and store on parity disk.
+Utilization: (N-1)/N</p>
+<div class="highlight"><pre><code class="language-" data-lang=""># P0-3 = S0 ^ S1 ^ S2 ^ S3
+# P'0-3 = S'0 ^ S1 ^ S2 ^ S3 = S'0 ^ S0 ^ P0-3
+
+| Strip 0 | | Strip 1 | | Strip 2 | | Strip 3 | | P0-3 |
+| Strip 4 | | Strip 5 | | Strip 6 | | Strip 7 | | P4-7 |
+| Strip 8 | | Strip 9 | | Strip 10| | Strip 11| | P8-11|
+</code></pre></div>
+<h3>RAID Level 5: Distributed Parity</h3>
+
+<p>Parity information distributed across all disks. Avoids bottleneck for parity disk.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">| Strip 0 | | Strip 1 | | Strip 2 | | Strip 3 | | P0-3    |
+| Strip 4 | | Strip 5 | | Strip 6 | | P4-7    | | Strip 7 |
+| Strip 8 | | Strip 9 | | P8-11   | | Strip 10| | Strip 11|
+</code></pre></div>
+<h4>Resources</h4>
 
 <ul>
-<li>Branching factor of 1st layer: B; 2nd: 1; 3rd: B; ...</li>
-</ul></li>
-<li>In practice, must make <strong>heuristic estimates</strong> of the terminal nodes -&gt; <strong>evaluation function</strong></li>
+<li><a href="http://www.zdnet.com/article/chunks-the-hidden-key-to-raid-performance/">Chunks: the hidden key to RAID performance</a></li>
+<li><a href="http://www.pcguide.com/ref/hdd/perf/raid/concepts/perfStripe-c.html">Stripe Width and Stripe Size</a></li>
 </ul>
-
-<h3>Real-Time/Online search</h3>
-
-<ol>
-<li>Run A* until out of memory</li>
-<li>Use <strong>evaluation function</strong> to decide which path looks best</li>
-<li>Make the move</li>
-<li>Restart search at the node reached (can be cached)</li>
-</ol>
 
 		</div>
 
@@ -294,19 +301,19 @@
 			
 
 			<li class="tag">
-				AI
+				OS
 			</li>
 
 			
 
 			<li class="tag">
-				CSC384
+				ECE344
 			</li>
 
 			
 
 			<li class="tag">
-				search
+				disk
 			</li>
 
 			
@@ -319,7 +326,7 @@
 <script>
 	var disqus_config = function () {
 	    this.page.url = "https://pyliaorachel.github.io";
-	    this.page.identifier = "/blog/notes/ai/2016/10/29/game-tree-search.html";
+	    this.page.identifier = "/blog/notes/os/2016/12/01/operating-system-disk-and-raid.html";
 	};
 	(function() {
 	    var d = document, s = d.createElement('script');
