@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 02 Dec 2016 18:43:10 -0500</pubDate>
-    <lastBuildDate>Fri, 02 Dec 2016 18:43:10 -0500</lastBuildDate>
+    <pubDate>Sun, 04 Dec 2016 17:37:31 -0500</pubDate>
+    <lastBuildDate>Sun, 04 Dec 2016 17:37:31 -0500</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -2012,6 +2012,7 @@ if (m &amp;gt; n) {
 &lt;li&gt;List-Based Queueing Locks (MCS Locks)&lt;/li&gt;
 &lt;li&gt;Summary&lt;/li&gt;
 &lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Case Studies&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;!--more--&gt;
@@ -2221,6 +2222,89 @@ L    me
 &lt;li&gt;Fair&lt;/li&gt;
 &lt;li&gt;Benefits from &lt;strong&gt;compare-and-swap&lt;/strong&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;Case Studies&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;48-core AMD Opteron
+
+&lt;ul&gt;
+&lt;li&gt;6 cores per die, total 8 dies&lt;/li&gt;
+&lt;li&gt;LLC not shared&lt;/li&gt;
+&lt;li&gt;Directory-based cache coherence&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;80-core Intel Xeon
+
+&lt;ul&gt;
+&lt;li&gt;10 cores per die, total 8 dies&lt;/li&gt;
+&lt;li&gt;LLC shared&lt;/li&gt;
+&lt;li&gt;Snooping-based cache coherence&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Cross-sockets communication can be 2-hops
+
+&lt;ul&gt;
+&lt;li&gt;Cross-socket communication expensive&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Latency of remote access
+
+&lt;ul&gt;
+&lt;li&gt;Read
+
+&lt;ul&gt;
+&lt;li&gt;Opteron
+
+&lt;ul&gt;
+&lt;li&gt;Uniform latency regardless of cache state (directory-based cache coherence)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Xeon
+
+&lt;ul&gt;
+&lt;li&gt;Shared state faster (served from LLC)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Write
+
+&lt;ul&gt;
+&lt;li&gt;Opteron
+
+&lt;ul&gt;
+&lt;li&gt;Store to shared expensive (wait for all invalidations to complete)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Xeon
+
+&lt;ul&gt;
+&lt;li&gt;Uniform latency regardless of cache state (snooping-based cache coherence)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Implications
+
+&lt;ul&gt;
+&lt;li&gt;Cache coherence is expensive
+
+&lt;ul&gt;
+&lt;li&gt;Avoid unnecessary sharing &lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Crossing sockets is expensive
+
+&lt;ul&gt;
+&lt;li&gt;Can be clower than running on single core&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pthread&lt;/code&gt; CPU affinity mask: pin cooperative threads on cores within same die&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Loads &amp;amp; stores can be as expensive as atomic operations&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Resources&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://people.eecs.berkeley.edu/%7Epattrsn/252F96/Lecture18.pdf&quot;&gt;Snooping vs. Directory Based Coherency&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www-cs-students.stanford.edu/%7Edbfaria/quals/summaries/Culler-chap8.txt&quot;&gt;Directory-Based Cache Coherence&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=xjRDejGF26M&quot;&gt;Video: Directory Based Coherence - Georgia Tech&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Sun, 27 Nov 2016 00:00:00 -0500</pubDate>
@@ -2698,7 +2782,7 @@ NOT: (g v h)(~g v ~h)
 &lt;li&gt;Inequality to equation:
 
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;sum_i_to_n(ai*xi) &amp;lt;= b&lt;/code&gt; &amp;lt;=&amp;gt; &lt;code&gt;sum_i_to_n(ai*xi) + s &amp;lt;= b &amp;amp;&amp;amp; s &amp;gt;= 0&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sum_i_to_n(ai*xi) &amp;lt;= b&lt;/code&gt; &amp;lt;=&amp;gt; &lt;code&gt;sum_i_to_n(ai*xi) + s = b &amp;amp;&amp;amp; s &amp;gt;= 0&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;s&lt;/code&gt; = slack variable&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;Equation to inequality:

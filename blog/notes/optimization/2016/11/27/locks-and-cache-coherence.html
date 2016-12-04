@@ -122,6 +122,7 @@
 <li>List-Based Queueing Locks (MCS Locks)</li>
 <li>Summary</li>
 </ol></li>
+<li>Case Studies</li>
 </ol>
 
 <!--more-->
@@ -331,6 +332,89 @@ L    me
 <li>Fair</li>
 <li>Benefits from <strong>compare-and-swap</strong></li>
 </ul></li>
+</ul>
+
+<h2>Case Studies</h2>
+
+<ol>
+<li>48-core AMD Opteron
+
+<ul>
+<li>6 cores per die, total 8 dies</li>
+<li>LLC not shared</li>
+<li>Directory-based cache coherence</li>
+</ul></li>
+<li>80-core Intel Xeon
+
+<ul>
+<li>10 cores per die, total 8 dies</li>
+<li>LLC shared</li>
+<li>Snooping-based cache coherence</li>
+</ul></li>
+</ol>
+
+<ul>
+<li>Cross-sockets communication can be 2-hops
+
+<ul>
+<li>Cross-socket communication expensive</li>
+</ul></li>
+<li>Latency of remote access
+
+<ul>
+<li>Read
+
+<ul>
+<li>Opteron
+
+<ul>
+<li>Uniform latency regardless of cache state (directory-based cache coherence)</li>
+</ul></li>
+<li>Xeon
+
+<ul>
+<li>Shared state faster (served from LLC)</li>
+</ul></li>
+</ul></li>
+<li>Write
+
+<ul>
+<li>Opteron
+
+<ul>
+<li>Store to shared expensive (wait for all invalidations to complete)</li>
+</ul></li>
+<li>Xeon
+
+<ul>
+<li>Uniform latency regardless of cache state (snooping-based cache coherence)</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>Implications
+
+<ul>
+<li>Cache coherence is expensive
+
+<ul>
+<li>Avoid unnecessary sharing </li>
+</ul></li>
+<li>Crossing sockets is expensive
+
+<ul>
+<li>Can be clower than running on single core</li>
+<li><code>pthread</code> CPU affinity mask: pin cooperative threads on cores within same die</li>
+</ul></li>
+<li>Loads &amp; stores can be as expensive as atomic operations</li>
+</ul></li>
+</ul>
+
+<h4>Resources</h4>
+
+<ul>
+<li><a href="https://people.eecs.berkeley.edu/%7Epattrsn/252F96/Lecture18.pdf">Snooping vs. Directory Based Coherency</a></li>
+<li><a href="http://www-cs-students.stanford.edu/%7Edbfaria/quals/summaries/Culler-chap8.txt">Directory-Based Cache Coherence</a></li>
+<li><a href="https://www.youtube.com/watch?v=xjRDejGF26M">Video: Directory Based Coherence - Georgia Tech</a></li>
 </ul>
 
 		</div>
