@@ -16,6 +16,7 @@ excerpt_separator: <!--more-->
 	3. Array-Based Queueing Locks
 	4. List-Based Queueing Locks (MCS Locks)
 	5. Summary
+2. Case Studies
 
 <!--more-->
 ---
@@ -167,11 +168,42 @@ while (my_ticket != now_serving)
 	- Fair
 	- Benefits from __compare-and-swap__
 
+## Case Studies
 
+1. 48-core AMD Opteron
+	- 6 cores per die, total 8 dies
+	- LLC not shared
+	- Directory-based cache coherence
+2. 80-core Intel Xeon
+	- 10 cores per die, total 8 dies
+	- LLC shared
+	- Snooping-based cache coherence
+	
+- Cross-sockets communication can be 2-hops
+	- Cross-socket communication expensive
+- Latency of remote access
+	- Read
+		- Opteron
+			- Uniform latency regardless of cache state (directory-based cache coherence)
+		- Xeon
+			- Shared state faster (served from LLC)
+	- Write
+		- Opteron
+			- Store to shared expensive (wait for all invalidations to complete)
+		- Xeon
+			- Uniform latency regardless of cache state (snooping-based cache coherence)
+- Implications
+	- Cache coherence is expensive
+		- Avoid unnecessary sharing 
+	- Crossing sockets is expensive
+		- Can be clower than running on single core
+		- `pthread` CPU affinity mask: pin cooperative threads on cores within same die
+	- Loads & stores can be as expensive as atomic operations
 
-
-
-
+#### Resources
+* [Snooping vs. Directory Based Coherency](https://people.eecs.berkeley.edu/~pattrsn/252F96/Lecture18.pdf)
+* [Directory-Based Cache Coherence](http://www-cs-students.stanford.edu/~dbfaria/quals/summaries/Culler-chap8.txt)
+* [Video: Directory Based Coherence - Georgia Tech](https://www.youtube.com/watch?v=xjRDejGF26M)
 
 
 

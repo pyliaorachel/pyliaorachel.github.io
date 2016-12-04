@@ -52,7 +52,7 @@ Reduction of variants into _standard form_:
 - Maximization to minimization:
 	- Coefficients * (-1)
 - Inequality to equation:
-	- `sum_i_to_n(ai*xi) <= b` <=> `sum_i_to_n(ai*xi) + s <= b && s >= 0`
+	- `sum_i_to_n(ai*xi) <= b` <=> `sum_i_to_n(ai*xi) + s = b && s >= 0`
 	- `s` = slack variable
 - Equation to inequality:
 	- `ax = b` <=> `ax <= b && ax >= b`
