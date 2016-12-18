@@ -26,7 +26,7 @@ a subproblems of size n/b, combining the answers in O(n^d) time.
 The k-th level of tree has a^k subproblems, each of size n/(b^k).
 => a^k * O(n/(b^k)^d) = O(n^d) * (a/(b^d))^k
 
-=> T(n) = aT(⌈n/b⌉) + O(nd)
+=> T(n) = aT(⌈n/b⌉) + O(n^d)
 		= O(n^d) 		  if a/(b^d) < 1
 		= O((n^d)logn) 	  if a/(b^d) = 1
 		= O(n^(log_b(a))) if a/(b^d) > 1
@@ -68,7 +68,8 @@ Multiply(x, y):
 	if n = 1: 
 		return xy
 
-	xL, xR = leftmost⌈n/2⌉, rightmost⌊n/2⌋ bits of x yL, yR = leftmost⌈n/2⌉, rightmost⌊n/2⌋ bits of y
+	xL, xR = leftmost⌈n/2⌉, rightmost⌊n/2⌋ bits of x 
+	yL, yR = leftmost⌈n/2⌉, rightmost⌊n/2⌋ bits of y
 	
 	P1 = Multiply(xL, yL)
 	P2 = Multiply(xR, yR)
@@ -104,10 +105,13 @@ Hull(S):
 		H = MergeHull(HA, HB) # => O(n)
 		return H
 ```
-=>	```
-	T(n) = 1 		   if n <= 3
-		   n + 2T(n/2) otherwise
-	```
+=>  
+
+```
+T(n) = 1 		   if n <= 3
+	   n + 2T(n/2) otherwise
+```
+
 => `O(nlogn)`
 
 #### Computing Tangents
@@ -147,10 +151,13 @@ LowerTangent(HA, HB):
 
 #### Running Time
 - Depends on how evenly the points are split  
-=> 	```
-	T(n) = 1 			 if n = 1
-		   T(n1) + T(n2) where n1 + n2 <= n
-	```  
+=> 	
+
+```
+T(n) = 1 			 if n = 1
+	   T(n1) + T(n2) where n1 + n2 <= n
+```  
+
 => `O(nlogn)` if evenly distributed (`n1 ~= n2`; `max(n1, n2) <= a * n` for some constant `a < 1`)  
 => `O(n^2)` otherwise
 

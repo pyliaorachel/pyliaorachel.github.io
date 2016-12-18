@@ -43,7 +43,7 @@ Dijkstra(G, l, s):
 	while H is not empty:
 		u = deletemin(H) # = |V| times
 		for all edges (u, v) ∈ E:
-			if dist(v)  dist(u) + l(u, v): 
+			if dist(v) > dist(u) + l(u, v): 
 				dist(v) = dist(u) + l(u, v) 
 				prev(v) = u 
 				decreasekey(H, v) # = |V| + |E| times
@@ -57,7 +57,7 @@ while R != V:
 	Pick the node v !∈ R with smallest dist(·) 
 	Add v to R
 	for all edges (v, z) ∈ E:
-		if dist(z)  dist(v) + l(v, z): 
+		if dist(z) > dist(v) + l(v, z): 
 			dist(z) = dist(v) + l(v, z)
 ```
 => Binary heap: `O((|V| + |E|)log|V|)`
@@ -116,7 +116,7 @@ Shortest-paths(G, l, s):
 		prev(u) = nil
 	
 	dist(s) = 0
-	repeat |V | − 1 times:
+	repeat |V| − 1 times:
 		for all e ∈ E: 
 			update(e)
 ```

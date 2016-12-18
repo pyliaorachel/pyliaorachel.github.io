@@ -198,7 +198,7 @@ vector `x = (x1, ..., xn)` such that the `m` equations `Ax = 1` are satisfied.
 
 - Let columns of `A` be triples in 3D matching
 - Let rows of `A` be all matching items
-- Aij is 1 if the triple inclues the item
+- `Aij` is 1 if the triple includes the item
 - Choose a set of triples `X` to be 1 s.t. the resulting column is all 1 (i.e. all items chosen once)
 
 #### ZOE -> Subset Sum
@@ -208,7 +208,7 @@ vector `x = (x1, ..., xn)` such that the `m` equations `Ax = 1` are satisfied.
 
 #### ZOE -> ILP
 
-- For `Ax ≤ b`, rewrite each equation as 2 inequalities
+- For `Ax = b`, rewrite each equation as 2 inequalities
 - Add for each variable `xi` inequalities `xi ≤ 1` and `−xi ≤ 0`
 
 #### ZOE -> Rudrata Cycle
@@ -219,7 +219,7 @@ vector `x = (x1, ..., xn)` such that the `m` equations `Ax = 1` are satisfied.
 	- Every equation and every variable xi appearing in it, add to `C` the pair `(e,e')`, `e` = the edge `xi` in that equation, `e'` = the edge xi = 0
 
 2. Rudrata cycle with paired edges -> Rudrata cycle
-	- Replace every pair `(e,e')` as `({a,b},{c,t})`with:
+	- Replace every pair `(e,e')` as `({a,b},{c,d})`with:
 		![gadget](http://i40.tinypic.com/1pfazb.png)
 	- Every other pair involving `{a,b}`, set it to be `{a,f}` and repeat the replacement
 

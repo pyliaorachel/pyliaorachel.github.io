@@ -29,8 +29,8 @@ Take the best move at the moment without worrying about future outcomes.
 
 #### Definition
 
-- _Input_: An undirected graph G = (V, E); edge weights we  
-- _Output_: A tree T = (V,E'), with E' ⊆ E, that minimizes weight(T) = Σ(e ⊆ E')we
+- _Input_: An undirected graph `G = (V, E)`; edge weights `we`  
+- _Output_: A tree `T = (V,E')`, with `E' ⊆ E`, that minimizes `weight(T) = Σ(e ⊆ E')we`
 
 #### Trees
 
@@ -100,7 +100,7 @@ union(x, y)  # = O(logn)
 	ry = find(y)
 	if rx = ry: 
 		return 
-	if rank(rx)  rank(ry):
+	if rank(rx) > rank(ry):
 		π(ry) = rx  # make root of y-tree point to root of x-tree
 	else:
 		π(rx) = ry
@@ -265,7 +265,7 @@ Return the set A as the set of accepted requests
 	Let A = {i1, ..., ik}, O = {j1, ..., jm}. Prove k = m.
 
 	From our algo: f(i1) <= f(j1) # we 'stay ahead'
-	Now prove for each r = 1, f(ir) <= f(jr)
+	Now prove for each r >= 1, f(ir) <= f(jr)
 	```
 2. For all indices r <= k, we have `f(ir) <= f(jr)`
 
@@ -273,7 +273,7 @@ Return the set A as the set of accepted requests
 	Prove by induction.
 
 	For r = 1, true.
-	Let r  1. Assume f(i_r-1) <= f(j_r-1).
+	Let r > 1. Assume f(i_r-1) <= f(j_r-1).
 	We know f(j_r-1) <= s(jr), since O has compatible intervals.
 	= f(i_r-1) <= f(j_r-1) <= s(jr)
 	Thus jr is in set R of available intervals when our algorithm selects ir, hence f(ir) <= f(jr) so that we didn't choose it.
@@ -284,7 +284,7 @@ Return the set A as the set of accepted requests
 	```
 	Prove by contradiction.
 
-	Assume A not optimal, then m  k. # O schedules more than A
+	Assume A not optimal, then m > k. # O schedules more than A
 	By 2., there is request j_k+1 in O.
 	This request starts after request jk ends & hence after ik ends.
 	So R still contains j_k+1, which is valid to be put into A.
@@ -375,16 +375,8 @@ Return the set of scheduled intervals [s(i), f (i)] for i = 1, . . . , n
 
 #### Proof
 
-1. Schedule has no __gaps__, i.e. no idle time.
-2. There is an optimal schedule with no idle time.
-
-	```
-	Prove by exchange argument.
-
-	Suppose schedule A' has an inversion if job i with di scheduled before job j with dj, but dj < di. Our algorithm has no inversions.
-	```
-
-3. All schedules with no inversions & no idle time have the same max lateness.
+1. Schedule has no __gaps__, i.e. no idle time. There is an optimal schedule with no idle time.
+2. All schedules with no inversions & no idle time have the same max lateness.
 
 	```
 	2 schedules with these properties can only differ in the order in which jobs with the same deadlines are scheduled.
@@ -392,9 +384,13 @@ Return the set of scheduled intervals [s(i), f (i)] for i = 1, . . . , n
 	Let such deadline be d. There are some jobs with deadline d and scheduled consecutively. Among them, the latest scheduled one has the greatest lateness. This lateness does not depend on the order of the jobs!
 	```
 
-4. There is an optimal schedule with no inversions and no idle time.
+3. There is an optimal schedule with no inversions and no idle time.
 
 	```
+	Prove by exchange argument.
+
+	Suppose schedule A' has an inversion if job i with di scheduled before job j with dj, but dj < di. Our algorithm has no inversions.
+
 	a. If O has an inversion, there is a pair of jobs i & j s.t. j is schedules immediately after i, but dj < di.
 	b. Swapping i, j, we get a schedule with one less inversion.
 	c. The new max lateness <= original lateness.
@@ -403,7 +399,7 @@ Return the set of scheduled intervals [s(i), f (i)] for i = 1, . . . , n
 
 		Let O' be the swapped schedule.
 
-		= fi = sj, f'j = s'i
+		=> fi = sj, f'j = s'i
 
 		All other jobs remain finishing at the same time after the swap, since t(i)+t(j) is the same.
 
@@ -418,7 +414,7 @@ Return the set of scheduled intervals [s(i), f (i)] for i = 1, . . . , n
 		Since L = lj  l'i, the swap doesn't increase max lateness.
 	```
 
-5. An optimal schedule with no inversions exists. And all such schedules have the same max lateness. Hence algorithm optimal.
+4. An optimal schedule with no inversions exists. And all such schedules have the same max lateness. Hence algorithm optimal.
 
 #### Extension
 - Includes release time?

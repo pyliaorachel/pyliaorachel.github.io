@@ -90,8 +90,8 @@ excerpt_separator: <!--more-->
 	- Write readable & maintainable code
 	- __Eliminate optimization blockers__
 		- Memory aliasing
-			- 2 different memory references specific single location
-		- Pocedural side-effects
+			- 2 different memory references specify single location
+		- Procedural side-effects
 
 ### Common Compiler Optimizations
 

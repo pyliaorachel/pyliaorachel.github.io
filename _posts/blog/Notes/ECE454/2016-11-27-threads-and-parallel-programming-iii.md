@@ -63,7 +63,7 @@ excerpt_separator: <!--more-->
 - Dynamic memory allocation
 	- Space utilization
 	- Time complexity on malloc/free
-	- __Memory-wall__: growing desparity of CPU & RAM speeds	
+	- __Memory-wall__: growing disparity of CPU & RAM speeds	
 		- Caching effectiveness important
 		- Padding not cache-friendly: avoid internal fragmentation
 - __False sharing__: occurs when >= 2 processors access different data in _same cache line_, and at least one of them writes
@@ -112,13 +112,13 @@ I ------------------> S ------------------> M
 	- Update state, perform bus transaction, flush value onto bus
 - Problem
 	- Reading & modifying data is 2 bus xactions (BusRd(I->S) + BusRdX)
-	- A write to _shared__ will generate invalidation request
+	- A write to __shared__ will generate invalidation request
 
 #### MESI Protocol
 
 - One more state
 	- __Exclusive/Exclusive-clean__: only this cache has copy but not modified
-	- A write to _exclusive__ will not generate invalidation request
+	- A write to __exclusive__ will not generate invalidation request
 - Typically built on write-back caches
 
 ### Locality in Parallel Programming

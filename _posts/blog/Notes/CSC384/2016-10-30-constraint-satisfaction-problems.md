@@ -177,7 +177,7 @@ BT(Level):
 		return;
 	```
 	- May keep track of __supports__ to avoid having to search through all possible assignments and check satisfication
-	- Check if current support still valie, i.e. all values it assigns still lie in the variables' current domains
+	- Check if current support still valid, i.e. all values it assigns still lie in the variables' current domains
 
 #### Heuristics
 

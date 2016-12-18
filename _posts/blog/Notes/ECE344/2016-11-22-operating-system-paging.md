@@ -137,7 +137,7 @@ Maps __frame num -> (thread id, page num)__
 - Hashing function needs to be good
 - Poor cache locality
 	- Adjacent pages hashed to scattered locations
-- Sharing memory is complecated
+- Sharing memory is complicated
 
 ## Translation Lookaside Buffer (TLB)
 
@@ -315,7 +315,7 @@ Fully associative TLB example
 		- S/W managed TLB: flush TLB
 	- Memory allocation/deallocation `sbrk, stack`
 		- Heap: system call (`sbrk`) to grow; allows OS to __detect errors__
-		- Stack: when faulting address _clost_ to stack, extend stack region running standard page fault handler
+		- Stack: when faulting address _close_ to stack, extend stack region running standard page fault handler
 
 ### Page Sharing & Memory-Mapped Files
 
@@ -410,9 +410,9 @@ Fully associative TLB example
 				- S/W looks through PT, identifies entry with oldest timestamp
 		- If MMU doesn't provide such counter, OS maintains it in S/W (__LRU aprroximation__):
 			- Periodically (timer interrupt) increment counter; granularity depends on timer interrupt
-			- If referenced bit set:
-				- Write counter value
-				- Clear referenced bit
+				- If referenced bit set:
+					- Write counter value
+					- Clear referenced bit
 			- On page fault:
 				- S/W looks through PT & identify the oldest timestamp
 	- __Working set clock__: keep working set in memory
@@ -476,7 +476,7 @@ Fully associative TLB example
 	- Daemon runs replacement algorithm periodically or when pool reaches __low watermark__:
 		- Writes out dirty pages
 		- Frees enough pages until pool reaches __high watermark__
-	- Frames can be __rescued__ if page referenced before realocation, because previous content still holds
+	- Frames can be __rescued__ if page referenced before reallocation, because previous content still holds
 - __Prefetching__: swap in in advance
 	- Predict future page usage at current faults
 	- Works well when pages read sequentially

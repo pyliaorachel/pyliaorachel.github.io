@@ -67,7 +67,7 @@ Cach size = S * E * B bytes
 ### Blocking/Tiling
 
 - Traverse array in blocks
-- Imporves __temporal locality__
+- Improves __temporal locality__
 
 ### The Memory Moutain
 

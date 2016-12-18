@@ -194,7 +194,7 @@ excerpt_separator: <!--more-->
 		- Number each resources, need to acquire lower numbered resources before higher ones? (circular wait)
 			- Difficult to number a whole bunch, and some of them are from third-party
 - `Starvation`: a set of threads waiting for resources constantly used by others
-- `Livelock`: a set of threads continue to num but make no progress
+- `Livelock`: a set of threads continue to rum but make no progress
 	- e.g. `interrupt livelock`: interrupts queueing up and suspend the running threads
 		=> Can turn to `polling`, with intervals not too long
 	- Need to ensure a thread runs for a while before switching
@@ -248,8 +248,8 @@ excerpt_separator: <!--more-->
 			; // empty
 		msg = buf[out];
 		out = (out+1) % n;
-		return msg;
 		unlock(l);
+		return msg;
 	}
 	```
 	```

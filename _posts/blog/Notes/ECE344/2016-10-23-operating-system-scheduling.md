@@ -51,7 +51,7 @@ excerpt_separator: <!--more-->
 			- Starving long jobs
 			- Optimal w.r.t. avg waiting time
 	- Properties
-		- Some require estimate of preocessing time
+		- Some require estimate of processing time
 		- May starve long running threads
 		- Long response time
 - __Interactive systems__
@@ -108,7 +108,7 @@ excerpt_separator: <!--more-->
 	- Others run user code
 	- Simple implementation
 - Symmetric multiprocessing (SMP)
-	- All processors fun OS & user code
+	- All processors run OS & user code
 	- Efficient
 	- Difficult implementation
 	- Scheduling issues

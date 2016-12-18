@@ -265,8 +265,8 @@ Switch steps. Crash in between leads to __dangling pointer__.
 	- Most blocks are data blocks, improves file system performance
 	- Data blocks can be lost without affecting file system consistency
 - __Crash recovery__: restore file system consistency
-		- Full scan of file system to recover inconsistent states
-		- Long time since disk capacities increase faster than disk throughput
+	- Full scan of file system to recover inconsistent states
+	- Long time since disk capacities increase faster than disk throughput
 - Avoid crash recovery:
 	- Use __battery-backed RAM__
 		- Ensure enough power to write all dirty blocks to disk
@@ -328,7 +328,7 @@ Write all file system data & metadata in a contiguous log.
 		# Checkpoint region -> inode map -> inode -> data
 		```
 
-		- Kepp 2 checkpoint regions to ensure faulure atomicity on checkpoint region itself
+		- Keep 2 checkpoint regions to ensure failure atomicity on checkpoint region itself
 - Log space reclamation
 	- Reclaim segments when:
 		- blocks overwritten

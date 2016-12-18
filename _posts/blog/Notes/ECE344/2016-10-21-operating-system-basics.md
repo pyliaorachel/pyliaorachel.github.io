@@ -273,7 +273,7 @@ protection, process mgmt, security, ...)	|	(when program runs most instructions)
 		Restore processor state
 		Return to user code, switch to user mode
 	```
-	=> __atomic__ to avoid `user code` running in `kernal mode`
+	=> __atomic__ to avoid `user code` running in `kernel mode`
 
 - Unix system calls
 	- Process related  
@@ -321,11 +321,11 @@ protection, process mgmt, security, ...)	|	(when program runs most instructions)
 	2. What if a running thread doesn’t make a system call to the OS and hence hogs the CPU?
 		- OS must register a future timer interrupt before it hands control of the CPU over to a thread; when the timer interrupt goes off, the OS gets control
 	3. What stops the running program from disabling an interrupt?
-		- It is a priviledges instruction
+		- It is a priviledged instruction
 	4. What stops a program from modifying the OS so that the OS runs user code?
 		- Program cannot even see OS code due to memory virtualization
 	5. What stops a program from changing the MMU registers?
-		- It is a priviledges instruction
+		- It is a priviledged instruction
 7. How does the OS solve these problems:
 	1. Time sharing the CPU among programs?
 		- Timer interrupts
@@ -346,7 +346,7 @@ protection, process mgmt, security, ...)	|	(when program runs most instructions)
 	- User code wants to execute some code in kernel mode, so what can it do?
 		1. Write instructions into kernel image - can’t do that due to memory protection.
 		2. Transfer control to arbitrary places in kernel image to skip checks - can’t do this due to memory protection, and control can only be transferred via TRAP to well known kernel entry locations.
-		3. Execute privileged instructions - can’t do this in user mode.
+		3. Execute privileged instructions - can't do this in user mode.
 11. What is the minimum number of privileged instructions that h/w must implement so that the OS can work correctly?
 	- With memory mapped IO, you can hide all device accesses with memory protection. So programming the MMU (i.e., modify MMU registers) should be privileged. 
 	- Also, returning from a trap (e.g., iret instruction) should ensure that we cannot switch from user to kernel mode and run arbitrary kernel code. For example, on x86, a return from trap is guaranteed to execute code with the same or lower privilege level.

@@ -41,7 +41,7 @@ excerpt_separator: <!--more-->
 
 ## Managing Memory with Bitmaps & Lists
 
-- After `boot loader` loads OS code & dage in low memory, `OS` keeps track of `allocated` & `free` memory
+- After `boot loader` loads OS code & data in low memory, `OS` keeps track of `allocated` & `free` memory
 
 - Bitmap
 	- 1 bit per chunk of memory; in use or not

@@ -203,7 +203,7 @@ Different in execution time between processors between barriers.
 	- Fine for regular data parallel
 - __Dynamic load balancing__: done at runtime; task queue
 	- __Centralized__: easy to program, good load balance
-	- __Distributed__: less communication/synchronization
+	- __Distributed__: less communication/synchronization; more memory & larger working set
 	- __Task stealing__: extra overhead, difficult to program, better load balance
 	- Unpredictable execution times
 	- Regular data parallel in heterogeneous/multitasked environment
