@@ -502,8 +502,11 @@ Child's fd table  / |             |
 <li>Data blocks can be lost without affecting file system consistency</li>
 </ul></li>
 <li><strong>Crash recovery</strong>: restore file system consistency
-    - Full scan of file system to recover inconsistent states
-    - Long time since disk capacities increase faster than disk throughput</li>
+
+<ul>
+<li>Full scan of file system to recover inconsistent states</li>
+<li>Long time since disk capacities increase faster than disk throughput</li>
+</ul></li>
 <li>Avoid crash recovery:
 
 <ul>
@@ -603,7 +606,7 @@ Child's fd table  / |             |
 # Checkpoint region -&gt; inode map -&gt; inode -&gt; data
 </code></pre></div>
 <ul>
-<li>Kepp 2 checkpoint regions to ensure faulure atomicity on checkpoint region itself</li>
+<li>Keep 2 checkpoint regions to ensure failure atomicity on checkpoint region itself</li>
 </ul></li>
 </ul></li>
 <li><p>Log space reclamation</p>

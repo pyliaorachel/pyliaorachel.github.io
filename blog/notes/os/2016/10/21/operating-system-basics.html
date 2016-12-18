@@ -513,7 +513,7 @@ e.g. <code>add</code>, <code>sub</code>, <code>push</code>, <code>pop</code>, et
     Restore processor state
     Return to user code, switch to user mode
 </code></pre></div>
-<p>=&gt; <strong>atomic</strong> to avoid <code>user code</code> running in <code>kernal mode</code></p></li>
+<p>=&gt; <strong>atomic</strong> to avoid <code>user code</code> running in <code>kernel mode</code></p></li>
 <li><p>Unix system calls</p>
 
 <ul>
@@ -612,7 +612,7 @@ e.g. open, read, write, close, link, unlink, chdir</li>
 <li>What stops the running program from disabling an interrupt?
 
 <ul>
-<li>It is a priviledges instruction</li>
+<li>It is a priviledged instruction</li>
 </ul></li>
 <li>What stops a program from modifying the OS so that the OS runs user code?
 
@@ -622,7 +622,7 @@ e.g. open, read, write, close, link, unlink, chdir</li>
 <li>What stops a program from changing the MMU registers?
 
 <ul>
-<li>It is a priviledges instruction</li>
+<li>It is a priviledged instruction</li>
 </ul></li>
 </ol></li>
 <li>How does the OS solve these problems:
@@ -673,7 +673,7 @@ e.g. open, read, write, close, link, unlink, chdir</li>
 <ol>
 <li>Write instructions into kernel image - can’t do that due to memory protection.</li>
 <li>Transfer control to arbitrary places in kernel image to skip checks - can’t do this due to memory protection, and control can only be transferred via TRAP to well known kernel entry locations.</li>
-<li>Execute privileged instructions - can’t do this in user mode.</li>
+<li>Execute privileged instructions - can&#39;t do this in user mode.</li>
 </ol></li>
 </ul></li>
 <li>What is the minimum number of privileged instructions that h/w must implement so that the OS can work correctly?

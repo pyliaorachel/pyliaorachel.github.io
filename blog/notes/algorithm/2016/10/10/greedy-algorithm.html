@@ -138,8 +138,8 @@
 <h4>Definition</h4>
 
 <ul>
-<li><em>Input</em>: An undirected graph G = (V, E); edge weights we<br></li>
-<li><em>Output</em>: A tree T = (V,E&#39;), with E&#39; ⊆ E, that minimizes weight(T) = Σ(e ⊆ E&#39;)we</li>
+<li><em>Input</em>: An undirected graph <code>G = (V, E)</code>; edge weights <code>we</code><br></li>
+<li><em>Output</em>: A tree <code>T = (V,E&#39;)</code>, with <code>E&#39; ⊆ E</code>, that minimizes <code>weight(T) = Σ(e ⊆ E&#39;)we</code></li>
 </ul>
 
 <h4>Trees</h4>
@@ -213,7 +213,7 @@ union(x, y)  # = O(logn)
     ry = find(y)
     if rx = ry: 
         return 
-    if rank(rx)  rank(ry):
+    if rank(rx) &gt; rank(ry):
         π(ry) = rx  # make root of y-tree point to root of x-tree
     else:
         π(rx) = ry
@@ -383,13 +383,13 @@ Return the set A as the set of accepted requests
 <div class="highlight"><pre><code class="language-" data-lang="">Let A = {i1, ..., ik}, O = {j1, ..., jm}. Prove k = m.
 
 From our algo: f(i1) &lt;= f(j1) # we 'stay ahead'
-Now prove for each r = 1, f(ir) &lt;= f(jr)
+Now prove for each r &gt;= 1, f(ir) &lt;= f(jr)
 </code></pre></div></li>
 <li><p>For all indices r &lt;= k, we have <code>f(ir) &lt;= f(jr)</code></p>
 <div class="highlight"><pre><code class="language-" data-lang="">Prove by induction.
 
 For r = 1, true.
-Let r  1. Assume f(i_r-1) &lt;= f(j_r-1).
+Let r &gt; 1. Assume f(i_r-1) &lt;= f(j_r-1).
 We know f(j_r-1) &lt;= s(jr), since O has compatible intervals.
 = f(i_r-1) &lt;= f(j_r-1) &lt;= s(jr)
 Thus jr is in set R of available intervals when our algorithm selects ir, hence f(ir) &lt;= f(jr) so that we didn't choose it.
@@ -398,7 +398,7 @@ Thus jr is in set R of available intervals when our algorithm selects ir, hence 
 <li><p><code>A</code> is optimal.</p>
 <div class="highlight"><pre><code class="language-" data-lang="">Prove by contradiction.
 
-Assume A not optimal, then m  k. # O schedules more than A
+Assume A not optimal, then m &gt; k. # O schedules more than A
 By 2., there is request j_k+1 in O.
 This request starts after request jk ends &amp; hence after ik ends.
 So R still contains j_k+1, which is valid to be put into A.
@@ -491,19 +491,18 @@ Return the set of scheduled intervals [s(i), f (i)] for i = 1, . . . , n
 <h4>Proof</h4>
 
 <ol>
-<li>Schedule has no <strong>gaps</strong>, i.e. no idle time.</li>
-<li><p>There is an optimal schedule with no idle time.</p>
-<div class="highlight"><pre><code class="language-" data-lang="">Prove by exchange argument.
-
-Suppose schedule A' has an inversion if job i with di scheduled before job j with dj, but dj &lt; di. Our algorithm has no inversions.
-</code></pre></div></li>
+<li>Schedule has no <strong>gaps</strong>, i.e. no idle time. There is an optimal schedule with no idle time.</li>
 <li><p>All schedules with no inversions &amp; no idle time have the same max lateness.</p>
 <div class="highlight"><pre><code class="language-" data-lang="">2 schedules with these properties can only differ in the order in which jobs with the same deadlines are scheduled.
 
 Let such deadline be d. There are some jobs with deadline d and scheduled consecutively. Among them, the latest scheduled one has the greatest lateness. This lateness does not depend on the order of the jobs!
 </code></pre></div></li>
 <li><p>There is an optimal schedule with no inversions and no idle time.</p>
-<div class="highlight"><pre><code class="language-" data-lang="">a. If O has an inversion, there is a pair of jobs i &amp; j s.t. j is schedules immediately after i, but dj &lt; di.
+<div class="highlight"><pre><code class="language-" data-lang="">Prove by exchange argument.
+
+Suppose schedule A' has an inversion if job i with di scheduled before job j with dj, but dj &lt; di. Our algorithm has no inversions.
+
+a. If O has an inversion, there is a pair of jobs i &amp; j s.t. j is schedules immediately after i, but dj &lt; di.
 b. Swapping i, j, we get a schedule with one less inversion.
 c. The new max lateness &lt;= original lateness.
 
@@ -511,7 +510,7 @@ c. The new max lateness &lt;= original lateness.
 
     Let O' be the swapped schedule.
 
-    = fi = sj, f'j = s'i
+    =&gt; fi = sj, f'j = s'i
 
     All other jobs remain finishing at the same time after the swap, since t(i)+t(j) is the same.
 

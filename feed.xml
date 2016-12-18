@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 04 Dec 2016 17:37:31 -0500</pubDate>
-    <lastBuildDate>Sun, 04 Dec 2016 17:37:31 -0500</lastBuildDate>
+    <pubDate>Sat, 17 Dec 2016 23:17:34 -0500</pubDate>
+    <lastBuildDate>Sat, 17 Dec 2016 23:17:34 -0500</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -404,8 +404,11 @@ Child's fd table  / |             |
 &lt;li&gt;Data blocks can be lost without affecting file system consistency&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Crash recovery&lt;/strong&gt;: restore file system consistency
-    - Full scan of file system to recover inconsistent states
-    - Long time since disk capacities increase faster than disk throughput&lt;/li&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Full scan of file system to recover inconsistent states&lt;/li&gt;
+&lt;li&gt;Long time since disk capacities increase faster than disk throughput&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;Avoid crash recovery:
 
 &lt;ul&gt;
@@ -505,7 +508,7 @@ Child's fd table  / |             |
 # Checkpoint region -&amp;gt; inode map -&amp;gt; inode -&amp;gt; data
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;ul&gt;
-&lt;li&gt;Kepp 2 checkpoint regions to ensure faulure atomicity on checkpoint region itself&lt;/li&gt;
+&lt;li&gt;Keep 2 checkpoint regions to ensure failure atomicity on checkpoint region itself&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Log space reclamation&lt;/p&gt;
@@ -1589,7 +1592,7 @@ P2: while (!flag); consume data;
 &lt;ul&gt;
 &lt;li&gt;Space utilization&lt;/li&gt;
 &lt;li&gt;Time complexity on malloc/free&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Memory-wall&lt;/strong&gt;: growing desparity of CPU &amp;amp; RAM speeds&lt;br&gt;
+&lt;li&gt;&lt;strong&gt;Memory-wall&lt;/strong&gt;: growing disparity of CPU &amp;amp; RAM speeds&lt;br&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Caching effectiveness important&lt;/li&gt;
@@ -1669,7 +1672,7 @@ I ------------------&amp;gt; S ------------------&amp;gt; M
 
 &lt;ul&gt;
 &lt;li&gt;Reading &amp;amp; modifying data is 2 bus xactions (BusRd(I-&amp;gt;S) + BusRdX)&lt;/li&gt;
-&lt;li&gt;A write to &lt;em&gt;shared&lt;/em&gt;_ will generate invalidation request&lt;/li&gt;
+&lt;li&gt;A write to &lt;strong&gt;shared&lt;/strong&gt; will generate invalidation request&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -1680,7 +1683,7 @@ I ------------------&amp;gt; S ------------------&amp;gt; M
 
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Exclusive/Exclusive-clean&lt;/strong&gt;: only this cache has copy but not modified&lt;/li&gt;
-&lt;li&gt;A write to &lt;em&gt;exclusive&lt;/em&gt;_ will not generate invalidation request&lt;/li&gt;
+&lt;li&gt;A write to &lt;strong&gt;exclusive&lt;/strong&gt; will not generate invalidation request&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;Typically built on write-back caches&lt;/li&gt;
 &lt;/ul&gt;
@@ -1967,7 +1970,7 @@ if (m &amp;gt; n) {
 
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Centralized&lt;/strong&gt;: easy to program, good load balance&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Distributed&lt;/strong&gt;: less communication/synchronization&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Distributed&lt;/strong&gt;: less communication/synchronization; more memory &amp;amp; larger working set&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Task stealing&lt;/strong&gt;: extra overhead, difficult to program, better load balance&lt;/li&gt;
 &lt;li&gt;Unpredictable execution times&lt;/li&gt;
 &lt;li&gt;Regular data parallel in heterogeneous/multitasked environment&lt;/li&gt;
@@ -2594,7 +2597,7 @@ vector &lt;code&gt;x = (x1, ..., xn)&lt;/code&gt; such that the &lt;code&gt;m&lt
 &lt;ul&gt;
 &lt;li&gt;Let columns of &lt;code&gt;A&lt;/code&gt; be triples in 3D matching&lt;/li&gt;
 &lt;li&gt;Let rows of &lt;code&gt;A&lt;/code&gt; be all matching items&lt;/li&gt;
-&lt;li&gt;Aij is 1 if the triple inclues the item&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Aij&lt;/code&gt; is 1 if the triple includes the item&lt;/li&gt;
 &lt;li&gt;Choose a set of triples &lt;code&gt;X&lt;/code&gt; to be 1 s.t. the resulting column is all 1 (i.e. all items chosen once)&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -2608,7 +2611,7 @@ vector &lt;code&gt;x = (x1, ..., xn)&lt;/code&gt; such that the &lt;code&gt;m&lt
 &lt;h4&gt;ZOE -&amp;gt; ILP&lt;/h4&gt;
 
 &lt;ul&gt;
-&lt;li&gt;For &lt;code&gt;Ax ≤ b&lt;/code&gt;, rewrite each equation as 2 inequalities&lt;/li&gt;
+&lt;li&gt;For &lt;code&gt;Ax = b&lt;/code&gt;, rewrite each equation as 2 inequalities&lt;/li&gt;
 &lt;li&gt;Add for each variable &lt;code&gt;xi&lt;/code&gt; inequalities &lt;code&gt;xi ≤ 1&lt;/code&gt; and &lt;code&gt;−xi ≤ 0&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -2625,7 +2628,7 @@ vector &lt;code&gt;x = (x1, ..., xn)&lt;/code&gt; such that the &lt;code&gt;m&lt
 &lt;li&gt;&lt;p&gt;Rudrata cycle with paired edges -&amp;gt; Rudrata cycle&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Replace every pair &lt;code&gt;(e,e&amp;#39;)&lt;/code&gt; as &lt;code&gt;({a,b},{c,t})&lt;/code&gt;with:
+&lt;li&gt;Replace every pair &lt;code&gt;(e,e&amp;#39;)&lt;/code&gt; as &lt;code&gt;({a,b},{c,d})&lt;/code&gt;with:
 &lt;img src=&quot;http://i40.tinypic.com/1pfazb.png&quot; alt=&quot;gadget&quot;&gt;&lt;/li&gt;
 &lt;li&gt;Every other pair involving &lt;code&gt;{a,b}&lt;/code&gt;, set it to be &lt;code&gt;{a,f}&lt;/code&gt; and repeat the replacement&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;

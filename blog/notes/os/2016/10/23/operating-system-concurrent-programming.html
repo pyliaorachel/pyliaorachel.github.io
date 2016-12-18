@@ -378,7 +378,7 @@ unlock(int *l) {
 </ul></li>
 </ul></li>
 <li><code>Starvation</code>: a set of threads waiting for resources constantly used by others</li>
-<li><code>Livelock</code>: a set of threads continue to num but make no progress
+<li><code>Livelock</code>: a set of threads continue to rum but make no progress
 
 <ul>
 <li>e.g. <code>interrupt livelock</code>: interrupts queueing up and suspend the running threads
@@ -434,8 +434,8 @@ char receive() {
         ; // empty
     msg = buf[out];
     out = (out+1) % n;
-    return msg;
     unlock(l);
+    return msg;
 }
 </code></pre></div><div class="highlight"><pre><code class="language-" data-lang=""># release locks before spinning - too tight
 

@@ -133,7 +133,7 @@
 The k-th level of tree has a^k subproblems, each of size n/(b^k).
 =&gt; a^k * O(n/(b^k)^d) = O(n^d) * (a/(b^d))^k
 
-=&gt; T(n) = aT(⌈n/b⌉) + O(nd)
+=&gt; T(n) = aT(⌈n/b⌉) + O(n^d)
         = O(n^d)          if a/(b^d) &lt; 1
         = O((n^d)logn)    if a/(b^d) = 1
         = O(n^(log_b(a))) if a/(b^d) &gt; 1
@@ -175,7 +175,8 @@ The k-th level of tree has a^k subproblems, each of size n/(b^k).
     if n = 1: 
         return xy
 
-    xL, xR = leftmost⌈n/2⌉, rightmost⌊n/2⌋ bits of x yL, yR = leftmost⌈n/2⌉, rightmost⌊n/2⌋ bits of y
+    xL, xR = leftmost⌈n/2⌉, rightmost⌊n/2⌋ bits of x 
+    yL, yR = leftmost⌈n/2⌉, rightmost⌊n/2⌋ bits of y
 
     P1 = Multiply(xL, yL)
     P2 = Multiply(xR, yR)
@@ -214,11 +215,11 @@ Hull(S):
         H = MergeHull(HA, HB) # =&gt; O(n)
         return H
 </code></pre></div>
-<p>=&gt;  <code>
-    T(n) = 1           if n &lt;= 3
-           n + 2T(n/2) otherwise
-</code>
-=&gt; <code>O(nlogn)</code></p>
+<p>=&gt;  </p>
+<div class="highlight"><pre><code class="language-" data-lang="">T(n) = 1           if n &lt;= 3
+       n + 2T(n/2) otherwise
+</code></pre></div>
+<p>=&gt; <code>O(nlogn)</code></p>
 
 <h4>Computing Tangents</h4>
 <div class="highlight"><pre><code class="language-" data-lang=""># Walking procedure
@@ -266,13 +267,13 @@ LowerTangent(HA, HB):
 
 <ul>
 <li>Depends on how evenly the points are split<br>
-=&gt;  <code>
-T(n) = 1             if n = 1
-       T(n1) + T(n2) where n1 + n2 &lt;= n
-</code><br>
-=&gt; <code>O(nlogn)</code> if evenly distributed (<code>n1 ~= n2</code>; <code>max(n1, n2) &lt;= a * n</code> for some constant <code>a &lt; 1</code>)<br>
-=&gt; <code>O(n^2)</code> otherwise</li>
+=&gt;<br></li>
 </ul>
+<div class="highlight"><pre><code class="language-" data-lang="">T(n) = 1             if n = 1
+       T(n1) + T(n2) where n1 + n2 &lt;= n
+</code></pre></div>
+<p>=&gt; <code>O(nlogn)</code> if evenly distributed (<code>n1 ~= n2</code>; <code>max(n1, n2) &lt;= a * n</code> for some constant <code>a &lt; 1</code>)<br>
+=&gt; <code>O(n^2)</code> otherwise</p>
 
 <h3><em>Gift Wrapping and Jarvis&#39;s March</em></h3>
 

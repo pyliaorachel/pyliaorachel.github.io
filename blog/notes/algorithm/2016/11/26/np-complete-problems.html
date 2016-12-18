@@ -378,7 +378,7 @@ vector <code>x = (x1, ..., xn)</code> such that the <code>m</code> equations <co
 <ul>
 <li>Let columns of <code>A</code> be triples in 3D matching</li>
 <li>Let rows of <code>A</code> be all matching items</li>
-<li>Aij is 1 if the triple inclues the item</li>
+<li><code>Aij</code> is 1 if the triple includes the item</li>
 <li>Choose a set of triples <code>X</code> to be 1 s.t. the resulting column is all 1 (i.e. all items chosen once)</li>
 </ul>
 
@@ -392,7 +392,7 @@ vector <code>x = (x1, ..., xn)</code> such that the <code>m</code> equations <co
 <h4>ZOE -&gt; ILP</h4>
 
 <ul>
-<li>For <code>Ax ≤ b</code>, rewrite each equation as 2 inequalities</li>
+<li>For <code>Ax = b</code>, rewrite each equation as 2 inequalities</li>
 <li>Add for each variable <code>xi</code> inequalities <code>xi ≤ 1</code> and <code>−xi ≤ 0</code></li>
 </ul>
 
@@ -409,7 +409,7 @@ vector <code>x = (x1, ..., xn)</code> such that the <code>m</code> equations <co
 <li><p>Rudrata cycle with paired edges -&gt; Rudrata cycle</p>
 
 <ul>
-<li>Replace every pair <code>(e,e&#39;)</code> as <code>({a,b},{c,t})</code>with:
+<li>Replace every pair <code>(e,e&#39;)</code> as <code>({a,b},{c,d})</code>with:
 <img src="http://i40.tinypic.com/1pfazb.png" alt="gadget"></li>
 <li>Every other pair involving <code>{a,b}</code>, set it to be <code>{a,f}</code> and repeat the replacement</li>
 </ul></li>

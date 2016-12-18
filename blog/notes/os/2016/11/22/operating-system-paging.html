@@ -268,7 +268,7 @@ Processor              MMU              Bus
 <ul>
 <li>Adjacent pages hashed to scattered locations</li>
 </ul></li>
-<li>Sharing memory is complecated</li>
+<li>Sharing memory is complicated</li>
 </ul>
 
 <h2>Translation Lookaside Buffer (TLB)</h2>
@@ -536,7 +536,7 @@ unused: unused by hardware, can be used by OS  </p>
 
 <ul>
 <li>Heap: system call (<code>sbrk</code>) to grow; allows OS to <strong>detect errors</strong></li>
-<li>Stack: when faulting address <em>clost</em> to stack, extend stack region running standard page fault handler</li>
+<li>Stack: when faulting address <em>close</em> to stack, extend stack region running standard page fault handler</li>
 </ul></li>
 </ul></li>
 </ul>
@@ -723,12 +723,15 @@ unused: unused by hardware, can be used by OS  </p>
 <li>If MMU doesn&#39;t provide such counter, OS maintains it in S/W (<strong>LRU aprroximation</strong>):
 
 <ul>
-<li>Periodically (timer interrupt) increment counter; granularity depends on timer interrupt</li>
+<li>Periodically (timer interrupt) increment counter; granularity depends on timer interrupt
+
+<ul>
 <li>If referenced bit set:
 
 <ul>
-<li>Write counter value</li>
-<li>Clear referenced bit</li>
+<li></li>
+<li></li>
+</ul></li>
 </ul></li>
 <li>On page fault:
 
@@ -839,7 +842,7 @@ unused: unused by hardware, can be used by OS  </p>
 <li>Writes out dirty pages</li>
 <li>Frees enough pages until pool reaches <strong>high watermark</strong></li>
 </ul></li>
-<li>Frames can be <strong>rescued</strong> if page referenced before realocation, because previous content still holds</li>
+<li>Frames can be <strong>rescued</strong> if page referenced before reallocation, because previous content still holds</li>
 </ul></li>
 <li><strong>Prefetching</strong>: swap in in advance
 
