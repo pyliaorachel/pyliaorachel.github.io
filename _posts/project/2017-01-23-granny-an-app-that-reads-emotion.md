@@ -1,0 +1,116 @@
+---
+layout: post
+title:  "Granny - an App that Reads Emotion"
+date:   2017-01-23 22:20:27 +0800
+link: "https://github.com/pyliaorachel/granny"
+background_color: "rgba(0, 150, 136, 0.2)"
+categories: Project App
+tags: react-native azure emotion-api
+author: pyliaorachel
+comments: true
+excerpt_separator: <!--more-->
+---
+
+<p align="center"><img width="400px" height="400px" src="https://raw.githubusercontent.com/pyliaorachel/granny/master/img/granny-icon.jpg" /></p>
+
+[Granny](https://github.com/pyliaorachel/granny) is an app aimed at helping people to understand their emotions without having to overcome many difficulties when trying to find an assistant. You can easily open the app and talk to Granny, and Granny will respond with a face reflective of your emotions. Emotion history will also be kepted as a diary _(not yet implemented)_. 
+
+Details can be found [here](https://devpost.com/software/granny).
+
+<!--more-->
+---
+## React Native
+
+This app was created in a hackathon and won us the first prize. It was built on [React Native](https://facebook.github.io/react-native/), which extremely accelerated the development of the app. I strongly recommend this powerful yet easy-to-learn framework for any developers ready to attend a hackathon.
+
+Some problems encountered with Android development and solutions:
+
+1. Make sure in `android/app/build.bundle`, `buildToolsVersion`(in my case, 23.0.1) has the same version as your SDK.
+2. To enable developer mode on an android device, go to `Settings > About Phone > Build Number` and tap on it for 7 times.
+3. If any error shows up when you open AndroidStudio and is trying to run the app, just follow the instructions to upgrade anything they require.
+
+## Emotion API
+
+The hackathon was held by Microsoft, and Azure was required in all projects. We chose [Emotion API](https://dev.projectoxford.ai/docs/services/5639d931ca73072154c1ce89/operations/563b31ea778daf121cc3a5fa) to capture the emotions from the user's face. There is a hidden camera ([react-native-camera](https://github.com/lwansbrough/react-native-camera)) capturing user's face every 3-5 seconds and return the scores of 8 emotions:
+
+```json
+[
+  {
+    "faceRectangle": {
+      "left": 488,
+      "top": 263,
+      "width": 148,
+      "height": 148
+    },
+    "scores": {
+      "anger": 9.075572e-13,
+      "contempt": 7.048959e-9,
+      "disgust": 1.02152783e-11,
+      "fear": 1.778957e-14,
+      "happiness": 0.9999999,
+      "neutral": 1.31694478e-7,
+      "sadness": 6.04054263e-12,
+      "surprise": 3.92249462e-11
+    }
+  },
+  ...
+]
+```
+
+We gather the data for 2 purposes:
+
+1. Granny changes her face in respond to the user's emotion.
+2. The cumulated emotion distribution will be kept as the emotion report.
+
+Some problems encountered and solutions:
+
+1. When calling the API with `Content-Type` specifying `application/octet`, the required body format remains confusing (see [here](http://stackoverflow.com/questions/37900554/microsoft-cognitive-services-uploading-image)). Eventually [react-native-fetch-blob](https://github.com/wkh237/react-native-fetch-blob) saved my life. Here's the code snippet:
+
+	```js
+	RNFetchBlob.fetch('POST', 'https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize', {
+	  'Ocp-Apim-Subscription-Key': [your key],
+	  'Content-Type' : 'application/octet-stream',
+	}, data.data)
+	.then(...)
+	```
+
+2. JUST.REMEMBER.TO.TURN.ON.YOUR.PHONE'S.INTERNET.
+
+## User Speech End Detection
+
+Although we could simply make up a script and set timeout to continue to the next question for demo purpose, I strongly felt that it would not be amazing at all if everything were fake. Hence I came up with a detection method to detect when the user finishes speaking:
+
+1. Record background sound amplitude (averaging the first 10 second sampling data).
+2. Retrieve the audio stream every 1 second, look for 3 consecutive seconds when the amplitude is less than the background (with some scaling).
+3. If so, go to next question.
+
+The first problem is that we couldn't find a package that fit our need to retrieve the audio stream and the amplitudes. We decided to use [react-native-audio](https://github.com/jsierles/react-native-audio) and start audio recording while saving the file to `/dev/null`. We can now register a listener for `onProgress`, which triggers the callback about every 1 second. The only field returned is `currentTime` though, so we modified the package itself to actually return `maxAmplitude` as well (see [github](https://github.com/pyliaorachel/granny) for the line of code I added. Boom! It's working!
+
+Another problem is that [`onProgress` seems not well supported on Android devices](https://github.com/jsierles/react-native-audio/issues/111). Use `DeviceEventEmitter` instead.
+
+Lastly, remember to turn off the camera's capture sounds!
+
+#### Some Mysterious Problems (and Probably Solutions)
+
+1. Some mysterious sound is coming out every 2-6 seconds when the user is talking, and I am not quite sure which of the packages causes this. This makes detecting whether the user has finished speaking or not troublesome because the noise produces quite a high amplitude. I doubt it to be caused by react-native-camera, but no evidence so far, and the problem remains unsolved.
+2. According to [this](https://github.com/facebook/react-native/issues/2481), no dynamic strings are allowed in `Image` source. Require all the images first and alternate between them.
+3. When I was importing and using color constants (in `src/utils/colors.js`), `Object.keys(colors)` also includes a `default` field. Don't know how to avoid this, so I simply discarded it.
+
+#### Other Notes
+
+1. After uninstalling packages, remember to unlink all references to them everywhere in your code!
+2. Animations look slow in debugging mode, so don't panic, it is better than you thought.
+3. Learning Android __release build__ is awful! XCode requires only 1 press of button... See [this tutorial](https://github.com/shyjal/reactnative-android-production) and try to install the release built app. If you have your debug app (or previous version of released app) on your phone, remember to uninstall it by running `adb uninstall [package name]` first (see [this](http://stackoverflow.com/questions/26794862/failure-install-failed-update-incompatible-even-if-app-appears-to-not-be-insta))! For example, my case would be `adb uninstall com.granny`.
+
+
+
+
+
+
+
+
+
+
+
+
+

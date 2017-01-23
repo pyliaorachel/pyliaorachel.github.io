@@ -2,7 +2,7 @@
 layout: post
 title:  "Shortest Path Algorithms"
 categories: Blog Tech Algorithm
-tags: ["dijkstra's", "bellman-ford", "floyd–warshall", "data structure", "algorithm", "CSC373"]
+tags: ["dijkstra's", "bellman-ford", "floyd–warshall", "data structure", "algorithm"]
 author: pyliaorachel
 comments: true
 excerpt_separator: <!--more-->
