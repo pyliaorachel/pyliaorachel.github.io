@@ -57,6 +57,9 @@ layout: post
 title:  "MyProject"
 date:   2016-09-19 22:24:27 -0400
 link: "project-url"
+image_url: "background-image-url"
+background-color: "red"
+text_color: "green"
 categories: Project App React-Native
 tags: jekyll react-native
 author: pyliaorachel

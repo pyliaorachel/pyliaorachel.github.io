@@ -15,19 +15,23 @@
 		{% assign mapping_bg = site.data.mapping_bg %}
 		{% for project in posts %}
 			{% if project.categories[0] == "Project" %}
-				{% assign category = project.categories | last %}
-				{% assign imageUrl= mapping_bg[category] %}
-				{% if imageUrl == nil %}
-					{% assign imageUrl = mapping_bg['Default'] %}
-				{% endif %}
-				{% if project.imageUrl %}
-					{% assign imageUrl= project.imageUrl %}
-				{% endif %}
 				<li class="project-cell">
-					<div class="bg" style="background-image: url('{{imageUrl}}');"></div>
+					{% if project.image_url %}
+						<div class="bg" style="background: white url('{{project.image_url}}') no-repeat center center; background-size: cover;"></div>
+					{% else %}
+						{% if project.background_color %}
+							<div class="bg" style="background-color: {{project.background_color}};"></div>
+						{% else %}
+							<div class="bg" style="background-color: white;"></div>
+						{% endif %}
+					{% endif %}
 					<div class="content">
-						<div class="text-panel">
-							<h1>
+						{% if project.text_color %}
+							<div class="text-panel" style="color: {{project.text_color}}">
+						{% else %}
+							<div class="text-panel">
+						{% endif %}
+							<h1 class="text-panel-title">
 								{% if project.link %}
 									<a href="{{link}}"  target="_blank">
 										<span class="icon icon-github">
@@ -37,7 +41,7 @@
 								{% endif %}
 								<a href="{{project.url}}" target="_blank">{{ project.title }}<span> | {{ project.date | date: "%b %-d, %Y" }}</span></a>
 							</h1>
-							<p>{{ project.excerpt }}</p>
+							<div class="text-panel-desc">{{ project.excerpt }}</div>
 						</div>
 					</div>
 				</li>
