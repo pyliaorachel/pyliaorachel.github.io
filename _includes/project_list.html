@@ -33,13 +33,23 @@
 						{% endif %}
 							<h1 class="text-panel-title">
 								{% if project.link %}
-									<a href="{{link}}"  target="_blank">
-										<span class="icon icon-github">
-											<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+									<a href="{{project.link}}"  target="_blank">
+										<span class="icon-helper">
 										</span>
+										<img class="icon icon-github" src="/assets/svg/github-logo.svg" alt="GitHub Logo">
 									</a>
 								{% endif %}
 								<a href="{{project.url}}" target="_blank">{{ project.title }}<span> | {{ project.date | date: "%b %-d, %Y" }}</span></a>
+
+								{% if project.tags %}
+									<ul class="tag-list">
+										{% for tag in project.tags %}
+
+										<li class="tag-pin tag">{{tag}}</li>
+										
+										{% endfor %}
+									</ul>
+								{% endif %}
 							</h1>
 							<div class="text-panel-desc">{{ project.excerpt }}</div>
 						</div>
