@@ -6,9 +6,127 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 23 Jan 2017 22:17:33 +0800</pubDate>
-    <lastBuildDate>Mon, 23 Jan 2017 22:17:33 +0800</lastBuildDate>
+    <pubDate>Tue, 24 Jan 2017 00:10:39 +0800</pubDate>
+    <lastBuildDate>Tue, 24 Jan 2017 00:10:39 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Granny - an App that Reads Emotion</title>
+        <description>&lt;p align=&quot;center&quot;&gt;&lt;img width=&quot;400px&quot; height=&quot;400px&quot; src=&quot;https://raw.githubusercontent.com/pyliaorachel/granny/master/img/granny-icon.jpg&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/pyliaorachel/granny&quot;&gt;Granny&lt;/a&gt; is an app aimed at helping people to understand their emotions without having to overcome many difficulties when trying to find an assistant. You can easily open the app and talk to Granny, and Granny will respond with a face reflective of your emotions. Emotion history will also be kepted as a diary &lt;em&gt;(not yet implemented)&lt;/em&gt;. &lt;/p&gt;
+
+&lt;p&gt;Details can be found &lt;a href=&quot;https://devpost.com/software/granny&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;React Native&lt;/h2&gt;
+
+&lt;p&gt;This app was created in a hackathon and won us the first prize. It was built on &lt;a href=&quot;https://facebook.github.io/react-native/&quot;&gt;React Native&lt;/a&gt;, which extremely accelerated the development of the app. I strongly recommend this powerful yet easy-to-learn framework for any developers ready to attend a hackathon.&lt;/p&gt;
+
+&lt;p&gt;Some problems encountered with Android development and solutions:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Make sure in &lt;code&gt;android/app/build.bundle&lt;/code&gt;, &lt;code&gt;buildToolsVersion&lt;/code&gt;(in my case, 23.0.1) has the same version as your SDK.&lt;/li&gt;
+&lt;li&gt;To enable developer mode on an android device, go to &lt;code&gt;Settings &amp;gt; About Phone &amp;gt; Build Number&lt;/code&gt; and tap on it for 7 times.&lt;/li&gt;
+&lt;li&gt;If any error shows up when you open AndroidStudio and is trying to run the app, just follow the instructions to upgrade anything they require.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;Emotion API&lt;/h2&gt;
+
+&lt;p&gt;The hackathon was held by Microsoft, and Azure was required in all projects. We chose &lt;a href=&quot;https://dev.projectoxford.ai/docs/services/5639d931ca73072154c1ce89/operations/563b31ea778daf121cc3a5fa&quot;&gt;Emotion API&lt;/a&gt; to capture the emotions from the user&amp;#39;s face. There is a hidden camera (&lt;a href=&quot;https://github.com/lwansbrough/react-native-camera&quot;&gt;react-native-camera&lt;/a&gt;) capturing user&amp;#39;s face every 3-5 seconds and return the scores of 8 emotions:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;faceRectangle&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;left&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;488&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;top&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;263&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;width&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;148&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;height&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;148&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;scores&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;anger&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;9.075572e-13&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;contempt&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;7.048959e-9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;disgust&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.02152783e-11&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;fear&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.778957e-14&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;happiness&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.9999999&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;neutral&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.31694478e-7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;sadness&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;6.04054263e-12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;surprise&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;3.92249462e-11&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We gather the data for 2 purposes:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Granny changes her face in respond to the user&amp;#39;s emotion.&lt;/li&gt;
+&lt;li&gt;The cumulated emotion distribution will be kept as the emotion report.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Some problems encountered and solutions:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;When calling the API with &lt;code&gt;Content-Type&lt;/code&gt; specifying &lt;code&gt;application/octet&lt;/code&gt;, the required body format remains confusing (see &lt;a href=&quot;http://stackoverflow.com/questions/37900554/microsoft-cognitive-services-uploading-image&quot;&gt;here&lt;/a&gt;). Eventually &lt;a href=&quot;https://github.com/wkh237/react-native-fetch-blob&quot;&gt;react-native-fetch-blob&lt;/a&gt; saved my life. Here&amp;#39;s the code snippet:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;RNFetchBlob&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'POST'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;s1&quot;&gt;'Ocp-Apim-Subscription-Key'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+  &lt;span class=&quot;s1&quot;&gt;'Content-Type'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'application/octet-stream'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(...)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;JUST.REMEMBER.TO.TURN.ON.YOUR.PHONE&amp;#39;S.INTERNET.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;User Speech End Detection&lt;/h2&gt;
+
+&lt;p&gt;Although we could simply make up a script and set timeout to continue to the next question for demo purpose, I strongly felt that it would not be amazing at all if everything were fake. Hence I came up with a detection method to detect when the user finishes speaking:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Record background sound amplitude (averaging the first 10 second sampling data).&lt;/li&gt;
+&lt;li&gt;Retrieve the audio stream every 1 second, look for 3 consecutive seconds when the amplitude is less than the background (with some scaling).&lt;/li&gt;
+&lt;li&gt;If so, go to next question.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The first problem is that we couldn&amp;#39;t find a package that fit our need to retrieve the audio stream and the amplitudes. We decided to use &lt;a href=&quot;https://github.com/jsierles/react-native-audio&quot;&gt;react-native-audio&lt;/a&gt; and start audio recording while saving the file to &lt;code&gt;/dev/null&lt;/code&gt;. We can now register a listener for &lt;code&gt;onProgress&lt;/code&gt;, which triggers the callback about every 1 second. The only field returned is &lt;code&gt;currentTime&lt;/code&gt; though, so we modified the package itself to actually return &lt;code&gt;maxAmplitude&lt;/code&gt; as well (see &lt;a href=&quot;https://github.com/pyliaorachel/granny&quot;&gt;github&lt;/a&gt; for the line of code I added. Boom! It&amp;#39;s working!&lt;/p&gt;
+
+&lt;p&gt;Another problem is that &lt;a href=&quot;https://github.com/jsierles/react-native-audio/issues/111&quot;&gt;&lt;code&gt;onProgress&lt;/code&gt; seems not well supported on Android devices&lt;/a&gt;. Use &lt;code&gt;DeviceEventEmitter&lt;/code&gt; instead.&lt;/p&gt;
+
+&lt;p&gt;Lastly, remember to turn off the camera&amp;#39;s capture sounds!&lt;/p&gt;
+
+&lt;h4&gt;Some Mysterious Problems (and Probably Solutions)&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Some mysterious sound is coming out every 2-6 seconds when the user is talking, and I am not quite sure which of the packages causes this. This makes detecting whether the user has finished speaking or not troublesome because the noise produces quite a high amplitude. I doubt it to be caused by react-native-camera, but no evidence so far, and the problem remains unsolved.&lt;/li&gt;
+&lt;li&gt;According to &lt;a href=&quot;https://github.com/facebook/react-native/issues/2481&quot;&gt;this&lt;/a&gt;, no dynamic strings are allowed in &lt;code&gt;Image&lt;/code&gt; source. Require all the images first and alternate between them.&lt;/li&gt;
+&lt;li&gt;When I was importing and using color constants (in &lt;code&gt;src/utils/colors.js&lt;/code&gt;), &lt;code&gt;Object.keys(colors)&lt;/code&gt; also includes a &lt;code&gt;default&lt;/code&gt; field. Don&amp;#39;t know how to avoid this, so I simply discarded it.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;Other Notes&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;After uninstalling packages, remember to unlink all references to them everywhere in your code!&lt;/li&gt;
+&lt;li&gt;Animations look slow in debugging mode, so don&amp;#39;t panic, it is better than you thought.&lt;/li&gt;
+&lt;li&gt;Learning Android &lt;strong&gt;release build&lt;/strong&gt; is awful! XCode requires only 1 press of button... See &lt;a href=&quot;https://github.com/shyjal/reactnative-android-production&quot;&gt;this tutorial&lt;/a&gt; and try to install the release built app. If you have your debug app (or previous version of released app) on your phone, remember to uninstall it by running &lt;code&gt;adb uninstall [package name]&lt;/code&gt; first (see &lt;a href=&quot;http://stackoverflow.com/questions/26794862/failure-install-failed-update-incompatible-even-if-app-appears-to-not-be-insta&quot;&gt;this&lt;/a&gt;)! For example, my case would be &lt;code&gt;adb uninstall com.granny&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        <pubDate>Mon, 23 Jan 2017 22:20:27 +0800</pubDate>
+        <link>/project/app/2017/01/23/granny-an-app-that-reads-emotion.html</link>
+        <guid isPermaLink="true">/project/app/2017/01/23/granny-an-app-that-reads-emotion.html</guid>
+        
+        <category>react-native</category>
+        
+        <category>azure</category>
+        
+        <category>emotion-api</category>
+        
+        
+        <category>Project</category>
+        
+        <category>App</category>
+        
+      </item>
     
       <item>
         <title>Serverside Swift</title>
@@ -692,8 +810,6 @@ for each u ∈ V, in linearized order:
         <category>data structure</category>
         
         <category>algorithm</category>
-        
-        <category>CSC373</category>
         
         
         <category>Blog</category>
