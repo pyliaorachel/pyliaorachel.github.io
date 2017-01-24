@@ -1,7 +1,6 @@
 ---
 layout: post
 title:  "Granny - an App that Reads Emotion"
-date:   2017-01-23 22:20:27 +0800
 link: "https://github.com/pyliaorachel/granny"
 background_color: "rgba(0, 150, 136, 0.2)"
 categories: Project App
