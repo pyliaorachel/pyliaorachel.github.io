@@ -2,7 +2,7 @@
 layout: post
 title:  "Battleship AI"
 link: "https://github.com/pyliaorachel/battleship-ai"
-background_color: "rgba(16, 16, 16, 0.2)"
+background_color: "rgba(128, 128, 128, 0.2)"
 categories: Project AI
 tags: CSP AI
 author: pyliaorachel
@@ -10,7 +10,7 @@ comments: true
 excerpt_separator: <!--more-->
 ---
 
-<p align="center"><img width="800px" height="400px" src="http://vignette4.wikia.nocookie.net/habbo/images/9/9d/Battleship_Game.png/revision/latest?cb=20120731170300&path-prefix=en" /></p>
+<p align="center"><img width="600px" height="300px" src="http://vignette4.wikia.nocookie.net/habbo/images/9/9d/Battleship_Game.png/revision/latest?cb=20120731170300&path-prefix=en" /></p>
 
 [Battleship](https://github.com/pyliaorachel/battleship-ai) is an AI project for identifying battleships hidden in the map given the information of how many targets there are in each row and column.
 
