@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Elite Bank BOT</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="/css/main.css" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
+		<link rel="stylesheet" href="/css/github-markdown.css">
+
+		<!-- Place jquery before bootstrap -->
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">MyCoon</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+
+			<form class="navbar-form navbar-left">
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Search">
+				</div>
+				<button type="submit" class="btn btn-default">Submit</button>
+			</form>
+
+			<ul class="nav navbar-nav navbar-right" id="nav-links">
+				<li class="nav-home"><a href="/">Home</a></li>
+				<li class="dropdown nav-blog">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Blog<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/blog">MyCoon Blog</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/blog/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/blog/notes">
+									<span>Notes</span>
+									<span>5</span>
+								</a>
+							</li>
+						
+							
+							
+							<li class="category">
+								<a href="/blog/tech">
+									<span>Tech</span>
+									<span>3</span>
+								</a>
+							</li>
+						
+						<li><a href="/blog/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li class="dropdown nav-tutorial">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Tutorials<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/tutorial">MyCoon Tutorial</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/tutorial/categories">Categories</a></li>
+						
+							
+						
+
+						
+						<li><a href="/tutorial/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li  class="nav-project"><a href="/project">Projects</a></li>
+				<li class="nav-special" id="special"><a href="#">?</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+		<main class="page-content post" aria-label="Content">
+	<div class="post-wrapper">
+		<div class="wrapper">
+	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
+
+		<header class="post-header">
+			<h1 class="post-title" itemprop="name headline">Elite Bank BOT</h1>
+			<p class="post-meta">Jul 15, 2016
+				 • AI
+				 • pyliaorachel
+			</p>
+		</header>
+
+		
+
+		<span class="separator"> • • • </span>
+
+		<div class="post-content" itemprop="articleBody">
+			<p align="center"><img width="400px" height="300px" src="https://raw.githubusercontent.com/pyliaorachel/elite-bank-bot/master/img/cover.jpg" /></p>
+
+<p><a href="https://github.com/pyliaorachel/elite-bank-bot">Elite Bank BOT</a> is an FB BOT aiming to provide more user-friendly services to clients. It reacts to market events by providing reports to customers, and it provides answers to frequently answered questions.</p>
+
+<!--more-->
+
+<hr>
+
+<p><em>The BOT was created for proof of concept in UBS Technology Case Study Competition and won us the first prize.</em></p>
+
+<h2>Language &amp; Environment</h2>
+
+<p>Product based on <strong>Facebook Messenger Platform</strong> and webhook to our BOT server.</p>
+
+<p>Serverside implementation written in <strong>Node.js</strong> &amp; deployed in <a href="https://aws.amazon.com/lambda/">AWS Lambda</a> using <a href="https://github.com/serverless/serverless">serverless</a> framework.</p>
+
+<p>Database using Google <a href="https://www.firebase.com">Firebase</a>.</p>
+
+<p>*<em>Depending on the budget, performance requirement, data size, and project size, it is recommended to adopt a suitable environment for your project.</em></p>
+
+<h2>Function description</h2>
+
+<h3>functions/bot</h3>
+
+<p>The BOT server for interacting with the users. New users can click on the &quot;Get Started&quot; button to register, and the user ID will be saved into the database.</p>
+
+<h3>functions/postEvent</h3>
+
+<p>Linked from a report forming page to be used by the market event analyst. When the report of market event is sent, a customized report would be uploaded up to AWS S3 and a link to it along with messages would be presented to the user.</p>
+
+<p>*<em>The report forming page is the index.html file at root.</em></p>
+
+<h3>functions/authentication</h3>
+
+<p>After the market event report is presented to user, a button can be pressed if the user wishes to perform action. It will link to this authentication page. </p>
+
+<p>*<em>The page is the index.html file at functions/authentication</em></p>
+
+<p><img src="https://raw.githubusercontent.com/pyliaorachel/elite-bank-bot/master/img/login.jpg" 
+alt="Authentication Page" width="330" height="200" border="50" /></p>
+
+<h3>functions/transaction</h3>
+
+<p>If authentication passes, the user will be redirected to the transaction page to perform transaction. Here we simplify a bank transaction system by only presenting a single button as for proof of concept. The real system should be more complicated.</p>
+
+<p>*<em>The page is the index.html file at functions/transaction</em></p>
+
+<p><img src="https://raw.githubusercontent.com/pyliaorachel/elite-bank-bot/master/img/transaction.jpg" 
+alt="Transaction Page" width="450" height="200" border="50" /></p>
+
+<h2>Database description</h2>
+
+<p>The database is based on Firebase in our proof of concept. The choice of database should be suitable for your own dataset and implementation.</p>
+
+<p>The data will be retrieved in JSON format:</p>
+<div class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+  </span><span class="nt">"answers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"111"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UBS publishes its results quarterly in February, May, August and November. The annual report is published in March."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"222"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The UBS GRS is listed on the SIX Swiss Exchange and the New York Stock Exchange."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"333"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UBS's fiscal year is 1st January to 31st December."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"444"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UBS is headquartered in Zurich and Basel, Switzerland."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"555"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Information on UBS's annual general meetings (AGMs) is shown in our AGM section. AGM's are normally held in April in Switzerland (Zurich or Basel)."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"666"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UBS normally publishes its quarterly results in February, May, August and November. UBS's annual report is published in March."</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"investorList"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"-KMjE0-EGUYqJhOzDiZv"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1120359171369250"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"erqerew"</span><span class="p">:</span><span class="w"> </span><span class="s2">"958628190914977"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"erqrwert346"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1120359171369250"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"keys"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"agm"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="mi">555</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"annual"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="mi">111</span><span class="p">,</span><span class="w">
+      </span><span class="mi">666</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"financial"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="mi">111</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"fiscal year"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="mi">333</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"grs"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="mi">222</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"headquarters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="mi">444</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"quarterly"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="mi">111</span><span class="p">,</span><span class="w">
+      </span><span class="mi">666</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"report"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="mi">111</span><span class="p">,</span><span class="w">
+      </span><span class="mi">666</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="mi">111</span><span class="p">,</span><span class="w">
+      </span><span class="mi">666</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"share"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="mi">222</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"what"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="mi">333</span><span class="p">,</span><span class="w">
+      </span><span class="mi">555</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"when"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="mi">666</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"where"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="mi">111</span><span class="p">,</span><span class="w">
+      </span><span class="mi">222</span><span class="p">,</span><span class="w">
+      </span><span class="mi">444</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"questions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"111"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Where can I obtain information on UBS's latest financial results?"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"222"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Where is the UBS share listed?"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"333"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What is UBS's fiscal year?"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"444"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Where are UBS's headquarters?"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"555"</span><span class="p">:</span><span class="w"> </span><span class="s2">"What are the dates of previous and future AGM's?"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"666"</span><span class="p">:</span><span class="w"> </span><span class="s2">"When will the next annual and quarterly results be published?"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"templates"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"111"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"Annual reporting"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"Quarterly reporting"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"web_url"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"https://www.ubs.com/global/en/about_ubs/investor_relations/annualreporting/2015.html"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"https://www.ubs.com/global/en/about_ubs/investor_relations/quarterly_reporting/2016.html"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"222"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"333"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"444"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"555"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"Annual general meeting"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"web_url"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"https://www.ubs.com/global/en/about_ubs/investor_relations/agm.html"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"666"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"Corporate calendar"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"web_url"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"https://www.ubs.com/global/en/about_ubs/investor_relations/ubs_events.html"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<p>We stored the user IDs (investorList) and the Q&amp;A data. Here we only have six questions. A simplified MapReduce technique is simulated for searching.</p>
+
+<p>The templates is the format of message for each answer, because some may have links to it, and we want to customize each answer.</p>
+
+<p>*<em>The userData storing the investor list for each company is missing in the database here. It is hardcoded in the <code>functions/postEvent/handler.js</code> file for simplification.</em></p>
+
+<h3>Other Details</h3>
+
+<h4>Detail data flow of market event report</h4>
+
+<p><img src="https://raw.githubusercontent.com/pyliaorachel/elite-bank-bot/master/img/report.jpg" 
+alt="Feature View" width="180" height="320" border="10" /></p>
+
+<ol>
+<li><p>In the analyst webpage, the analyst will insert the data into the webpage and submit it.</p>
+
+<p><img src="https://raw.githubusercontent.com/pyliaorachel/elite-bank-bot/master/img/make_report.jpg" alt="Market Event" width="320" height="320" border="10" /></p></li>
+<li><p>The postEvent function will be trigered and parse the data into JSON format, which looks like this:</p>
+<div class="highlight"><pre><code class="language-" data-lang=""><span class="p">{</span><span class="w">
+    </span><span class="nt">"marketEvents"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UK leaving the EU"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"effects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"Depreciation of Euro and GBP"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"Appreciation of USD"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"Depreciation of Crude Oil"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"Much higher taxes for agricultural product"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nt">"affectedIndustries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"positive"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"Louis Vuitton Moët Hennessy"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"Scotch Whiskey"</span><span class="w">
+                </span><span class="p">],</span><span class="w"> 
+                </span><span class="nt">"negative"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="s2">"RyanAir"</span><span class="p">,</span><span class="w">
+                    </span><span class="s2">"Volkswagen Group"</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></li>
+<li><p>The function will retrieve the userData from database (simplified into hard-coded data here), which looks like this:</p>
+<div class="highlight"><pre><code class="language-" data-lang=""><span class="p">{</span><span class="w">
+</span><span class="nt">"companyInvestors"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"LVMH"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"1120359171369250"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"958628190914977"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"Scotch Whiskey"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"1120359171369250"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"1208270852551586"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"RyanAir"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"1120359171369250"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"958628190914977"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"Volkswagen Group"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"1120359171369250"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"1208270852551586"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></li>
+<li><p>The function will also retrieve the investor list from database, which looks like this:</p>
+<div class="highlight"><pre><code class="language-" data-lang=""><span class="p">{</span><span class="w">
+</span><span class="nt">"-KMjE0-EGUYqJhOzDiZv"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1120359171369250"</span><span class="p">,</span><span class="w">
+</span><span class="nt">"erqerew"</span><span class="p">:</span><span class="w"> </span><span class="s2">"958628190914977"</span><span class="p">,</span><span class="w">
+</span><span class="nt">"erqrwert346"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1120359171369250"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<p>*<em>The keys are Firebase-inserted IDs, and the values are the user IDs. Can also modify to store the data as <code>{userID: userName}</code></em></p></li>
+<li><p>The function starts to parse customized report for individual investors in the investorList.</p></li>
+<li><p>Requests are sent to BOT for sending messages to the users.</p></li>
+</ol>
+
+<p><img src="https://raw.githubusercontent.com/pyliaorachel/elite-bank-bot/master/img/report-fb.jpg" 
+alt="Sample Report" width="180" height="320" border="50" /></p>
+
+<h4>Details of Q&amp;A system</h4>
+
+<p><img src="https://raw.githubusercontent.com/pyliaorachel/elite-bank-bot/master/img/questions.jpg" 
+alt="No corresponding answer" width="180" height="320" border="50" />
+<img src="https://raw.githubusercontent.com/pyliaorachel/elite-bank-bot/master/img/question_confirm.jpg" 
+alt="Suggesting questions based on keywords" width="180" height="320" border="50" />
+<img src="https://raw.githubusercontent.com/pyliaorachel/elite-bank-bot/master/img/answer.jpg" 
+alt="Answer in text form or links" width="180" height="320" border="50" /></p>
+
+<p>*<em>For code details, please review <code>functions/bot/utils.processQAndA</code></em></p>
+
+<ol>
+<li>In the BOT, after receiving the user&#39;s messages, the engine will parse individual words into an array.</li>
+<li><p>The function will retrieve keywords from the database. Each keyword looks like this:</p>
+<div class="highlight"><pre><code class="language-" data-lang=""><span class="p">{</span><span class="nt">"keyword"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">111</span><span class="p">,</span><span class="w"> </span><span class="mi">222</span><span class="p">]}</span><span class="w">
+</span></code></pre></div>
+<p>where the numbers represent the corresponding question IDs.</p></li>
+<li><p>The function will base on the results of the previous 2 steps and do a simple MapReduce to find out the top three matching questions stored in the database. Then these possible questions will be sent to the user for confirmation.</p></li>
+<li><p>After the user confirmed, the function will retrieve the corresponding answer from the database and send to user.</p></li>
+</ol>
+
+		</div>
+
+		<ul class="tag-list">
+			
+
+			<li class="tag">
+				CSP
+			</li>
+
+			
+
+			<li class="tag">
+				AI
+			</li>
+
+			
+		</ul>
+
+	</article>
+
+	
+		<div id="disqus_thread"></div>
+<script>
+	var disqus_config = function () {
+	    this.page.url = "https://pyliaorachel.github.io";
+	    this.page.identifier = "/project/ai/2016/07/15/elite-bank-bot.html";
+	};
+	(function() {
+	    var d = document, s = d.createElement('script');
+	    s.src = '//pyliaorachel.disqus.com/embed.js';
+	    s.setAttribute('data-timestamp', +new Date());
+	    (d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	
+</div>
+	</div>
+</main>
+		<footer>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4 footer-link">
+				<a href="mailto:rachel5566kk@gmail.com">
+					<span class="icon icon-email">
+						<img src="/assets/svg/email-logo.svg" alt="Email Logo">
+					</span>
+					<span class="username">rachel5566kk@gmail.com</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://github.com/pyliaorachel"  target="_blank">
+					<span class="icon icon-github">
+						<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+					</span>
+					<span class="username">pyliaorachel</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://tw.linkedin.com/in/peiyu-liao" target="_blank">
+					<span class="icon icon-linkedin">
+						<img src="/assets/svg/linkedin-logo.svg" alt="LinkedIn Logo">
+					</span>
+					<span class="username">Peiyu Liao</span>
+				</a>
+			</div>
+		</div><!-- /.row -->
+		<div class="row">
+			<div class="footer-copy-right">
+				<p>2017	&copy; Liao Peiyu</p>
+			</div >
+		</div><!-- /.row -->
+	</div><!-- /.container-fluid -->
+</footer>
+		<script type="text/javascript" src="/js/main.js"></script>
+		<script type="text/javascript" src="/js/home.js"></script>
+		<script id="dsq-count-scr" src="//pyliaorachel.disqus.com/count.js" async></script>
+	</body>
+</html>

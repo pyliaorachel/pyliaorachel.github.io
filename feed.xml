@@ -6,12 +6,12 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 24 Jan 2017 22:06:07 +0800</pubDate>
-    <lastBuildDate>Tue, 24 Jan 2017 22:06:07 +0800</lastBuildDate>
+    <pubDate>Tue, 24 Jan 2017 22:33:23 +0800</pubDate>
+    <lastBuildDate>Tue, 24 Jan 2017 22:33:23 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
-        <title>Granny - an App that Reads Emotion</title>
+        <title>Granny</title>
         <description>&lt;p align=&quot;center&quot;&gt;&lt;img width=&quot;400px&quot; height=&quot;400px&quot; src=&quot;https://raw.githubusercontent.com/pyliaorachel/granny/master/img/granny-icon.jpg&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/pyliaorachel/granny&quot;&gt;Granny&lt;/a&gt; is an app aimed at helping people to understand their emotions without having to overcome many difficulties when trying to find an assistant. You can easily open the app and talk to Granny, and Granny will respond with a face reflective of your emotions. Emotion history will also be kepted as a diary &lt;em&gt;(not yet implemented)&lt;/em&gt;. &lt;/p&gt;
@@ -21,6 +21,10 @@
 &lt;!--more--&gt;
 
 &lt;hr&gt;
+
+&lt;p&gt;&lt;img width=&quot;245px&quot; height=&quot;416px&quot; src=&quot;https://raw.githubusercontent.com/pyliaorachel/granny/master/img/happy_granny.gif&quot; /&gt;
+&lt;img width=&quot;245px&quot; height=&quot;414px&quot; src=&quot;https://raw.githubusercontent.com/pyliaorachel/granny/master/img/sad_neutral_granny.gif&quot; /&gt;
+&lt;img width=&quot;245px&quot; height=&quot;414px&quot; src=&quot;https://raw.githubusercontent.com/pyliaorachel/granny/master/img/surprised_angry_granny.gif&quot; /&gt;&lt;/p&gt;
 
 &lt;h2&gt;React Native&lt;/h2&gt;
 
@@ -112,8 +116,8 @@
 &lt;/ol&gt;
 </description>
         <pubDate>Mon, 23 Jan 2017 00:00:00 +0800</pubDate>
-        <link>/project/app/2017/01/23/granny-an-app-that-reads-emotion.html</link>
-        <guid isPermaLink="true">/project/app/2017/01/23/granny-an-app-that-reads-emotion.html</guid>
+        <link>/project/app/2017/01/23/granny.html</link>
+        <guid isPermaLink="true">/project/app/2017/01/23/granny.html</guid>
         
         <category>react-native</category>
         
@@ -130,7 +134,7 @@
     
       <item>
         <title>Battleship AI</title>
-        <description>&lt;p align=&quot;center&quot;&gt;&lt;img width=&quot;800px&quot; height=&quot;400px&quot; src=&quot;http://vignette4.wikia.nocookie.net/habbo/images/9/9d/Battleship_Game.png/revision/latest?cb=20120731170300&amp;path-prefix=en&quot; /&gt;&lt;/p&gt;
+        <description>&lt;p align=&quot;center&quot;&gt;&lt;img width=&quot;600px&quot; height=&quot;300px&quot; src=&quot;http://vignette4.wikia.nocookie.net/habbo/images/9/9d/Battleship_Game.png/revision/latest?cb=20120731170300&amp;path-prefix=en&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/pyliaorachel/battleship-ai&quot;&gt;Battleship&lt;/a&gt; is an AI project for identifying battleships hidden in the map given the information of how many targets there are in each row and column.&lt;/p&gt;
 
