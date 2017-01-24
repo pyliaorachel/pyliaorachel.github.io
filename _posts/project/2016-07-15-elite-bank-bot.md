@@ -3,8 +3,8 @@ layout: post
 title:  "Elite Bank BOT"
 link: "https://github.com/pyliaorachel/elite-bank-bot"
 background_color: "rgba(10, 36, 78, 0.2)"
-categories: Project AI
-tags: CSP AI
+categories: Project BOT
+tags: fb-bot nodejs aws firebase
 author: pyliaorachel
 comments: true
 excerpt_separator: <!--more-->

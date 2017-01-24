@@ -4,7 +4,7 @@ title:  "Battleship AI"
 link: "https://github.com/pyliaorachel/battleship-ai"
 background_color: "rgba(128, 128, 128, 0.2)"
 categories: Project AI
-tags: CSP AI
+tags: csp ai
 author: pyliaorachel
 comments: true
 excerpt_separator: <!--more-->
