@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 24 Jan 2017 22:33:23 +0800</pubDate>
-    <lastBuildDate>Tue, 24 Jan 2017 22:33:23 +0800</lastBuildDate>
+    <pubDate>Tue, 24 Jan 2017 22:35:39 +0800</pubDate>
+    <lastBuildDate>Tue, 24 Jan 2017 22:35:39 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -268,9 +268,9 @@ Step 6. Valid assignment found. Solved.
         <link>/project/ai/2016/12/06/battleship-ai.html</link>
         <guid isPermaLink="true">/project/ai/2016/12/06/battleship-ai.html</guid>
         
-        <category>CSP</category>
+        <category>csp</category>
         
-        <category>AI</category>
+        <category>ai</category>
         
         
         <category>Project</category>
