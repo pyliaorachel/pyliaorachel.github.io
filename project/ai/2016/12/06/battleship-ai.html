@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Battleship AI</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="/css/main.css" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
+		<link rel="stylesheet" href="/css/github-markdown.css">
+
+		<!-- Place jquery before bootstrap -->
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">MyCoon</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+
+			<form class="navbar-form navbar-left">
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Search">
+				</div>
+				<button type="submit" class="btn btn-default">Submit</button>
+			</form>
+
+			<ul class="nav navbar-nav navbar-right" id="nav-links">
+				<li class="nav-home"><a href="/">Home</a></li>
+				<li class="dropdown nav-blog">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Blog<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/blog">MyCoon Blog</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/blog/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/blog/notes">
+									<span>Notes</span>
+									<span>5</span>
+								</a>
+							</li>
+						
+							
+							
+							<li class="category">
+								<a href="/blog/tech">
+									<span>Tech</span>
+									<span>3</span>
+								</a>
+							</li>
+						
+						<li><a href="/blog/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li class="dropdown nav-tutorial">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Tutorials<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/tutorial">MyCoon Tutorial</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/tutorial/categories">Categories</a></li>
+						
+							
+						
+
+						
+						<li><a href="/tutorial/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li  class="nav-project"><a href="/project">Projects</a></li>
+				<li class="nav-special" id="special"><a href="#">?</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+		<main class="page-content post" aria-label="Content">
+	<div class="post-wrapper">
+		<div class="wrapper">
+	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
+
+		<header class="post-header">
+			<h1 class="post-title" itemprop="name headline">Battleship AI</h1>
+			<p class="post-meta">Dec 6, 2016
+				 • AI
+				 • pyliaorachel
+			</p>
+		</header>
+
+		
+
+		<span class="separator"> • • • </span>
+
+		<div class="post-content" itemprop="articleBody">
+			<p align="center"><img width="800px" height="400px" src="http://vignette4.wikia.nocookie.net/habbo/images/9/9d/Battleship_Game.png/revision/latest?cb=20120731170300&path-prefix=en" /></p>
+
+<p><a href="https://github.com/pyliaorachel/battleship-ai">Battleship</a> is an AI project for identifying battleships hidden in the map given the information of how many targets there are in each row and column.</p>
+
+<!--more-->
+
+<hr>
+
+<h2>Battleship Introduction</h2>
+
+<p>A <strong>Battleship Puzzle</strong> is a board of size <code>n * n</code>, with numbers along each row and column indicating the number of grids in this row or column that is occupied by a ship. </p>
+
+<p>The number of ships of each size is given. Find a placement of the given battleships in the board that matches the number along the columns and rows.</p>
+<div class="highlight"><pre><code class="language-" data-lang=""># Sample Problem    # Input
+
+  1 3 2 2             ships = [0,1,2,1]       // 1 ship of size 1, 2 ships of size 2, etc.
+2 ? ? ? ?             row_targets = [2,1,2,3] // 2 ships occupy row 0, 1 ship occupies row 1, etc.
+1 ? ? ? ?             col_targets = [1,3,2,2] // 1 ship occupies column 0, 3 ships occupy row 2, etc.
+2 ? ? ? ?
+3 ? ? ? ?
+
+# Sample Solution
+
+0 0 2 2              # 2 2 represents a ship of size 2 in left-right direction
+0 2 0 0
+0 2 0 1
+3 3 3 0
+</code></pre></div>
+<p>In this project, the problem is modeled into a <a href="https://en.wikipedia.org/wiki/Constraint_satisfaction_problem">Constraint Satisfaction Problem (CSP)</a>, which is solved by the framework provided in class. How do we design the CSP model to suit the problems&#39; need?</p>
+
+<p>We came up with 3 models, each having its advantages and limitations. Below, how we came up with the models will be described; for more details, e.g. how the state variables/variable domains/constraints are defined, they are well-written in our <a href="https://github.com/pyliaorachel/battleship-ai/blob/master/csc384-project.pdf">report</a>.</p>
+
+<h2>CSP Models</h2>
+
+<h4>Model 2 - Pure CSP</h4>
+
+<p>Let me present model 2 first, since this was the first one we came up with. The thought was pretty naive - model each grid on board into a variable, where the variable domain values are integers of any valid ship length. Running the framework should solve the problem well.</p>
+
+<p>A serious problem came up: it was not trivial to separate between ships of the same size in contact with each other. For example:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">0 0 3 0
+3 3 3 3
+0 0 3 0
+</code></pre></div>
+<p>is not valid. How to tell though?</p>
+
+<p>We decided to make the domain value look like this:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">(ship_id,ship_length) e.g. (0,3) =&gt; the 0th ship of size 3
+</code></pre></div>
+<p>to uniquely identify each ship of the same length. Now the separation problem could be solved.</p>
+
+<p>Some other limitations:</p>
+
+<ol>
+<li>When creating constraints, the constraint scope includes <strong>all variables on board</strong> to check if ship numbers are consistent with the given input. The large domain hurts the constraint construction time.</li>
+<li>The method is totally not clever - it wastes a lot of time assigning values to neighbor variables that can&#39;t even form a complete ship!</li>
+</ol>
+
+<p>Hence model 1 is created.</p>
+
+<h4>Model 1 - CSP + Custom Backtracking Search</h4>
+
+<p>The key point is we want to assign <strong>a ship</strong> at a time instead of <strong>a grid</strong>. To achieve this, we had to modify the framework a bit and design our own backtracking search (see <a href="https://github.com/pyliaorachel/battleship-ai/blob/master/battleship_BT.py">battleship_BT.py</a>). The backtrack steps are as follows:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">Step 1. Assign a variable (say grid x) with ship size l. The assignments are in top-left to bottom-right direction.
+Step 2. Assign all variables starting from grid x towards the right until a ship of size l is formed.
+Step 3. Keep going until failure and backtrack to grid x.
+Step 4. Assign all variables starting from grid x towards the bottom until a ship of size l is formed.
+Step 5. Keep going. If backtrack, assign a ship of different sizes (depends on value ordering heuristic).
+Step 6. Valid assignment found. Solved.
+</code></pre></div>
+<p>This approach significantly sped up our program by avoiding pointless assignments during progress. The construction time was also reduced since we don&#39;t need a constraint with scope including all variables now! But some drawbacks can still be seen:</p>
+
+<ol>
+<li>Writing the customized backtrack search was error-prone. We had to manually assign values to the required variables, reverse the assignments, change directions, check boundaries, etc.</li>
+<li>Variable ordering heuristics seem to have no power in this model, since the assignment must go in a certain direction, in our case, from top-left to bottom-right.</li>
+</ol>
+
+<h4>Model 3 - Pure CSP</h4>
+
+<p>Although we were pretty happy with the performance of model 2, we still wanted to have a model that was pure CSP (i.e. didn&#39;t require modifying the CSP framework) but was more clever than model 2.</p>
+
+<p>We made some changes in the variable definition - a variable now represents <strong>a ship</strong> instead of <strong>a grid</strong> in hope of avoiding the useless assignment problem. Multiple ship variables of different sizes and in different directions might overlap on the same grid, and the number of variables significantly grew.</p>
+
+<p>The result was that since the space requirement grew, we got stuck in model construction! The performance in backtracking was believed to be improved though.</p>
+
+<h3>Comparison</h3>
+
+<table><thead>
+<tr>
+<th style="text-align: center"></th>
+<th style="text-align: left">Model 1</th>
+<th style="text-align: left">Model 2</th>
+<th style="text-align: left">Model 3</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: center">Type</td>
+<td style="text-align: left">CSP + Search</td>
+<td style="text-align: left">CSP</td>
+<td style="text-align: left">CSP</td>
+</tr>
+<tr>
+<td style="text-align: center">Runtime</td>
+<td style="text-align: left">Fast. Fast fast.</td>
+<td style="text-align: left">Slow. Stuck in BT search.</td>
+<td style="text-align: left">Slow. Stuck in model construction.</td>
+</tr>
+<tr>
+<td style="text-align: center">Space</td>
+<td style="text-align: left">Exponential.</td>
+<td style="text-align: left">Exponential. Also exponentially larger than model 1.</td>
+<td style="text-align: left">Exponential. Even larger than model 2.</td>
+</tr>
+<tr>
+<td style="text-align: center">Advantage</td>
+<td style="text-align: left">Efficiency.</td>
+<td style="text-align: left">Easy to implement.</td>
+<td style="text-align: left">Avoids useless assignments as in model 2 and improves efficiency.</td>
+</tr>
+<tr>
+<td style="text-align: center">Drawback</td>
+<td style="text-align: left">1. Customizing BT search is error-prone.<br />2. Variable ordering heuristics are useless.</td>
+<td style="text-align: left">1. Takes time finding satisfying tuples for each constraint due to large scope and domain.<br />2. Many useless assignments since neighbor variable assignments may not even form a legal ship.</td>
+<td style="text-align: left">Takes more time than model 2 forming satisfying tuples for each constraint due to big scope and many constraints.</td>
+</tr>
+</tbody></table>
+
+<h2>Playing with Battleship-AI</h2>
+
+<p>Feel free to follow the instructions <a href="https://github.com/pyliaorachel/battleship-ai">here</a> and find out the battleship placements of your peer!</p>
+
+		</div>
+
+		<ul class="tag-list">
+			
+
+			<li class="tag">
+				CSP
+			</li>
+
+			
+
+			<li class="tag">
+				AI
+			</li>
+
+			
+		</ul>
+
+	</article>
+
+	
+		<div id="disqus_thread"></div>
+<script>
+	var disqus_config = function () {
+	    this.page.url = "https://pyliaorachel.github.io";
+	    this.page.identifier = "/project/ai/2016/12/06/battleship-ai.html";
+	};
+	(function() {
+	    var d = document, s = d.createElement('script');
+	    s.src = '//pyliaorachel.disqus.com/embed.js';
+	    s.setAttribute('data-timestamp', +new Date());
+	    (d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	
+</div>
+	</div>
+</main>
+		<footer>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4 footer-link">
+				<a href="mailto:rachel5566kk@gmail.com">
+					<span class="icon icon-email">
+						<img src="/assets/svg/email-logo.svg" alt="Email Logo">
+					</span>
+					<span class="username">rachel5566kk@gmail.com</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://github.com/pyliaorachel"  target="_blank">
+					<span class="icon icon-github">
+						<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+					</span>
+					<span class="username">pyliaorachel</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://tw.linkedin.com/in/peiyu-liao" target="_blank">
+					<span class="icon icon-linkedin">
+						<img src="/assets/svg/linkedin-logo.svg" alt="LinkedIn Logo">
+					</span>
+					<span class="username">Peiyu Liao</span>
+				</a>
+			</div>
+		</div><!-- /.row -->
+		<div class="row">
+			<div class="footer-copy-right">
+				<p>2017	&copy; Liao Peiyu</p>
+			</div >
+		</div><!-- /.row -->
+	</div><!-- /.container-fluid -->
+</footer>
+		<script type="text/javascript" src="/js/main.js"></script>
+		<script type="text/javascript" src="/js/home.js"></script>
+		<script id="dsq-count-scr" src="//pyliaorachel.disqus.com/count.js" async></script>
+	</body>
+</html>
