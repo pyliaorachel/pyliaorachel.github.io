@@ -27,6 +27,15 @@
 			"type": "education"
 		},
 		{
+			"school": "The University of Toronto (U of T)",
+			"location": "Toronto, Canada",
+			"start": "201609",
+			"end": "201612",
+			"program": "Exchange Program in Electrical & Computer Engineering ",
+			"grade": "GPA 4.0/4.0",
+			"type": "education"
+		},
+		{
 			"school": "Taipei First Girls Senior High School (TFG)",
 			"location": "Taiwan",
 			"start": "201109",
@@ -85,6 +94,20 @@
 			}
 		],
 		"competition": [
+			{
+				"title": "Microsoft ImagineHack",
+				"company": "Microsoft",
+				"location": "Hong Kong",
+				"start": "201701",
+				"end": "201701",
+				"result": "The Winning Team",
+				"description": "Developed an Android App to assist users with emotion management; won over 20 groups of participants",
+				"highlights": [
+					"Developed using React Native; used Microsoft Emotion API to detect user’s facial emotions in real time",
+					"Developed a mechanism to detect end of talks (using comparison with background noise amplitudes)"
+				],
+				"type": "competition"
+			},
 			{
 				"title": "UBS Group Technology Case Study Challenge",
 				"company": "UBS",
@@ -148,8 +171,8 @@
 	},
 	"skill": {
 		"technical": {
-			"language": ["C", "C++", "Java"],
-			"appDevelopment": ["HTML", "CSS", "JavaScript", "jQuery", "Node.js", "React Native"],
+			"language": ["C", "C++", "Java", "Python"],
+			"appDevelopment": ["HTML", "CSS", "JavaScript", "jQuery", "Node.js", "React.js", "React Native", "PHP"],
 			"database": ["Firebase", "MySQL"],
 			"os": ["Windows", "OSX", "Linux"],
 			"others": ["Shell Script", "Git"]
