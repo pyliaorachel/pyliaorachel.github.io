@@ -6,9 +6,72 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 17 Feb 2017 16:26:48 +0800</pubDate>
-    <lastBuildDate>Fri, 17 Feb 2017 16:26:48 +0800</lastBuildDate>
+    <pubDate>Wed, 29 Mar 2017 16:43:33 +0800</pubDate>
+    <lastBuildDate>Wed, 29 Mar 2017 16:43:33 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Django SQLite DB Cleanup</title>
+        <description>&lt;p&gt;To beginners of Django, you may want to play with the sqlite db configuration commands before you actually implement something related to your project. The cleanup afterwards may be harmful due to the lack of clear instructions found online, and many cleanup should be done manually. Some useful commands and solutions to weird issues will be addressed.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h4&gt;DB Commands&lt;/h4&gt;
+
+&lt;h6&gt;&lt;a href=&quot;https://docs.djangoproject.com/en/1.10/topics/migrations/&quot;&gt;Migrations&lt;/a&gt;&lt;/h6&gt;
+
+&lt;p&gt;&lt;code&gt;python manage.py makemigrations&lt;/code&gt;: creating new migrations based on the changes you have made to your models&lt;br&gt;
+&lt;code&gt;python manage.py migrate&lt;/code&gt;: applying &amp;amp; unapplying migrations&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Issues
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://stackoverflow.com/questions/9373871/django-migrate-table-forum-user-already-exists&quot;&gt;table not exists errors&lt;/a&gt; occur
+
+&lt;ul&gt;
+&lt;li&gt;Run &lt;code&gt;python manage.py migrate --fake&lt;/code&gt; instead&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://stackoverflow.com/questions/21457563/operationalerror-no-such-column&quot;&gt;column not exists errors&lt;/a&gt; occur
+
+&lt;ul&gt;
+&lt;li&gt;Probably due to schema changes not synced with DB tables; check schema with &lt;code&gt;python manage.py inspectdb&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Suggest cleaning up the entire database in the following section&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h6&gt;Clean Up&lt;/h6&gt;
+
+&lt;p&gt;This is only used when you want to clean up the &lt;strong&gt;entire database&lt;/strong&gt;, e.g. you&amp;#39;re playing with your DB and wants to start implementing real things now.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Dump all data in the DB: &lt;code&gt;python manage.py flush&lt;/code&gt; &lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://simpleisbetterthancomplex.com/tutorial/2016/07/26/how-to-reset-migrations.html&quot;&gt;Reset migrations&lt;/a&gt;:&lt;br&gt;
+&lt;code&gt;find . -path &amp;quot;*/migrations/*.py&amp;quot; -not -name &amp;quot;__init__.py&amp;quot; -delete&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;find . -path &amp;quot;*/migrations/*.pyc&amp;quot;  -delete&lt;/code&gt;&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.techiediaries.com/how-to-reset-migrations-in-django-17-18-19-and-110/&quot;&gt;Discard current schema&lt;/a&gt;: &lt;code&gt;rm db.sqlite3&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Run migrations again&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Now all things should be reset.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 29 Mar 2017 00:00:00 +0800</pubDate>
+        <link>/blog/tech/django/2017/03/29/django-sqlite-db-cleanup.html</link>
+        <guid isPermaLink="true">/blog/tech/django/2017/03/29/django-sqlite-db-cleanup.html</guid>
+        
+        <category>django</category>
+        
+        <category>sqlite</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Tech</category>
+        
+        <category>Django</category>
+        
+      </item>
     
       <item>
         <title>Granny</title>
@@ -1339,323 +1402,6 @@ Union(i, j, k): # V[i] - V[j] = k
         <category>Notes</category>
         
         <category>Competition</category>
-        
-      </item>
-    
-      <item>
-        <title>Linked List Basic</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;What is Linked List?&lt;/li&gt;
-&lt;li&gt;Linked List v.s. Array&lt;/li&gt;
-&lt;li&gt;Visualizing Linked List&lt;/li&gt;
-&lt;li&gt;Basic examples (in C)&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h1&gt;What is Linked List?&lt;/h1&gt;
-
-&lt;p&gt;&lt;em&gt;Linked lists&lt;/em&gt; use &lt;strong&gt;dynamically allocated memories&lt;/strong&gt; as data storage, and associate these storages with &lt;strong&gt;pointers&lt;/strong&gt;. &lt;/p&gt;
-
-&lt;p&gt;Well, you may just think of &lt;em&gt;linked lists&lt;/em&gt; as arrays that are &lt;strong&gt;resizable&lt;/strong&gt;, easily &lt;strong&gt;rearrangible&lt;/strong&gt;, with &lt;strong&gt;non-consecutive&lt;/strong&gt; slots. &lt;/p&gt;
-
-&lt;h1&gt;Linked List v.s. Array&lt;/h1&gt;
-
-&lt;p&gt;Everyone likes comparisons. So the properties of linked list &amp;amp; array here -&lt;/p&gt;
-
-&lt;table&gt;&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;Linked List&lt;/th&gt;
-&lt;th style=&quot;text-align: left&quot;&gt;Array&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;* Dynamic size&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Fixed size&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;* Cheaper insertion&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Expensive insertion&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;No random access&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;* Random Access&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;---&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;* Better cache performance&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;Extra memory space&lt;/td&gt;
-&lt;td style=&quot;text-align: left&quot;&gt;* ---&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;&lt;/table&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;We must know how many elements to allow when defining an array; &lt;strong&gt;linked lists&lt;/strong&gt; allowes more flexibility.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;To insert an element into array, we probably need to move a whole bunch of elements backwards for the newcomer to fit. For &lt;strong&gt;linked lists&lt;/strong&gt;, it&amp;#39;s just about switching between some pointers and that&amp;#39;s it.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Memories are allocated consecutively for arrays, which mean calculating &lt;code&gt;arr[5]&lt;/code&gt;, &lt;code&gt;arr[10]&lt;/code&gt;, &lt;code&gt;arr[1000]&lt;/code&gt; are all about adding offsets to &lt;code&gt;arr[0]&lt;/code&gt;, which is quite cheap. But for &lt;strong&gt;linked lists&lt;/strong&gt;, the memories are dynamically allocated on heap and do not have this luxury.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Moreover for consecutive memories, the cache performance is better, since a whole bunch of array elements that fit into the cache size will be fetched all at once.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Linked lists&lt;/strong&gt; requires more memory space than arrays due to the fact that pointers are required.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1&gt;Visualizing Linked List&lt;/h1&gt;
-
-&lt;p&gt;OK, so what&amp;#39;s the picture of &lt;em&gt;linked lists&lt;/em&gt;? It all starts with a pointer (&lt;code&gt;*list&lt;/code&gt;), followed by a list of nodes (&lt;code&gt;node_i&lt;/code&gt;):&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;
-  []   -&amp;gt;   [_]  -&amp;gt;  [_]  -&amp;gt; ...  -&amp;gt;  [_]  -&amp;gt;  NULL
-*list     node_1   node_2    ...    node_N
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Hold on, some structures need to be defined for &lt;strong&gt;lists&lt;/strong&gt; and &lt;strong&gt;nodes&lt;/strong&gt; before you can easily mingle with the crazy pointers.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;
-&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// holding the value of the node; can be any type or have multiple value fields
-&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// pointing to the next node in list
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SinglyLinkedList&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// pointing to the first node in list
-&lt;/span&gt;    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// count of nodes in list; optional field
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;typedef&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SinglyLinkedList&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SinglyLinkedList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;blockquote&gt;
-&lt;h4&gt;Haven&amp;#39;t seen &lt;code&gt;typedef&lt;/code&gt; before?&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;typedef&lt;/code&gt; provides an easy way to define types so that you don&amp;#39;t have to type in so many words when declaring a variable with that data type.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;typedef [actual-data-type] [a-convenient-name]&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;So in C, after defiing a struct (e.g. Node), everytime you wanna declare a Node, you type &lt;code&gt;struct Node n&lt;/code&gt;. Now I know how to alias &lt;code&gt;struct Node&lt;/code&gt; into &lt;code&gt;Node&lt;/code&gt; by &lt;code&gt;typedef&lt;/code&gt;!&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;typedef struct Node Node;&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Then we&amp;#39;re ready to use these structs and build a linked list.&lt;/p&gt;
-
-&lt;h1&gt;Basic Examples (in C)&lt;/h1&gt;
-
-&lt;h3&gt;Initialization&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;
-&lt;span class=&quot;n&quot;&gt;SinglyLinkedList&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;malloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SinglyLinkedList&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;code&gt;malloc&lt;/code&gt; stands for memory allocation, which is similar to the &lt;code&gt;new&lt;/code&gt; keyword in C++.&lt;br&gt;
-You pass in the size of memory you want to allocate, so for a &lt;code&gt;SinglyLinkedList&lt;/code&gt; struct, its
-&lt;code&gt;sizeof(SinglyLinkedList)&lt;/code&gt;.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3&gt;Adding a node to list&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;
-&lt;span class=&quot;cm&quot;&gt;/*      []     -&amp;gt;    NULL   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list                 */&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// create a node
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;malloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// give the node a value
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// the node is not linked by other nodes yet
-&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// add it to the head of the list
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*      []     -&amp;gt;    [1]    -&amp;gt;     NULL   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list           ↑                   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                   *n                   */&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// remove it from the list
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt;      NULL    [1] -&amp;gt;  NULL   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list                  ↑             */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                           *n            */&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// destroy it by releasing its memory
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;free&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*      []     -&amp;gt;    NULL   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list                 */&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Always free your malloc&amp;#39;ed memories to avoid memory leak.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3&gt;Adding nodes to list&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;
-&lt;span class=&quot;c1&quot;&gt;// declare pointer temp_n to point to the head of the empty list
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// create new node
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;malloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    &lt;span class=&quot;c1&quot;&gt;// add to the head of the list
-&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// if list empty, let head point to n
-&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// else let the currently pointed node link to n (by assigning *next to point to n)
-&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt; [0] -&amp;gt; [1] -&amp;gt; [2] -&amp;gt; ... -&amp;gt; [999] -&amp;gt;  NULL   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list     ↑  -&amp;gt;  ↑  -&amp;gt;  ↑     ... -&amp;gt;   ↑              */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*          *temp_n *temp_n *temp_n        *temp_n          */&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Use a temp node pointer to move around the list.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3&gt;List traversal&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;
-&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;value: %d&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// move forward the cursor
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sum: %d&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3&gt;Insert a node into list&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt; [0] -&amp;gt; [1] -&amp;gt; [2] -&amp;gt; ... -&amp;gt; [999] -&amp;gt;  NULL   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list                                                 */&lt;/span&gt;
-
-&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// inserting into index 5 of list
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;malloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;87&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// traverse through the list to find index; assume we don't check if index is valid
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt; ... -&amp;gt; [4] -&amp;gt; [5] -&amp;gt; ... -&amp;gt;  NULL   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list            ↑                           */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                  *temp_n                        */&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// insert by moving around pointers
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*                    *n  -&amp;gt; [87]                          */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                             ↓                           */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt; ... -&amp;gt; [4] -&amp;gt;  [5]   -&amp;gt; ... -&amp;gt;  NULL        */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list            ↑                                   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                  *temp_n                                */&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*                    *n  -&amp;gt; [87]                          */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                         ⬈   ↓                           */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt; ... -&amp;gt; [4]     [5]   -&amp;gt; ... -&amp;gt;  NULL        */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list            ↑                                   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                  *temp_n                                */&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3&gt;Remove a node from list&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;
-&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// removing node at index 5 of list
-&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// traverse through the list to find index; assume we don't check if index is valid
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt; ... -&amp;gt; [4] -&amp;gt; [87] -&amp;gt; ... -&amp;gt;  NULL  */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list            ↑                           */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                  *temp_n                        */&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// remove by moving around pointers; notice that we're removing temp_n-&amp;gt;next instead of temp-&amp;gt;n
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// n = node to remove
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// connect the previous node and the next node
-&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                            *n                           */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                             ↓                           */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt; ... -&amp;gt; [4] -&amp;gt;  [87]   -&amp;gt; ... -&amp;gt;  NULL       */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list            ↑                                   */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                  *temp_n                                */&lt;/span&gt;
-
-&lt;span class=&quot;cm&quot;&gt;/*                            *n                                    */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                             ↓                                    */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*      []  -&amp;gt; ... -&amp;gt; [4]     [87]   -&amp;gt;  [5]  -&amp;gt; ... -&amp;gt;  NULL       */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*    *list            ↑  \_____________⬈                           */&lt;/span&gt;
-&lt;span class=&quot;cm&quot;&gt;/*                  *temp_n                                         */&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;free&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// release memory
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;   
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3&gt;Destroy the whole list before program ends&lt;/h3&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;
-&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;free&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;temp_n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// finally, free list as well
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;free&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h1&gt;Summary&lt;/h1&gt;
-
-&lt;p&gt;&lt;strong&gt;Linked lists&lt;/strong&gt; are the most basic data structure to know and deal with, and its application is wide, such as creating trees. Make sure you can construct a valid linked list before you move on to the more complicated pointer-related data structure!&lt;/p&gt;
-
-&lt;p&gt;Source code can be found at &lt;a href=&quot;https://github.com/pyliaorachel/data-structure-and-algorithm/blob/master/DataStructures/LinkedList/Implementations/linked-list.c&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2&gt;References&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.geeksforgeeks.org/linked-list-vs-array/&quot;&gt;GeeksforGeeks - Linked List vs Array&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Sat, 08 Oct 2016 00:00:00 +0800</pubDate>
-        <link>/blog/tech/datastructure/2016/10/08/linked-list-basic.html</link>
-        <guid isPermaLink="true">/blog/tech/datastructure/2016/10/08/linked-list-basic.html</guid>
-        
-        <category>data structure</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Tech</category>
-        
-        <category>DataStructure</category>
         
       </item>
     

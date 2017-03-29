@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Serverside Swift</title>
+		<title>Django SQLite DB Cleanup</title>
 		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
 		<link rel="stylesheet" href="/css/main.css" type="text/css">
 		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono" rel="stylesheet">
@@ -98,9 +98,9 @@
 	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
 
 		<header class="post-header">
-			<h1 class="post-title" itemprop="name headline">Serverside Swift</h1>
-			<p class="post-meta">Nov 24, 2016
-				 • Notes
+			<h1 class="post-title" itemprop="name headline">Django SQLite DB Cleanup</h1>
+			<p class="post-meta">Mar 29, 2017
+				 • Tech
 				 • pyliaorachel
 			</p>
 		</header>
@@ -110,85 +110,49 @@
 		<span class="separator"> • • • </span>
 
 		<div class="post-content" itemprop="articleBody">
-			<h2>Content</h2>
-
-<ol>
-<li>Basics
-
-<ol>
-<li>Terminologies</li>
-<li>Commands</li>
-</ol></li>
-<li>Docker Images
-
-<ol>
-<li>Image Types</li>
-<li>Create Images</li>
-</ol></li>
-<li>Docker Compose
-
-<ol>
-<li><code>docker-compose.yml</code></li>
-<li>Run Application</li>
-</ol></li>
-</ol>
+			<p>To beginners of Django, you may want to play with the sqlite db configuration commands before you actually implement something related to your project. The cleanup afterwards may be harmful due to the lack of clear instructions found online, and many cleanup should be done manually. Some useful commands and solutions to weird issues will be addressed.</p>
 
 <!--more-->
 
-<hr>
+<h4>DB Commands</h4>
 
-<h2>Create Swift Package</h2>
+<h6><a href="https://docs.djangoproject.com/en/1.10/topics/migrations/">Migrations</a></h6>
 
-<p><code>swift package init</code><br>
-<code>swift build</code><br>
-<code>swift package generate-xcodeproj</code></p>
+<p><code>python manage.py makemigrations</code>: creating new migrations based on the changes you have made to your models<br>
+<code>python manage.py migrate</code>: applying &amp; unapplying migrations</p>
 
-<h4>Package.swift</h4>
-<div class="highlight"><pre><code class="language-" data-lang="">name: name of package
-targets: binary files
-dependencies: [
-  .Package(url: "url", majorVersion: version, minor: version)
-]
-</code></pre></div>
-<h2>Swift Basics</h2>
+<ul>
+<li>Issues
 
-<h5>Strongly-Typed</h5>
+<ul>
+<li><a href="http://stackoverflow.com/questions/9373871/django-migrate-table-forum-user-already-exists">table not exists errors</a> occur
 
-<p><code>var myVar = &quot;string&quot;</code> or <code>var myVar: String</code><br>
-<code>var myInt = Int(myVar)</code> or <code>var myInt = (myVar as NSString).integerValue</code>  </p>
+<ul>
+<li>Run <code>python manage.py migrate --fake</code> instead</li>
+</ul></li>
+<li><a href="http://stackoverflow.com/questions/21457563/operationalerror-no-such-column">column not exists errors</a> occur
 
-<h5>Constants &amp; Variables</h5>
+<ul>
+<li>Probably due to schema changes not synced with DB tables; check schema with <code>python manage.py inspectdb</code></li>
+<li>Suggest cleaning up the entire database in the following section</li>
+</ul></li>
+</ul></li>
+</ul>
 
-<p><code>let const = value</code> vs <code>var const = value</code></p>
+<h6>Clean Up</h6>
 
-<h5>Class</h5>
-<div class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="kd">class</span> <span class="kt">MyClass</span> <span class="p">{</span>
-  <span class="k">var</span> <span class="nv">myName</span> <span class="o">=</span> <span class="s">"name"</span>
-  <span class="kd">func</span> <span class="nf">myFunc</span><span class="p">(</span><span class="n">_</span> <span class="nv">name</span><span class="p">:</span><span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="p">{</span> <span class="c1">// unnamed parameter</span>
-    <span class="k">return</span> <span class="s">"Hello </span><span class="se">\(</span><span class="n">myName</span><span class="se">)</span><span class="s">"</span>
-  <span class="p">}</span>
-  <span class="kd">static</span> <span class="kd">func</span> <span class="nf">myStaticFunc</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">"default"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="p">{</span> <span class="c1">// named parameter</span>
-    <span class="k">return</span> <span class="s">"Hello </span><span class="se">\(</span><span class="n">myName</span><span class="se">)</span><span class="s">"</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">let</span> <span class="nv">this</span> <span class="o">=</span> <span class="kt">MyClass</span><span class="p">()</span>
-<span class="nf">print</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="nf">myFunc</span><span class="p">(</span><span class="s">"name"</span><span class="p">))</span>
-
-<span class="nf">print</span><span class="p">(</span><span class="kt">MyClass</span><span class="o">.</span><span class="nf">myStaticFunc</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span><span class="s">"name"</span><span class="p">))</span>
-</code></pre></div>
-<h2>Building Swift Applicstions</h2>
-
-<h4>Targets</h4>
+<p>This is only used when you want to clean up the <strong>entire database</strong>, e.g. you&#39;re playing with your DB and wants to start implementing real things now.</p>
 
 <ol>
-<li>Library</li>
-<li>Executable (terminal-like icon)</li>
+<li>Dump all data in the DB: <code>python manage.py flush</code> </li>
+<li><a href="https://simpleisbetterthancomplex.com/tutorial/2016/07/26/how-to-reset-migrations.html">Reset migrations</a>:<br>
+<code>find . -path &quot;*/migrations/*.py&quot; -not -name &quot;__init__.py&quot; -delete</code><br>
+<code>find . -path &quot;*/migrations/*.pyc&quot;  -delete</code><br></li>
+<li><a href="https://www.techiediaries.com/how-to-reset-migrations-in-django-17-18-19-and-110/">Discard current schema</a>: <code>rm db.sqlite3</code></li>
+<li>Run migrations again</li>
 </ol>
 
-<h4>Settings</h4>
-
-<p>Target &gt; Edit Scheme &gt; Run &gt; Options &gt; Use custom working directory: [project-directory]</p>
+<p>Now all things should be reset.</p>
 
 		</div>
 
@@ -196,7 +160,13 @@ dependencies: [
 			
 
 			<li class="tag">
-				swift
+				django
+			</li>
+
+			
+
+			<li class="tag">
+				sqlite
 			</li>
 
 			
@@ -209,7 +179,7 @@ dependencies: [
 <script>
 	var disqus_config = function () {
 	    this.page.url = "https://pyliaorachel.github.io";
-	    this.page.identifier = "/blog/notes/swift/2016/11/24/serverside-swift.html";
+	    this.page.identifier = "/blog/tech/django/2017/03/29/django-sqlite-db-cleanup.html";
 	};
 	(function() {
 	    var d = document, s = d.createElement('script');
