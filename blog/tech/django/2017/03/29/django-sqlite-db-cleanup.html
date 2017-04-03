@@ -154,6 +154,28 @@
 
 <p>Now all things should be reset.</p>
 
+<h6>Schema</h6>
+
+<p>Suppose now you already have a bunch of data and you really don&#39;t wanna dump them away. But after you modify the models, you found that the database schema won&#39;t be updated!  </p>
+
+<p>Here is the suggested way:  </p>
+
+<ol>
+<li><code>sqlite3 db.sqlite</code>: enter the sqlite3 shell</li>
+<li><code>&gt;&gt;&gt; .schema</code>: check schema</li>
+<li>Verify your schema. If not matched with models, identify the outdated table and proceed with the following steps; otherwise, there must be other problems.</li>
+<li><code>&gt;&gt;&gt; drop table [table_name]</code>: drop the table</li>
+<li><code>&gt;&gt;&gt; create table [table_name] (...);</code>: create the table again manually with the updated fields</li>
+<li><a href="https://simpleisbetterthancomplex.com/tutorial/2016/07/26/how-to-reset-migrations.html">Reset migrations</a>:<br>
+<code>find . -path &quot;*/migrations/*.py&quot; -not -name &quot;__init__.py&quot; -delete</code><br>
+<code>find . -path &quot;*/migrations/*.pyc&quot;  -delete</code><br></li>
+<li>Run migrations again</li>
+</ol>
+
+<p>Now you can check schema with <code>python manage.py inspectdb</code> again, and the related model should be updated.  </p>
+
+<p>This might not be the most perfect solution, but I bet there is no other simple way to update the schema without dumping the database all away; at least after all of the research, this is the only effective way I found to solve my problem. </p>
+
 		</div>
 
 		<ul class="tag-list">
