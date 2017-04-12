@@ -6,9 +6,185 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 03 Apr 2017 20:12:55 +0800</pubDate>
-    <lastBuildDate>Mon, 03 Apr 2017 20:12:55 +0800</lastBuildDate>
+    <pubDate>Thu, 13 Apr 2017 02:37:38 +0800</pubDate>
+    <lastBuildDate>Thu, 13 Apr 2017 02:37:38 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>ESP8266 with Arduino - Trials and Errors</title>
+        <description>&lt;p&gt;ESP8266 is a popular WiFi module for its extremely affordable price. However, more errors tend to be encountered during the setup of this primitive module. &lt;/p&gt;
+
+&lt;p&gt;In this tutorial, the basic steps of setting up ESP8266 through an Arduino board would be covered, and some personal trials and errors will be shared in hope to save people&amp;#39;s time and life if they are stuck with the same problems as I did.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;&lt;em&gt;I am actually an Arduino beginner and a software person. But in turn, I faced more errors than others, managed to solved them, and have more to share with other people who are also new to Arduino and ESP8266 WiFi module!&lt;/em&gt;&lt;/p&gt;
+
+&lt;h1&gt;Introduction &amp;amp; Setup&lt;/h1&gt;
+
+&lt;h2&gt;What is ESP8266?&lt;/h2&gt;
+
+&lt;p&gt;An extremely affordable hardware component ($USD 3) to connect to WiFi. &lt;/p&gt;
+
+&lt;p&gt;Comes with a variety of different models, which are all based on the same chip. The most popular model is ESP-03, which is of similar price to ESP-01 that I will be using in this tutorial, but with more ports (&lt;em&gt;so regretful, should have picked this one!&lt;/em&gt;).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://i2.wp.com/randomnerdtutorials.com/wp-content/uploads/2015/01/all_esp_modules1.png?resize=600%2C337&quot; alt=&quot;ESP models&quot;&gt;&lt;/p&gt;
+
+&lt;h2&gt;Components&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https://world.taobao.com/item/40484626466.htm&quot;&gt;ESP8266 WiFi module ESP-01&lt;/a&gt; (or other)&lt;/li&gt;
+&lt;li&gt;Arduino Mega board (or others)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://world.taobao.com/item/522587064231.htm?spm=a312a.7700714.0.0.LOoy8V#detail&quot;&gt;Logic level converter&lt;/a&gt; (optional)&lt;/li&gt;
+&lt;li&gt;Breadboard, wires, ...&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;Before You Start...&lt;/h2&gt;
+
+&lt;p&gt;Ok, here are some advice before you read on.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;If you don&amp;#39;t know what &lt;strong&gt;AT command&lt;/strong&gt; is, DON&amp;#39;T SKIP THE SECTION INTRODUCING IT. I&amp;#39;ll make it simple, I promise, but don&amp;#39;t directly dive into writing the codes before you know the basics of AT commands like I did - you&amp;#39;ll end up wasting more time dealing with errors.&lt;/li&gt;
+&lt;li&gt;Always start with the most basic examples.&lt;/li&gt;
+&lt;li&gt;Just to let you know, &lt;strong&gt;Arduino is not necessary for you to program ESP8266&lt;/strong&gt;. Interestingly, more tutorials I found online deal with it with a USB to serial converter such as the &lt;strong&gt;FTDI232R&lt;/strong&gt; module. Follow this tutorial if you have an Arduino board with you, or else you can follow the nice tutorials I took reference on in the reference list.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1&gt;Getting Started!&lt;/h1&gt;
+
+&lt;p&gt;The following contents will be walked through:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Hooking Up ESP8266 + Sending AT Commands&lt;/li&gt;
+&lt;li&gt;Programing ESP8266&lt;/li&gt;
+&lt;li&gt;Connecting to WiFi
+
+&lt;ol&gt;
+&lt;li&gt;Client Example&lt;/li&gt;
+&lt;li&gt;Server Example&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;1. Hooking Up ESP8266 + Sending AT Commands&lt;/h2&gt;
+
+&lt;p&gt;Here are the pins for ESP-01 model:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/ESP8266-pins.png&quot; alt=&quot;pins&quot;&gt;&lt;/p&gt;
+
+&lt;h3&gt;Connections&lt;/h3&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&quot;text-align: center&quot;&gt;ESP8266&lt;/th&gt;
+&lt;th style=&quot;text-align: center&quot;&gt;Arduino&lt;/th&gt;
+&lt;th style=&quot;text-align: center&quot;&gt;Others&lt;/th&gt;
+&lt;th style=&quot;text-align: left&quot;&gt;Purpose&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;Vcc&lt;/td&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;-&lt;/td&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;3.3V&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Power supply&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;GND&lt;/td&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;GND&lt;/td&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;GND&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Ground&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;Rx&lt;/td&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;Rx&lt;/td&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;-&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Receive data in&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;Tx&lt;/td&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;Tx&lt;/td&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;-&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Transmit data out&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;CH_PD&lt;/td&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;-&lt;/td&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;Normally 3.3V&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Chip power down&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;RESET&lt;/td&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;-&lt;/td&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;3.3V for normal operations / GND for reset&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;Reset&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;GPIO0&lt;/td&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;-&lt;/td&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;- for normal operations / GND for flashing firmware&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;General purpose I/O pins, but used in flashing firmware&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;GPIO2&lt;/td&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;-&lt;/td&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;-&lt;/td&gt;
+&lt;td style=&quot;text-align: left&quot;&gt;General purpose I/O pin&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;h5&gt;Key Notes&lt;/h5&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;NEVER&lt;/strong&gt; connect Vcc and other pins to 5V.
+
+&lt;ul&gt;
+&lt;li&gt;ESP8266 operates on 3.3V; connecting pins to 5V may damage the module.&lt;/li&gt;
+&lt;li&gt;For Rx/Tx pins, the one receiving data through Arduino board should theoretically also be logically shifted down to 5V; but many people didn&amp;#39;t encounter problem connecting them directly to each other&amp;#39;s pins, including me.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;DON&amp;#39;T&lt;/strong&gt; connect 3.3V power pin of Arduino to ESP8266. Use a &lt;strong&gt;logic level converter&lt;/strong&gt; to bring 5V down to 3.3V.
+
+&lt;ul&gt;
+&lt;li&gt;The max limit of current flowing out of that pin is around 50 mA, which usually is not enough. That&amp;#39;s why we need a &lt;strong&gt;logic level converter&lt;/strong&gt;; there are &lt;a href=&quot;http://randomnerdtutorials.com/how-to-level-shift-5v-to-3-3v/&quot;&gt;other ways&lt;/a&gt; to bring 5V down to 3.3V, but using logic level converter ensures a better transmission performance. You can also connect it to external power source, which should be the best way.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Rx-Rx, Tx-Tx&lt;/strong&gt; for uploading program from computer to ESP8266 &lt;strong&gt;via Arduino board&lt;/strong&gt;; &lt;strong&gt;Rx-Tx, Tx-Rx&lt;/strong&gt; for letting Arduino board talk to ESP8266.
+
+&lt;ul&gt;
+&lt;li&gt;Think of Rx-Rx, Tx-Tx as making Arduino board a channel between the computer and ESP8266; whatever goes to the Arduino board goes to ESP8266, and whatever ESP8266 sends back goes to the computer! &lt;/li&gt;
+&lt;li&gt;Think of Rx-Tx, Tx-Rx as making Arduino talk to ESP8266, so probably you would have some program in Arduino sending and receiving data/commands via its own serial ports.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;I don&amp;#39;t know what CH_PD port does. So you just leave it at 3.3V.&lt;/li&gt;
+&lt;li&gt;If thinking of ESP8266 as an Arduino board, Rx, Tx, GPIO0, and GPIO2 are the possible digital pins, where Rx/Tx are the predefined Serial ports.
+
+&lt;ul&gt;
+&lt;li&gt;If you are programming directly into ESP8266, then when using up Rx and Tx, you would probably find yourself out of Serial ports for debugging. I&amp;#39;m not sure how it can be solved, but probably you can &lt;a href=&quot;https://github.com/esp8266/Arduino/blob/master/doc/reference.md&quot;&gt;set GPIO2 as the TX pin&lt;/a&gt; or &lt;a href=&quot;http://www.forward.com.au/pfod/ESP8266/GPIOpins/index.html&quot;&gt;extend your ports&lt;/a&gt;. Not sure if they make sense for ESP-01 model (try it and tell me).&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.forward.com.au/pfod/ESP8266/GPIOpins/index.html&quot;&gt;Learn more on GPIO ports&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;2. Programing ESP8266&lt;/h2&gt;
+
+&lt;h2&gt;3. Connecting to WiFi&lt;/h2&gt;
+
+&lt;h3&gt;1. Client Example&lt;/h3&gt;
+
+&lt;h3&gt;2. Server Example&lt;/h3&gt;
+</description>
+        <pubDate>Thu, 13 Apr 2017 00:00:00 +0800</pubDate>
+        <link>/tutorial/hardware/arduino/2017/04/13/esp8266-with-arduino-trials-and-errors.html</link>
+        <guid isPermaLink="true">/tutorial/hardware/arduino/2017/04/13/esp8266-with-arduino-trials-and-errors.html</guid>
+        
+        <category>arduino</category>
+        
+        <category>esp8266</category>
+        
+        
+        <category>Tutorial</category>
+        
+        <category>Hardware</category>
+        
+        <category>Arduino</category>
+        
+      </item>
     
       <item>
         <title>Django SQLite DB Cleanup</title>
@@ -1361,60 +1537,6 @@ Union(i, j, k): # V[i] - V[j] = k
         <pubDate>Wed, 09 Nov 2016 00:00:00 +0800</pubDate>
         <link>/blog/notes/competition/2016/11/09/competition-notes.html</link>
         <guid isPermaLink="true">/blog/notes/competition/2016/11/09/competition-notes.html</guid>
-        
-        <category>competition</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>Competition</category>
-        
-      </item>
-    
-      <item>
-        <title>Competition Cheatsheet</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;p&gt;Cheatsheet for coding competitions.&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Complexity Limit&lt;/h2&gt;
-
-&lt;h3&gt;TLE&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;10^8&lt;/code&gt; int operations/&lt;code&gt;10^7&lt;/code&gt; floating point operations in a for loop run in around &lt;strong&gt;1 sec&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;n = 20: exponential ok&lt;/li&gt;
-&lt;li&gt;n = 100: &lt;code&gt;O(n^3)&lt;/code&gt; ok&lt;/li&gt;
-&lt;li&gt;n = 1000: &lt;code&gt;O(n^2)&lt;/code&gt; ok&lt;/li&gt;
-&lt;li&gt;n = 10^4: &lt;code&gt;n*polylog(n)&lt;/code&gt; ^ &lt;code&gt;n*sqrt(n)&lt;/code&gt; ok&lt;/li&gt;
-&lt;li&gt;n = 10^5: &lt;code&gt;nlogn&lt;/code&gt; ok&lt;/li&gt;
-&lt;li&gt;n = 10^6: &lt;code&gt;O(n)&lt;/code&gt; ok&lt;/li&gt;
-&lt;li&gt;n = 10^9: &lt;code&gt;O(logn)&lt;/code&gt; ok&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;STL&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;vector&lt;/code&gt; in &lt;code&gt;&amp;lt;vector&amp;gt;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;priority_queue&lt;/code&gt; in &lt;code&gt;&amp;lt;queue&amp;gt;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;sort&lt;/code&gt; in &lt;code&gt;&amp;lt;algorithm&amp;gt;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;binary_search&lt;/code&gt; in &lt;code&gt;&amp;lt;algorithm&amp;gt;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;next_permutation&lt;/code&gt; in &lt;code&gt;&amp;lt;algorithm&amp;gt;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;lower_bound&lt;/code&gt;, &lt;code&gt;upper_bound&lt;/code&gt; in &lt;code&gt;&amp;lt;algorithm&amp;gt;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;set&lt;/code&gt;, &lt;code&gt;multiset&lt;/code&gt; in &lt;code&gt;&amp;lt;set&amp;gt;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;map&lt;/code&gt;, &lt;code&gt;multimap&lt;/code&gt; in &lt;code&gt;&amp;lt;map&amp;gt;&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Wed, 09 Nov 2016 00:00:00 +0800</pubDate>
-        <link>/blog/notes/competition/2016/11/09/competition-cheatsheet.html</link>
-        <guid isPermaLink="true">/blog/notes/competition/2016/11/09/competition-cheatsheet.html</guid>
         
         <category>competition</category>
         
