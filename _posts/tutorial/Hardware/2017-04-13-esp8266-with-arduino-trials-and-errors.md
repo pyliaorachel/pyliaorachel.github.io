@@ -377,7 +377,7 @@ void loop(void)
         Serial.print("create tcp err\r\n");
     }
 
-    char *message = "GET /dweet/for/elec3848-group-27-2017?value=1 HTTP/1.1\r\nHost: dweet.io\r\nConnection: keep-alive\r\n\r\n";
+    char *message = "GET /dweet/for/thing-name?value=1 HTTP/1.1\r\nHost: dweet.io\r\nConnection: keep-alive\r\n\r\n";
     wifi.send((const uint8_t*)message, strlen(message));
 
     uint32_t len = wifi.recv(buffer, sizeof(buffer), 10000);
