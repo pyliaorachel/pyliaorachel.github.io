@@ -23,7 +23,7 @@ _I am actually an Arduino beginner and a software person. But in turn, I faced m
 
 An extremely affordable hardware component ($USD 3) to connect to WiFi. 
 
-Comes with a variety of different models, which are all based on the same chip. The most popular model is ESP-03, which is of similar price to ESP-01 that I will be using in this tutorial, but with more ports (_so regretful, should have picked this one!_).
+Comes with a variety of different models, which are all based on the same chip. The most popular model is ESP-03, which is of similar price to ESP-01 that I will be using in this tutorial, but with more ports (_so regretful, should have picked this one_).
 
 ![ESP models](http://i2.wp.com/randomnerdtutorials.com/wp-content/uploads/2015/01/all_esp_modules1.png?resize=600%2C337)
 
@@ -37,17 +37,13 @@ Comes with a variety of different models, which are all based on the same chip. 
 
 ## Before You Start...
 
-Ok, here are some advice before you read on.
-
-1. If you don't know what __AT command__ is, DON'T SKIP THE SECTION INTRODUCING IT. I'll make it simple, I promise, but don't directly dive into writing the codes before you know the basics of AT commands like I did - you'll end up wasting more time dealing with errors.
+1. If you don't know what __AT command__ is, __DON'T SKIP THE SECTION INTRODUCING IT__. I'll make it simple, I promise, but don't directly dive into writing the codes before you know the basics of AT commands, like I did - you'll end up wasting more time dealing with errors.
 2. Always start with the most basic examples.
 3. Just to let you know, __Arduino is not necessary for you to program ESP8266__. Interestingly, more tutorials I found online deal with it with a USB to serial converter such as the __FTDI232R__ module. Follow this tutorial if you have an Arduino board with you, or else you can follow the nice tutorials I took reference on in the reference list.
-4. Arduino IDE is also not mandatory, there are other ways to write program and upload to ESP8266. But I didn't do research on it, as that is not my intention for my project.
-5. Setting up a bare ESP8266 module without other assisting development board is __FRUSTRATING__. If you don't have as much confidence as I did and are just finding a quick way to hack it out for assignments, then go ahead and buy any of those development borads and make your life easier.
+4. __Arduino IDE is also not mandatory__, there are other ways to write program and upload to ESP8266. But I didn't do research on it, as that is not my intention for my project.
+5. Setting up a bare ESP8266 module without other assisting development board is __FRUSTRATING__. If you don't have as much confidence as I did and are just finding a quick way to hack it out for assignments without budget concerns, then go ahead and buy any of those development borads and make your life easier.
 
 # Getting Started!
-
-The following contents will be walked through:
 
 1. Hooking up ESP8266 + Sending AT Commands
 2. Programing ESP8266
@@ -87,24 +83,24 @@ Here are the pins for ESP-01 model:
 
 1. __NEVER connect Vcc and other pins to 5V.__
     - ESP8266 operates on 3.3V; connecting pins to 5V may damage the module.
-    - For Rx/Tx pins, the one receiving data through Arduino board should theoretically also be logically shifted down to 5V; but many people didn't encounter problem connecting them directly to each other's pins, including me.
+    - For Rx/Tx pins, the one receiving data through Arduino board should theoretically also be logically shifted down to 3.3V; but many people didn't encounter problem connecting them directly to each other's pins, including me.
 1. __DON'T connect 3.3V power pin of Arduino to ESP8266. Use a logic level converter to bring 5V down to 3.3V.__
-    - The max limit of current flowing out of that pin is around 50 mA, which usually is not enough. That's why we need a __logic level converter__; there are [other ways](http://randomnerdtutorials.com/how-to-level-shift-5v-to-3-3v/) to bring 5V down to 3.3V, but using logic level converter ensures a better transmission performance. You can also connect it to external power source, which should be the best way.
+    - The max limit of current flowing out of that pin is around 50 mA, which usually is not enough. That's why we need a __logic level converter__; there are [other ways](http://randomnerdtutorials.com/how-to-level-shift-5v-to-3-3v/) to bring 5V down to 3.3V, but using logic level converter ensures a better transmission performance. You can also connect it to external power source, which should be the best way to ensure stability.
 2. __Rx-Rx, Tx-Tx: uploading program from computer to ESP8266 via Arduino board; Rx-Tx, Tx-Rx: letting Arduino board talk to ESP8266.__
-    - Think of Rx-Rx, Tx-Tx as making Arduino board a channel between the computer and ESP8266; whatever goes to the Arduino board goes to ESP8266, and whatever ESP8266 sends back goes to the computer! 
+    - Think of Rx-Rx, Tx-Tx as making Arduino board a channel between the computer and ESP8266; whatever goes to the Arduino board goes to ESP8266, and whatever ESP8266 sends back goes to the computer.
     - Think of Rx-Tx, Tx-Rx as making Arduino talk to ESP8266, so probably you would have some program in Arduino sending and receiving data/commands via its own serial ports.
 3. __I don't know what CH_PD port does. Normally just leave it at 3.3V.__
-4. __If thinking of ESP8266 as an Arduino board, Rx, Tx, GPIO0, and GPIO2 are the possible digital pins, where Rx/Tx are the predefined Serial ports.__
-    - If you are programming directly into ESP8266, then when using up Rx and Tx, you would probably find yourself out of Serial ports for debugging. I'm not sure how it can be solved, but probably you can [set GPIO2 as the TX pin](https://github.com/esp8266/Arduino/blob/master/doc/reference.md) or [extend your ports](http://www.forward.com.au/pfod/ESP8266/GPIOpins/index.html). Not sure if they make sense for ESP-01 model (try it and tell me).
+4. __If thinking of ESP8266 as an Arduino board, then Rx, Tx, GPIO0, and GPIO2 are the possible digital pins, where Rx/Tx are the predefined Serial ports.__
+    - If you are programming directly into ESP8266, then when using up Rx and Tx, you would probably find yourself out of Serial ports for debugging. I'm not sure how it can be solved, but probably you can [set GPIO2 as the TX pin for debugging](https://github.com/esp8266/Arduino/blob/master/doc/reference.md) or [extend your ports](http://www.forward.com.au/pfod/ESP8266/GPIOpins/index.html). Not sure if they make sense for ESP-01 model (try it and tell me).
     - [Learn more on GPIO ports](http://www.forward.com.au/pfod/ESP8266/GPIOpins/index.html)
 
 ### Basics of AT Commands
 
-If you have experienced with using terminals, then AT commands are of the same concept as those commands you put into the terminal. In terminal, when you input `ls` and send, some programs would be run, then some outputs would be sent back to your terminal window and shown. You interact via the terminal with your computer software with a set of commands available.
+If you have experience using terminals, then AT commands are of the same concept as those commands you put into the terminal. In terminal, when you input `ls` and send, some programs would be run, then some outputs would be sent back to your terminal window and shown. You interact via the terminal with your computer software with a set of commands available.
 
-Similarly, you interact via the __serial monitor__ with your ESP8266 with a set of __AT commands__ available.
+Similarly, __you interact via the serial monitor with your ESP8266 with a set of AT commands available__.
 
-Simple, isn't it? Instead of guiding you through how to send the various AT commands, I'll only use 2 AT commands to test the module in the following section - `AT` and `AT+GMR`. You should try more yourself looking at [this doc](https://www.espressif.com/sites/default/files/documentation/4a-esp8266_at_instruction_set_en.pdf), including how to scan for available WiFis and connect to them via AT commands, but I do not tend to terrify you with a bunch of those commands.
+Simple, isn't it? Instead of guiding you through how to send the various AT commands, I'll only use 2 AT commands to test the module in the following section - `AT` and `AT+GMR`. You should try more yourself looking at [this doc](https://www.espressif.com/sites/default/files/documentation/4a-esp8266_at_instruction_set_en.pdf), including how to scan for available WiFis and connect to them via AT commands, but I do not tend to terrify you with a bunch of those commands, as they are not needed if you are using libraries that wraps up those commands for you.
 
 But knowing how this mechanism drives the interaction with ESP8266 is essential in effective comprehension of the libraries used in the following sections.
 
@@ -114,7 +110,7 @@ _Connection: Rx-Rx, Tx-Tx, RST-3.3V, GPIO0 & GPIO2 floating._
 Note that you are directly talking to ESP8266 via Arduino board as a channel.
 
 1. Connect and power up your Arduino board & ESP8266
-2. Make sure you Arduino board isn't loaded with other programs. Either reset your Arduino baord, or upload a `BareMinimum` example program to it if so
+2. Make sure you Arduino board isn't loaded with other programs. Either reset your Arduino baord, or upload a `BareMinimum` example program to it
 3. Open up Arduino IDE, select `Tools > Port > YourConnectedPort`
 4. Open up `Serial Monitor`, and listen to baudrate `115200`. You may see some messages bump up; those should be from ESP8266. Recognize the `ready` message at the end. See image in step 7
     - _Try other baudrates if you are seeing random symbols, or seeing nothing_
@@ -142,7 +138,7 @@ Note that you are directly talking to ESP8266 via Arduino board as a channel.
 
 #### Alternative2: Testing with Arduino Board
 
-_Connection: Rx-Tx1, Tx-Rx1, RST-3.3V, GPIO0 & GPIO2 floating._  
+_Connection: Rx-Tx1, Tx-Rx1, RST-3.3V, GPIO0 & GPIO2 floating for Mega; Rx-D2, Tx-D3, RST-3.3V, GPIO0 & GPIO2 floating for Uno._  
 Note that your Arduino board is the one talking to ESP8266.
 
 1. Connect and power up your Arduino board & ESP8266
@@ -189,6 +185,7 @@ Note that your Arduino board is the one talking to ESP8266.
       }
     }
     ```
+    - `SoftwareSerial` library is necessary if you are having only 1 Serial port and you want it to be the debug port.
     - Try `AT+GMR` command; if you see the message corrupted, i.e. some parts of the message is somehow not readable, don't assume you're ok. see troubleshooting section.
 
 3. Select `Tools > Board > YourConnectedArduinoBoard`, `Tools > Port > YourConnectedPort`. Upload the program
@@ -214,7 +211,7 @@ Library: [esp8266/arduino](https://github.com/esp8266/arduino#installing-with-bo
 2. Open up any examples under `File > Examples > WiFi`, for example, the `SimpleWebServerWiFi`
 3. Replace the `ssid` and `password` with a reachable WiFi AP at your place
     - See troubleshooting for the requirements on the AP network
-4. Change the baudrate to a workable one
+4. Change the baudrate to a workable one, in our case, `115200`
 5. Select `Tools > Board > ESP8266 Modules > Generic ESP8266 Module` (or others if you're not using bare ESP8266), `Tools > Port > YourConnectedPort`
 6. Upload the program to ESP
     1. Diconnect power to ESP
@@ -236,6 +233,8 @@ Library: [itead/ITEADLIB_Arduino_WeeESP8266](https://github.com/itead/ITEADLIB_A
     3. Choose your downloaded `zip` file
 2. Open up any examples under `File > Examples > ITEADLIB_Arduino_WeeESP8266`, for example, the `ConnectWiFi`
 3. Replace the `ssid` and `password` with a reachable WiFi AP at your place
+    - See troubleshooting for the requirements on the AP network
+4. Change the baudrate to a workable one, in our case, `115200`
 5. Select `Tools > Board > Arduino AVR Boards > Arduino/Genuino Mega or Mega2560` (or others), `Tools > Port > YourConnectedPort`
 6. Upload the program to Arduino board
 7. Open up the serial monitor, and you should see messages showing the program interacting with ESP
@@ -524,9 +523,11 @@ _To be released._
 
 # Conclusion
 
-So I believe that's all you need to know to successfully setup an ESP8266 module - ok I guess it's pretty much. Now you know how frustrating the process might be setting up this WiFi module for a software person, and how the cheap price comes with a huge cost. But I believe I was the one who encountered most of the errors people are likely to encounter and managed to solve them somehow, so I hope the troubleshooting part is comprehensive enough to cover all of your problems. 
+So I believe that's all you need to know to successfully setup an ESP8266 module - ok I guess it's pretty much. Now you know how frustrating the process might be setting up this WiFi module for a software person, and how the cheap price comes with a huge cost. 
 
-Really have to thank the people who wrote the tutorials, instructables, guides, and documentations online, which are mostly included in the following references (cannot put them all). 
+But I believe I was the one who encountered most of the errors people are likely to encounter and managed to solve them somehow, so I hope the troubleshooting part is comprehensive enough to cover all of your problems. To me, every error popped up appeared to have 100 different possible suggested solutions online, and I almost tried all of them to finally identify one possible valid solution, or sometimes even none of them are valid. I have to say, ESP8266 still have its long way to go.
+
+Finally, I really have to thank the people who wrote the tutorials, instructables, guides, and documentations online, which are mostly included in the following references (cannot put them all). 
 
 _I will post the sample codes up to GitHub along with a summary of this tutorial as a cheatsheet later if I find time._
 
