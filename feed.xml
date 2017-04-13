@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 13 Apr 2017 12:50:10 +0800</pubDate>
-    <lastBuildDate>Thu, 13 Apr 2017 12:50:10 +0800</lastBuildDate>
+    <pubDate>Thu, 13 Apr 2017 14:56:20 +0800</pubDate>
+    <lastBuildDate>Thu, 13 Apr 2017 14:56:20 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -59,13 +59,15 @@
 &lt;p&gt;The following contents will be walked through:&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;Hooking Up ESP8266 + Sending AT Commands&lt;/li&gt;
+&lt;li&gt;Hooking up ESP8266 + Sending AT Commands&lt;/li&gt;
 &lt;li&gt;Programing ESP8266&lt;/li&gt;
-&lt;li&gt;Connecting to WiFi
+&lt;li&gt;Examples
 
 &lt;ol&gt;
-&lt;li&gt;Client Example&lt;/li&gt;
-&lt;li&gt;Server Example&lt;/li&gt;
+&lt;li&gt;Client Example - Programming ESP8266 Like Arduino&lt;/li&gt;
+&lt;li&gt;Client Example - Talking to ESP8266 via Arduino&lt;/li&gt;
+&lt;li&gt;Server Example - Programming ESP8266 Like Arduino&lt;/li&gt;
+&lt;li&gt;Server Example - Talking to ESP8266 via Arduino&lt;/li&gt;
 &lt;/ol&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
@@ -77,13 +79,13 @@
 
 &lt;h3&gt;Connections&lt;/h3&gt;
 
-&lt;div&gt;
-    &lt;img src='https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/circuit_1.png'/&gt;
-    &lt;img src='https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/circuit_2.png'/&gt;
-    &lt;img src='https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/circuit_4.png'/&gt;
+&lt;div style='margin-bottom: 5px;'&gt;
+    &lt;img src='https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/circuit_1.jpg' width='32%'/&gt;
+    &lt;img src='https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/circuit_2.jpg' width='32%'/&gt;
+    &lt;img src='https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/circuit_4.jpg' width='32%'/&gt;
 &lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/circuit_3.png&quot; alt=&quot;connections&quot;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/circuit_3.jpg&quot; alt=&quot;connections&quot;&gt;&lt;/p&gt;
 
 &lt;table&gt;&lt;thead&gt;
 &lt;tr&gt;
@@ -184,59 +186,50 @@
 
 &lt;h3&gt;Testing with Andruino IDE&lt;/h3&gt;
 
-&lt;p&gt;&lt;em&gt;Connection: Rx-Rx, Tx-Tx, RST-3.3V, GPIO0 &amp;amp; GPIO2 floating.&lt;/em&gt; Note that you are directly talking to ESP8266 with Arduino board as a channel.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Connection: Rx-Rx, Tx-Tx, RST-3.3V, GPIO0 &amp;amp; GPIO2 floating.&lt;/em&gt;&lt;br&gt;
+Note that you are directly talking to ESP8266 via Arduino board as a channel.&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;Connect and power up your Arduino board &amp;amp; ESP8266.&lt;/li&gt;
-&lt;li&gt;Make sure you Arduino board isn&amp;#39;t loaded with other programs. Either reset your Arduino baord, or upload a &lt;code&gt;BareMinimum&lt;/code&gt; example program to it if so.&lt;/li&gt;
-&lt;li&gt;Open up Arduino IDE, select &lt;code&gt;Tools &amp;gt; Port &amp;gt; YourConnectedPort&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;Open up &lt;code&gt;Serial Monitor&lt;/code&gt;, and listen to baudrate &lt;code&gt;115200&lt;/code&gt;. You may see some messages bump up; those should be from ESP8266. Recognize the &lt;code&gt;ready&lt;/code&gt; message at the end. See image in step 7.
+&lt;li&gt;Connect and power up your Arduino board &amp;amp; ESP8266&lt;/li&gt;
+&lt;li&gt;Make sure you Arduino board isn&amp;#39;t loaded with other programs. Either reset your Arduino baord, or upload a &lt;code&gt;BareMinimum&lt;/code&gt; example program to it if so&lt;/li&gt;
+&lt;li&gt;Open up Arduino IDE, select &lt;code&gt;Tools &amp;gt; Port &amp;gt; YourConnectedPort&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Open up &lt;code&gt;Serial Monitor&lt;/code&gt;, and listen to baudrate &lt;code&gt;115200&lt;/code&gt;. You may see some messages bump up; those should be from ESP8266. Recognize the &lt;code&gt;ready&lt;/code&gt; message at the end. See image in step 7
 
 &lt;ul&gt;
-&lt;li&gt;&lt;em&gt;Try other baudrates if you are seeing random symbols, or seeing nothing.&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Try other baudrates if you are seeing random symbols, or seeing nothing&lt;/em&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Select &lt;code&gt;Both NL &amp;amp; CR&lt;/code&gt; option - it adds &lt;code&gt;\r\n&lt;/code&gt; after your input line. Necessary for sending a valid AT command.&lt;/li&gt;
-&lt;li&gt;Input &lt;code&gt;AT&lt;/code&gt; in your input box and press &lt;code&gt;enter&lt;/code&gt;. You should see the response &lt;code&gt;OK&lt;/code&gt; from ESP8266.
-
-&lt;ul&gt;
-&lt;li&gt;&lt;img src=&quot;https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/AT.png&quot; alt=&quot;AT&quot;&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Input &lt;code&gt;AT+GMR&lt;/code&gt; in your input box and press &lt;code&gt;enter&lt;/code&gt;. You should see the version information of your ESP8266.
-
-&lt;ul&gt;
-&lt;li&gt;&lt;img src=&quot;https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/AT+GMR.png&quot; alt=&quot;AT+GMR&quot;&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Select &lt;code&gt;Both NL &amp;amp; CR&lt;/code&gt; option - it adds &lt;code&gt;\r\n&lt;/code&gt; after your input line. Necessary for sending a valid AT command&lt;/li&gt;
+&lt;li&gt;Input &lt;code&gt;AT&lt;/code&gt; in your input box and press &lt;code&gt;enter&lt;/code&gt;. You should see the response &lt;code&gt;OK&lt;/code&gt; from ESP8266
+&lt;img src=&quot;https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/AT.png&quot; alt=&quot;AT&quot;&gt;&lt;/li&gt;
+&lt;li&gt;Input &lt;code&gt;AT+GMR&lt;/code&gt; in your input box and press &lt;code&gt;enter&lt;/code&gt;. You should see the version information of your ESP8266
+&lt;img src=&quot;https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/AT+GMR.png&quot; alt=&quot;AT+GMR&quot;&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;p&gt;If everything shown is as expected, congratulations, your ESP8266 is working, and you can move on to the programming section. If not, then go to the troubleshooting section for help.&lt;/p&gt;
 
 &lt;h4&gt;Alternative1: Testing with PuTTY on Windows&lt;/h4&gt;
 
-&lt;p&gt;&lt;em&gt;Connection: Rx-Rx, Tx-Tx, RST-3.3V, GPIO0 &amp;amp; GPIO2 floating.&lt;/em&gt; Note that you are directly talking to ESP8266 with Arduino board as a channel.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Connection: Rx-Rx, Tx-Tx, RST-3.3V, GPIO0 &amp;amp; GPIO2 floating.&lt;/em&gt;&lt;br&gt;
+Note that you are directly talking to ESP8266 via Arduino board as a channel.&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;Connect and power up your Arduino board &amp;amp; ESP8266.&lt;/li&gt;
-&lt;li&gt;Make sure you Arduino board isn&amp;#39;t loaded with other programs. Either reset your Arduino baord, or upload a &lt;code&gt;BareMinimum&lt;/code&gt; example program to it if so.&lt;/li&gt;
-&lt;li&gt;Check the serial port number of your device under &lt;code&gt;Device Manager &amp;gt; Ports &amp;gt; USB Serial Port&lt;/code&gt; or &lt;code&gt;Arduino IDE &amp;gt; Tools &amp;gt; Port&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;Open up PuTTY, select &lt;code&gt;Connection type &amp;gt; Serial&lt;/code&gt;, input &lt;code&gt;Serial line &amp;gt; COMX&lt;/code&gt; where &lt;code&gt;COMX&lt;/code&gt; is your connected serial port number, &lt;code&gt;Speed &amp;gt; 115200&lt;/code&gt; or other baudrates that work. Press &lt;code&gt;Open&lt;/code&gt;. Some messages bump up as in Arduino IDE. &lt;/li&gt;
-&lt;li&gt;Enter &lt;code&gt;AT&lt;/code&gt;, &lt;strong&gt;hold down &lt;code&gt;Ctrl&lt;/code&gt; key, press &lt;code&gt;m&lt;/code&gt; key, press &lt;code&gt;j&lt;/code&gt; key, release &lt;code&gt;Ctrl&lt;/code&gt; key&lt;/strong&gt;. This sends an &lt;code&gt;AT&lt;/code&gt; command ending with &lt;code&gt;\r\n&lt;/code&gt;. You should see the response &lt;code&gt;OK&lt;/code&gt;.
-
-&lt;ul&gt;
-&lt;li&gt;&lt;img src=&quot;https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/AT_PUTTY.png&quot; alt=&quot;AT&quot;&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Enter &lt;code&gt;AT+GMR&lt;/code&gt; and do the same thing as above. You should see the version information.
-
-&lt;ul&gt;
-&lt;li&gt;&lt;img src=&quot;https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/AT+GMR_PUTTY.png&quot; alt=&quot;AT+GMR&quot;&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Connect and power up your Arduino board &amp;amp; ESP8266&lt;/li&gt;
+&lt;li&gt;Make sure you Arduino board isn&amp;#39;t loaded with other programs. Either reset your Arduino baord, or upload a &lt;code&gt;BareMinimum&lt;/code&gt; example program to it if so&lt;/li&gt;
+&lt;li&gt;Check the serial port number of your device under &lt;code&gt;Device Manager &amp;gt; Ports &amp;gt; USB Serial Port&lt;/code&gt; or &lt;code&gt;Arduino IDE &amp;gt; Tools &amp;gt; Port&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Open up PuTTY, select &lt;code&gt;Connection type &amp;gt; Serial&lt;/code&gt;, input &lt;code&gt;Serial line &amp;gt; COMX&lt;/code&gt; where &lt;code&gt;COMX&lt;/code&gt; is your connected serial port number, &lt;code&gt;Speed &amp;gt; 115200&lt;/code&gt; or other baudrates that work. Press &lt;code&gt;Open&lt;/code&gt;. Some messages bump up as in Arduino IDE&lt;/li&gt;
+&lt;li&gt;Enter &lt;code&gt;AT&lt;/code&gt;, &lt;strong&gt;hold down &lt;code&gt;Ctrl&lt;/code&gt; key, press &lt;code&gt;m&lt;/code&gt; key, press &lt;code&gt;j&lt;/code&gt; key, release &lt;code&gt;Ctrl&lt;/code&gt; key&lt;/strong&gt;. This sends an &lt;code&gt;AT&lt;/code&gt; command ending with &lt;code&gt;\r\n&lt;/code&gt;. You should see the response &lt;code&gt;OK&lt;/code&gt;
+&lt;img src=&quot;https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/AT_PUTTY.png&quot; alt=&quot;AT&quot;&gt;&lt;/li&gt;
+&lt;li&gt;Enter &lt;code&gt;AT+GMR&lt;/code&gt; and do the same thing as above. You should see the version information
+&lt;img src=&quot;https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/AT+GMR_PUTTY.png&quot; alt=&quot;AT+GMR&quot;&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h4&gt;Alternative2: Testing with Arduino Board&lt;/h4&gt;
 
-&lt;p&gt;&lt;em&gt;Connection: Rx-Tx1, Tx-Rx1, RST-3.3V, GPIO0 &amp;amp; GPIO2 floating.&lt;/em&gt; Note that your Arduino board is the one talking to ESP8266.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Connection: Rx-Tx1, Tx-Rx1, RST-3.3V, GPIO0 &amp;amp; GPIO2 floating.&lt;/em&gt;&lt;br&gt;
+Note that your Arduino board is the one talking to ESP8266.&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;Connect and power up your Arduino board &amp;amp; ESP8266.&lt;/li&gt;
+&lt;li&gt;Connect and power up your Arduino board &amp;amp; ESP8266&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Open up a new Arduino &lt;code&gt;BareMinimum&lt;/code&gt; example, copy and paste the following code:&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// For boards with more than 1 hardware serial ports e.g. Mega
 &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
@@ -281,27 +274,284 @@
 &lt;ul&gt;
 &lt;li&gt;Try &lt;code&gt;AT+GMR&lt;/code&gt; command; if you see the message corrupted, i.e. some parts of the message is somehow not readable, don&amp;#39;t assume you&amp;#39;re ok. see troubleshooting section.&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Select &lt;code&gt;Tools &amp;gt; Board &amp;gt; YourConnectedArduinoBoard&lt;/code&gt;, &lt;code&gt;Tools &amp;gt; Port &amp;gt; YourConnectedPort&lt;/code&gt;. Upload the program.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The following steps are the same as step 4 ~ step 7 in the main testing method &lt;strong&gt;Testing with Andruino IDE&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Select &lt;code&gt;Tools &amp;gt; Board &amp;gt; YourConnectedArduinoBoard&lt;/code&gt;, &lt;code&gt;Tools &amp;gt; Port &amp;gt; YourConnectedPort&lt;/code&gt;. Upload the program&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The following steps are the same as step 4 ~ step 7 in the main testing method &lt;strong&gt;Testing with Andruino IDE&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h2&gt;2. Programing ESP8266&lt;/h2&gt;
 
 &lt;p&gt;There are basically 2 ways of using the ESP8266 module: &lt;strong&gt;programming ESP8266 like Arduino&lt;/strong&gt; and &lt;strong&gt;talking to ESP8266 via Arduino&lt;/strong&gt;. Strictly speaking, the latter one may not really mean to &lt;strong&gt;program&lt;/strong&gt; the module; it is the program we upload into Arduino board that sends commands to ESP8266 on behalf of us.&lt;/p&gt;
 
-&lt;p&gt;I didn&amp;#39;t notice this at first, and follow whatever the first tutorial I found online that is workable, that is to directly upload programs to ESP8266 and treat it like Arduino. But later I found that I really need another serial port for communication in addition to the debug port! There are workarounds, as stated in &lt;code&gt;Getting Started! &amp;gt; Hooking Up ESP8266 + Sending AT Commands &amp;gt; Connections &amp;gt; Key Notes&lt;/code&gt;, but I was too tired to try so. Then I switched to the other method, in which the debug port is the Mega&amp;#39;s. &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Programming ESP8266 like Arduino&lt;/strong&gt;: directly upload programs to ESP8266 and treat it like Arduino&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Talking to ESP8266 via Arduino&lt;/strong&gt;: upload program into Arduino board that sends commands to ESP8266 on behalf of us&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I didn&amp;#39;t notice the different programming methods at first, and follow whatever the first tutorial I found online that is workable, that is to &lt;strong&gt;program ESP8266 like Arduino&lt;/strong&gt;. But later I found that I really need another serial port for communication in addition to the debug port! There are workarounds, as stated in &lt;code&gt;Getting Started! &amp;gt; Hooking Up ESP8266 + Sending AT Commands &amp;gt; Connections &amp;gt; Key Notes&lt;/code&gt; in this tutorial, but I was too tired to try so. Then I switched to the other method, in which the debug port is the Mega&amp;#39;s. &lt;/p&gt;
 
 &lt;p&gt;However, the latter method is less stable then the first one, as errors tend to come out more often with the extra communication between Arduino and ESP. Choose whatever suits your purpose the best.&lt;/p&gt;
 
 &lt;h3&gt;Programming ESP8266 Like Arduino&lt;/h3&gt;
 
+&lt;p&gt;&lt;em&gt;Connection: Rx-Rx, Tx-Tx, RST-3.3V, GPIO0 &amp;amp; GPIO2 floating.&lt;/em&gt;&lt;br&gt;
+Library: &lt;a href=&quot;https://github.com/esp8266/arduino#installing-with-boards-manager&quot;&gt;esp8266/arduino&lt;/a&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Go through the &lt;a href=&quot;https://github.com/esp8266/arduino#installing-with-boards-manager&quot;&gt;installation guide&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Open up any examples under &lt;code&gt;File &amp;gt; Examples &amp;gt; WiFi&lt;/code&gt;, for example, the &lt;code&gt;SimpleWebServerWiFi&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Replace the &lt;code&gt;ssid&lt;/code&gt; and &lt;code&gt;password&lt;/code&gt; with a reachable WiFi AP at your place
+
+&lt;ul&gt;
+&lt;li&gt;See troubleshooting for the requirements on the AP network&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Change the baudrate to a workable one&lt;/li&gt;
+&lt;li&gt;Select &lt;code&gt;Tools &amp;gt; Board &amp;gt; ESP8266 Modules &amp;gt; Generic ESP8266 Module&lt;/code&gt; (or others if you&amp;#39;re not using bare ESP8266), &lt;code&gt;Tools &amp;gt; Port &amp;gt; YourConnectedPort&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Upload the program to ESP
+
+&lt;ol&gt;
+&lt;li&gt;Diconnect power to ESP&lt;/li&gt;
+&lt;li&gt;Bring &lt;code&gt;GPIO0&lt;/code&gt; to ground&lt;/li&gt;
+&lt;li&gt;Power up ESP&lt;/li&gt;
+&lt;li&gt;Pull out &lt;code&gt;GPIO0&lt;/code&gt; to float&lt;/li&gt;
+&lt;li&gt;Click the upload button in IDE&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;You should see something like this:
+&lt;img src=&quot;https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/Upload_to_ESP.png&quot; alt=&quot;Upload to ESP&quot;&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
 &lt;h3&gt;Talking to ESP8266 via Arduino&lt;/h3&gt;
 
-&lt;h2&gt;3. Connecting to WiFi&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;Connection: Rx-Tx1, Tx-Rx1, RST-3.3V, GPIO0 &amp;amp; GPIO2 floating.&lt;/em&gt;&lt;br&gt;
+Library: &lt;a href=&quot;https://github.com/itead/ITEADLIB_Arduino_WeeESP8266&quot;&gt;itead/ITEADLIB_Arduino_WeeESP8266&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3&gt;1. Client Example&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Install the library
 
-&lt;h3&gt;2. Server Example&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Download the library as a &lt;code&gt;zip&lt;/code&gt; file&lt;/li&gt;
+&lt;li&gt;Under &lt;code&gt;Sketch &amp;gt; Include Libaray&lt;/code&gt;, select &lt;code&gt;Add .ZIP Library...&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Choose your downloaded &lt;code&gt;zip&lt;/code&gt; file&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;Open up any examples under &lt;code&gt;File &amp;gt; Examples &amp;gt; ITEADLIB_Arduino_WeeESP8266&lt;/code&gt;, for example, the &lt;code&gt;ConnectWiFi&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Replace the &lt;code&gt;ssid&lt;/code&gt; and &lt;code&gt;password&lt;/code&gt; with a reachable WiFi AP at your place&lt;/li&gt;
+&lt;li&gt;Select &lt;code&gt;Tools &amp;gt; Board &amp;gt; Arduino AVR Boards &amp;gt; Arduino/Genuino Mega or Mega2560&lt;/code&gt; (or others), &lt;code&gt;Tools &amp;gt; Port &amp;gt; YourConnectedPort&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Upload the program to Arduino board&lt;/li&gt;
+&lt;li&gt;Open up the serial monitor, and you should see messages showing the program interacting with ESP&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;3. Examples&lt;/h2&gt;
+
+&lt;p&gt;The examples are modified from the ones included in the libraries, but I&amp;#39;ll put more comments in the code.&lt;/p&gt;
+
+&lt;h3&gt;1. Client Example - Programming ESP8266 Like Arduino&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;Connection: Rx-Rx, Tx-Tx, RST-3.3V, GPIO0 &amp;amp; GPIO2 floating.&lt;/em&gt;&lt;br&gt;
+&lt;code&gt;HTTPClient&lt;/code&gt; is a wrapper of &lt;code&gt;WiFiWebClient&lt;/code&gt;, which is more easy to use. No need to wrap the request message yourself.&lt;br&gt;
+Modified from: &lt;a href=&quot;https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266HTTPClient/examples/BasicHttpClient/BasicHttpClient.ino&quot;&gt;esp8266/arduino - BasicHttpClient&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;cm&quot;&gt;/* Posting values from 0 to 255 onto dweet.io */&lt;/span&gt;
+
+&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;stdio.h&amp;gt;
+#include &amp;lt;ESP8266WiFi.h&amp;gt;
+#include &amp;lt;ESP8266HTTPClient.h&amp;gt;
+&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#define MAX 255
+#define MIN 0
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ssid&lt;/span&gt;     &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;xxx&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;xxx&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;urlPath&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;http://dweet.io/dweet/for/thing-name?value=&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;                &lt;span class=&quot;c1&quot;&gt;// dweet.io is a simple messaging host for IoT devices
+&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;IPAddress&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ip_static&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;192&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;168&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;137&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;                                                 &lt;span class=&quot;c1&quot;&gt;// Use a static IP address
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IPAddress&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gateway&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;192&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;168&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;137&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;                                                   &lt;span class=&quot;c1&quot;&gt;// Gateway should be the IP of your connected hotspot device
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;IPAddress&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;subnet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;255&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;255&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;255&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;                                                    &lt;span class=&quot;c1&quot;&gt;// Check subnet  through that device as well
+&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;115200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;                                                             &lt;span class=&quot;c1&quot;&gt;// Serial for debug messages, since we're using ESP like Arduino
+&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// Connect to WiFi network
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;WiFi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ip_static&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gateway&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;subnet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;WiFi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ssid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n\r&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n\r&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Working to connect&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// Wait for connection
+&lt;/span&gt;  &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WiFi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;WL_CONNECTED&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;delay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Connected to &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ssid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;IP address: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WiFi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;localIP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;loop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;delay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WiFi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;WL_CONNECTED&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;HTTPClient&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// Create URI for the request
+&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MAX&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;sprintf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;%s%d&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;urlPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;connecting to &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;                                                                  &lt;span class=&quot;c1&quot;&gt;// TCP handshake with host 
+&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;httpCode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GET&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;                                                        &lt;span class=&quot;c1&quot;&gt;// GET request, return response
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;httpCode: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;httpCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;httpCode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;payload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;                                                                        &lt;span class=&quot;c1&quot;&gt;// Close TCP connection
+&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;2. Client Example - Talking to ESP8266 via Arduino&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;Connection: Rx-Tx1, Tx-Rx1, RST-3.3V, GPIO0 &amp;amp; GPIO2 floating.&lt;/em&gt;&lt;br&gt;
+Modified from: &lt;a href=&quot;https://github.com/itead/ITEADLIB_Arduino_WeeESP8266/blob/master/examples/HTTPGET/HTTPGET.ino&quot;&gt;ITEADLIB_Arduino_WeeESP8266 - HTTPGET&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;cp&quot;&gt;#include &quot;ESP8266.h&quot;
+&lt;/span&gt;
+&lt;span class=&quot;cp&quot;&gt;#define SSID        &quot;xxx&quot;
+#define PASSWORD    &quot;xxx&quot;
+#define HOST_NAME   &quot;dweet.io&quot;
+#define HOST_PORT   (80)
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ESP8266&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wifi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Serial1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;115200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;115200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;setup begin&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;FW Version:&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wifi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getVersion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c_str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wifi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setOprToStationSoftAP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;to station + softap ok&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;to station + softap err&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wifi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;joinAP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SSID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PASSWORD&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Join AP success&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;IP:&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wifi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getLocalIP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c_str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;       
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Join AP failure&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wifi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;disableMUX&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;single ok&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;single err&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;setup end&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;loop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;uint8_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1024&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wifi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;createTCP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HOST_NAME&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HOST_PORT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;create tcp ok&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;create tcp err&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;GET /dweet/for/elec3848-group-27-2017?value=1 HTTP/1.1&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Host: dweet.io&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Connection: keep-alive&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r\n\r\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;wifi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;uint8_t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strlen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+
+    &lt;span class=&quot;kt&quot;&gt;uint32_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;len&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wifi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;recv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;sizeof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;len&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Received:[&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;uint32_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;]&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wifi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;releaseTCP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;release tcp ok&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;release tcp err&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\r\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;delay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;3. Server Example - Programming ESP8266 Like Arduino&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;Connection: Rx-Rx, Tx-Tx, RST-3.3V, GPIO0 &amp;amp; GPIO2 floating.&lt;/em&gt;&lt;br&gt;
+Modified from: &lt;a href=&quot;https://learn.adafruit.com/esp8266-temperature-slash-humidity-webserver/code&quot;&gt;Adafruit - ESP8266 Temperature / Humidity Webserver&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;ESP8266WiFi.h&amp;gt;
+#include &amp;lt;WiFiClient.h&amp;gt;
+#include &amp;lt;ESP8266WebServer.h&amp;gt;
+&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ssid&lt;/span&gt;     &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;xxx&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;xxx&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;ESP8266WebServer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;80&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;                                                           &lt;span class=&quot;c1&quot;&gt;// Listening on port 80
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;webString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;                                                                   &lt;span class=&quot;c1&quot;&gt;// String to display
+&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;handle_root&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;text/plain&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Hello from esp8266!&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;                               &lt;span class=&quot;c1&quot;&gt;// If accessing root, respond this message
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;delay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// You can open the Arduino IDE Serial Monitor window to see what the code is doing
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;115200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// Connect to WiFi network
+&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;WiFi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ssid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n\r&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n\r&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Working to connect&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// Wait for connection
+&lt;/span&gt;  &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WiFi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;WL_CONNECTED&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;delay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Connected to &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ssid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;IP address: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WiFi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;localIP&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;handle_root&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;                                                         &lt;span class=&quot;c1&quot;&gt;// If client requests root page, handle it with handle_root subroutine
+&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/test&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[](){&lt;/span&gt;                                                             &lt;span class=&quot;c1&quot;&gt;// If client requests /test page, handle it with the code section 
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;webString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello World!&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;text/plain&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;webString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;begin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Serial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;HTTP server started&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;loop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;handleClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;                                                                &lt;span class=&quot;c1&quot;&gt;// Waiting for clients to connect
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;4. Server Example - Talking to ESP8266 via Arduino&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;To be released.&lt;/em&gt;&lt;/p&gt;
 
 &lt;h1&gt;Trouble Shooting&lt;/h1&gt;
 
@@ -314,7 +564,13 @@
 
 &lt;ul&gt;
 &lt;li&gt;Reset: &lt;strong&gt;pull GPIO0 to GND, pull RST to GND, pull RST back to Vcc, pull GPIO0 out to floating&lt;/strong&gt;.&lt;/li&gt;
-&lt;li&gt;If not working, follow &lt;a href=&quot;https://www.allaboutcircuits.com/projects/update-the-firmware-in-your-esp8266-wi-fi-module/&quot;&gt;this guide&lt;/a&gt; on updating your firmware to the latest version. &lt;strong&gt;This is really recommended!!!&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;If not working, power off ESP and power on ESP. Reset again.&lt;/li&gt;
+&lt;li&gt;If not working, follow &lt;a href=&quot;https://www.allaboutcircuits.com/projects/update-the-firmware-in-your-esp8266-wi-fi-module/&quot;&gt;this guide&lt;/a&gt; on updating your firmware to the latest version. &lt;strong&gt;This is really recommended!!!&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Download the latest &lt;a href=&quot;http://bbs.espressif.com/viewtopic.php?f=57&amp;amp;t=433&quot;&gt;Flash Download Tool&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Download the latest &lt;a href=&quot;http://bbs.espressif.com/viewtopic.php?f=46&amp;amp;t=850&quot;&gt;ESP8266 SDK&lt;/a&gt;. Choose &lt;strong&gt;Non-OS SDK&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -329,6 +585,78 @@
 &lt;li&gt;If not working, switch to Mega or other boards.&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;h4&gt;2. Programing ESP8266&lt;/h4&gt;
+
+&lt;h6&gt;Programming ESP8266 Like Arduino&lt;/h6&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;If you don&amp;#39;t know what &lt;code&gt;ssid&lt;/code&gt; and &lt;code&gt;password&lt;/code&gt; are, &lt;code&gt;ssid&lt;/code&gt; is the network name you would see when you want to connect to WiFi in the available WiFi list e.g. &lt;code&gt;eduroam&lt;/code&gt;, and &lt;code&gt;password&lt;/code&gt; is the password. Note that there&amp;#39;s no options for &lt;code&gt;username&lt;/code&gt;, because ESP8266 doesn&amp;#39;t accept enterprise protected access points (WPA2_Enterprise)! So you need to have a private AP available. Some common connection points are from:
+&lt;img src=&quot;https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/available_network_types.png&quot; alt=&quot;Available network types&quot;&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Your router&lt;/li&gt;
+&lt;li&gt;Your mobile phone hotspot&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Your shared hotspot from a computer that is connected to network cables&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Under Windows platforms, there is a convenient way to share its network as hotspot:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Open command prompt, run:  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;netsh wlan show drivers  
+netsh wlan set hostednetwork mode=allow ssid=your-preferred-name key=your-preferred-password
+netsh wlan start hostednetwork
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Make sure the network is allowed to be shared&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Press &lt;code&gt;Windows + r&lt;/code&gt; key, enter &lt;code&gt;ncpa.cpl&lt;/code&gt;. This opens up &lt;code&gt;Network Connections&lt;/code&gt; panel.&lt;/li&gt;
+&lt;li&gt;Right-click &lt;code&gt;Wi-Fi &amp;gt; properties&lt;/code&gt;, switch to &lt;code&gt;Sharing&lt;/code&gt; and check the first checkbox under &lt;code&gt;Internet Connection Sharing&lt;/code&gt; that reads &lt;code&gt;Allow other network users to connect...&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Test hotspot&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Take out your mobile phone, connect to hotspot, and try to go to a website. If everything is fine, then you are good to go.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If you cannot see the uploading progress message, but instead see a lot of mysterious errors such as &lt;code&gt;espcomm_open failed&lt;/code&gt;, &lt;code&gt;espcomm_sync failed&lt;/code&gt;, and a whole bunch of other possibilities, try:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Check your port selection is the right one. Check your circuit connections, ensure the &lt;code&gt;GND&lt;/code&gt;s are connected.&lt;/li&gt;
+&lt;li&gt;If not working, repeat the upload process as state in step 6.&lt;/li&gt;
+&lt;li&gt;If not working, power off ESP and power on ESP. Upload again.&lt;/li&gt;
+&lt;li&gt;If not working, unplug your USB and plug in again. Upload again.&lt;/li&gt;
+&lt;li&gt;If not working, follow &lt;a href=&quot;https://www.allaboutcircuits.com/projects/update-the-firmware-in-your-esp8266-wi-fi-module/&quot;&gt;this guide&lt;/a&gt; on updating your firmware to the latest version. &lt;strong&gt;This is really recommended!!!&lt;/strong&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Download the latest &lt;a href=&quot;http://bbs.espressif.com/viewtopic.php?f=57&amp;amp;t=433&quot;&gt;Flash Download Tool&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Download the latest &lt;a href=&quot;http://bbs.espressif.com/viewtopic.php?f=46&amp;amp;t=850&quot;&gt;ESP8266 SDK&lt;/a&gt;. Choose &lt;strong&gt;Non-OS SDK&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h6&gt;Talking to ESP8266 via Arduino&lt;/h6&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If you&amp;#39;re using Arduino Uno and ESP is sending you responses that doesn&amp;#39;t appear readable, the data might be corrupted due to the high baudrate &lt;code&gt;115200&lt;/code&gt; that Arduino Uno cannot withstand, or some voltage level problems. Try:
+
+&lt;ul&gt;
+&lt;li&gt;Ensure every GNDs are connected, including the ESP&amp;#39;s and Arduino&amp;#39;s GND pins.&lt;/li&gt;
+&lt;li&gt;If not working, lower the baudrate.&lt;/li&gt;
+&lt;li&gt;If not working, switch to Mega or other boards.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;So I believe that&amp;#39;s all you need to know to successfully setup an ESP8266 module - ok I guess it&amp;#39;s pretty much. Now you know how frustrating the process might be setting up this WiFi module for a software person, and how the cheap price comes with a huge cost. But I believe I was the one who encountered most of the errors people are likely to encounter and managed to solve them somehow, so I hope the troubleshooting part is comprehensive enough to cover all of your problems. &lt;/p&gt;
+
+&lt;p&gt;Really have to thank the people who wrote the tutorials, instructables, guides, and documentations online, which are mostly included in the following references (cannot put them all). &lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;I will post the sample codes up to GitHub along with a summary of this tutorial as a cheatsheet later if I find time.&lt;/em&gt;&lt;/p&gt;
 
 &lt;h1&gt;References&lt;/h1&gt;
 
@@ -349,6 +677,12 @@
 &lt;li&gt;Programming ESP8266 like Arduino
 
 &lt;ul&gt;
+&lt;li&gt;* &lt;a href=&quot;https://learn.adafruit.com/esp8266-temperature-slash-humidity-webserver/overview&quot;&gt;ESP8266 Temperature / Humidity Webserver&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A little bit outdated on IDE setup, but the program uploading steps saved my life!&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;* &lt;a href=&quot;http://www.whatimade.today/esp8266-easiest-way-to-program-so-far/&quot;&gt;ESP8266 - Easiest way to program so far (Using Arduino IDE)&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://www.hackster.io/rayburne/esp8266-01-using-arduino-ide-67a124&quot;&gt;ESP8266-01 using Arduino IDE&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;http://www.geekstips.com/esp8266-arduino-tutorial-iot-code-example/&quot;&gt;ESP8266 ARDUINO TUTORIAL – WIFI MODULE COMPLETE REVIEW&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
@@ -366,17 +700,18 @@
 
 &lt;ul&gt;
 &lt;li&gt;* &lt;a href=&quot;https://mlwmlw.org/2015/07/%E6%B7%B1%E5%85%A5%E6%B7%BA%E5%87%BA-wifi-%E6%99%B6%E7%89%87-esp8266-with-arduino/&quot;&gt;深入淺出 Wifi 晶片 ESP8266 with Arduino&lt;/a&gt; &lt;em&gt;Chinese&lt;/em&gt; &lt;em&gt;(台灣人好棒棒)&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;* &lt;a href=&quot;https://learn.adafruit.com/esp8266-temperature-slash-humidity-webserver/overview&quot;&gt;ESP8266 Temperature / Humidity Webserver&lt;/a&gt;
-
-&lt;ul&gt;
-&lt;li&gt;A little bit outdated on IDE setup, but the program uploading steps saved my life!&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;* &lt;a href=&quot;https://www.allaboutcircuits.com/projects/update-the-firmware-in-your-esp8266-wi-fi-module/&quot;&gt;Update the Firmware in Your ESP8266 Wi-Fi Module&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;Other examples
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;http://www.homeautomationforgeeks.com/ESP8266_samples.shtml&quot;&gt;ESP8266 Samples&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/Karang/Ardunet&quot;&gt;Arduino port for ESP8266&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Documentations
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.espressif.com/sites/default/files/documentation/4a-esp8266_at_instruction_set_en.pdf&quot;&gt;AT Command Set&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>

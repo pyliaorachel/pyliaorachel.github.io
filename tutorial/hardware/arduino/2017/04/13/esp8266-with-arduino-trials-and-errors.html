@@ -165,13 +165,15 @@
 <p>The following contents will be walked through:</p>
 
 <ol>
-<li>Hooking Up ESP8266 + Sending AT Commands</li>
+<li>Hooking up ESP8266 + Sending AT Commands</li>
 <li>Programing ESP8266</li>
-<li>Connecting to WiFi
+<li>Examples
 
 <ol>
-<li>Client Example</li>
-<li>Server Example</li>
+<li>Client Example - Programming ESP8266 Like Arduino</li>
+<li>Client Example - Talking to ESP8266 via Arduino</li>
+<li>Server Example - Programming ESP8266 Like Arduino</li>
+<li>Server Example - Talking to ESP8266 via Arduino</li>
 </ol></li>
 </ol>
 
@@ -183,13 +185,13 @@
 
 <h3>Connections</h3>
 
-<div>
-    <img src='https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/circuit_1.png'/>
-    <img src='https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/circuit_2.png'/>
-    <img src='https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/circuit_4.png'/>
+<div style='margin-bottom: 5px;'>
+    <img src='https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/circuit_1.jpg' width='32%'/>
+    <img src='https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/circuit_2.jpg' width='32%'/>
+    <img src='https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/circuit_4.jpg' width='32%'/>
 </div>
 
-<p><img src="https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/circuit_3.png" alt="connections"></p>
+<p><img src="https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/circuit_3.jpg" alt="connections"></p>
 
 <table><thead>
 <tr>
@@ -290,59 +292,50 @@
 
 <h3>Testing with Andruino IDE</h3>
 
-<p><em>Connection: Rx-Rx, Tx-Tx, RST-3.3V, GPIO0 &amp; GPIO2 floating.</em> Note that you are directly talking to ESP8266 with Arduino board as a channel.</p>
+<p><em>Connection: Rx-Rx, Tx-Tx, RST-3.3V, GPIO0 &amp; GPIO2 floating.</em><br>
+Note that you are directly talking to ESP8266 via Arduino board as a channel.</p>
 
 <ol>
-<li>Connect and power up your Arduino board &amp; ESP8266.</li>
-<li>Make sure you Arduino board isn&#39;t loaded with other programs. Either reset your Arduino baord, or upload a <code>BareMinimum</code> example program to it if so.</li>
-<li>Open up Arduino IDE, select <code>Tools &gt; Port &gt; YourConnectedPort</code>.</li>
-<li>Open up <code>Serial Monitor</code>, and listen to baudrate <code>115200</code>. You may see some messages bump up; those should be from ESP8266. Recognize the <code>ready</code> message at the end. See image in step 7.
+<li>Connect and power up your Arduino board &amp; ESP8266</li>
+<li>Make sure you Arduino board isn&#39;t loaded with other programs. Either reset your Arduino baord, or upload a <code>BareMinimum</code> example program to it if so</li>
+<li>Open up Arduino IDE, select <code>Tools &gt; Port &gt; YourConnectedPort</code></li>
+<li>Open up <code>Serial Monitor</code>, and listen to baudrate <code>115200</code>. You may see some messages bump up; those should be from ESP8266. Recognize the <code>ready</code> message at the end. See image in step 7
 
 <ul>
-<li><em>Try other baudrates if you are seeing random symbols, or seeing nothing.</em></li>
+<li><em>Try other baudrates if you are seeing random symbols, or seeing nothing</em></li>
 </ul></li>
-<li>Select <code>Both NL &amp; CR</code> option - it adds <code>\r\n</code> after your input line. Necessary for sending a valid AT command.</li>
-<li>Input <code>AT</code> in your input box and press <code>enter</code>. You should see the response <code>OK</code> from ESP8266.
-
-<ul>
-<li><img src="https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/AT.png" alt="AT"></li>
-</ul></li>
-<li>Input <code>AT+GMR</code> in your input box and press <code>enter</code>. You should see the version information of your ESP8266.
-
-<ul>
-<li><img src="https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/AT+GMR.png" alt="AT+GMR"></li>
-</ul></li>
+<li>Select <code>Both NL &amp; CR</code> option - it adds <code>\r\n</code> after your input line. Necessary for sending a valid AT command</li>
+<li>Input <code>AT</code> in your input box and press <code>enter</code>. You should see the response <code>OK</code> from ESP8266
+<img src="https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/AT.png" alt="AT"></li>
+<li>Input <code>AT+GMR</code> in your input box and press <code>enter</code>. You should see the version information of your ESP8266
+<img src="https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/AT+GMR.png" alt="AT+GMR"></li>
 </ol>
 
 <p>If everything shown is as expected, congratulations, your ESP8266 is working, and you can move on to the programming section. If not, then go to the troubleshooting section for help.</p>
 
 <h4>Alternative1: Testing with PuTTY on Windows</h4>
 
-<p><em>Connection: Rx-Rx, Tx-Tx, RST-3.3V, GPIO0 &amp; GPIO2 floating.</em> Note that you are directly talking to ESP8266 with Arduino board as a channel.</p>
+<p><em>Connection: Rx-Rx, Tx-Tx, RST-3.3V, GPIO0 &amp; GPIO2 floating.</em><br>
+Note that you are directly talking to ESP8266 via Arduino board as a channel.</p>
 
 <ol>
-<li>Connect and power up your Arduino board &amp; ESP8266.</li>
-<li>Make sure you Arduino board isn&#39;t loaded with other programs. Either reset your Arduino baord, or upload a <code>BareMinimum</code> example program to it if so.</li>
-<li>Check the serial port number of your device under <code>Device Manager &gt; Ports &gt; USB Serial Port</code> or <code>Arduino IDE &gt; Tools &gt; Port</code>.</li>
-<li>Open up PuTTY, select <code>Connection type &gt; Serial</code>, input <code>Serial line &gt; COMX</code> where <code>COMX</code> is your connected serial port number, <code>Speed &gt; 115200</code> or other baudrates that work. Press <code>Open</code>. Some messages bump up as in Arduino IDE. </li>
-<li>Enter <code>AT</code>, <strong>hold down <code>Ctrl</code> key, press <code>m</code> key, press <code>j</code> key, release <code>Ctrl</code> key</strong>. This sends an <code>AT</code> command ending with <code>\r\n</code>. You should see the response <code>OK</code>.
-
-<ul>
-<li><img src="https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/AT_PUTTY.png" alt="AT"></li>
-</ul></li>
-<li>Enter <code>AT+GMR</code> and do the same thing as above. You should see the version information.
-
-<ul>
-<li><img src="https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/AT+GMR_PUTTY.png" alt="AT+GMR"></li>
-</ul></li>
+<li>Connect and power up your Arduino board &amp; ESP8266</li>
+<li>Make sure you Arduino board isn&#39;t loaded with other programs. Either reset your Arduino baord, or upload a <code>BareMinimum</code> example program to it if so</li>
+<li>Check the serial port number of your device under <code>Device Manager &gt; Ports &gt; USB Serial Port</code> or <code>Arduino IDE &gt; Tools &gt; Port</code></li>
+<li>Open up PuTTY, select <code>Connection type &gt; Serial</code>, input <code>Serial line &gt; COMX</code> where <code>COMX</code> is your connected serial port number, <code>Speed &gt; 115200</code> or other baudrates that work. Press <code>Open</code>. Some messages bump up as in Arduino IDE</li>
+<li>Enter <code>AT</code>, <strong>hold down <code>Ctrl</code> key, press <code>m</code> key, press <code>j</code> key, release <code>Ctrl</code> key</strong>. This sends an <code>AT</code> command ending with <code>\r\n</code>. You should see the response <code>OK</code>
+<img src="https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/AT_PUTTY.png" alt="AT"></li>
+<li>Enter <code>AT+GMR</code> and do the same thing as above. You should see the version information
+<img src="https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/AT+GMR_PUTTY.png" alt="AT+GMR"></li>
 </ol>
 
 <h4>Alternative2: Testing with Arduino Board</h4>
 
-<p><em>Connection: Rx-Tx1, Tx-Rx1, RST-3.3V, GPIO0 &amp; GPIO2 floating.</em> Note that your Arduino board is the one talking to ESP8266.</p>
+<p><em>Connection: Rx-Tx1, Tx-Rx1, RST-3.3V, GPIO0 &amp; GPIO2 floating.</em><br>
+Note that your Arduino board is the one talking to ESP8266.</p>
 
 <ol>
-<li>Connect and power up your Arduino board &amp; ESP8266.</li>
+<li>Connect and power up your Arduino board &amp; ESP8266</li>
 <li><p>Open up a new Arduino <code>BareMinimum</code> example, copy and paste the following code:</p>
 <div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">// For boards with more than 1 hardware serial ports e.g. Mega
 </span><span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span> <span class="p">{</span>
@@ -387,27 +380,284 @@
 <ul>
 <li>Try <code>AT+GMR</code> command; if you see the message corrupted, i.e. some parts of the message is somehow not readable, don&#39;t assume you&#39;re ok. see troubleshooting section.</li>
 </ul></li>
-<li><p>Select <code>Tools &gt; Board &gt; YourConnectedArduinoBoard</code>, <code>Tools &gt; Port &gt; YourConnectedPort</code>. Upload the program.</p></li>
-<li><p>The following steps are the same as step 4 ~ step 7 in the main testing method <strong>Testing with Andruino IDE</strong>.</p></li>
+<li><p>Select <code>Tools &gt; Board &gt; YourConnectedArduinoBoard</code>, <code>Tools &gt; Port &gt; YourConnectedPort</code>. Upload the program</p></li>
+<li><p>The following steps are the same as step 4 ~ step 7 in the main testing method <strong>Testing with Andruino IDE</strong></p></li>
 </ol>
 
 <h2>2. Programing ESP8266</h2>
 
 <p>There are basically 2 ways of using the ESP8266 module: <strong>programming ESP8266 like Arduino</strong> and <strong>talking to ESP8266 via Arduino</strong>. Strictly speaking, the latter one may not really mean to <strong>program</strong> the module; it is the program we upload into Arduino board that sends commands to ESP8266 on behalf of us.</p>
 
-<p>I didn&#39;t notice this at first, and follow whatever the first tutorial I found online that is workable, that is to directly upload programs to ESP8266 and treat it like Arduino. But later I found that I really need another serial port for communication in addition to the debug port! There are workarounds, as stated in <code>Getting Started! &gt; Hooking Up ESP8266 + Sending AT Commands &gt; Connections &gt; Key Notes</code>, but I was too tired to try so. Then I switched to the other method, in which the debug port is the Mega&#39;s. </p>
+<ul>
+<li><strong>Programming ESP8266 like Arduino</strong>: directly upload programs to ESP8266 and treat it like Arduino</li>
+<li><strong>Talking to ESP8266 via Arduino</strong>: upload program into Arduino board that sends commands to ESP8266 on behalf of us</li>
+</ul>
+
+<p>I didn&#39;t notice the different programming methods at first, and follow whatever the first tutorial I found online that is workable, that is to <strong>program ESP8266 like Arduino</strong>. But later I found that I really need another serial port for communication in addition to the debug port! There are workarounds, as stated in <code>Getting Started! &gt; Hooking Up ESP8266 + Sending AT Commands &gt; Connections &gt; Key Notes</code> in this tutorial, but I was too tired to try so. Then I switched to the other method, in which the debug port is the Mega&#39;s. </p>
 
 <p>However, the latter method is less stable then the first one, as errors tend to come out more often with the extra communication between Arduino and ESP. Choose whatever suits your purpose the best.</p>
 
 <h3>Programming ESP8266 Like Arduino</h3>
 
+<p><em>Connection: Rx-Rx, Tx-Tx, RST-3.3V, GPIO0 &amp; GPIO2 floating.</em><br>
+Library: <a href="https://github.com/esp8266/arduino#installing-with-boards-manager">esp8266/arduino</a></p>
+
+<ol>
+<li>Go through the <a href="https://github.com/esp8266/arduino#installing-with-boards-manager">installation guide</a></li>
+<li>Open up any examples under <code>File &gt; Examples &gt; WiFi</code>, for example, the <code>SimpleWebServerWiFi</code></li>
+<li>Replace the <code>ssid</code> and <code>password</code> with a reachable WiFi AP at your place
+
+<ul>
+<li>See troubleshooting for the requirements on the AP network</li>
+</ul></li>
+<li>Change the baudrate to a workable one</li>
+<li>Select <code>Tools &gt; Board &gt; ESP8266 Modules &gt; Generic ESP8266 Module</code> (or others if you&#39;re not using bare ESP8266), <code>Tools &gt; Port &gt; YourConnectedPort</code></li>
+<li>Upload the program to ESP
+
+<ol>
+<li>Diconnect power to ESP</li>
+<li>Bring <code>GPIO0</code> to ground</li>
+<li>Power up ESP</li>
+<li>Pull out <code>GPIO0</code> to float</li>
+<li>Click the upload button in IDE</li>
+</ol></li>
+<li>You should see something like this:
+<img src="https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/Upload_to_ESP.png" alt="Upload to ESP"></li>
+</ol>
+
 <h3>Talking to ESP8266 via Arduino</h3>
 
-<h2>3. Connecting to WiFi</h2>
+<p><em>Connection: Rx-Tx1, Tx-Rx1, RST-3.3V, GPIO0 &amp; GPIO2 floating.</em><br>
+Library: <a href="https://github.com/itead/ITEADLIB_Arduino_WeeESP8266">itead/ITEADLIB_Arduino_WeeESP8266</a></p>
 
-<h3>1. Client Example</h3>
+<ol>
+<li>Install the library
 
-<h3>2. Server Example</h3>
+<ol>
+<li>Download the library as a <code>zip</code> file</li>
+<li>Under <code>Sketch &gt; Include Libaray</code>, select <code>Add .ZIP Library...</code></li>
+<li>Choose your downloaded <code>zip</code> file</li>
+</ol></li>
+<li>Open up any examples under <code>File &gt; Examples &gt; ITEADLIB_Arduino_WeeESP8266</code>, for example, the <code>ConnectWiFi</code></li>
+<li>Replace the <code>ssid</code> and <code>password</code> with a reachable WiFi AP at your place</li>
+<li>Select <code>Tools &gt; Board &gt; Arduino AVR Boards &gt; Arduino/Genuino Mega or Mega2560</code> (or others), <code>Tools &gt; Port &gt; YourConnectedPort</code></li>
+<li>Upload the program to Arduino board</li>
+<li>Open up the serial monitor, and you should see messages showing the program interacting with ESP</li>
+</ol>
+
+<h2>3. Examples</h2>
+
+<p>The examples are modified from the ones included in the libraries, but I&#39;ll put more comments in the code.</p>
+
+<h3>1. Client Example - Programming ESP8266 Like Arduino</h3>
+
+<p><em>Connection: Rx-Rx, Tx-Tx, RST-3.3V, GPIO0 &amp; GPIO2 floating.</em><br>
+<code>HTTPClient</code> is a wrapper of <code>WiFiWebClient</code>, which is more easy to use. No need to wrap the request message yourself.<br>
+Modified from: <a href="https://github.com/esp8266/Arduino/blob/master/libraries/ESP8266HTTPClient/examples/BasicHttpClient/BasicHttpClient.ino">esp8266/arduino - BasicHttpClient</a></p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cm">/* Posting values from 0 to 255 onto dweet.io */</span>
+
+<span class="cp">#include &lt;stdio.h&gt;
+#include &lt;ESP8266WiFi.h&gt;
+#include &lt;ESP8266HTTPClient.h&gt;
+</span>
+<span class="cp">#define MAX 255
+#define MIN 0
+</span>
+<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">ssid</span>     <span class="o">=</span> <span class="s">"xxx"</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">password</span> <span class="o">=</span> <span class="s">"xxx"</span><span class="p">;</span>
+
+<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">urlPath</span> <span class="o">=</span> <span class="s">"http://dweet.io/dweet/for/thing-name?value="</span><span class="p">;</span>                <span class="c1">// dweet.io is a simple messaging host for IoT devices
+</span><span class="kt">char</span> <span class="n">url</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+
+<span class="n">IPAddress</span> <span class="n">ip_static</span><span class="p">(</span><span class="mi">192</span><span class="p">,</span><span class="mi">168</span><span class="p">,</span><span class="mi">137</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>                                                 <span class="c1">// Use a static IP address
+</span><span class="n">IPAddress</span> <span class="n">gateway</span><span class="p">(</span><span class="mi">192</span><span class="p">,</span><span class="mi">168</span><span class="p">,</span><span class="mi">137</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>                                                   <span class="c1">// Gateway should be the IP of your connected hotspot device
+</span><span class="n">IPAddress</span> <span class="n">subnet</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>                                                    <span class="c1">// Check subnet  through that device as well
+</span>
+<span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">setup</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>                                                             <span class="c1">// Serial for debug messages, since we're using ESP like Arduino
+</span>
+  <span class="c1">// Connect to WiFi network
+</span>  <span class="n">WiFi</span><span class="p">.</span><span class="n">config</span><span class="p">(</span><span class="n">ip_static</span><span class="p">,</span> <span class="n">gateway</span><span class="p">,</span> <span class="n">subnet</span><span class="p">);</span>
+  <span class="n">WiFi</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="n">ssid</span><span class="p">,</span> <span class="n">password</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n\r</span><span class="s"> </span><span class="se">\n\r</span><span class="s">Working to connect"</span><span class="p">);</span>
+
+  <span class="c1">// Wait for connection
+</span>  <span class="k">while</span> <span class="p">(</span><span class="n">WiFi</span><span class="p">.</span><span class="n">status</span><span class="p">()</span> <span class="o">!=</span> <span class="n">WL_CONNECTED</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"."</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">""</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"Connected to "</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">ssid</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"IP address: "</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">WiFi</span><span class="p">.</span><span class="n">localIP</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">loop</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">delay</span><span class="p">(</span><span class="mi">5000</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">WiFi</span><span class="p">.</span><span class="n">status</span><span class="p">()</span> <span class="o">==</span> <span class="n">WL_CONNECTED</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">HTTPClient</span> <span class="n">http</span><span class="p">;</span>
+
+    <span class="c1">// Create URI for the request
+</span>    <span class="o">++</span><span class="n">value</span><span class="p">;</span>
+    <span class="n">value</span> <span class="o">%=</span> <span class="n">MAX</span><span class="p">;</span>
+
+    <span class="n">sprintf</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="s">"%s%d"</span><span class="p">,</span> <span class="n">urlPath</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"connecting to "</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">url</span><span class="p">);</span>
+
+    <span class="n">http</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="n">url</span><span class="p">);</span>                                                                  <span class="c1">// TCP handshake with host 
+</span>
+    <span class="kt">int</span> <span class="n">httpCode</span> <span class="o">=</span> <span class="n">http</span><span class="p">.</span><span class="n">GET</span><span class="p">();</span>                                                        <span class="c1">// GET request, return response
+</span>    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"httpCode: "</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">httpCode</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">httpCode</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">String</span> <span class="n">payload</span> <span class="o">=</span> <span class="n">http</span><span class="p">.</span><span class="n">getString</span><span class="p">();</span>
+      <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">payload</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">http</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>                                                                        <span class="c1">// Close TCP connection
+</span>  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3>2. Client Example - Talking to ESP8266 via Arduino</h3>
+
+<p><em>Connection: Rx-Tx1, Tx-Rx1, RST-3.3V, GPIO0 &amp; GPIO2 floating.</em><br>
+Modified from: <a href="https://github.com/itead/ITEADLIB_Arduino_WeeESP8266/blob/master/examples/HTTPGET/HTTPGET.ino">ITEADLIB_Arduino_WeeESP8266 - HTTPGET</a></p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#include "ESP8266.h"
+</span>
+<span class="cp">#define SSID        "xxx"
+#define PASSWORD    "xxx"
+#define HOST_NAME   "dweet.io"
+#define HOST_PORT   (80)
+</span>
+<span class="n">ESP8266</span> <span class="n">wifi</span><span class="p">(</span><span class="n">Serial1</span><span class="p">,</span> <span class="mi">115200</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">setup</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"setup begin</span><span class="se">\r\n</span><span class="s">"</span><span class="p">);</span>
+
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"FW Version:"</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">wifi</span><span class="p">.</span><span class="n">getVersion</span><span class="p">().</span><span class="n">c_str</span><span class="p">());</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">wifi</span><span class="p">.</span><span class="n">setOprToStationSoftAP</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"to station + softap ok</span><span class="se">\r\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"to station + softap err</span><span class="se">\r\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">wifi</span><span class="p">.</span><span class="n">joinAP</span><span class="p">(</span><span class="n">SSID</span><span class="p">,</span> <span class="n">PASSWORD</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"Join AP success</span><span class="se">\r\n</span><span class="s">"</span><span class="p">);</span>
+
+        <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"IP:"</span><span class="p">);</span>
+        <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span> <span class="n">wifi</span><span class="p">.</span><span class="n">getLocalIP</span><span class="p">().</span><span class="n">c_str</span><span class="p">());</span>       
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"Join AP failure</span><span class="se">\r\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">wifi</span><span class="p">.</span><span class="n">disableMUX</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"single ok</span><span class="se">\r\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"single err</span><span class="se">\r\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"setup end</span><span class="se">\r\n</span><span class="s">"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">loop</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">uint8_t</span> <span class="n">buffer</span><span class="p">[</span><span class="mi">1024</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">wifi</span><span class="p">.</span><span class="n">createTCP</span><span class="p">(</span><span class="n">HOST_NAME</span><span class="p">,</span> <span class="n">HOST_PORT</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"create tcp ok</span><span class="se">\r\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"create tcp err</span><span class="se">\r\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kt">char</span> <span class="o">*</span><span class="n">message</span> <span class="o">=</span> <span class="s">"GET /dweet/for/elec3848-group-27-2017?value=1 HTTP/1.1</span><span class="se">\r\n</span><span class="s">Host: dweet.io</span><span class="se">\r\n</span><span class="s">Connection: keep-alive</span><span class="se">\r\n\r\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="n">wifi</span><span class="p">.</span><span class="n">send</span><span class="p">((</span><span class="k">const</span> <span class="kt">uint8_t</span><span class="o">*</span><span class="p">)</span><span class="n">message</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">message</span><span class="p">));</span>
+
+    <span class="kt">uint32_t</span> <span class="n">len</span> <span class="o">=</span> <span class="n">wifi</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">buffer</span><span class="p">),</span> <span class="mi">10000</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"Received:["</span><span class="p">);</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">uint32_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">len</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">((</span><span class="kt">char</span><span class="p">)</span><span class="n">buffer</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+        <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"]</span><span class="se">\r\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">wifi</span><span class="p">.</span><span class="n">releaseTCP</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"release tcp ok</span><span class="se">\r\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"release tcp err</span><span class="se">\r\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">delay</span><span class="p">(</span><span class="mi">5000</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3>3. Server Example - Programming ESP8266 Like Arduino</h3>
+
+<p><em>Connection: Rx-Rx, Tx-Tx, RST-3.3V, GPIO0 &amp; GPIO2 floating.</em><br>
+Modified from: <a href="https://learn.adafruit.com/esp8266-temperature-slash-humidity-webserver/code">Adafruit - ESP8266 Temperature / Humidity Webserver</a></p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#include &lt;ESP8266WiFi.h&gt;
+#include &lt;WiFiClient.h&gt;
+#include &lt;ESP8266WebServer.h&gt;
+</span>
+<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">ssid</span>     <span class="o">=</span> <span class="s">"xxx"</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">password</span> <span class="o">=</span> <span class="s">"xxx"</span><span class="p">;</span>
+
+<span class="n">ESP8266WebServer</span> <span class="n">server</span><span class="p">(</span><span class="mi">80</span><span class="p">);</span>                                                           <span class="c1">// Listening on port 80
+</span>
+<span class="n">String</span> <span class="n">webString</span><span class="o">=</span><span class="s">""</span><span class="p">;</span>                                                                   <span class="c1">// String to display
+</span>
+<span class="kt">void</span> <span class="nf">handle_root</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">server</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="s">"text/plain"</span><span class="p">,</span> <span class="s">"Hello from esp8266!"</span><span class="p">);</span>                               <span class="c1">// If accessing root, respond this message
+</span>  <span class="n">delay</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">setup</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">// You can open the Arduino IDE Serial Monitor window to see what the code is doing
+</span>  <span class="n">Serial</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="mi">115200</span><span class="p">);</span>
+
+  <span class="c1">// Connect to WiFi network
+</span>  <span class="n">WiFi</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="n">ssid</span><span class="p">,</span> <span class="n">password</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n\r</span><span class="s"> </span><span class="se">\n\r</span><span class="s">Working to connect"</span><span class="p">);</span>
+
+  <span class="c1">// Wait for connection
+</span>  <span class="k">while</span> <span class="p">(</span><span class="n">WiFi</span><span class="p">.</span><span class="n">status</span><span class="p">()</span> <span class="o">!=</span> <span class="n">WL_CONNECTED</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">delay</span><span class="p">(</span><span class="mi">500</span><span class="p">);</span>
+    <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"."</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">""</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"Connected to "</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">ssid</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s">"IP address: "</span><span class="p">);</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="n">WiFi</span><span class="p">.</span><span class="n">localIP</span><span class="p">());</span>
+
+  <span class="n">server</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="s">"/"</span><span class="p">,</span> <span class="n">handle_root</span><span class="p">);</span>                                                         <span class="c1">// If client requests root page, handle it with handle_root subroutine
+</span>
+  <span class="n">server</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="s">"/test"</span><span class="p">,</span> <span class="p">[](){</span>                                                             <span class="c1">// If client requests /test page, handle it with the code section 
+</span>    <span class="n">webString</span><span class="o">=</span><span class="s">"Hello World!"</span><span class="p">;</span>
+    <span class="n">server</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="s">"text/plain"</span><span class="p">,</span> <span class="n">webString</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="n">server</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span>
+  <span class="n">Serial</span><span class="p">.</span><span class="n">println</span><span class="p">(</span><span class="s">"HTTP server started"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">loop</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">server</span><span class="p">.</span><span class="n">handleClient</span><span class="p">();</span>                                                                <span class="c1">// Waiting for clients to connect
+</span><span class="p">}</span> 
+</code></pre></div>
+<h3>4. Server Example - Talking to ESP8266 via Arduino</h3>
+
+<p><em>To be released.</em></p>
 
 <h1>Trouble Shooting</h1>
 
@@ -420,7 +670,13 @@
 
 <ul>
 <li>Reset: <strong>pull GPIO0 to GND, pull RST to GND, pull RST back to Vcc, pull GPIO0 out to floating</strong>.</li>
-<li>If not working, follow <a href="https://www.allaboutcircuits.com/projects/update-the-firmware-in-your-esp8266-wi-fi-module/">this guide</a> on updating your firmware to the latest version. <strong>This is really recommended!!!</strong></li>
+<li>If not working, power off ESP and power on ESP. Reset again.</li>
+<li>If not working, follow <a href="https://www.allaboutcircuits.com/projects/update-the-firmware-in-your-esp8266-wi-fi-module/">this guide</a> on updating your firmware to the latest version. <strong>This is really recommended!!!</strong>
+
+<ul>
+<li>Download the latest <a href="http://bbs.espressif.com/viewtopic.php?f=57&amp;t=433">Flash Download Tool</a></li>
+<li>Download the latest <a href="http://bbs.espressif.com/viewtopic.php?f=46&amp;t=850">ESP8266 SDK</a>. Choose <strong>Non-OS SDK</strong>.</li>
+</ul></li>
 </ul></li>
 </ul>
 
@@ -435,6 +691,78 @@
 <li>If not working, switch to Mega or other boards.</li>
 </ul></li>
 </ul>
+
+<h4>2. Programing ESP8266</h4>
+
+<h6>Programming ESP8266 Like Arduino</h6>
+
+<ul>
+<li><p>If you don&#39;t know what <code>ssid</code> and <code>password</code> are, <code>ssid</code> is the network name you would see when you want to connect to WiFi in the available WiFi list e.g. <code>eduroam</code>, and <code>password</code> is the password. Note that there&#39;s no options for <code>username</code>, because ESP8266 doesn&#39;t accept enterprise protected access points (WPA2_Enterprise)! So you need to have a private AP available. Some common connection points are from:
+<img src="https://raw.githubusercontent.com/pyliaorachel/pyliaorachel.github.io/master/assets/post_img/available_network_types.png" alt="Available network types"></p>
+
+<ul>
+<li>Your router</li>
+<li>Your mobile phone hotspot</li>
+<li><p>Your shared hotspot from a computer that is connected to network cables</p>
+
+<ul>
+<li><p>Under Windows platforms, there is a convenient way to share its network as hotspot:</p>
+
+<ol>
+<li><p>Open command prompt, run:  </p>
+<div class="highlight"><pre><code class="language-" data-lang="">netsh wlan show drivers  
+netsh wlan set hostednetwork mode=allow ssid=your-preferred-name key=your-preferred-password
+netsh wlan start hostednetwork
+</code></pre></div></li>
+<li><p>Make sure the network is allowed to be shared</p>
+
+<ol>
+<li>Press <code>Windows + r</code> key, enter <code>ncpa.cpl</code>. This opens up <code>Network Connections</code> panel.</li>
+<li>Right-click <code>Wi-Fi &gt; properties</code>, switch to <code>Sharing</code> and check the first checkbox under <code>Internet Connection Sharing</code> that reads <code>Allow other network users to connect...</code></li>
+</ol></li>
+<li><p>Test hotspot</p>
+
+<ul>
+<li>Take out your mobile phone, connect to hotspot, and try to go to a website. If everything is fine, then you are good to go.</li>
+</ul></li>
+</ol></li>
+</ul></li>
+</ul></li>
+<li><p>If you cannot see the uploading progress message, but instead see a lot of mysterious errors such as <code>espcomm_open failed</code>, <code>espcomm_sync failed</code>, and a whole bunch of other possibilities, try:</p>
+
+<ul>
+<li>Check your port selection is the right one. Check your circuit connections, ensure the <code>GND</code>s are connected.</li>
+<li>If not working, repeat the upload process as state in step 6.</li>
+<li>If not working, power off ESP and power on ESP. Upload again.</li>
+<li>If not working, unplug your USB and plug in again. Upload again.</li>
+<li>If not working, follow <a href="https://www.allaboutcircuits.com/projects/update-the-firmware-in-your-esp8266-wi-fi-module/">this guide</a> on updating your firmware to the latest version. <strong>This is really recommended!!!</strong>
+
+<ul>
+<li>Download the latest <a href="http://bbs.espressif.com/viewtopic.php?f=57&amp;t=433">Flash Download Tool</a></li>
+<li>Download the latest <a href="http://bbs.espressif.com/viewtopic.php?f=46&amp;t=850">ESP8266 SDK</a>. Choose <strong>Non-OS SDK</strong>.</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h6>Talking to ESP8266 via Arduino</h6>
+
+<ul>
+<li>If you&#39;re using Arduino Uno and ESP is sending you responses that doesn&#39;t appear readable, the data might be corrupted due to the high baudrate <code>115200</code> that Arduino Uno cannot withstand, or some voltage level problems. Try:
+
+<ul>
+<li>Ensure every GNDs are connected, including the ESP&#39;s and Arduino&#39;s GND pins.</li>
+<li>If not working, lower the baudrate.</li>
+<li>If not working, switch to Mega or other boards.</li>
+</ul></li>
+</ul>
+
+<h1>Conclusion</h1>
+
+<p>So I believe that&#39;s all you need to know to successfully setup an ESP8266 module - ok I guess it&#39;s pretty much. Now you know how frustrating the process might be setting up this WiFi module for a software person, and how the cheap price comes with a huge cost. But I believe I was the one who encountered most of the errors people are likely to encounter and managed to solve them somehow, so I hope the troubleshooting part is comprehensive enough to cover all of your problems. </p>
+
+<p>Really have to thank the people who wrote the tutorials, instructables, guides, and documentations online, which are mostly included in the following references (cannot put them all). </p>
+
+<p><em>I will post the sample codes up to GitHub along with a summary of this tutorial as a cheatsheet later if I find time.</em></p>
 
 <h1>References</h1>
 
@@ -455,6 +783,12 @@
 <li>Programming ESP8266 like Arduino
 
 <ul>
+<li>* <a href="https://learn.adafruit.com/esp8266-temperature-slash-humidity-webserver/overview">ESP8266 Temperature / Humidity Webserver</a>
+
+<ul>
+<li>A little bit outdated on IDE setup, but the program uploading steps saved my life!</li>
+</ul></li>
+<li>* <a href="http://www.whatimade.today/esp8266-easiest-way-to-program-so-far/">ESP8266 - Easiest way to program so far (Using Arduino IDE)</a></li>
 <li><a href="https://www.hackster.io/rayburne/esp8266-01-using-arduino-ide-67a124">ESP8266-01 using Arduino IDE</a></li>
 <li><a href="http://www.geekstips.com/esp8266-arduino-tutorial-iot-code-example/">ESP8266 ARDUINO TUTORIAL – WIFI MODULE COMPLETE REVIEW</a></li>
 </ul></li>
@@ -472,17 +806,18 @@
 
 <ul>
 <li>* <a href="https://mlwmlw.org/2015/07/%E6%B7%B1%E5%85%A5%E6%B7%BA%E5%87%BA-wifi-%E6%99%B6%E7%89%87-esp8266-with-arduino/">深入淺出 Wifi 晶片 ESP8266 with Arduino</a> <em>Chinese</em> <em>(台灣人好棒棒)</em></li>
-<li>* <a href="https://learn.adafruit.com/esp8266-temperature-slash-humidity-webserver/overview">ESP8266 Temperature / Humidity Webserver</a>
-
-<ul>
-<li>A little bit outdated on IDE setup, but the program uploading steps saved my life!</li>
-</ul></li>
 <li>* <a href="https://www.allaboutcircuits.com/projects/update-the-firmware-in-your-esp8266-wi-fi-module/">Update the Firmware in Your ESP8266 Wi-Fi Module</a></li>
 </ul></li>
 <li>Other examples
 
 <ul>
 <li><a href="http://www.homeautomationforgeeks.com/ESP8266_samples.shtml">ESP8266 Samples</a></li>
+<li><a href="https://github.com/Karang/Ardunet">Arduino port for ESP8266</a></li>
+</ul></li>
+<li>Documentations
+
+<ul>
+<li><a href="https://www.espressif.com/sites/default/files/documentation/4a-esp8266_at_instruction_set_en.pdf">AT Command Set</a></li>
 </ul></li>
 </ul>
 
