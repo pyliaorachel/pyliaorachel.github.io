@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 13 Apr 2017 14:56:20 +0800</pubDate>
-    <lastBuildDate>Thu, 13 Apr 2017 14:56:20 +0800</lastBuildDate>
+    <pubDate>Thu, 13 Apr 2017 17:22:37 +0800</pubDate>
+    <lastBuildDate>Thu, 13 Apr 2017 17:22:37 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -28,7 +28,7 @@
 
 &lt;p&gt;An extremely affordable hardware component ($USD 3) to connect to WiFi. &lt;/p&gt;
 
-&lt;p&gt;Comes with a variety of different models, which are all based on the same chip. The most popular model is ESP-03, which is of similar price to ESP-01 that I will be using in this tutorial, but with more ports (&lt;em&gt;so regretful, should have picked this one!&lt;/em&gt;).&lt;/p&gt;
+&lt;p&gt;Comes with a variety of different models, which are all based on the same chip. The most popular model is ESP-03, which is of similar price to ESP-01 that I will be using in this tutorial, but with more ports (&lt;em&gt;so regretful, should have picked this one&lt;/em&gt;).&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;http://i2.wp.com/randomnerdtutorials.com/wp-content/uploads/2015/01/all_esp_modules1.png?resize=600%2C337&quot; alt=&quot;ESP models&quot;&gt;&lt;/p&gt;
 
@@ -44,19 +44,15 @@
 
 &lt;h2&gt;Before You Start...&lt;/h2&gt;
 
-&lt;p&gt;Ok, here are some advice before you read on.&lt;/p&gt;
-
 &lt;ol&gt;
-&lt;li&gt;If you don&amp;#39;t know what &lt;strong&gt;AT command&lt;/strong&gt; is, DON&amp;#39;T SKIP THE SECTION INTRODUCING IT. I&amp;#39;ll make it simple, I promise, but don&amp;#39;t directly dive into writing the codes before you know the basics of AT commands like I did - you&amp;#39;ll end up wasting more time dealing with errors.&lt;/li&gt;
+&lt;li&gt;If you don&amp;#39;t know what &lt;strong&gt;AT command&lt;/strong&gt; is, &lt;strong&gt;DON&amp;#39;T SKIP THE SECTION INTRODUCING IT&lt;/strong&gt;. I&amp;#39;ll make it simple, I promise, but don&amp;#39;t directly dive into writing the codes before you know the basics of AT commands, like I did - you&amp;#39;ll end up wasting more time dealing with errors.&lt;/li&gt;
 &lt;li&gt;Always start with the most basic examples.&lt;/li&gt;
 &lt;li&gt;Just to let you know, &lt;strong&gt;Arduino is not necessary for you to program ESP8266&lt;/strong&gt;. Interestingly, more tutorials I found online deal with it with a USB to serial converter such as the &lt;strong&gt;FTDI232R&lt;/strong&gt; module. Follow this tutorial if you have an Arduino board with you, or else you can follow the nice tutorials I took reference on in the reference list.&lt;/li&gt;
-&lt;li&gt;Arduino IDE is also not mandatory, there are other ways to write program and upload to ESP8266. But I didn&amp;#39;t do research on it, as that is not my intention for my project.&lt;/li&gt;
-&lt;li&gt;Setting up a bare ESP8266 module without other assisting development board is &lt;strong&gt;FRUSTRATING&lt;/strong&gt;. If you don&amp;#39;t have as much confidence as I did and are just finding a quick way to hack it out for assignments, then go ahead and buy any of those development borads and make your life easier.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Arduino IDE is also not mandatory&lt;/strong&gt;, there are other ways to write program and upload to ESP8266. But I didn&amp;#39;t do research on it, as that is not my intention for my project.&lt;/li&gt;
+&lt;li&gt;Setting up a bare ESP8266 module without other assisting development board is &lt;strong&gt;FRUSTRATING&lt;/strong&gt;. If you don&amp;#39;t have as much confidence as I did and are just finding a quick way to hack it out for assignments without budget concerns, then go ahead and buy any of those development borads and make your life easier.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h1&gt;Getting Started!&lt;/h1&gt;
-
-&lt;p&gt;The following contents will be walked through:&lt;/p&gt;
 
 &lt;ol&gt;
 &lt;li&gt;Hooking up ESP8266 + Sending AT Commands&lt;/li&gt;
@@ -152,35 +148,35 @@
 
 &lt;ul&gt;
 &lt;li&gt;ESP8266 operates on 3.3V; connecting pins to 5V may damage the module.&lt;/li&gt;
-&lt;li&gt;For Rx/Tx pins, the one receiving data through Arduino board should theoretically also be logically shifted down to 5V; but many people didn&amp;#39;t encounter problem connecting them directly to each other&amp;#39;s pins, including me.&lt;/li&gt;
+&lt;li&gt;For Rx/Tx pins, the one receiving data through Arduino board should theoretically also be logically shifted down to 3.3V; but many people didn&amp;#39;t encounter problem connecting them directly to each other&amp;#39;s pins, including me.&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;DON&amp;#39;T connect 3.3V power pin of Arduino to ESP8266. Use a logic level converter to bring 5V down to 3.3V.&lt;/strong&gt;
 
 &lt;ul&gt;
-&lt;li&gt;The max limit of current flowing out of that pin is around 50 mA, which usually is not enough. That&amp;#39;s why we need a &lt;strong&gt;logic level converter&lt;/strong&gt;; there are &lt;a href=&quot;http://randomnerdtutorials.com/how-to-level-shift-5v-to-3-3v/&quot;&gt;other ways&lt;/a&gt; to bring 5V down to 3.3V, but using logic level converter ensures a better transmission performance. You can also connect it to external power source, which should be the best way.&lt;/li&gt;
+&lt;li&gt;The max limit of current flowing out of that pin is around 50 mA, which usually is not enough. That&amp;#39;s why we need a &lt;strong&gt;logic level converter&lt;/strong&gt;; there are &lt;a href=&quot;http://randomnerdtutorials.com/how-to-level-shift-5v-to-3-3v/&quot;&gt;other ways&lt;/a&gt; to bring 5V down to 3.3V, but using logic level converter ensures a better transmission performance. You can also connect it to external power source, which should be the best way to ensure stability.&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;Rx-Rx, Tx-Tx: uploading program from computer to ESP8266 via Arduino board; Rx-Tx, Tx-Rx: letting Arduino board talk to ESP8266.&lt;/strong&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Think of Rx-Rx, Tx-Tx as making Arduino board a channel between the computer and ESP8266; whatever goes to the Arduino board goes to ESP8266, and whatever ESP8266 sends back goes to the computer! &lt;/li&gt;
+&lt;li&gt;Think of Rx-Rx, Tx-Tx as making Arduino board a channel between the computer and ESP8266; whatever goes to the Arduino board goes to ESP8266, and whatever ESP8266 sends back goes to the computer.&lt;/li&gt;
 &lt;li&gt;Think of Rx-Tx, Tx-Rx as making Arduino talk to ESP8266, so probably you would have some program in Arduino sending and receiving data/commands via its own serial ports.&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;&lt;strong&gt;I don&amp;#39;t know what CH_PD port does. Normally just leave it at 3.3V.&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;If thinking of ESP8266 as an Arduino board, Rx, Tx, GPIO0, and GPIO2 are the possible digital pins, where Rx/Tx are the predefined Serial ports.&lt;/strong&gt;
+&lt;li&gt;&lt;strong&gt;If thinking of ESP8266 as an Arduino board, then Rx, Tx, GPIO0, and GPIO2 are the possible digital pins, where Rx/Tx are the predefined Serial ports.&lt;/strong&gt;
 
 &lt;ul&gt;
-&lt;li&gt;If you are programming directly into ESP8266, then when using up Rx and Tx, you would probably find yourself out of Serial ports for debugging. I&amp;#39;m not sure how it can be solved, but probably you can &lt;a href=&quot;https://github.com/esp8266/Arduino/blob/master/doc/reference.md&quot;&gt;set GPIO2 as the TX pin&lt;/a&gt; or &lt;a href=&quot;http://www.forward.com.au/pfod/ESP8266/GPIOpins/index.html&quot;&gt;extend your ports&lt;/a&gt;. Not sure if they make sense for ESP-01 model (try it and tell me).&lt;/li&gt;
+&lt;li&gt;If you are programming directly into ESP8266, then when using up Rx and Tx, you would probably find yourself out of Serial ports for debugging. I&amp;#39;m not sure how it can be solved, but probably you can &lt;a href=&quot;https://github.com/esp8266/Arduino/blob/master/doc/reference.md&quot;&gt;set GPIO2 as the TX pin for debugging&lt;/a&gt; or &lt;a href=&quot;http://www.forward.com.au/pfod/ESP8266/GPIOpins/index.html&quot;&gt;extend your ports&lt;/a&gt;. Not sure if they make sense for ESP-01 model (try it and tell me).&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;http://www.forward.com.au/pfod/ESP8266/GPIOpins/index.html&quot;&gt;Learn more on GPIO ports&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;h3&gt;Basics of AT Commands&lt;/h3&gt;
 
-&lt;p&gt;If you have experienced with using terminals, then AT commands are of the same concept as those commands you put into the terminal. In terminal, when you input &lt;code&gt;ls&lt;/code&gt; and send, some programs would be run, then some outputs would be sent back to your terminal window and shown. You interact via the terminal with your computer software with a set of commands available.&lt;/p&gt;
+&lt;p&gt;If you have experience using terminals, then AT commands are of the same concept as those commands you put into the terminal. In terminal, when you input &lt;code&gt;ls&lt;/code&gt; and send, some programs would be run, then some outputs would be sent back to your terminal window and shown. You interact via the terminal with your computer software with a set of commands available.&lt;/p&gt;
 
-&lt;p&gt;Similarly, you interact via the &lt;strong&gt;serial monitor&lt;/strong&gt; with your ESP8266 with a set of &lt;strong&gt;AT commands&lt;/strong&gt; available.&lt;/p&gt;
+&lt;p&gt;Similarly, &lt;strong&gt;you interact via the serial monitor with your ESP8266 with a set of AT commands available&lt;/strong&gt;.&lt;/p&gt;
 
-&lt;p&gt;Simple, isn&amp;#39;t it? Instead of guiding you through how to send the various AT commands, I&amp;#39;ll only use 2 AT commands to test the module in the following section - &lt;code&gt;AT&lt;/code&gt; and &lt;code&gt;AT+GMR&lt;/code&gt;. You should try more yourself looking at &lt;a href=&quot;https://www.espressif.com/sites/default/files/documentation/4a-esp8266_at_instruction_set_en.pdf&quot;&gt;this doc&lt;/a&gt;, including how to scan for available WiFis and connect to them via AT commands, but I do not tend to terrify you with a bunch of those commands.&lt;/p&gt;
+&lt;p&gt;Simple, isn&amp;#39;t it? Instead of guiding you through how to send the various AT commands, I&amp;#39;ll only use 2 AT commands to test the module in the following section - &lt;code&gt;AT&lt;/code&gt; and &lt;code&gt;AT+GMR&lt;/code&gt;. You should try more yourself looking at &lt;a href=&quot;https://www.espressif.com/sites/default/files/documentation/4a-esp8266_at_instruction_set_en.pdf&quot;&gt;this doc&lt;/a&gt;, including how to scan for available WiFis and connect to them via AT commands, but I do not tend to terrify you with a bunch of those commands, as they are not needed if you are using libraries that wraps up those commands for you.&lt;/p&gt;
 
 &lt;p&gt;But knowing how this mechanism drives the interaction with ESP8266 is essential in effective comprehension of the libraries used in the following sections.&lt;/p&gt;
 
@@ -191,7 +187,7 @@ Note that you are directly talking to ESP8266 via Arduino board as a channel.&lt
 
 &lt;ol&gt;
 &lt;li&gt;Connect and power up your Arduino board &amp;amp; ESP8266&lt;/li&gt;
-&lt;li&gt;Make sure you Arduino board isn&amp;#39;t loaded with other programs. Either reset your Arduino baord, or upload a &lt;code&gt;BareMinimum&lt;/code&gt; example program to it if so&lt;/li&gt;
+&lt;li&gt;Make sure you Arduino board isn&amp;#39;t loaded with other programs. Either reset your Arduino baord, or upload a &lt;code&gt;BareMinimum&lt;/code&gt; example program to it&lt;/li&gt;
 &lt;li&gt;Open up Arduino IDE, select &lt;code&gt;Tools &amp;gt; Port &amp;gt; YourConnectedPort&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Open up &lt;code&gt;Serial Monitor&lt;/code&gt;, and listen to baudrate &lt;code&gt;115200&lt;/code&gt;. You may see some messages bump up; those should be from ESP8266. Recognize the &lt;code&gt;ready&lt;/code&gt; message at the end. See image in step 7
 
@@ -225,7 +221,7 @@ Note that you are directly talking to ESP8266 via Arduino board as a channel.&lt
 
 &lt;h4&gt;Alternative2: Testing with Arduino Board&lt;/h4&gt;
 
-&lt;p&gt;&lt;em&gt;Connection: Rx-Tx1, Tx-Rx1, RST-3.3V, GPIO0 &amp;amp; GPIO2 floating.&lt;/em&gt;&lt;br&gt;
+&lt;p&gt;&lt;em&gt;Connection: Rx-Tx1, Tx-Rx1, RST-3.3V, GPIO0 &amp;amp; GPIO2 floating for Mega; Rx-D2, Tx-D3, RST-3.3V, GPIO0 &amp;amp; GPIO2 floating for Uno.&lt;/em&gt;&lt;br&gt;
 Note that your Arduino board is the one talking to ESP8266.&lt;/p&gt;
 
 &lt;ol&gt;
@@ -272,6 +268,7 @@ Note that your Arduino board is the one talking to ESP8266.&lt;/p&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;ul&gt;
+&lt;li&gt;&lt;code&gt;SoftwareSerial&lt;/code&gt; library is necessary if you are having only 1 Serial port and you want it to be the debug port.&lt;/li&gt;
 &lt;li&gt;Try &lt;code&gt;AT+GMR&lt;/code&gt; command; if you see the message corrupted, i.e. some parts of the message is somehow not readable, don&amp;#39;t assume you&amp;#39;re ok. see troubleshooting section.&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Select &lt;code&gt;Tools &amp;gt; Board &amp;gt; YourConnectedArduinoBoard&lt;/code&gt;, &lt;code&gt;Tools &amp;gt; Port &amp;gt; YourConnectedPort&lt;/code&gt;. Upload the program&lt;/p&gt;&lt;/li&gt;
@@ -304,7 +301,7 @@ Library: &lt;a href=&quot;https://github.com/esp8266/arduino#installing-with-boa
 &lt;ul&gt;
 &lt;li&gt;See troubleshooting for the requirements on the AP network&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Change the baudrate to a workable one&lt;/li&gt;
+&lt;li&gt;Change the baudrate to a workable one, in our case, &lt;code&gt;115200&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Select &lt;code&gt;Tools &amp;gt; Board &amp;gt; ESP8266 Modules &amp;gt; Generic ESP8266 Module&lt;/code&gt; (or others if you&amp;#39;re not using bare ESP8266), &lt;code&gt;Tools &amp;gt; Port &amp;gt; YourConnectedPort&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Upload the program to ESP
 
@@ -333,7 +330,12 @@ Library: &lt;a href=&quot;https://github.com/itead/ITEADLIB_Arduino_WeeESP8266&q
 &lt;li&gt;Choose your downloaded &lt;code&gt;zip&lt;/code&gt; file&lt;/li&gt;
 &lt;/ol&gt;&lt;/li&gt;
 &lt;li&gt;Open up any examples under &lt;code&gt;File &amp;gt; Examples &amp;gt; ITEADLIB_Arduino_WeeESP8266&lt;/code&gt;, for example, the &lt;code&gt;ConnectWiFi&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Replace the &lt;code&gt;ssid&lt;/code&gt; and &lt;code&gt;password&lt;/code&gt; with a reachable WiFi AP at your place&lt;/li&gt;
+&lt;li&gt;Replace the &lt;code&gt;ssid&lt;/code&gt; and &lt;code&gt;password&lt;/code&gt; with a reachable WiFi AP at your place
+
+&lt;ul&gt;
+&lt;li&gt;See troubleshooting for the requirements on the AP network&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Change the baudrate to a workable one, in our case, &lt;code&gt;115200&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Select &lt;code&gt;Tools &amp;gt; Board &amp;gt; Arduino AVR Boards &amp;gt; Arduino/Genuino Mega or Mega2560&lt;/code&gt; (or others), &lt;code&gt;Tools &amp;gt; Port &amp;gt; YourConnectedPort&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Upload the program to Arduino board&lt;/li&gt;
 &lt;li&gt;Open up the serial monitor, and you should see messages showing the program interacting with ESP&lt;/li&gt;
@@ -652,9 +654,11 @@ netsh wlan start hostednetwork
 
 &lt;h1&gt;Conclusion&lt;/h1&gt;
 
-&lt;p&gt;So I believe that&amp;#39;s all you need to know to successfully setup an ESP8266 module - ok I guess it&amp;#39;s pretty much. Now you know how frustrating the process might be setting up this WiFi module for a software person, and how the cheap price comes with a huge cost. But I believe I was the one who encountered most of the errors people are likely to encounter and managed to solve them somehow, so I hope the troubleshooting part is comprehensive enough to cover all of your problems. &lt;/p&gt;
+&lt;p&gt;So I believe that&amp;#39;s all you need to know to successfully setup an ESP8266 module - ok I guess it&amp;#39;s pretty much. Now you know how frustrating the process might be setting up this WiFi module for a software person, and how the cheap price comes with a huge cost. &lt;/p&gt;
 
-&lt;p&gt;Really have to thank the people who wrote the tutorials, instructables, guides, and documentations online, which are mostly included in the following references (cannot put them all). &lt;/p&gt;
+&lt;p&gt;But I believe I was the one who encountered most of the errors people are likely to encounter and managed to solve them somehow, so I hope the troubleshooting part is comprehensive enough to cover all of your problems. To me, every error popped up appeared to have 100 different possible suggested solutions online, and I almost tried all of them to finally identify one possible valid solution, or sometimes even none of them are valid. I have to say, ESP8266 still have its long way to go.&lt;/p&gt;
+
+&lt;p&gt;Finally, I really have to thank the people who wrote the tutorials, instructables, guides, and documentations online, which are mostly included in the following references (cannot put them all). &lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;I will post the sample codes up to GitHub along with a summary of this tutorial as a cheatsheet later if I find time.&lt;/em&gt;&lt;/p&gt;
 
