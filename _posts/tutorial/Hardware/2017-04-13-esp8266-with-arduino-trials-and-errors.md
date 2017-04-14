@@ -514,12 +514,18 @@ _To be released._
         - Download the latest [Flash Download Tool](http://bbs.espressif.com/viewtopic.php?f=57&t=433)
         - Download the latest [ESP8266 SDK](http://bbs.espressif.com/viewtopic.php?f=46&t=850). Choose __Non-OS SDK__.
 
+- If you're testing as a server, and have no response after you ping the IP address of ESP, try:
+    - Connect you computer with WiFi under the same network as ESP8266
+
 ###### Talking to ESP8266 via Arduino
 
 - If you're using Arduino Uno and ESP is sending you responses that doesn't appear readable, the data might be corrupted due to the high baudrate `115200` that Arduino Uno cannot withstand, or some voltage level problems. Try:
     - Ensure every GNDs are connected, including the ESP's and Arduino's GND pins.
     - If not working, lower the baudrate.
     - If not working, switch to Mega or other boards.
+
+- If you're testing as a server, and have no response after you ping the IP address of ESP, try:
+    - Connect you computer with WiFi under the same network as ESP8266
 
 # Conclusion
 
