@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 13 Apr 2017 20:04:04 +0800</pubDate>
-    <lastBuildDate>Thu, 13 Apr 2017 20:04:04 +0800</lastBuildDate>
+    <pubDate>Fri, 14 Apr 2017 16:38:43 +0800</pubDate>
+    <lastBuildDate>Fri, 14 Apr 2017 16:38:43 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -638,17 +638,27 @@ netsh wlan start hostednetwork
 &lt;li&gt;Download the latest &lt;a href=&quot;http://bbs.espressif.com/viewtopic.php?f=46&amp;amp;t=850&quot;&gt;ESP8266 SDK&lt;/a&gt;. Choose &lt;strong&gt;Non-OS SDK&lt;/strong&gt;.&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If you&amp;#39;re testing as a server, and have no response after you ping the IP address of ESP, try:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Connect you computer with WiFi under the same network as ESP8266&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h6&gt;Talking to ESP8266 via Arduino&lt;/h6&gt;
 
 &lt;ul&gt;
-&lt;li&gt;If you&amp;#39;re using Arduino Uno and ESP is sending you responses that doesn&amp;#39;t appear readable, the data might be corrupted due to the high baudrate &lt;code&gt;115200&lt;/code&gt; that Arduino Uno cannot withstand, or some voltage level problems. Try:
+&lt;li&gt;&lt;p&gt;If you&amp;#39;re using Arduino Uno and ESP is sending you responses that doesn&amp;#39;t appear readable, the data might be corrupted due to the high baudrate &lt;code&gt;115200&lt;/code&gt; that Arduino Uno cannot withstand, or some voltage level problems. Try:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Ensure every GNDs are connected, including the ESP&amp;#39;s and Arduino&amp;#39;s GND pins.&lt;/li&gt;
 &lt;li&gt;If not working, lower the baudrate.&lt;/li&gt;
 &lt;li&gt;If not working, switch to Mega or other boards.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If you&amp;#39;re testing as a server, and have no response after you ping the IP address of ESP, try:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Connect you computer with WiFi under the same network as ESP8266&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 

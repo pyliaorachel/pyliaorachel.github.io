@@ -744,17 +744,27 @@ netsh wlan start hostednetwork
 <li>Download the latest <a href="http://bbs.espressif.com/viewtopic.php?f=46&amp;t=850">ESP8266 SDK</a>. Choose <strong>Non-OS SDK</strong>.</li>
 </ul></li>
 </ul></li>
+<li><p>If you&#39;re testing as a server, and have no response after you ping the IP address of ESP, try:</p>
+
+<ul>
+<li>Connect you computer with WiFi under the same network as ESP8266</li>
+</ul></li>
 </ul>
 
 <h6>Talking to ESP8266 via Arduino</h6>
 
 <ul>
-<li>If you&#39;re using Arduino Uno and ESP is sending you responses that doesn&#39;t appear readable, the data might be corrupted due to the high baudrate <code>115200</code> that Arduino Uno cannot withstand, or some voltage level problems. Try:
+<li><p>If you&#39;re using Arduino Uno and ESP is sending you responses that doesn&#39;t appear readable, the data might be corrupted due to the high baudrate <code>115200</code> that Arduino Uno cannot withstand, or some voltage level problems. Try:</p>
 
 <ul>
 <li>Ensure every GNDs are connected, including the ESP&#39;s and Arduino&#39;s GND pins.</li>
 <li>If not working, lower the baudrate.</li>
 <li>If not working, switch to Mega or other boards.</li>
+</ul></li>
+<li><p>If you&#39;re testing as a server, and have no response after you ping the IP address of ESP, try:</p>
+
+<ul>
+<li>Connect you computer with WiFi under the same network as ESP8266</li>
 </ul></li>
 </ul>
 
