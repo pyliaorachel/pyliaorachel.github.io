@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Flask App with Gunicorn on Nginx Server upon AWS EC2 Linux</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="/css/main.css" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono|Amatic+SC:700" rel="stylesheet">
+		<link rel="stylesheet" href="/css/github-markdown.css">
+
+		<!-- Place jquery before bootstrap -->
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">MyCoon</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+
+			<form class="navbar-form navbar-left">
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Search">
+				</div>
+				<button type="submit" class="btn btn-default">Submit</button>
+			</form>
+
+			<ul class="nav navbar-nav navbar-right" id="nav-links">
+				<li class="nav-home"><a href="/">Home</a></li>
+				<li class="dropdown nav-blog">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Blog<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/blog">MyCoon Blog</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/blog/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/blog/tech">
+									<span>Tech</span>
+									<span>5</span>
+								</a>
+							</li>
+						
+							
+							
+							<li class="category">
+								<a href="/blog/notes">
+									<span>Notes</span>
+									<span>5</span>
+								</a>
+							</li>
+						
+						<li><a href="/blog/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li class="dropdown nav-tutorial">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Tutorials<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/tutorial">MyCoon Tutorial</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/tutorial/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/tutorial/hardware">
+								<span>Hardware</span>
+								<span>1</span></a>
+							</li>
+						
+						<li><a href="/tutorial/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li  class="nav-project"><a href="/project">Projects</a></li>
+				<li class="nav-special" id="special"><a href="#">?</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+		<main class="page-content post" aria-label="Content">
+	<div class="post-wrapper">
+		<div class="wrapper">
+	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
+
+		<header class="post-header">
+			<h1 class="post-title" itemprop="name headline">Flask App with Gunicorn on Nginx Server upon AWS EC2 Linux</h1>
+			<p class="post-meta">Jul 7, 2017
+				 • Tech
+				 • pyliaorachel
+			</p>
+		</header>
+
+		
+
+		<span class="separator"> • • • </span>
+
+		<div class="post-content" itemprop="articleBody">
+			<p>The whole setup is modified from this <a href="https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-14-04">tutorial</a>,
+with the pain and gain from the alternative deployment on an AWS EC2 Linux server.</p>
+
+<ol>
+<li>Setup Environment</li>
+<li>Creating a Flask App</li>
+<li>Binding with Gunicorn</li>
+<li>Creating an Upstart Script for Running Gunicorn Server</li>
+<li>Running with Nginx on AWS EC2</li>
+</ol>
+
+<!--more-->
+
+<hr>
+
+<h4>Setup Environment</h4>
+
+<p>Install python development tools &amp; <code>nginx</code>.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">$ sudo yum update
+$ sudo yum install python-pip python-dev nginx
+</code></pre></div>
+<p>Install <code>virtualenv</code> from <code>pip</code> so that the python packages for the flask app will be in isolation.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">$ sudo pip install virtualenv
+</code></pre></div>
+<p>Create the project &amp; setup the virtual environment.</p>
+<div class="highlight"><pre><code class="language-" data-lang=""># create project
+$ mkdir myproject
+$ cd myproject
+
+# create virtualenv
+$ virtualenv venv
+
+# activate virtualenv
+$ source ./venv/bin/activate
+</code></pre></div>
+<p>Now the prompt should look like:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">(venv)user@host:~/myproject$
+</code></pre></div>
+<h4>Creating a Flask App</h4>
+
+<p>Install the dependencies under your virtualenv.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">(venv)user@host:~/myproject$ pip install gunicorn flask
+</code></pre></div>
+<p>Create the app entry file <code>~/myproject/app.py</code> and write the simplest flask app:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">from flask import Flask
+application = Flask(__name__)
+
+@application.route("/")
+def index():
+    return "Hello World!"
+
+if __name__ == "__main__":
+    application.run(host='0.0.0.0', port='8080')
+</code></pre></div>
+<p><em>Note that you need to make sure your app is run on an allowed port of the EC2 instance. 
+Check which ports are allowed under <code>AWS EC2 Dashboard &gt; Instances &gt; (select your instance) &gt; Security groups &gt; view inbound rules</code>.</em></p>
+
+<p>Test your flask app.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">(venv)user@host:~/myproject$ python app.py
+</code></pre></div>
+<p>Go to your browser and enter the url to your server, appending the port number you specified in <code>app.py</code>. 
+You should see <code>Hello World!</code> displayed.</p>
+
+<h4>Binding with Gunicorn</h4>
+
+<p>Create the WSGI entrypoint <code>~/myproject/wsgi.py</code>.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">from app import application
+
+if __name__ == "__main__":
+    application.run()
+</code></pre></div>
+<p>Test it.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">(venv)user@host:~/myproject$ gunicorn --bind 0.0.0.0:8080 wsgi
+</code></pre></div>
+<p><em>If you didn&#39;t name your app as <code>application</code>, for example as <code>app</code>, 
+use <code>wsgi:app</code> instead of <code>wsgi</code>, since <code>application</code> is the name to be picked up by default.</em></p>
+
+<p>Go to your browser again and read the <code>Hello World!</code> response.</p>
+
+<h4>Creating an Upstart Script for Running Gunicorn Server</h4>
+
+<p>Now let&#39;s make Linux automatically start the server upon booting by providing the upstart script.</p>
+
+<p>Create a configuration file:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">$ sudo vim /etc/init/myproject.conf
+</code></pre></div>
+<p>Write a little more complicated version than the original tutorial to help you debug:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">description "Gunicorn application server running myproject"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+
+env PATH=/home/ec2-user/myproject/venv/bin
+env PROGRAM_NAME="myproject"
+env USERNAME="ec2-user"
+
+# Main script to be run
+script
+    echo "[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Ready to run..." &gt;&gt; /var/log/$PROGRAM_NAME.sys.log
+
+    export HOME="/home/ec2-user"
+    echo $$ &gt; /var/run/$PROGRAM_NAME.pid
+
+    cd /home/ec2-user/myproject
+    # exec sudo -u ec2-user gunicorn --workers 3 --bind unix:myproject.sock -m 007 wsgi &gt;&gt; /var/log/$PROGRAM_NAME.sys.log 2&gt;&amp;1
+    # exec su -s /bin/sh -c 'exec "$0" "$@"' ec2-user -- gunicorn --workers 3 --bind unix:myproject.sock -m 007 wsgi &gt;&gt; /var/log/$PROGRAM_NAME.sys.log 2&gt;&amp;1
+    exec gunicorn --workers 3 --bind unix:myproject.sock -m 007 wsgi &gt;&gt; /var/log/$PROGRAM_NAME.sys.log 2&gt;&amp;1
+end script
+
+# Script for debug purpose, run before starting
+pre-start script
+    echo "[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Starting" &gt;&gt; /var/log/$PROGRAM_NAME.sys.log
+end script
+
+# Script for debug purpose, run before stopping
+pre-stop script
+    rm /var/run/$PROGRAM_NAME.pid/
+    echo "[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Stopping" &gt;&gt; /var/log/$PROGRAM_NAME.sys.log
+end script
+</code></pre></div>
+<p>Notes here:</p>
+
+<ol>
+<li><code>PATH</code> is for running the server under our virtual environment</li>
+<li>Note the commented out <code>exec</code> scripts that produce errors; 
+I intended to switch user by doing that, since <code>setuid</code> and <code>setgid</code> is not supported on EC2 Linux instance. 
+These commands are from <a href="https://www.thedevopsdoctors.com/blog/2016/4/8/init-scripts-for-web-apps-on-linux-and-why-you-should-be-using-them">these</a> <a href="https://deepumohan.com/tech/setting-up-apache-airflow-on-aws-ec2-instance/">places</a> and <a href="https://serverfault.com/questions/357060/how-should-i-use-sudo-from-an-upstart-script">here</a>. Feel free to provide a correct version...
+So now the server is run under <code>root</code>.</li>
+<li>Echos and <code>&gt;&gt;</code> are for debugging; see the logs at <code>/var/log/myproject.sys.log</code> if you cannot start your server.</li>
+</ol>
+
+<p>Test it.</p>
+<div class="highlight"><pre><code class="language-" data-lang=""># reload configuration files from /etc/init/*.conf
+$ sudo initctl reload-configuration
+
+# see if the new job is listed
+$ sudo initctl list
+
+# try start your server (job); the job name is without the '.conf' extension
+$ sudo initctl start myproject
+
+# if job is not listed, or error displays and says 'myproject' is not known, there's probably errors in the conf file
+# fix them and go on
+
+# check if it's actually running
+$ sudo initctl status myproject
+&gt; myproject start/running, process xxxx
+
+# or check with
+$ ps aux | grep gunicorn
+
+# if the job is not running, see the log at '/var/log/myproject.sys.log'
+# you can echo more messages in the conf file for your own debug purpose
+
+# you should also notice a socket file created at '/home/ec2-user/myproject/myproject.sock'
+</code></pre></div>
+<h4>Running with Nginx on AWS EC2</h4>
+
+<p>Now setup the nginx server to redirect the traffic received at port 80 (http) to the WSGI (Gunicorn) server running at the unix socket.</p>
+
+<p>Open the <code>/etc/nginx/nginx.conf</code> file, find the section and write:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">...
+server {
+        listen       80 default_server;
+        listen       [::]:80 default_server;
+        server_name  &lt;your-domain-name&gt;;                                    # &lt;- replace with your own one
+        root         /usr/share/nginx/html;
+
+        ...
+
+        location / {
+            proxy_pass http://unix:/home/ec2-user/myproject/myproject.sock; # &lt;- add this
+        }
+
+        ...
+</code></pre></div>
+<p>This will route the traffic to the specified socket.</p>
+
+<p>Test it.</p>
+<div class="highlight"><pre><code class="language-" data-lang="">$ sudo nginx -t
+</code></pre></div>
+<p>If ok, start the server:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">$ sudo service nginx restart
+</code></pre></div>
+<p>Go to the browser, and without specifying the port number now (default to 80). The request will hit the nginx proxy server, and the nginx server will pass it to the WSGI server, which talks to the flask app. Check if it successfully returns <code>Hello World!</code>.</p>
+
+<p>If not, there may be multiple reasons. The one that I encountered is solved by changing the permission of the home directory:</p>
+<div class="highlight"><pre><code class="language-" data-lang="">$ chmod 711 /home/ec2-user
+</code></pre></div>
+<p>Remember to restart.</p>
+
+<blockquote>
+<h6>Debug Methods</h6>
+
+<ol>
+<li>Echo message to <code>/var/log/xxx.sys.log</code></li>
+<li><code>tail -f /var/log/nginx/access.log</code> to check nginx logs</li>
+<li><code>netstat -anp | less</code> to show network status</li>
+</ol>
+</blockquote>
+
+<h2>References</h2>
+
+<ul>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-14-04">How To Serve Flask Applications with Gunicorn and Nginx on Ubuntu 14.04</a></li>
+</ul>
+
+		</div>
+
+		<ul class="tag-list">
+			
+
+			<li class="tag">
+				flask
+			</li>
+
+			
+
+			<li class="tag">
+				gunicorn
+			</li>
+
+			
+
+			<li class="tag">
+				nginx
+			</li>
+
+			
+
+			<li class="tag">
+				aws
+			</li>
+
+			
+		</ul>
+
+	</article>
+
+	
+		<div id="disqus_thread"></div>
+<script>
+	var disqus_config = function () {
+	    this.page.url = "https://pyliaorachel.github.io";
+	    this.page.identifier = "/blog/tech/system/2017/07/07/flask-app-with-gunicorn-on-nginx-server-upon-aws-ec2-linux.html";
+	};
+	(function() {
+	    var d = document, s = d.createElement('script');
+	    s.src = '//pyliaorachel.disqus.com/embed.js';
+	    s.setAttribute('data-timestamp', +new Date());
+	    (d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	
+</div>
+	</div>
+</main>
+		<footer>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4 footer-link">
+				<a href="mailto:rachel5566kk@gmail.com">
+					<span class="icon icon-email">
+						<img src="/assets/svg/email-logo.svg" alt="Email Logo">
+					</span>
+					<span class="username">rachel5566kk@gmail.com</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://github.com/pyliaorachel"  target="_blank">
+					<span class="icon icon-github">
+						<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+					</span>
+					<span class="username">pyliaorachel</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://tw.linkedin.com/in/peiyu-liao" target="_blank">
+					<span class="icon icon-linkedin">
+						<img src="/assets/svg/linkedin-logo.svg" alt="LinkedIn Logo">
+					</span>
+					<span class="username">Peiyu Liao</span>
+				</a>
+			</div>
+		</div><!-- /.row -->
+		<div class="row">
+			<div class="footer-copy-right">
+				<p>2017	&copy; Liao Peiyu</p>
+			</div >
+		</div><!-- /.row -->
+	</div><!-- /.container-fluid -->
+</footer>
+		<script type="text/javascript" src="/js/main.js"></script>
+		<script type="text/javascript" src="/js/home.js"></script>
+		<script id="dsq-count-scr" src="//pyliaorachel.disqus.com/count.js" async></script>
+	</body>
+</html>
