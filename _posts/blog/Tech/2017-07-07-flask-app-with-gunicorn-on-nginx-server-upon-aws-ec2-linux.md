@@ -1,14 +1,15 @@
 ---
 layout: post
 title:  "Flask App with Gunicorn on Nginx Server upon AWS EC2 Linux"
-categories: Blog Tech Server
-tags: ["flask gunicorn nginx aws"]
+categories: Blog Tech System
+tags: ["flask", "gunicorn", "nginx", "aws"]
 author: pyliaorachel
 comments: true
 excerpt_separator: <!--more-->
 ---
 
-## Content
+The whole setup is modified from this [tutorial](https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-14-04),
+with the pain and gain from the alternative deployment on an AWS EC2 Linux server.
 
 1. Setup Environment
 2. Creating a Flask App
@@ -18,8 +19,6 @@ excerpt_separator: <!--more-->
 
 <!--more-->
 ---
-The whole setup is modified from this [tutorial](https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-14-04),
-with the pain and gain from the alternative deployment on an AWS EC2 Linux server. Here we go.
 
 #### Setup Environment
 
@@ -72,7 +71,7 @@ application = Flask(__name__)
 
 @application.route("/")
 def index():
-    return "Hello World"
+    return "Hello World!"
 
 if __name__ == "__main__":
     application.run(host='0.0.0.0', port='8080')
@@ -107,7 +106,7 @@ Test it.
 (venv)user@host:~/myproject$ gunicorn --bind 0.0.0.0:8080 wsgi
 ```
 
-_If you didn't name your app as `application`, for example `app`, 
+_If you didn't name your app as `application`, for example as `app`, 
 use `wsgi:app` instead of `wsgi`, since `application` is the name to be picked up by default._
 
 Go to your browser again and read the `Hello World!` response.
@@ -136,6 +135,7 @@ env PATH=/home/ec2-user/myproject/venv/bin
 env PROGRAM_NAME="myproject"
 env USERNAME="ec2-user"
 
+# Main script to be run
 script
     echo "[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Ready to run..." >> /var/log/$PROGRAM_NAME.sys.log
 
@@ -148,10 +148,12 @@ script
     exec gunicorn --workers 3 --bind unix:myproject.sock -m 007 wsgi >> /var/log/$PROGRAM_NAME.sys.log 2>&1
 end script
 
+# Script for debug purpose, run before starting
 pre-start script
     echo "[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Starting" >> /var/log/$PROGRAM_NAME.sys.log
 end script
 
+# Script for debug purpose, run before stopping
 pre-stop script
     rm /var/run/$PROGRAM_NAME.pid/
     echo "[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Stopping" >> /var/log/$PROGRAM_NAME.sys.log
@@ -162,10 +164,10 @@ Notes here:
 
 1. `PATH` is for running the server under our virtual environment
 2. Note the commented out `exec` scripts that produce errors; 
-I intended to switch user by doing that, since `setuid` and `setgid` is not supported on EC2 instance. 
+I intended to switch user by doing that, since `setuid` and `setgid` is not supported on EC2 Linux instance. 
 These commands are from [these](https://www.thedevopsdoctors.com/blog/2016/4/8/init-scripts-for-web-apps-on-linux-and-why-you-should-be-using-them) [places](https://deepumohan.com/tech/setting-up-apache-airflow-on-aws-ec2-instance/) and [here](https://serverfault.com/questions/357060/how-should-i-use-sudo-from-an-upstart-script). Feel free to provide a correct version...
 So now the server is run under `root`.
-3. Echos are for debugging; see the logs at `/var/log/myproject.sys.log` if you cannot start your server.
+3. Echos and `>>` are for debugging; see the logs at `/var/log/myproject.sys.log` if you cannot start your server.
 
 Test it.
 
@@ -173,10 +175,13 @@ Test it.
 # reload configuration files from /etc/init/*.conf
 $ sudo initctl reload-configuration
 
+# see if the new job is listed
+$ sudo initctl list
+
 # try start your server (job); the job name is without the '.conf' extension
 $ sudo initctl start myproject
 
-# if error displays and says 'myproject' is not known, there's probably errors in the conf file
+# if job is not listed, or error displays and says 'myproject' is not known, there's probably errors in the conf file
 # fix them and go on
 
 # check if it's actually running
@@ -189,7 +194,7 @@ $ ps aux | grep gunicorn
 # if the job is not running, see the log at '/var/log/myproject.sys.log'
 # you can echo more messages in the conf file for your own debug purpose
 
-# you will also notice a socket file created at '/home/ec2-user/myproject/myproject.sock'
+# you should also notice a socket file created at '/home/ec2-user/myproject/myproject.sock'
 ```
 
 #### Running with Nginx on AWS EC2
@@ -229,7 +234,7 @@ If ok, start the server:
 $ sudo service nginx restart
 ```
 
-Go to the browser, and without specifying the port number now (default to 80). Check if it successfully returns `Hello World!`.
+Go to the browser, and without specifying the port number now (default to 80). The request will hit the nginx proxy server, and the nginx server will pass it to the WSGI server, which talks to the flask app. Check if it successfully returns `Hello World!`.
 
 If not, there may be multiple reasons. The one that I encountered is solved by changing the permission of the home directory:
 
@@ -241,7 +246,7 @@ Remember to restart.
 
 > ###### Debug Methods
 >
-> 1. Echo message to /var/log/xxx.sys.log
+> 1. Echo message to `/var/log/xxx.sys.log`
 > 2. `tail -f /var/log/nginx/access.log` to check nginx logs
 > 3. `netstat -anp | less` to show network status
 
