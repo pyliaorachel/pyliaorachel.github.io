@@ -567,6 +567,7 @@ I bet I've searched through 100 webpages along my journey on setting up ESP8266 
     - [Arduino port for ESP8266](https://github.com/Karang/Ardunet)
 - Documentations
     - [AT Command Set](https://www.espressif.com/sites/default/files/documentation/4a-esp8266_at_instruction_set_en.pdf)
+    - [ESP8266 - AT Command Reference](https://room-15.github.io/blog/2015/03/26/esp8266-at-command-reference/#AT+CIPSTATUS)
 
 
 
