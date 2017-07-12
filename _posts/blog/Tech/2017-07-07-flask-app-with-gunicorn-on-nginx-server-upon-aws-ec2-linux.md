@@ -24,20 +24,20 @@ with the pain and gain from the alternative deployment on an AWS EC2 Linux serve
 
 Install python development tools & `nginx`.
 
-```
+```shell
 $ sudo yum update
 $ sudo yum install python-pip python-dev nginx
 ```
 
 Install `virtualenv` from `pip` so that the python packages for the flask app will be in isolation.
 
-```
+```shell
 $ sudo pip install virtualenv
 ```
 
 Create the project & setup the virtual environment.
 
-```
+```shell
 # create project
 $ mkdir myproject
 $ cd myproject
@@ -51,21 +51,21 @@ $ source ./venv/bin/activate
 
 Now the prompt should look like:
 
-```
-(venv)user@host:~/myproject$
+```shell
+(venv)user@host:~/myproject$ 
 ```
 
 #### Creating a Flask App
 
 Install the dependencies under your virtualenv.
 
-```
+```shell
 (venv)user@host:~/myproject$ pip install gunicorn flask
 ```
 
 Create the app entry file `~/myproject/app.py` and write the simplest flask app:
 
-```
+```python
 from flask import Flask
 application = Flask(__name__)
 
@@ -82,7 +82,7 @@ Check which ports are allowed under `AWS EC2 Dashboard > Instances > (select you
 
 Test your flask app.
 
-```
+```shell
 (venv)user@host:~/myproject$ python app.py
 ```
 
@@ -93,7 +93,7 @@ You should see `Hello World!` displayed.
 
 Create the WSGI entrypoint `~/myproject/wsgi.py`.
 
-```
+```python
 from app import application
 
 if __name__ == "__main__":
@@ -102,7 +102,7 @@ if __name__ == "__main__":
 
 Test it.
 
-```
+```shell
 (venv)user@host:~/myproject$ gunicorn --bind 0.0.0.0:8080 wsgi
 ```
 
@@ -117,13 +117,13 @@ Now let's make Linux automatically start the server upon booting by providing th
 
 Create a configuration file:
 
-```
+```shell
 $ sudo vim /etc/init/myproject.conf
 ```
 
 Write a little more complicated version than the original tutorial to help you debug:
 
-```
+```conf
 description "Gunicorn application server running myproject"
 
 start on runlevel [2345]
@@ -143,9 +143,9 @@ script
     echo $$ > /var/run/$PROGRAM_NAME.pid
 
     cd /home/ec2-user/myproject
-    # exec sudo -u ec2-user gunicorn --workers 3 --bind unix:myproject.sock -m 007 wsgi >> /var/log/$PROGRAM_NAME.sys.log 2>&1
-    # exec su -s /bin/sh -c 'exec "$0" "$@"' ec2-user -- gunicorn --workers 3 --bind unix:myproject.sock -m 007 wsgi >> /var/log/$PROGRAM_NAME.sys.log 2>&1
-    exec gunicorn --workers 3 --bind unix:myproject.sock -m 007 wsgi >> /var/log/$PROGRAM_NAME.sys.log 2>&1
+    # exec sudo -u ec2-user gunicorn --workers 3 --bind unix:myproject.sock -m 000 wsgi >> /var/log/$PROGRAM_NAME.sys.log 2>&1
+    # exec su -s /bin/sh -c 'exec "$0" "$@"' ec2-user -- gunicorn --workers 3 --bind unix:myproject.sock -m 000 wsgi >> /var/log/$PROGRAM_NAME.sys.log 2>&1
+    exec gunicorn --workers 3 --bind unix:myproject.sock -m 000 wsgi >> /var/log/$PROGRAM_NAME.sys.log 2>&1
 end script
 
 # Script for debug purpose, run before starting
@@ -167,11 +167,12 @@ Notes here:
 I intended to switch user by doing that, since `setuid` and `setgid` is not supported on EC2 Linux instance. 
 These commands are from [these](https://www.thedevopsdoctors.com/blog/2016/4/8/init-scripts-for-web-apps-on-linux-and-why-you-should-be-using-them) [places](https://deepumohan.com/tech/setting-up-apache-airflow-on-aws-ec2-instance/) and [here](https://serverfault.com/questions/357060/how-should-i-use-sudo-from-an-upstart-script). Feel free to provide a correct version...
 So now the server is run under `root`.
-3. Echos and `>>` are for debugging; see the logs at `/var/log/myproject.sys.log` if you cannot start your server.
+3. `-m` flag is the umask; for umask value `000`, the permission would be `777`. This is insecure though, but since I have not found a way to set the access right to a specific user and group, the hooking with nginx only works when the permission is allowed for all users (as the nginx server we will set up later runs as user `nginx`).
+4. Echos and `>>` are for debugging; see the logs at `/var/log/myproject.sys.log` if you cannot start your server.
 
 Test it.
 
-```
+```shell
 # reload configuration files from /etc/init/*.conf
 $ sudo initctl reload-configuration
 
@@ -203,7 +204,7 @@ Now setup the nginx server to redirect the traffic received at port 80 (http) to
 
 Open the `/etc/nginx/nginx.conf` file, find the section and write:
 
-```
+```conf
 ...
 server {
         listen       80 default_server;
@@ -224,13 +225,13 @@ This will route the traffic to the specified socket.
 
 Test it.
 
-```
+```shell
 $ sudo nginx -t
 ```
 
 If ok, start the server:
 
-```
+```shell
 $ sudo service nginx restart
 ```
 
@@ -238,7 +239,7 @@ Go to the browser, and without specifying the port number now (default to 80). T
 
 If not, there may be multiple reasons. The one that I encountered is solved by changing the permission of the home directory:
 
-```
+```shell
 $ chmod 711 /home/ec2-user
 ```
 
