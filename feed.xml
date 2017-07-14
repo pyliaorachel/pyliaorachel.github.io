@@ -6,9 +6,194 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 12 Jul 2017 23:43:20 +0900</pubDate>
-    <lastBuildDate>Wed, 12 Jul 2017 23:43:20 +0900</lastBuildDate>
+    <pubDate>Fri, 14 Jul 2017 22:28:43 +0900</pubDate>
+    <lastBuildDate>Fri, 14 Jul 2017 22:28:43 +0900</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Nginx Server SSL Setup on AWS EC2 Linux with Letsencrypt</title>
+        <description>&lt;p&gt;This post is a followup on &lt;a href=&quot;https://pyliaorachel.github.io/blog/tech/system/2017/07/07/flask-app-with-gunicorn-on-nginx-server-upon-aws-ec2-linux.html&quot;&gt;my previous post on setting up an nginx server on AWS EC2 instance&lt;/a&gt;, and now we are going to support HTTPS to secure our website using a free SSL certificate authority (CA) &lt;a href=&quot;https://letsencrypt.org/&quot;&gt;letsencrypt&lt;/a&gt;.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Before you start:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Obtain a domain name and set it up in your EC2 console to point to the public DNS.&lt;/li&gt;
+&lt;li&gt;Understand the basic mechanism of &lt;a href=&quot;https://letsencrypt.org/how-it-works/&quot;&gt;letsencrypt&lt;/a&gt;. This is key to understanding why your setup does or does not work.&lt;/li&gt;
+&lt;li&gt;Remember to open up 443 port and allow source from &lt;code&gt;0.0.0.0/0&lt;/code&gt; in your EC2 console so that ACME can hit on you.&lt;/li&gt;
+&lt;li&gt;We are going to use &lt;a href=&quot;https://certbot.eff.org/&quot;&gt;certbot&lt;/a&gt;, which handles all the tedious works to communicate with &lt;code&gt;letsencrypt&lt;/code&gt; for us. &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;And here are the steps:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Obtain the certificate using &lt;code&gt;certbot&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Modify your &lt;code&gt;nginx&lt;/code&gt; configuration to enable SSL&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;Obtain the Certificate&lt;/h4&gt;
+
+&lt;p&gt;Get &lt;code&gt;certbot&lt;/code&gt; first:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;wget https://dl.eff.org/certbot-auto
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;chmod a+x certbot-auto
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;There are several plugins to use to help us retrieve the certificate. Two popular ones are &lt;a href=&quot;http://letsencrypt.readthedocs.io/en/latest/using.html#webroot&quot;&gt;webroot&lt;/a&gt; and &lt;a href=&quot;http://letsencrypt.readthedocs.io/en/latest/using.html#standalone&quot;&gt;standalone&lt;/a&gt;. If you do not want to stop your server, use &lt;code&gt;webroot&lt;/code&gt;; if you do not want to use existing server software, use &lt;code&gt;standalone&lt;/code&gt;. We will use &lt;code&gt;standalone&lt;/code&gt; below.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;h6&gt;Using webroot&lt;/h6&gt;
+
+&lt;p&gt;To retrieve the certificate from the CA, your server needs to solve some &lt;a href=&quot;http://letsencrypt.readthedocs.io/en/latest/using.html#getting-certificates-and-choosing-plugins&quot;&gt;challenges&lt;/a&gt;. The challenge is elaborated &lt;a href=&quot;https://letsencrypt.org/how-it-works/&quot;&gt;here&lt;/a&gt;. If you choose to use &lt;code&gt;webroot&lt;/code&gt; as the plugin, the thing to note is that the configuration of your server needs to be able to serve the files created in &lt;code&gt;${webroot}/.well-known/acme-challenge&lt;/code&gt;. You might want to verify that &lt;code&gt;GET /.well-known/acme-challenge&lt;/code&gt; is accessible first.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;To run as standalone, remember to close your services that listen on 80 or 443 ports.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#39;s write a config file first. We&amp;#39;ll use &lt;code&gt;example.com&lt;/code&gt; as our domain name. At &lt;code&gt;/etc/letsencrypt/configs/example.com.conf&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-conf&quot; data-lang=&quot;conf&quot;&gt;&lt;span class=&quot;c&quot;&gt;# domains to retrieve certificate
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;domains&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;example&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# increase key size
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rsa&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt; = &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# the CA endpoint server
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;https&lt;/span&gt;://&lt;span class=&quot;n&quot;&gt;acme&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;v01&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;letsencrypt&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;directory&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# the email to receive renewal reminders, IIRC
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;email&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;example&lt;/span&gt;@&lt;span class=&quot;n&quot;&gt;example&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;com&lt;/span&gt; 
+
+&lt;span class=&quot;c&quot;&gt;# turn off the ncurses UI, we want this to be run as a cronjob
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;True&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Run &lt;code&gt;certbot&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;./certbot-auto --standalone --config /etc/letsencrypt/configs/example.com.conf certonly
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You can skip the above config file as well:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;./certbot-auto --standalone -d example.com certonly
+&lt;span class=&quot;c&quot;&gt;# ...Answer some config questions&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now you should see &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;
+IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at
+   /etc/letsencrypt/live/example.com/fullchain.pem. Your cert will
+   expire on xxxx-xx-xx. To obtain a new version of the certificate in
+   the future, simply run Let's Encrypt again.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You can verify that the certificate and keys exist:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Certificate
+/etc/letsencrypt/live/example.com/cert.pem
+
+# Full Chain 
+/etc/letsencrypt/live/example.com/fullchain.pem
+
+# Private Key 
+/etc/letsencrypt/live/example.com/privkey.pem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;Modify &lt;code&gt;nginx&lt;/code&gt; configuration&lt;/h4&gt;
+
+&lt;p&gt;Now you&amp;#39;ve got the certificate, we need to configure the nginx for it to take up HTTPS requests.&lt;/p&gt;
+
+&lt;p&gt;Open up your &lt;code&gt;/etc/nginx/nginx.conf&lt;/code&gt; and modify:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-conf&quot; data-lang=&quot;conf&quot;&gt;...
+
+&lt;span class=&quot;n&quot;&gt;http&lt;/span&gt; {
+
+    ...
+
+    &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; {
+        &lt;span class=&quot;n&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt;;
+        &lt;span class=&quot;n&quot;&gt;server_name&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;example&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;;
+        &lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;         /&lt;span class=&quot;n&quot;&gt;usr&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;share&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;nginx&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;html&lt;/span&gt;;
+
+        &lt;span class=&quot;c&quot;&gt;# Load configuration files for the default server block.
+&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;include&lt;/span&gt; /&lt;span class=&quot;n&quot;&gt;etc&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;nginx&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt;/*.&lt;span class=&quot;n&quot;&gt;conf&lt;/span&gt;;
+
+        &lt;span class=&quot;n&quot;&gt;location&lt;/span&gt; / {
+            &lt;span class=&quot;c&quot;&gt;# redirect to HTTPS
+&lt;/span&gt;            &lt;span class=&quot;n&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;301&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;https&lt;/span&gt;://$&lt;span class=&quot;n&quot;&gt;server_name&lt;/span&gt;$&lt;span class=&quot;n&quot;&gt;request_uri&lt;/span&gt;;
+        }
+
+        ...
+    }
+
+    &lt;span class=&quot;c&quot;&gt;# Settings for a TLS enabled server.
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; {
+        &lt;span class=&quot;n&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;443&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ssl&lt;/span&gt;;
+        &lt;span class=&quot;n&quot;&gt;server_name&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;example&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;;
+        &lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;         /&lt;span class=&quot;n&quot;&gt;usr&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;share&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;nginx&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;html&lt;/span&gt;;
+
+        &lt;span class=&quot;n&quot;&gt;ssl_certificate&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/etc/letsencrypt/live/example.com/fullchain.pem&quot;&lt;/span&gt;;
+        &lt;span class=&quot;n&quot;&gt;ssl_certificate_key&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/etc/letsencrypt/live/example.com/privkey.pem&quot;&lt;/span&gt;;
+
+        &lt;span class=&quot;c&quot;&gt;# Automatically route HTTP to HTTPS
+&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;add_header&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Strict&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;Transport&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;Security&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;max-age=31536000&quot;&lt;/span&gt;;
+
+        &lt;span class=&quot;n&quot;&gt;include&lt;/span&gt; /&lt;span class=&quot;n&quot;&gt;etc&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;nginx&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt;/*.&lt;span class=&quot;n&quot;&gt;conf&lt;/span&gt;;
+
+        &lt;span class=&quot;n&quot;&gt;location&lt;/span&gt; / {
+            &lt;span class=&quot;c&quot;&gt;# These are esstential, or your flask app may not correctly redirect
+&lt;/span&gt;            &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Host&lt;/span&gt; $&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;;
+            &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;Real&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;IP&lt;/span&gt; $&lt;span class=&quot;n&quot;&gt;remote_addr&lt;/span&gt;;
+            &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;Forwarded&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;Proto&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;https&lt;/span&gt;;
+            &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;Forwarded&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;Host&lt;/span&gt; $&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;;
+            &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;Forwarded&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;For&lt;/span&gt; $&lt;span class=&quot;n&quot;&gt;proxy_add_x_forwarded_for&lt;/span&gt;;
+
+            &lt;span class=&quot;c&quot;&gt;# Pass to our WSGI server
+&lt;/span&gt;            &lt;span class=&quot;n&quot;&gt;proxy_pass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;://&lt;span class=&quot;n&quot;&gt;unix&lt;/span&gt;:/&lt;span class=&quot;n&quot;&gt;home&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;ec2&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;myproject&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;myproject&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;sock&lt;/span&gt;;
+        }
+
+        ...
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Reload your &lt;code&gt;nginx&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo service nginx reload
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now you should access your website using &lt;code&gt;https&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Not that the certificate expires in 3 months, so you may want to refer to the nice tutorials in the reference links to set up a cron job and make the renewals.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;h6&gt;Debug Tips&lt;/h6&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Logs reside in &lt;code&gt;/var/log/letsencrypt/letsencrypt.log&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;If there are permissoin problems, run &lt;code&gt;sudo su - nginx -s /bin/bash -c &amp;quot;ls /home/ec2-user/myproject/myproject.sock&amp;quot;&lt;/code&gt; to test permission from the viewpoint of &lt;code&gt;nginx&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;References&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://letsencrypt.readthedocs.io/en/latest/using.html&quot;&gt;Certbot Userguide&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://medium.freecodecamp.org/going-https-on-amazon-ec2-ubuntu-14-04-with-lets-encrypt-certbot-on-nginx-696770649e76&quot;&gt;Using the Let’s Encrypt Certbot to get HTTPS on your Amazon EC2 NGINX box&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://gist.github.com/xrstf/581981008b6be0d2224f&quot;&gt;Let&amp;#39;s Encrypt on Ubuntu 14.04, nginx with webroot auth&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://loune.net/2016/01/https-with-lets-encrypt-ssl-and-nginx/&quot;&gt;HTTPS with Let’s Encrypt SSL and Nginx (using certbot)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://nouveauframework.org/blog/installing-letsencrypts-free-ssl-amazon-linux/&quot;&gt;Installing LetsEncrypt’s free SSL on Amazon Linux&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 14 Jul 2017 00:00:00 +0900</pubDate>
+        <link>/blog/tech/system/2017/07/14/nginx-server-ssl-setup-on-aws-ec2-linux-with-letsencrypt.html</link>
+        <guid isPermaLink="true">/blog/tech/system/2017/07/14/nginx-server-ssl-setup-on-aws-ec2-linux-with-letsencrypt.html</guid>
+        
+        <category>ssl</category>
+        
+        <category>letsencrypt</category>
+        
+        <category>nginx</category>
+        
+        <category>aws</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Tech</category>
+        
+        <category>System</category>
+        
+      </item>
     
       <item>
         <title>Flask App with Gunicorn on Nginx Server upon AWS EC2 Linux</title>
@@ -207,7 +392,7 @@ So now the server is run under &lt;code&gt;root&lt;/code&gt;.&lt;/li&gt;
 &lt;p&gt;Remember to restart.&lt;/p&gt;
 
 &lt;blockquote&gt;
-&lt;h6&gt;Debug Methods&lt;/h6&gt;
+&lt;h6&gt;Debug Tips&lt;/h6&gt;
 
 &lt;ol&gt;
 &lt;li&gt;Echo message to &lt;code&gt;/var/log/xxx.sys.log&lt;/code&gt;&lt;/li&gt;
@@ -2023,276 +2208,6 @@ for each u ∈ V, in linearized order:
         <category>Tech</category>
         
         <category>Algorithm</category>
-        
-      </item>
-    
-      <item>
-        <title>Data Stucture Notes</title>
-        <description>&lt;p&gt;Data stucture notes for coding competitions.&lt;/p&gt;
-
-&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;BST&lt;/li&gt;
-&lt;li&gt;Monotone Queue&lt;/li&gt;
-&lt;li&gt;Block List&lt;/li&gt;
-&lt;li&gt;Merge-Find Set&lt;/li&gt;
-&lt;li&gt;Split &amp;amp; Join AVL&lt;/li&gt;
-&lt;li&gt;Persistent AVL&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;BST&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;map&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Dictionary&lt;/li&gt;
-&lt;li&gt;Insertion, deletion, searching &lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;lower_bound&lt;/code&gt;, &lt;code&gt;upper_bound&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Find element in range&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://acm.timus.ru/problem.aspx?space=1&amp;amp;num=1613&quot;&gt;For Fans of Statistics&lt;/a&gt;
-&lt;a href=&quot;http://poj.org/problem?id=2418&quot;&gt;Hardwood Species&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2&gt;Monotone Queue&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Basic operations
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;push&lt;/code&gt; in &lt;code&gt;O(1)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;pop&lt;/code&gt; in &lt;code&gt;O(1)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;max&lt;/code&gt;/&lt;code&gt;min&lt;/code&gt; in &lt;code&gt;O(1)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Implementation&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Insert(k):
-    while (queue not empty) and (tail element &amp;gt;= k):
-        discard tail
-    append k to tail
-
-Min():
-    return head of queue
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;a href=&quot;http://poj.org/problem?id=2823&quot;&gt;Sliding Window&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2&gt;Block List&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Structure
-
-&lt;ul&gt;
-&lt;li&gt;Partition indices into &lt;code&gt;O(sqrt(n))&lt;/code&gt; segments, each of length &lt;code&gt;O(sqrt(n))&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Basic operations
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;insert&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;delete&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Range operation on &lt;code&gt;[i,j]&lt;/code&gt; in &lt;code&gt;O(sqrt(n))&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Implementation&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;Insert(x):
-    # invariant: each segment has elements &amp;gt;= L and &amp;lt; 3L; OR only one segment &amp;lt; 3L
-
-    locate segment S # O(sqrt(n))
-    brute force insertion on S # O(L)
-    if size(S) == 3L:
-        evenly split into 2 segments
-
-Delete(x):
-    locate segment S # O(sqrt(n))
-    brute force deletion on S # O(L)
-    if size(S) == L and S has adjacent segment:
-        combine 2 segments
-        evenly split into 2 segments
-
-# range operation
-# change &amp;amp; sum as example
-
-## change [i,j] to x
-Change(i, j, x):
-    if i == l and j == r: # O(1)
-        b = true
-        y = x
-        s = x * (r - l + 1)
-    else: # O(L)
-        if b == true:
-            set every element in [l,r] to y
-            b = false
-        set every element in [i,j] to x
-        calculate s
-
-## query [i,j]
-Query(i, j):
-    if i == l and j == r: # O(1)
-        return s
-    else: # O(L)
-        if b == ture:
-            set every element in [l,r] to y
-            b = false
-        set every element in [i,j] to x
-        calculate s
-        return s
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;a href=&quot;http://poj.org/problem?id=3580&quot;&gt;SuperMemo&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2&gt;Merge-Find Set&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Disjoint-set_data_structure&quot;&gt;Wiki&lt;/a&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Structure
-
-&lt;ul&gt;
-&lt;li&gt;A ground set &lt;code&gt;S&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;A collection &lt;code&gt;C&lt;/code&gt; of subsets of &lt;code&gt;S&lt;/code&gt; where 2 different elements in &lt;code&gt;C&lt;/code&gt; are disjoint&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Basic operations
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;union&lt;/code&gt;: union 2 subsets&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;find&lt;/code&gt;: find the subset a specific elememt is in&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;test&lt;/code&gt;: test where 2 elements are in the same subset&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Implementation (linear)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;P: P[i] = parent of i in S
-F(P): forest difined by P
-
-Find(x):
-    while P[x] != x:
-        x = P[x]
-    return x # root
-
-Union(x):
-    P[Find(x)] = Find(y)
-
-Test(x, y):
-    return Find(x) == Find(y)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;Implementation (optimized)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;R: rank of element; init R = {0}
-
-Find(x): # path compression
-    if P[x] != x:
-        P[x] = Find(P[x])
-    return x
-
-Union(x): # union by rank
-    x' = Find(x)
-    y' = Find(y)
-    if R[x'] &amp;lt; R[y']:
-        P[x'] = y'
-    elif R[x'] &amp;gt; R[y']:
-        P[y'] = x'
-    else:
-        P[x'] = y'
-        R[y']++
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3&gt;Extension 1: Maintaining the Difference&lt;/h3&gt;
-
-&lt;p&gt;For each element &lt;code&gt;i&lt;/code&gt;, &lt;code&gt;V[i]&lt;/code&gt; is the underlying unknown integer. Information &lt;code&gt;V[j] - V[i] = k&lt;/code&gt; comes.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Problem
-
-&lt;ol&gt;
-&lt;li&gt;Consistent with previously known information?&lt;/li&gt;
-&lt;li&gt;If consistent, record the information&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;V[j] - V[i]&lt;/code&gt; uniquely determined?&lt;/li&gt;
-&lt;li&gt;If unique, answer the value&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Implementation&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;D: difference; D[i] = V[i] - V[P[i]]; init D = {0}
-
-Find(x):
-    if P[x] != x:
-        (P[x],d) = Find(P[x])
-        D[x] += d
-    return (x, D[x])
-
-Union(i, j, k): # V[i] - V[j] = k
-    (x',D[i]) = Find(i)
-    (y',D[j]) = Find(j)
-    if R[x'] &amp;lt; R[y']:
-        P[x'] = y'
-        D[x'] = D[j] - D[i] - k
-    elif R[x'] &amp;gt; R[y']:
-        P[y'] = x'
-        D[y'] = D[i] - D[j] - k
-    else:
-        P[x'] = y'
-        D[x'] = D[j] - D[i] - k
-        R[y']++r
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Apply the data structure&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Provided &lt;code&gt;V[j] - V[i] = k&lt;/code&gt;: &lt;code&gt;Union(i,j,k)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Answer &lt;code&gt;V[j] - V[i]&lt;/code&gt;: if &lt;code&gt;Test(i,j)&lt;/code&gt; then &lt;code&gt;return D[j] - D[i]&lt;/code&gt;&lt;br&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://acm.hdu.edu.cn/showproblem.php?pid=3038&quot;&gt;How Many Answers Are Wrong&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3&gt;Extension 2: XOR&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://acm.hdu.edu.cn/showproblem.php?pid=3234&quot;&gt;Exclusive-OR&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2&gt;Split &amp;amp; Join AVL&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Basic operations
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;join&lt;/code&gt;: &lt;code&gt;T1&lt;/code&gt; &amp;amp; &lt;code&gt;T2&lt;/code&gt; are AVL trees, and any keyword in &lt;code&gt;T1&lt;/code&gt; is less than any keyword in &lt;code&gt;T2&lt;/code&gt;. Return a union in &lt;code&gt;O(|h(T1)-h(T2)|)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;split&lt;/code&gt;: return &lt;code&gt;T1&lt;/code&gt; with keywords less than &lt;code&gt;k&lt;/code&gt; &amp;amp; &lt;code&gt;T2&lt;/code&gt; with keywords larger than &lt;code&gt;k&lt;/code&gt; in &lt;code&gt;O(h(T))&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;insert&lt;/code&gt;: &lt;code&gt;split(T,x)&lt;/code&gt;: return &lt;code&gt;join(T1,{x},T2)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;delete&lt;/code&gt;: &lt;code&gt;split(T,x)&lt;/code&gt;: return &lt;code&gt;join(T1,T2)&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;intervalSelection&lt;/code&gt;: return &lt;code&gt;T&lt;/code&gt; with elements &lt;code&gt;k1 &amp;lt;= e &amp;lt;= k2&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;intervalCut&lt;/code&gt;: cut out interval&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;linkAndCut&lt;/code&gt;: &lt;code&gt;intervalCut&lt;/code&gt; and link to another place&lt;/li&gt;
-&lt;li&gt;other statistic maintainenance e.g. min, max, sum&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;Persistent AVL&lt;/h2&gt;
-
-&lt;p&gt;AVL is link based, and modification operations are &lt;code&gt;join&lt;/code&gt; &amp;amp; &lt;code&gt;split&lt;/code&gt;. Each time &lt;code&gt;O(logn)&lt;/code&gt; nodes visited and modified. Create a copy of &lt;code&gt;root&lt;/code&gt; to modified nodes.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://uva.onlinejudge.org/index.php?option=com_onlinejudge&amp;amp;Itemid=8&amp;amp;category=24&amp;amp;page=show_problem&amp;amp;problem=3983&quot;&gt;Version Controlled Editor&lt;/a&gt;&lt;/p&gt;
-</description>
-        <pubDate>Wed, 09 Nov 2016 00:00:00 +0900</pubDate>
-        <link>/blog/notes/competition/2016/11/09/data-structure-notes.html</link>
-        <guid isPermaLink="true">/blog/notes/competition/2016/11/09/data-structure-notes.html</guid>
-        
-        <category>competition</category>
-        
-        <category>data structure</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>Competition</category>
         
       </item>
     
