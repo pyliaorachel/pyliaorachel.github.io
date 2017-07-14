@@ -245,8 +245,7 @@ $ chmod 711 /home/ec2-user
 
 Remember to restart.
 
-> ###### Debug Methods
->
+> ###### Debug Tips 
 > 1. Echo message to `/var/log/xxx.sys.log`
 > 2. `tail -f /var/log/nginx/access.log` to check nginx logs
 > 3. `netstat -anp | less` to show network status
