@@ -252,3 +252,4 @@ Remember to restart.
 
 ## References
 * [How To Serve Flask Applications with Gunicorn and Nginx on Ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-14-04)
+* [NGINX Beginner's Guide](http://nginx.org/en/docs/beginners_guide.html#conf_structure)
