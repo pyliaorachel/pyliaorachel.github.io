@@ -21,7 +21,7 @@ how to deploy a __Flask__ app connected to a __Redis__ database and served on __
 
 1. Introducing Docker & Setup
 2. Basic Commands
-3. _Tutorial: A Flask Project on Docker_
+3. _Hands On Time: A Flask Project on Docker_
 
 ## Introducing Docker
 
@@ -58,8 +58,7 @@ Unlike bulky VMs, which include the entire OS kernel, containers are more lightw
 3. [Container](https://docs.docker.com/engine/userguide/storagedriver/imagesandcontainers/)
     - __A running instance of an image__.
     Images are configurations residing in storage, and containers bring them into memory.
-    If thinking of an __image__ as Windows 10, then __container__ is probably a running machine running Windows 10. 
-    There can be many machines in the world running Windows 10, but there will be only 1 Windows 10.
+    Think of __image__ as a certain static environment configuration, and __containers__ are created once you load and run the environment; there can be many container instances running a certain image, but one image defines only one environment.
 4. [Volume](https://docs.docker.com/engine/tutorials/dockervolumes/#data-volumes)
     - __A directory providing persistent and sharable data__.
     With out volumes, data will be destroyed once the container is removed.
@@ -185,6 +184,9 @@ Unlike bulky VMs, which include the entire OS kernel, containers are more lightw
     # Remove stopped services
     docker-compose rm
     ```
+
+## Hands On Time: A Flask Project on Docker
+
 
 
 
