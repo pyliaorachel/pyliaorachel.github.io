@@ -134,7 +134,7 @@ Unlike bulky VMs, which include the entire OS kernel, containers are more lightw
     docker run -d <image-name>
         
     # Automatically remove the container when it exits
-    docker run -rm <image-name>
+    docker run --rm <image-name>
         
     # Run an image on published port, mapping the port exposed by the container to the host port on my machine
     docker run -p <host-port>:<container-exposed-port> <image-name>
