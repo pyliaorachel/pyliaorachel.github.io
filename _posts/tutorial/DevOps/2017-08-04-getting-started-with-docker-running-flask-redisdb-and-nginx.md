@@ -257,13 +257,13 @@ $ docker network create example
 
 - Test
 
-  ```shell
-  $ docker network ls
-  > NETWORK ID          NAME                DRIVER              SCOPE
-  > ...
-  > abcdefghijkl        example             bridge              local
-  > ...
-  ```
+    ```shell
+    $ docker network ls
+    > NETWORK ID          NAME                DRIVER              SCOPE
+    > ...
+    > abcdefghijkl        example             bridge              local
+    > ...
+    ```
 
 #### Flask App Container 
 
@@ -319,16 +319,16 @@ See `src/flaskapp/example/db.py`.
 - Test
     - Install [redis-server](https://redis.io/topics/quickstart) on your local machine first for testing
 
-    ```shell
-    # Start the server on default port `6397`
-    $ redis-server
+        ```shell
+        # Start the server on default port `6397`
+        $ redis-server
 
-    # Start the flask app
-    (venv) $ cd src/flaskapp
-    (venv) $ gunicorn --bind 0.0.0.0:8080 example.wsgi
+        # Start the flask app
+        (venv) $ cd src/flaskapp
+        (venv) $ gunicorn --bind 0.0.0.0:8080 example.wsgi
 
-    # Open browser and go to `localhost:8080/<your-name>`. You should see `Hello <your-name>!`.
-    ```
+        # Open browser and go to `localhost:8080/<your-name>`. You should see `Hello <your-name>!`.
+        ```
 
 ###### [Deploy on Docker](https://docs.docker.com/samples/redis/#start-a-redis-instance)
 
