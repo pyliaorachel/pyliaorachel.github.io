@@ -69,7 +69,7 @@ Unlike bulky VMs, which include the entire OS kernel, containers are more lightw
 6. [Docker Network](https://docs.docker.com/engine/userguide/networking/)
     - __A mechanism for a cluster of containers to communicate with each other.__ 
     For a single project, it may contain several containers, one for web app, one for database, one for proxy server, etc.
-    Docker network provides a way for them to communicate with each other, while different docker networks remain isolated.
+    Docker network provides a way for them to communicate with each other, while different docker networks remain isolated. More conveniently, while the IP address of each container is dynamic, the name of it in a network is static, hence provide a way to access, for example, container `example` with port `8080` published, via `http://example:8080`.
 7. [Docker Compose](https://docs.docker.com/compose/overview/)
     - __A tool for defining and running a cluster of containers.__
     For the single project consisting of serveral containers, you may have to `docker run` them individually to start the single service.
