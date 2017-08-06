@@ -93,6 +93,7 @@ Unlike bulky VMs, which include the entire OS kernel, containers are more lightw
 ## Basic Commands
 
 1. [Image](https://docs.docker.com/engine/reference/commandline/image/)
+
     ```shell
     # List the current images you have and their details
     docker images
@@ -115,7 +116,9 @@ Unlike bulky VMs, which include the entire OS kernel, containers are more lightw
     docker build -t <image-name>[:<tag>] <path-to-directory-containing-dockerfile>
         * docker build -t me/my-image .
     ```
+
 2. [Container](https://docs.docker.com/engine/reference/run/)
+
     ```shell
     # List all running containers
     docker ps
@@ -155,7 +158,9 @@ Unlike bulky VMs, which include the entire OS kernel, containers are more lightw
     # Remove all containers
     docker rm $(docker ps -a -q)
     ```
+
 3. [Docker Network](https://docs.docker.com/engine/reference/commandline/network/)
+
     ```shell
     # List all networks
     docker network ls
@@ -178,7 +183,9 @@ Unlike bulky VMs, which include the entire OS kernel, containers are more lightw
     # Disconnet a container from a network
     docker network disconnect <network-name> <container-name>
     ```
+
 4. [Docker Compose](https://docs.docker.com/compose/reference/overview/)
+
     ```shell
     # (Re)create and run the service
     docker-compose up
@@ -196,6 +203,7 @@ In this tutorial, we will create a network first so that containers can communic
 #### Init Project
 
 1. Create project named `example` with the structure below. Different services are seperated into different folders, each running a container (or serveral containers, if you want to scale).
+
     ```shell
     .
     ├── README.md
@@ -220,12 +228,16 @@ In this tutorial, we will create a network first so that containers can communic
             ├── __init__.py
             └── redis.conf                            # redis server configuration
     ```
+
 2. Create `virtualenv` for each container. Since only `flaskapp` need a python environment, we only create this one.
+
     ```shell
     $ cd src/flaskapp
     $ virtualenv venv
     ```
+
 3. Install Packages in `virtualenv`.
+
     ```shell
     $ cd src/flaskapp
     $ source venv/bin/activate
@@ -244,6 +256,7 @@ $ docker network create example
 ```
 
 - Test
+
   ```shell
   $ docker network ls
   > NETWORK ID          NAME                DRIVER              SCOPE
@@ -261,13 +274,16 @@ The following assumes `venv` in `src/flaskapp` is activated.
 See `src/flaskapp/example/app.py` and `src/flaskapp/example/wsgi.py`.
 
 - Test
+
     ```shell
     (venv) $ cd src/flaskapp
     (venv) $ gunicorn --bind 0.0.0.0:8080 example.wsgi
     
     # Open browser and go to `localhost:8080`. You should see `Hello World!`.
     ```
+
 - Freeze dependencies into `requirements.txt`
+
     ```shell
     (venv) $ pip3 freeze | grep -v 'exampleflask' > requirements.txt # ignore dependency on itself
     ```
@@ -277,14 +293,18 @@ See `src/flaskapp/example/app.py` and `src/flaskapp/example/wsgi.py`.
 See `src/flaskapp/Dockerfile`. `venv` is made ignored by adding it in `.dockerignore`.
 
 - Build image with tag `yourusername/exampleflask`
+
     ```shell
     $ cd src/flaskapp
     $ docker build -t yourusername/exampleflask .
     ```
+
 - Run container on image `yourusername/exampleflask` with name `exampleflask`, publish port `8080`
+
     ```shell
     $ docker run -d --rm -p 8080:8080 --name exampleflask yourusername/exampleflask
     ```
+
 - Test
     - Open browser and go to `localhost:8080`. You should see `Hello World!`.
     
@@ -298,6 +318,7 @@ See `src/flaskapp/example/db.py`.
 
 - Test
     - Install [redis-server](https://redis.io/topics/quickstart) on your local machine first for testing
+
     ```shell
     # Start the server on default port `6397`
     $ redis-server
@@ -314,15 +335,20 @@ See `src/flaskapp/example/db.py`.
 See `src/redisdb/Dockerfile` and `src/redisdb/redis.conf`.
 
 - Build image with tag `yourusername/exampleredis`
+
     ```shell
     $ cd redisdb
     $ docker build -t yourusername/exampleredis .
     ```
+
 - Run container on image `yourusername/exampleredis` with name `exampleredis`, publish port `6379`
+
     ```shell
     $ docker run -d --rm -p 6379:6379 --name exampleredis yourusername/exampleredis
     ```
+
 - Test
+
     ```shell
     $ redis-cli
     > 127.0.0.1:6379>
@@ -330,7 +356,9 @@ See `src/redisdb/Dockerfile` and `src/redisdb/redis.conf`.
     # This is wrong
     > not connected>
     ```
+
 - Stop the containers, now run `flaskapp` and `redisdb` in docker network `example` for communication
+
     ```shell
     $ docker stop exampleflask exampleredis
 
@@ -339,6 +367,7 @@ See `src/redisdb/Dockerfile` and `src/redisdb/redis.conf`.
     $ docker run -d --rm --net example --name exampleredis yourusername/exampleredis
     $ docker run -d --rm -p 8080:8080 --net example --name exampleflask yourusername/exampleflask
     ```
+
 - Test
     - Open browser and go to `localhost:8080/<your-name>`. You should see `Hello <your-name>!`.
 
@@ -375,11 +404,14 @@ Choose either of them, modify the `<your-domain-name>` (and `your.domain.name` f
 See `src/nginx/Dockerfile`.
 
 - Build image with tag `yourusername/examplenginx`
+
     ```shell
     $ cd src/nginx
     $ docker build -t yourusername/examplenginx .
     ```
+
 - Run container on image `yourusername/examplenginx` with name `examplenginx`, publish port `80` (and `443` for `HTTPS`). (_Note that -p 8080:8080 is not needed anymore in starting the flask app container, as we will not access this port directly from the browser anymore but instead access this nginx proxy server_)
+
     ```shell
     # HTTP
     $ docker run -d --rm --net example -p 80:80 --name examplenginx yourusername/examplenginx
@@ -387,6 +419,7 @@ See `src/nginx/Dockerfile`.
     # HTTPS, share the directory containing SSL certificate with -v
     $ docker run -d --rm --net example -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt --name examplenginx yourusername/examplenginx
     ```
+
 - Test
     - `HTTP`
         - Open browser and go to `http://localhost`. You should see `Hello World!`.
@@ -405,10 +438,12 @@ _Docker network is not needed anymore, as docker compose creates a default netwo
 See `src/docker-compose.yml`.
 
 - Start docker compose
+
     ```shell
     $ cd src
     $ docker-compose up
     ```
+
 - Test
     - `HTTP`
         - Open browser and go to `http://localhost`. You should see `Hello World!`.
@@ -418,57 +453,64 @@ See `src/docker-compose.yml`.
 > #### Debug Tips
 >
 > 1. Use `-it` to run containers in interactive mode so that you can test, view logs, curl other containers, etc. under the environment the app is run in
->   ```shell
->   $ docker run -it --rm -p 8080:8080 --net example --name exampleflask yourusername/exampleflask /bin/bash
->   > root@abcdefghijkl:~#
+>
+>       ```shell
+>       $ docker run -it --rm -p 8080:8080 --net example --name exampleflask yourusername/exampleflask /bin/bash
+>       > root@abcdefghijkl:~#
 > 
->   # try curl other containers in the same network
->   $ root@abcdefghijkl:~# apt-get -qq update && apt-get -yqq install curl
->   $ root@abcdefghijkl:~# curl <other-container>:<port>
->   > ...
+>       # try curl other containers in the same network
+>       $ root@abcdefghijkl:~# apt-get -qq update && apt-get -yqq install curl
+>       $ root@abcdefghijkl:~# curl <other-container>:<port>
+>       > ...
 >   
->   # list networks
->   $ root@abcdefghijkl:~# cat /etc/hosts
->   > ...
->   ```
+>       # list networks
+>       $ root@abcdefghijkl:~# cat /etc/hosts
+>       > ...
+>       ```
+>
 > 2. Print the logs of a container
->   ```shell
->   $ docker logs exampleflask
->   > ...
->   ```
+>   
+>       ```shell
+>       $ docker logs exampleflask
+>       > ...
+>       ```
+>
 > 3. List the running containers to ensure they didn't encounter errors
->   ```shell
->   $ docker ps
->   CONTAINER ID        IMAGE                       COMMAND                  CREATED             STATUS              PORTS                    NAMES
->   abcdefghijkl        yourusername/exampleflask   "gunicorn --bind 0..."   some time ago       Up some time        0.0.0.0:8080->8080/tcp   exampleflask
->   mnopqrstuvwx        yourusername/exampleredis   "docker-entrypoint..."   some time ago       Up some time        6379/tcp                 exampleredis
->   ```
+>
+>       ```shell
+>       $ docker ps
+>       CONTAINER ID        IMAGE                       COMMAND                  CREATED             STATUS              PORTS                    NAMES
+>       abcdefghijkl        yourusername/exampleflask   "gunicorn --bind 0..."   some time ago       Up some time        0.0.0.0:8080->8080/tcp   exampleflask
+>       mnopqrstuvwx        yourusername/exampleredis   "docker-entrypoint..."   some time ago       Up some time        6379/tcp                 exampleredis
+>       ```
+>
 > 4. List information of the network to ensure the containers are run within
->   ```shell
->   $ docker network inspect example
->   > [
->       {
->           "Name": "example",
->           "Id": "...",
->           "Created": "...",
->           "Scope": "local",
->           "Driver": "bridge",
->           "EnableIPv6": false,
->           // ...other properties
->           "Containers": {
->               "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx": {
->                   "Name": "exampleredis",
->                   "EndpointID": "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
->                   "MacAddress": "aa:bb:cc:dd:ee:ff",
->                   "IPv4Address": "w.x.y.z/a",
->                   "IPv6Address": ""
+>
+>       ```shell
+>       $ docker network inspect example
+>       > [
+>           {
+>               "Name": "example",
+>               "Id": "...",
+>               "Created": "...",
+>               "Scope": "local",
+>               "Driver": "bridge",
+>               "EnableIPv6": false,
+>               // ...other properties
+>               "Containers": {
+>                   "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx": {
+>                       "Name": "exampleredis",
+>                       "EndpointID": "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+>                       "MacAddress": "aa:bb:cc:dd:ee:ff",
+>                       "IPv4Address": "w.x.y.z/a",
+>                       "IPv6Address": ""
+>                   },
+>                   // ...other container info
 >               },
->               // ...other container info
->           },
->           // ...other properties
->        }
->    ]
->   ```
+>               // ...other properties
+>           }
+>       ]
+>       ```
 
 ## References
 
