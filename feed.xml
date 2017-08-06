@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 06 Aug 2017 18:46:26 +0900</pubDate>
-    <lastBuildDate>Sun, 06 Aug 2017 18:46:26 +0900</lastBuildDate>
+    <pubDate>Sun, 06 Aug 2017 18:51:56 +0900</pubDate>
+    <lastBuildDate>Sun, 06 Aug 2017 18:51:56 +0900</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -280,14 +280,15 @@ docker-compose rm
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker network create example
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;ul&gt;
-&lt;li&gt;Test&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker network ls
+&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;NETWORK ID          NAME                DRIVER              SCOPE
+&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;...
+&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;abcdefghijkl        example             bridge              &lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;docker network ls
-  &amp;gt; NETWORK ID          NAME                DRIVER              SCOPE
-  &amp;gt; ...
-  &amp;gt; abcdefghijkl        example             bridge              &lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;
-  &amp;gt; ...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
 &lt;h4&gt;Flask App Container&lt;/h4&gt;
 
 &lt;p&gt;The following assumes &lt;code&gt;venv&lt;/code&gt; in &lt;code&gt;src/flaskapp&lt;/code&gt; is activated.&lt;/p&gt;
@@ -339,8 +340,7 @@ docker-compose rm
 &lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Install &lt;a href=&quot;https://redis.io/topics/quickstart&quot;&gt;redis-server&lt;/a&gt; on your local machine first for testing&lt;/li&gt;
-&lt;/ul&gt;
+&lt;li&gt;&lt;p&gt;Install &lt;a href=&quot;https://redis.io/topics/quickstart&quot;&gt;redis-server&lt;/a&gt; on your local machine first for testing&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Start the server on default port `6397`&lt;/span&gt;
 &lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;redis-server
 
@@ -350,6 +350,7 @@ docker-compose rm
 
 &lt;span class=&quot;c&quot;&gt;# Open browser and go to `localhost:8080/&amp;lt;your-name&amp;gt;`. You should see `Hello &amp;lt;your-name&amp;gt;!`.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h6&gt;&lt;a href=&quot;https://docs.docker.com/samples/redis/#start-a-redis-instance&quot;&gt;Deploy on Docker&lt;/a&gt;&lt;/h6&gt;

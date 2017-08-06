@@ -394,14 +394,15 @@ docker-compose rm
 <div class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="gp">$ </span>docker network create example
 </code></pre></div>
 <ul>
-<li>Test</li>
+<li><p>Test</p>
+<div class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="gp">$ </span>docker network ls
+<span class="gp">&gt; </span>NETWORK ID          NAME                DRIVER              SCOPE
+<span class="gp">&gt; </span>...
+<span class="gp">&gt; </span>abcdefghijkl        example             bridge              <span class="nb">local</span>
+<span class="gp">&gt; </span>...
+</code></pre></div></li>
 </ul>
-<div class="highlight"><pre><code class="language-shell" data-lang="shell">  <span class="nv">$ </span>docker network ls
-  &gt; NETWORK ID          NAME                DRIVER              SCOPE
-  &gt; ...
-  &gt; abcdefghijkl        example             bridge              <span class="nb">local</span>
-  &gt; ...
-</code></pre></div>
+
 <h4>Flask App Container</h4>
 
 <p>The following assumes <code>venv</code> in <code>src/flaskapp</code> is activated.</p>
@@ -453,8 +454,7 @@ docker-compose rm
 <li><p>Test</p>
 
 <ul>
-<li>Install <a href="https://redis.io/topics/quickstart">redis-server</a> on your local machine first for testing</li>
-</ul>
+<li><p>Install <a href="https://redis.io/topics/quickstart">redis-server</a> on your local machine first for testing</p>
 <div class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c"># Start the server on default port `6397`</span>
 <span class="gp">$ </span>redis-server
 
@@ -464,6 +464,7 @@ docker-compose rm
 
 <span class="c"># Open browser and go to `localhost:8080/&lt;your-name&gt;`. You should see `Hello &lt;your-name&gt;!`.</span>
 </code></pre></div></li>
+</ul></li>
 </ul>
 
 <h6><a href="https://docs.docker.com/samples/redis/#start-a-redis-instance">Deploy on Docker</a></h6>
