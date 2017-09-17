@@ -162,7 +162,7 @@ package/
 
 要點：
 
-1. Relative import裡，`.`代表上一層，幾個`.`就代表上幾層
+1. Relative import裡，`.`代表上一層，幾個`.`就代表上幾層。
 2. Relative import一律採用 `from ... import ...` 語法，即使是從 `.` import也要寫 `from . import some_module` 而非 `import .some_module`。原因是`.some_module`這個名稱在expression裡無法出現。Absolute import則無限制。
 
 ## 常見import陷阱
@@ -282,7 +282,7 @@ ImportError: cannot import name 'A_greet_back'
 
 	是的，治本方法還是好好思考自己寫的code為什麼會陷入這種危機，然後重新refactor吧。
 
-## Relative Import above Top-level Package
+#### Relative Import above Top-level Package
 
 還不熟悉relative import的人常常會見到這個error：
 
