@@ -6,9 +6,302 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 06 Aug 2017 18:51:56 +0900</pubDate>
-    <lastBuildDate>Sun, 06 Aug 2017 18:51:56 +0900</lastBuildDate>
+    <pubDate>Sun, 17 Sep 2017 19:06:36 +0800</pubDate>
+    <lastBuildDate>Sun, 17 Sep 2017 19:06:36 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Python的import陷阱</title>
+        <description>&lt;p&gt;在脫離Python幼幼班準備建立稍大型的專案的時候，學習如何組織化你的Python專案是一大要點。Python提供的&lt;strong&gt;module（模組）&lt;/strong&gt;與&lt;strong&gt;package（套件）&lt;/strong&gt;是建立架構的基本元件，但在module之間為了重複使用一些function（函數）或class（類別）而必須互相&lt;strong&gt;import（匯入）&lt;/strong&gt;，使用上一個不注意就會掉入混亂的import陷阱。&lt;/p&gt;
+
+&lt;p&gt;此篇將會從基本module和package介紹起，提點基本import語法及absolute import和relative import的用法與差異，最後舉出幾個常見因為錯誤import觀念造成的錯誤。&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;&lt;em&gt;* 請注意，以下只針對Python3進行講解與測試。&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2&gt;Module與Package&lt;/h2&gt;
+
+&lt;p&gt;基本上一個file就是一個module，裡頭可以定義function，class，和variable。&lt;br&gt;
+把一個module想成一個file，那一個package就是一個folder了。Package可裝有subpackage和module，讓你的專案更條理更組織化，最後一坨打包好還能分給別人使用。&lt;/p&gt;
+
+&lt;p&gt;先看看module。假設有一個module &lt;code&gt;sample_module.py&lt;/code&gt; 裡頭定義了一個function &lt;code&gt;sample_func&lt;/code&gt; ：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sample_func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Hello!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;現在你在同一個目錄裡下有另一個module &lt;code&gt;sample_module_import.py&lt;/code&gt; 想要重複使用這個function，這時可以直接從 &lt;code&gt;sample_module&lt;/code&gt; import拿取：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;sample_module&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sample_func&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'__main__'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sample_func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;跑 &lt;code&gt;python3 sample_module_import.py&lt;/code&gt; 會得到：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;Hello!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;再來是package。我們把上面兩個檔案包在一個新的folder &lt;code&gt;sample_package&lt;/code&gt; 底下：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;sample_package/
+├── __init__.py
+├── sample_module.py
+└── sample_module_import.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;很重要的是新增那個 &lt;code&gt;__init__.py&lt;/code&gt; 檔。它是空的沒關係，但一定要有，有點宣稱自己是一個package的味道。&lt;/p&gt;
+
+&lt;p&gt;這時候如果是進到 &lt;code&gt;sample_package&lt;/code&gt; 裡面跑一樣的指令，那沒差。但既然都打包成package了，通常是需要在package以外的地方下指令的，這時候裡面的import就要稍微做因應。&lt;/p&gt;
+
+&lt;p&gt;假設這時我們在跟 &lt;code&gt;sample_package&lt;/code&gt; 同一個folder底下，讓我們修正一下 &lt;code&gt;sample_package/sample_module_import.py&lt;/code&gt; ：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;s&quot;&gt;'''跑在`sample_package`底下（非常見情況）'''&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# from sample_module import sample_func&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;'''跑在跟`sample_package`同folder底下'''&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.sample_module&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sample_func&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;'''或'''&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# from sample_package.sample_module import sample_func&lt;/span&gt;
+
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'__main__'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sample_func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;這邊兩種解來自於absolute import和relative import的選擇，等等再提。總之我們可以跑了：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python3 -m sample_package.sample_module_import
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;修好了。這邊&lt;a href=&quot;https://docs.python.org/2/using/cmdline.html#cmdoption-m&quot;&gt;&lt;code&gt;-m&lt;/code&gt;&lt;/a&gt;是為了讓Python先import你要的package或module給你，然後再執行script。所以這邊 &lt;code&gt;sample_module_import&lt;/code&gt; 在跑的時候，是以 &lt;code&gt;sample_package&lt;/code&gt; 為環境的，這樣那些import才不會出錯。&lt;/p&gt;
+
+&lt;h2&gt;基本import語法&lt;/h2&gt;
+
+&lt;p&gt;前面有看過了，這邊統整介紹一下。如果你想使用在其他module裡定義的function、class、variable等等，就需要在使用它們之前先進行import。通常都會把需要import的module們列在整個file的最一開始，但不是必須。&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;s&quot;&gt;'''語法1：import [module]'''&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Import整個`random`module&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;random&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# 使用`random`module底下的`randint`function&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;random&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;randint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;'''語法2：from [module] import [name1, name2, ...]'''&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 從`random`module裡import其中一個function`randint`&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;random&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;randint&lt;/span&gt; 
+
+&lt;span class=&quot;c&quot;&gt;# 不一樣的是，使用`randint`的時候就不需要先寫`random`了&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;randint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;'''語法3：import [module] as [new_name]'''&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Import整個`random`module，但這個名字可能跟其他地方有衝突，改名成`rd`&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;random&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;rd&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# 使用`rd`這個名稱取代原本的`random`&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;randint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;'''語法4（不推薦）：from [module] import *'''&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Import所有`random`module底下的東西&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;random&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# 使用`randint`的時候也不需要先寫`random`&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;randint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;語法4不推薦原因是容易造成名稱衝突，降低可讀性和可維護性。&lt;/p&gt;
+
+&lt;h2&gt;Absolute Import v.s. Relative Import&lt;/h2&gt;
+
+&lt;p&gt;Python有兩種import方法，&lt;strong&gt;absolute import&lt;/strong&gt;及&lt;strong&gt;relative import&lt;/strong&gt;。Absolute import就是完整使用module路徑，relative import則是使用以當前package為參考的相對路徑。Relative import的需求在於，有時候在改變專案架構的時候，裡面的package和module會拉來拉去，這時候如果這些package裡面使用的是relative import的話，他們的相對關係就不會改變，也就是不需要再一一進入module裡更改路徑。但因為relative import的路徑取決於當前package，所以在哪裡執行就會造成不一樣的結果，一不小心又要噴一堆error；這時absolute import就會減少許多困擾。&lt;/p&gt;
+
+&lt;p&gt;這邊參考&lt;a href=&quot;https://www.python.org/dev/peps/pep-0328/#guido-s-decision&quot;&gt;PEP328&lt;/a&gt;提供的範例。Package架構如下：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;package/
+    __init__.py
+    subpackage1/
+        __init__.py
+        moduleX.py
+        moduleY.py
+    subpackage2/
+        __init__.py
+        moduleZ.py
+    moduleA.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;現在假設&lt;code&gt;package/subpackage1/moduleX.py&lt;/code&gt;想要從其他module裡import一些東西，則使用下列語法：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;s&quot;&gt;'''[A]表Absolute import範例；[R]表Relative import範例'''&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Import同一個package底下的sibling module `moduleY`&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;package.subpackage1&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moduleY&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moduleY&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.moduleY&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# 從同一個package底下的sibling module `moduleY` import `spam`這個function&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;package.subpackage1.moduleY&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;spam&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.moduleY&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;spam&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# 從隔壁package底下的module `moduleZ` import `eggs`這個function&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;package.subpackage2.moduleZ&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eggs&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;..subpackage2.moduleZ&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eggs&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Import parent package底下的module `moduleA`&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moduleA&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;..&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moduleA&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;或&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;...package&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moduleA&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;要點：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Relative import裡，&lt;code&gt;.&lt;/code&gt;代表上一層，幾個&lt;code&gt;.&lt;/code&gt;就代表上幾層&lt;/li&gt;
+&lt;li&gt;Relative import一律採用 &lt;code&gt;from ... import ...&lt;/code&gt; 語法，即使是從 &lt;code&gt;.&lt;/code&gt; import也要寫 &lt;code&gt;from . import some_module&lt;/code&gt; 而非 &lt;code&gt;import .some_module&lt;/code&gt;。原因是&lt;code&gt;.some_module&lt;/code&gt;這個名稱在expression裡無法出現。Absolute import則無限制。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;常見import陷阱&lt;/h2&gt;
+
+&lt;h4&gt;Circular Import&lt;/h4&gt;
+
+&lt;p&gt;想像一個module &lt;code&gt;A&lt;/code&gt; 在一開始要import另一個module &lt;code&gt;B&lt;/code&gt; 裡的東西，但在匯入module &lt;code&gt;B&lt;/code&gt; 的途中必須先執行它，而很不巧的它也需要從module &lt;code&gt;A&lt;/code&gt; import一些東西。但module &lt;code&gt;A&lt;/code&gt;還正在執行途中，自己都還沒定義好自己的function啊！於是你不讓我我不讓你，這種類似deadlock的情形正是常見的&lt;strong&gt;circular import（循環匯入）&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;讓我們看看範例。現在在 &lt;code&gt;sample_package&lt;/code&gt; 裡有 &lt;code&gt;A&lt;/code&gt; 和 &lt;code&gt;B&lt;/code&gt; 兩個module想互打招呼，程式碼分別如下：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;# A.py&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.B&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B_greet_back&lt;/span&gt;
+
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;A_say_hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'A says hello!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;B_greet_back&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;A_greet_back&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'A says hello back!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'__main__'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;A_say_hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;# B.py&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.A&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A_greet_back&lt;/span&gt;
+
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;B_say_hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'B says hello!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;A_greet_back&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;B_greet_back&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'B says hello back!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'__main__'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;B_say_hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;內容都一樣，只是&lt;code&gt;A/B&lt;/code&gt;互換。&lt;code&gt;B&lt;/code&gt; 很有禮貌想先打招呼。在與 &lt;code&gt;sample_package&lt;/code&gt; 同目錄底下執行：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python3 -m sample_package.B
+
+&amp;gt;&amp;gt;&amp;gt;
+Traceback &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;most recent call last&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/usr/local/Cellar/python3/3.6.2/Frameworks/Python.framework/Versions/3.6/lib/python3.6/runpy.py&quot;&lt;/span&gt;, line 193, &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;_run_module_as_main
+    &lt;span class=&quot;s2&quot;&gt;&quot;__main__&quot;&lt;/span&gt;, mod_spec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/usr/local/Cellar/python3/3.6.2/Frameworks/Python.framework/Versions/3.6/lib/python3.6/runpy.py&quot;&lt;/span&gt;, line 85, &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;_run_code
+    &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;code, run_globals&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/path/to/sample_package/B.py&quot;&lt;/span&gt;, line 2, &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &amp;lt;module&amp;gt;
+    from .A import A_greet_back
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/path/to/sample_package/A.py&quot;&lt;/span&gt;, line 1, &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &amp;lt;module&amp;gt;
+    from .B import B_greet_back
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/path/to/sample_package/B.py&quot;&lt;/span&gt;, line 2, &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &amp;lt;module&amp;gt;
+    from .A import A_greet_back
+ImportError: cannot import name &lt;span class=&quot;s1&quot;&gt;'A_greet_back'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;觀察到了嗎？&lt;code&gt;B&lt;/code&gt; 試圖import &lt;code&gt;A_greet_back&lt;/code&gt;，但途中先進到 &lt;code&gt;A&lt;/code&gt; 執行，而因為Python是從頭開始一行一行執行下來的，於是在定義 &lt;code&gt;A_greet_back&lt;/code&gt; 之前會先碰到自己的import statement，於是又進入 &lt;code&gt;B&lt;/code&gt;，然後陷入死胡同。&lt;/p&gt;
+
+&lt;p&gt;常見解決這種circular import的方法如下：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Import整個module而非單一attribute  &lt;/p&gt;
+
+&lt;p&gt;把 &lt;code&gt;B.py&lt;/code&gt; 更改成如下：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;# from .A import A_greet_back&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;B_say_hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'B says hello!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;# A_greet_back()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A_greet_back&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;就不會發生錯誤：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python3 -m sample_package.B
+
+&amp;gt;&amp;gt;&amp;gt;
+B says hello!
+A says hello back!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;理由是，執行 &lt;code&gt;from .A import A_greet_back&lt;/code&gt; 被迫要從load進來的 &lt;code&gt;A&lt;/code&gt; module object中找出 &lt;code&gt;A_greet_back&lt;/code&gt; 的定義，但此時這個module object還是空的；而 &lt;code&gt;from . import A&lt;/code&gt; 就只會檢查 &lt;code&gt;A&lt;/code&gt; module object 存不存在，至於 &lt;code&gt;A_greet_back&lt;/code&gt; 存不存在等到需要執行的時候再去找就行了。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;延遲import  &lt;/p&gt;
+
+&lt;p&gt;把 &lt;code&gt;B.py&lt;/code&gt; 更改成如下：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;# 前面全刪&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;B_say_hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.A&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A_greet_back&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'B says hello!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;A_greet_back&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;也會成功跑出結果。跟前面類似，Python在跑到這行時才會import &lt;code&gt;A&lt;/code&gt; module，這時因為 &lt;code&gt;B&lt;/code&gt; module都已經load完了，所以不會有circular import的問題。但這個方法比較hacky一點，大概只能在hackathon中使用，否則正式專案裡看到這種難維護的code可能會有生命危險。 &lt;/p&gt;
+
+&lt;p&gt;另一方面，把所有import statement擺到整個module最後面也是類似效果，但也會被打。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;好好釐清架構，避免circular import&lt;/p&gt;
+
+&lt;p&gt;是的，治本方法還是好好思考自己寫的code為什麼會陷入這種危機，然後重新refactor吧。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;Relative Import above Top-level Package&lt;/h2&gt;
+
+&lt;p&gt;還不熟悉relative import的人常常會見到這個error：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;ValueError: attempted relative import beyond top-level package
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;讓我們重現一下這個error。把 &lt;code&gt;B.py&lt;/code&gt; 前頭更改成如下：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;# from . import A&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;..sample_package&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;現在我們的路徑位置在與 &lt;code&gt;sample_package&lt;/code&gt; 同目錄底下。跑：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python3 -m sample_package.B
+
+&amp;gt;&amp;gt;&amp;gt;
+Traceback &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;most recent call last&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/usr/local/Cellar/python3/3.6.2/Frameworks/Python.framework/Versions/3.6/lib/python3.6/runpy.py&quot;&lt;/span&gt;, line 193, &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;_run_module_as_main
+    &lt;span class=&quot;s2&quot;&gt;&quot;__main__&quot;&lt;/span&gt;, mod_spec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/usr/local/Cellar/python3/3.6.2/Frameworks/Python.framework/Versions/3.6/lib/python3.6/runpy.py&quot;&lt;/span&gt;, line 85, &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;_run_code
+    &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;code, run_globals&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/path/to/sample_package/B.py&quot;&lt;/span&gt;, line 5, &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &amp;lt;module&amp;gt;
+    from ..sample_package import A
+ValueError: attempted relative import beyond top-level package
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;所謂的 &lt;code&gt;top-level package&lt;/code&gt; 就是你所執行的package中最高的那一層，也就是 &lt;code&gt;sample_package&lt;/code&gt;。超過這一層的relative import是不被允許的，指的就是 &lt;code&gt;..sample_package&lt;/code&gt; 這行嘗試跳兩層上去而超過 &lt;code&gt;sample_package&lt;/code&gt;了。  &lt;/p&gt;
+
+&lt;p&gt;可以試試更改當前目錄到上一層（&lt;code&gt;cd ..&lt;/code&gt;），假設叫 &lt;code&gt;parent_folder&lt;/code&gt; ，然後執行 &lt;code&gt;python3 -m parent_folder.sample_package.B&lt;/code&gt;，就會發現error消失了，因為現在的 &lt;code&gt;top-level package&lt;/code&gt; 已經變成 &lt;code&gt;parent_folder&lt;/code&gt;了。&lt;/p&gt;
+
+&lt;h2&gt;結語&lt;/h2&gt;
+
+&lt;p&gt;Import是各大語言必備功能，看似簡單，使用上來說陷阱卻頗多。如果搞不清楚Python中的import是怎麼運作的，除了在整體專案架構上難以靈活設計，更可能要陷入可怕的error海了。&lt;/p&gt;
+
+&lt;p&gt;我寫了一些額外的sample code放上&lt;a href=&quot;https://github.com/pyliaorachel/python-import-traps&quot;&gt;github&lt;/a&gt;了，有不清楚的地方可以直接參考。&lt;/p&gt;
+
+&lt;h2&gt;參考資料&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.python.org/2/tutorial/modules.html&quot;&gt;Python Documentation - Modules&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.python.org/3/reference/import.html&quot;&gt;Python Documnetation - the Import System&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.tutorialspoint.com/python/python_modules.htm&quot;&gt;tutorialspoint - Python Modules&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.python.org/dev/peps/pep-0328/#guido-s-decision&quot;&gt;PEP328 -- Imports: Multi-Line and Absolute/Relative&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://effbot.org/zone/import-confusion.htm&quot;&gt;Importing Python Modules&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.blog.pythonlibrary.org/2016/03/01/python-101-all-about-imports/&quot;&gt;Python 101: All about imports&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 15 Sep 2017 00:00:00 +0800</pubDate>
+        <link>/blog/tech/python/2017/09/15/pythons-import-trap.html</link>
+        <guid isPermaLink="true">/blog/tech/python/2017/09/15/pythons-import-trap.html</guid>
+        
+        <category>Python</category>
+        
+        <category>PyLadies</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Tech</category>
+        
+        <category>Python</category>
+        
+      </item>
     
       <item>
         <title>Getting Started with Docker Running Flask, RedisDB, and NGINX</title>
@@ -538,7 +831,7 @@ If you don&amp;#39;t need a customized configuration, you don&amp;#39;t need to 
 &lt;li&gt;&lt;a href=&quot;https://runnable.com/docker/docker-compose-networking&quot;&gt;Docker Compose Networking&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-        <pubDate>Fri, 04 Aug 2017 00:00:00 +0900</pubDate>
+        <pubDate>Fri, 04 Aug 2017 00:00:00 +0800</pubDate>
         <link>/tutorial/devops/docker/2017/08/04/getting-started-with-docker-running-flask-redisdb-and-nginx.html</link>
         <guid isPermaLink="true">/tutorial/devops/docker/2017/08/04/getting-started-with-docker-running-flask-redisdb-and-nginx.html</guid>
         
@@ -723,7 +1016,7 @@ IMPORTANT NOTES:
 &lt;li&gt;&lt;a href=&quot;https://nouveauframework.org/blog/installing-letsencrypts-free-ssl-amazon-linux/&quot;&gt;Installing LetsEncrypt’s free SSL on Amazon Linux&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-        <pubDate>Fri, 14 Jul 2017 00:00:00 +0900</pubDate>
+        <pubDate>Fri, 14 Jul 2017 00:00:00 +0800</pubDate>
         <link>/blog/tech/system/2017/07/14/nginx-server-ssl-setup-on-aws-ec2-linux-with-letsencrypt.html</link>
         <guid isPermaLink="true">/blog/tech/system/2017/07/14/nginx-server-ssl-setup-on-aws-ec2-linux-with-letsencrypt.html</guid>
         
@@ -957,7 +1250,7 @@ So now the server is run under &lt;code&gt;root&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;http://nginx.org/en/docs/beginners_guide.html#conf_structure&quot;&gt;NGINX Beginner&amp;#39;s Guide&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-        <pubDate>Fri, 07 Jul 2017 00:00:00 +0900</pubDate>
+        <pubDate>Fri, 07 Jul 2017 00:00:00 +0800</pubDate>
         <link>/blog/tech/system/2017/07/07/flask-app-with-gunicorn-on-nginx-server-upon-aws-ec2-linux.html</link>
         <guid isPermaLink="true">/blog/tech/system/2017/07/07/flask-app-with-gunicorn-on-nginx-server-upon-aws-ec2-linux.html</guid>
         
@@ -1698,7 +1991,7 @@ netsh wlan start hostednetwork
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-        <pubDate>Thu, 13 Apr 2017 00:00:00 +0900</pubDate>
+        <pubDate>Thu, 13 Apr 2017 00:00:00 +0800</pubDate>
         <link>/tutorial/hardware/arduino/2017/04/13/esp8266-with-arduino-trials-and-errors.html</link>
         <guid isPermaLink="true">/tutorial/hardware/arduino/2017/04/13/esp8266-with-arduino-trials-and-errors.html</guid>
         
@@ -1783,7 +2076,7 @@ netsh wlan start hostednetwork
 
 &lt;p&gt;This might not be the most perfect solution, but I bet there is no other simple way to update the schema without dumping the database all away; at least after all of the research, this is the only effective way I found to solve my problem. &lt;/p&gt;
 </description>
-        <pubDate>Wed, 29 Mar 2017 00:00:00 +0900</pubDate>
+        <pubDate>Wed, 29 Mar 2017 00:00:00 +0800</pubDate>
         <link>/blog/tech/django/2017/03/29/django-sqlite-db-cleanup.html</link>
         <guid isPermaLink="true">/blog/tech/django/2017/03/29/django-sqlite-db-cleanup.html</guid>
         
@@ -1905,7 +2198,7 @@ netsh wlan start hostednetwork
 &lt;li&gt;Learning Android &lt;strong&gt;release build&lt;/strong&gt; is awful! XCode requires only 1 press of button... See &lt;a href=&quot;https://github.com/shyjal/reactnative-android-production&quot;&gt;this tutorial&lt;/a&gt; and try to install the release built app. If you have your debug app (or previous version of released app) on your phone, remember to uninstall it by running &lt;code&gt;adb uninstall [package name]&lt;/code&gt; first (see &lt;a href=&quot;http://stackoverflow.com/questions/26794862/failure-install-failed-update-incompatible-even-if-app-appears-to-not-be-insta&quot;&gt;this&lt;/a&gt;)! For example, my case would be &lt;code&gt;adb uninstall com.granny&lt;/code&gt;.&lt;/li&gt;
 &lt;/ol&gt;
 </description>
-        <pubDate>Mon, 23 Jan 2017 00:00:00 +0900</pubDate>
+        <pubDate>Mon, 23 Jan 2017 00:00:00 +0800</pubDate>
         <link>/project/app/2017/01/23/granny.html</link>
         <guid isPermaLink="true">/project/app/2017/01/23/granny.html</guid>
         
@@ -2054,7 +2347,7 @@ Step 6. Valid assignment found. Solved.
 
 &lt;p&gt;Feel free to follow the instructions &lt;a href=&quot;https://github.com/pyliaorachel/battleship-ai&quot;&gt;here&lt;/a&gt; and find out the battleship placements of your peer!&lt;/p&gt;
 </description>
-        <pubDate>Tue, 06 Dec 2016 00:00:00 +0900</pubDate>
+        <pubDate>Tue, 06 Dec 2016 00:00:00 +0800</pubDate>
         <link>/project/ai/2016/12/06/battleship-ai.html</link>
         <guid isPermaLink="true">/project/ai/2016/12/06/battleship-ai.html</guid>
         
@@ -2151,7 +2444,7 @@ dependencies: [
 
 &lt;p&gt;Target &amp;gt; Edit Scheme &amp;gt; Run &amp;gt; Options &amp;gt; Use custom working directory: [project-directory]&lt;/p&gt;
 </description>
-        <pubDate>Thu, 24 Nov 2016 00:00:00 +0900</pubDate>
+        <pubDate>Thu, 24 Nov 2016 00:00:00 +0800</pubDate>
         <link>/blog/notes/swift/2016/11/24/serverside-swift.html</link>
         <guid isPermaLink="true">/blog/notes/swift/2016/11/24/serverside-swift.html</guid>
         
@@ -2332,7 +2625,7 @@ Parse categories as &lt;code&gt;label&lt;/code&gt; and values as &lt;code&gt;val
 &lt;li&gt;Customized x-/y-axis is not flexible enough&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-        <pubDate>Mon, 21 Nov 2016 00:00:00 +0900</pubDate>
+        <pubDate>Mon, 21 Nov 2016 00:00:00 +0800</pubDate>
         <link>/blog/tech/reactjs/2016/11/21/reactjs-data-visualization-libraries-in-a-hack-night.html</link>
         <guid isPermaLink="true">/blog/tech/reactjs/2016/11/21/reactjs-data-visualization-libraries-in-a-hack-night.html</guid>
         
@@ -2352,232 +2645,6 @@ Parse categories as &lt;code&gt;label&lt;/code&gt; and values as &lt;code&gt;val
         <category>Tech</category>
         
         <category>ReactJS</category>
-        
-      </item>
-    
-      <item>
-        <title>Docker Beginner</title>
-        <description>&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Basics
-
-&lt;ol&gt;
-&lt;li&gt;Terminologies&lt;/li&gt;
-&lt;li&gt;Commands&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Docker Images
-
-&lt;ol&gt;
-&lt;li&gt;Image Types&lt;/li&gt;
-&lt;li&gt;Create Images&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;Docker Compose
-
-&lt;ol&gt;
-&lt;li&gt;&lt;code&gt;docker-compose.yml&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Run Application&lt;/li&gt;
-&lt;/ol&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;Basics&lt;/h2&gt;
-
-&lt;h3&gt;Terminologies&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Images&lt;/strong&gt;: the &lt;strong&gt;file system and configuration of an application&lt;/strong&gt; used to &lt;strong&gt;create containers&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;docker inspect image-name&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Containers&lt;/strong&gt;: &lt;strong&gt;running instances of Docker images&lt;/strong&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Run the actual applications; includes an application and all of its dependencies &lt;/li&gt;
-&lt;li&gt;Share the kernel with other containers&lt;/li&gt;
-&lt;li&gt;Run as an isolated process in user space on the host OS &lt;/li&gt;
-&lt;li&gt;A container created by &lt;code&gt;docker run&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Docker daemon&lt;/strong&gt;: the background service running on the host that &lt;strong&gt;manages building, running and distributing Docker containers&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Docker client&lt;/strong&gt;: the command line tool that allows the user to interact with the Docker daemon&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Docker Hub&lt;/strong&gt;: a registry of Docker images&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Commands&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;docker login&lt;/code&gt; login to docker hub&lt;br&gt;
-&lt;code&gt;docker ps&lt;/code&gt; list current running containers&lt;br&gt;
-    - &lt;code&gt;docker ps -a&lt;/code&gt; list containers ran before&lt;br&gt;
-&lt;code&gt;docker images&lt;/code&gt; list images&lt;br&gt;
-&lt;code&gt;docker pull image-name&lt;/code&gt; pull image from hub&lt;br&gt;
-    - &lt;code&gt;image-name:version&lt;/code&gt; specify version e.g. &lt;code&gt;ubuntu:12.04&lt;/code&gt;, &lt;code&gt;ubuntu:latest&lt;/code&gt;
-&lt;code&gt;docker push USERNAME/image-name&lt;/code&gt; push image to hub&lt;br&gt;
-&lt;code&gt;docker run image-name [command]&lt;/code&gt; executes commands in container&lt;br&gt;
-    - &lt;code&gt;docker pull&lt;/code&gt; if image not exists
-    - &lt;code&gt;-it&lt;/code&gt; iterative mode; will not exit container&lt;br&gt;
-    - &lt;code&gt;-d&lt;/code&gt; detached mode; detach running container from terminal
-    - &lt;code&gt;-P&lt;/code&gt; publish all the exposed container ports to random ports on the Docker host
-    - &lt;code&gt;-p&lt;/code&gt; specify port number e.g. &lt;code&gt;-p 8888:80&lt;/code&gt; link 8888 on container to 80 on host
-    - &lt;code&gt;-e&lt;/code&gt; pass environment variables
-        - e.g. &lt;code&gt;-e AUTHOR=&amp;quot;name&amp;quot;&lt;/code&gt;
-    - &lt;code&gt;--name&lt;/code&gt; specify container name
-&lt;code&gt;docker stop container-name&lt;/code&gt; stop running container&lt;br&gt;
-&lt;code&gt;docker rm container1-name container2-name ...&lt;/code&gt; remove containers&lt;br&gt;
-    - &lt;code&gt;-f&lt;/code&gt; remove running containers 
-&lt;code&gt;docker port container-name&lt;/code&gt; port of running container
-&lt;code&gt;docker search image-name&lt;/code&gt; search for images  &lt;/p&gt;
-
-&lt;h2&gt;Docker Images&lt;/h2&gt;
-
-&lt;h3&gt;Image Types&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Base images v.s. child images
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Base image&lt;/strong&gt;: no parent images, usually images with an OS&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Child image&lt;/strong&gt;: build on base images and add additional functionality&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Official images v.s. user images
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Official image&lt;/strong&gt;: no prefix&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;User image&lt;/strong&gt;: &lt;code&gt;user/image-name&lt;/code&gt;; based on &lt;em&gt;base image&lt;/em&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Create Images&lt;/h3&gt;
-
-&lt;h4&gt;Steps&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Create an app&lt;/li&gt;
-&lt;li&gt;Write a Dockerfile&lt;/li&gt;
-&lt;li&gt;Build the image&lt;/li&gt;
-&lt;li&gt;Run your image&lt;/li&gt;
-&lt;li&gt;Dockerfile commands summary&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;Dockerfile&lt;/h4&gt;
-
-&lt;p&gt;List of commands the Docker daemon calls while creating an image.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Base Docker image to run from&lt;/li&gt;
-&lt;li&gt;Location of your project code&lt;/li&gt;
-&lt;li&gt;Dependencies&lt;/li&gt;
-&lt;li&gt;Commands to run at start-up&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# specify base image
-FROM alpine:latest # username/imagename:version
-
-# copying files &amp;amp; installing dependencies
-RUN apk add --update py-pip # install Python pip package to the alpine linux distribution # RUN add new layers
-
-# install required Python packages &amp;amp; copy files
-COPY requirements.txt /usr/src/app/
-RUN pip install --no-cache-dir -r /usr/src/app/requirements.txt
-COPY app.py /usr/src/app/
-COPY templates/index.html /usr/src/app/templates/
-
-# specify port number
-EXPOSE 5000
-
-# run application; one CMD per Dockerfile/Image
-CMD [&quot;python&quot;, &quot;/usr/src/app/app.py&quot;] # which command to run by default when started
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4&gt;Build Images&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;docker build -t &amp;lt;USERNAME&amp;gt;/appname [path-to-dockerfile]&lt;/code&gt;&lt;br&gt;
-    - &lt;code&gt;-t&lt;/code&gt; optional tag name&lt;/p&gt;
-
-&lt;h2&gt;Docker Compose&lt;/h2&gt;
-
-&lt;p&gt;Define &amp;amp; run multi-container apps.&lt;/p&gt;
-
-&lt;h3&gt;&lt;code&gt;docker-compose.yml&lt;/code&gt;&lt;/h3&gt;
-
-&lt;p&gt;Describe containers &amp;amp; volumes you want.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yml&quot; data-lang=&quot;yml&quot;&gt;&lt;span class=&quot;s&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;2&quot;&lt;/span&gt;
-
-&lt;span class=&quot;s&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;vote&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;./vote&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;python app.py&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-     &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;./vote:/app&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;5000:80&quot;&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;front-tier&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;
-
-  &lt;span class=&quot;s&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;./result&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;command&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;nodemon --debug server.js&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;./result:/app&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;5001:80&quot;&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;5858:5858&quot;&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;front-tier&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;
-
-  &lt;span class=&quot;s&quot;&gt;worker&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;./worker&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;
-
-  &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis:alpine&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;6379&quot;&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;
-
-  &lt;span class=&quot;s&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;postgres:9.4&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;db&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;db-data:/var/lib/postgresql/data&quot;&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;
-
-&lt;span class=&quot;s&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;db-data&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-
-&lt;span class=&quot;s&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;front-tier&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;back-tier&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Networks&lt;/strong&gt;: containers can communicate with others in the same network&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;Run Application&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;docker-compose up -d&lt;/code&gt; start all containers in &lt;code&gt;docker-compose.yml&lt;/code&gt;&lt;br&gt;
-    - &lt;code&gt;-d&lt;/code&gt; run in daemon mode in background&lt;/p&gt;
-
-&lt;p&gt;Then build &amp;amp; push to hub.&lt;/p&gt;
-</description>
-        <pubDate>Thu, 17 Nov 2016 00:00:00 +0900</pubDate>
-        <link>/blog/notes/docker/2016/11/17/docker-beginner.html</link>
-        <guid isPermaLink="true">/blog/notes/docker/2016/11/17/docker-beginner.html</guid>
-        
-        <category>docker</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Notes</category>
-        
-        <category>Docker</category>
         
       </item>
     
