@@ -54,7 +54,7 @@
 							<li class="category">
 								<a href="/blog/tech">
 									<span>Tech</span>
-									<span>7</span>
+									<span>8</span>
 								</a>
 							</li>
 						
@@ -253,7 +253,7 @@
 <p>要點：</p>
 
 <ol>
-<li>Relative import裡，<code>.</code>代表上一層，幾個<code>.</code>就代表上幾層</li>
+<li>Relative import裡，<code>.</code>代表上一層，幾個<code>.</code>就代表上幾層。</li>
 <li>Relative import一律採用 <code>from ... import ...</code> 語法，即使是從 <code>.</code> import也要寫 <code>from . import some_module</code> 而非 <code>import .some_module</code>。原因是<code>.some_module</code>這個名稱在expression裡無法出現。Absolute import則無限制。</li>
 </ol>
 
@@ -355,7 +355,7 @@ A says hello back!
 <p>是的，治本方法還是好好思考自己寫的code為什麼會陷入這種危機，然後重新refactor吧。</p></li>
 </ol>
 
-<h2>Relative Import above Top-level Package</h2>
+<h4>Relative Import above Top-level Package</h4>
 
 <p>還不熟悉relative import的人常常會見到這個error：</p>
 <div class="highlight"><pre><code class="language-bash" data-lang="bash">ValueError: attempted relative import beyond top-level package

@@ -6,9 +6,241 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 17 Sep 2017 19:06:36 +0800</pubDate>
-    <lastBuildDate>Sun, 17 Sep 2017 19:06:36 +0800</lastBuildDate>
+    <pubDate>Wed, 18 Oct 2017 22:28:27 +0800</pubDate>
+    <lastBuildDate>Wed, 18 Oct 2017 22:28:27 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>深度學習新手村：PyTorch入門</title>
+        <description>&lt;p&gt;深度學習新手在從學校、網路、或書中習得基礎神經網絡知識後，手癢想建立專案體現深度學習的威力之前，得先決定要玩哪一套深度學習框架。&lt;a href=&quot;https://www.tensorflow.org/&quot;&gt;TensorFlow&lt;/a&gt; 無疑是近來相當火紅的一個，其由 Google 開源，近年來已建立龐大社群基礎。&lt;/p&gt;
+
+&lt;p&gt;但 2017 年初由 Facebook 開源的另一套建立在 &lt;a href=&quot;http://torch.ch/&quot;&gt;Torch&lt;/a&gt; 之上的深度學習框架 &lt;a href=&quot;http://pytorch.org/&quot;&gt;PyTorch&lt;/a&gt; 因其語法簡潔優雅、概念直觀和易上手的特性，甫推出便迅速走紅，儼然已成為瓜分深度學習市場的有力競爭者。藉由這樣的優勢，此篇將引領深度學習新手入門 PyTorch ，簡述其核心概念，並以深度學習領域的 Hello World! 專案 -- MNIST 手寫數字辨識為例，直接帶大家理解 PyTorch 如何打造模型及進行深度學習。&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;&lt;em&gt;* 請注意，此篇 PyTorch 建立在 Python3 之上，並以 MacOSX 為環境。&lt;/em&gt;&lt;br&gt;
+&lt;em&gt;* 預備知識：基礎神經網絡 &amp;amp; 反向傳播算法（Backpropagation）概念&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://pytorch.org/&quot;&gt;PyTorch&lt;/a&gt; 為 Facebook 在 2017 年初開源的深度學習框架，其建立在 &lt;a href=&quot;http://torch.ch/&quot;&gt;Torch&lt;/a&gt; 之上，且標榜 Python First ，為量身替 Python 語言所打造，使用起來就跟寫一般 Python 專案沒兩樣，也能和其他 Python 套件無痛整合。PyTorch 的優勢在於其概念相當直觀且語法簡潔優雅，因此視為新手入門的一個好選項；再來其輕量架構讓模型得以快速訓練且有效運用資源 [1]。&lt;/p&gt;
+
+&lt;p&gt;網路上已有很多詳盡教學手把手帶你認識 PyTorch 的基本語法，例如&lt;a href=&quot;http://pytorch.org/tutorials/&quot;&gt;官方文件&lt;/a&gt;或&lt;a href=&quot;https://github.com/rguthrie3/DeepLearningForNLPInPytorch/blob/master/Deep%20Learning%20for%20Natural%20Language%20Processing%20with%20Pytorch.ipynb&quot;&gt;社群力量&lt;/a&gt;，這邊就只簡述概念，語法部分則藉由後面 MNIST 實作直接攻破。&lt;/p&gt;
+
+&lt;h2&gt;PyTorch 核心概念&lt;/h2&gt;
+
+&lt;p&gt;首先，讓我們來抓住 PyTorch 精髓吧！&lt;/p&gt;
+
+&lt;h4&gt;基本元素：&lt;code&gt;Tensor&lt;/code&gt;&lt;/h4&gt;
+
+&lt;p&gt;一個 Tensor（張量）類似一個高維度向量，也是深度學習裡進行運算的基本元素。這裡比數學上的意義還要廣義，所以可以把它當成任意維度的資料向量。既然此文假設讀者已有基本神經網絡知識，那為什麼 Tensor 會是基本元素應該不難理解吧。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://pytorch.org/docs/master/tensors.html#torch.Tensor&quot;&gt;&lt;code&gt;torch.Tensor&lt;/code&gt;&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;創建 Tensor，可包任意維度向量&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://pytorch.org/docs/master/torch.html#torch.randn&quot;&gt;&lt;code&gt;torch.randn&lt;/code&gt;&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;創建 Tensor，data 隨機&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;x1 + x2&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;兩個 Tensor 相加&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://pytorch.org/docs/master/torch.html#torch.cat&quot;&gt;&lt;code&gt;torch.cat&lt;/code&gt;&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;串聯（concatenate）Tensor&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://pytorch.org/docs/master/tensors.html#torch.Tensor.view&quot;&gt;&lt;code&gt;x.view&lt;/code&gt;&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;重塑（reshape）Tensor 維度&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Computational Graph&lt;/h4&gt;
+
+&lt;p&gt;Computational graph 讓你定義 data 要怎麼銜接組合才能取得 output、其中有哪些 parameter、有哪些 activation function 等等，總之你的 model 要運算導數（derivative）及梯度（gradient）需要的資訊都在裡頭。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://pytorch.org/docs/master/autograd.html&quot;&gt;&lt;code&gt;torch.autograd&lt;/code&gt;&lt;/a&gt; 是一個幫你把跟微分有關的事都處理好的重要套件。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://pytorch.org/docs/master/autograd.html#torch.autograd.Variable&quot;&gt;&lt;code&gt;autograd.Variable&lt;/code&gt;&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;上述基本元素 Tensor 其實只有告訴你裡頭的 data 和他的 shape，這些是不足夠整個 graph 運算 derivative 的。&lt;code&gt;autograd.Variable&lt;/code&gt; 是打包 Tensor 和一些額外資訊的元件，例如 &lt;code&gt;z&lt;/code&gt; 是 &lt;code&gt;x&lt;/code&gt; 和 &lt;code&gt;y&lt;/code&gt; 相加而成，那麼用 &lt;code&gt;autograd.Variable&lt;/code&gt; 處理 &lt;code&gt;z&lt;/code&gt; 能夠記錄這個&lt;strong&gt;相加&lt;/strong&gt;的資訊，而非單純把 &lt;code&gt;x+y&lt;/code&gt; 的&lt;strong&gt;結果&lt;/strong&gt;記下；如此一來才能運算 derivative。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://pytorch.org/docs/master/autograd.html#torch.autograd.Variable.backward&quot;&gt;&lt;code&gt;x.backward&lt;/code&gt;&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;從 &lt;code&gt;x&lt;/code&gt; 開始實施 backpropagation 魔法&lt;/li&gt;
+&lt;li&gt;被掃到的 variable &lt;code&gt;y&lt;/code&gt; 其 gradient 會在 &lt;code&gt;y.grad&lt;/code&gt; 裡累積&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Functions&lt;/h4&gt;
+
+&lt;p&gt;神經網絡需要用到很多 function，例如 activation function、loss function 等等。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://pytorch.org/docs/master/nn.html&quot;&gt;&lt;code&gt;torch.nn&lt;/code&gt;&lt;/a&gt; 提供了很多 neural network 需要的功能和元件，而&lt;a href=&quot;http://pytorch.org/docs/master/nn.html#torch-nn-functional&quot;&gt;&lt;code&gt;torch.nn.functional&lt;/code&gt;&lt;/a&gt; 也提供了很多常用 function。兩者差別在於， &lt;code&gt;torch.nn.functional&lt;/code&gt; 提供的是純函數，而 &lt;code&gt;torch.nn&lt;/code&gt; 提供的是一個包裝完整的 &lt;code&gt;nn.Module&lt;/code&gt;（也就是可以直接跟其它 function 鏈結起來拿去訓練了）。&lt;/p&gt;
+
+&lt;p&gt;API 基本上就是 function 名字，&lt;code&gt;Linear&lt;/code&gt;、&lt;code&gt;ReLU&lt;/code&gt;、&lt;code&gt;Sigmoid&lt;/code&gt; 之類，很簡單。&lt;/p&gt;
+
+&lt;h4&gt;Training &amp;amp; Optimizer&lt;/h4&gt;
+
+&lt;p&gt;從上面 &lt;code&gt;autograd.Variable&lt;/code&gt; 的介紹裡得知 gradient 已經有辦法算出來了，那算出來後就能以此更新參數，也就是我們能進行模型訓練了。不過深度學習裡還有一些竅門，能大大的優（複雜）化這些學習過程，例如 learning rate 的動態適應、每多少訓練資料要更新參數一次等等，這些演算法的選擇就是&lt;strong&gt;優化器（Optimizer）&lt;/strong&gt;的選擇。&lt;/p&gt;
+
+&lt;p&gt;不過既然我們在新手村，只要知道通常矇著眼選一個能得到更好的效果就行了。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://pytorch.org/docs/master/optim.html&quot;&gt;&lt;code&gt;torch.optim&lt;/code&gt;&lt;/a&gt; 裡陳列了很多 optimizer，常用的例如 &lt;code&gt;SGD&lt;/code&gt;、&lt;code&gt;Adam&lt;/code&gt;、&lt;code&gt;RMSprop&lt;/code&gt; 等等。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://pytorch.org/docs/master/optim.html#optimizer-step&quot;&gt;&lt;code&gt;o.step&lt;/code&gt;&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;更新參數&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;建立 Neural Network&lt;/h4&gt;
+
+&lt;p&gt;終於能來打造 neural network model 了。基本上這個 model 就是一個 class 繼承 &lt;a href=&quot;http://pytorch.org/docs/master/nn.html#torch.nn.Module&quot;&gt;&lt;code&gt;torch.nn.Module&lt;/code&gt;&lt;/a&gt;，只要 override &lt;code&gt;__init__&lt;/code&gt; 和 &lt;code&gt;forward&lt;/code&gt; 就能定義這個 model。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__init__&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;定義 model 中需要的參數，weight、bias 等等&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://pytorch.org/docs/master/nn.html#torch.nn.Module.forward&quot;&gt;&lt;code&gt;forward&lt;/code&gt;&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;定義 model 接收 input 時，data 要怎麼傳遞、經過哪些 activation function 等等&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;以 PyTorch 打造 MNIST 手寫數字辨識模型&lt;/h2&gt;
+
+&lt;p&gt;前半部分只是介紹一下這個那個在幹嘛、有哪些 API，現在就來實際訓練一個模型吧。&lt;a href=&quot;http://yann.lecun.com/exdb/mnist/&quot;&gt;MNIST&lt;/a&gt; 是一套手寫數字的訓練集，在機器學習界的重要性堪比程式語言的 Hello World! [9] 官方也有提供範例程式。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://corochann.com/wp-content/uploads/2017/02/mnist_plot.png&quot; alt=&quot;MNIST&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;接下來就是把官方範例去蕪存菁（簡化模型、省略 CUDA 等）、模組化、加上詳細註解、並提供一個互動介面供自行測試，一起用 PyTorch 和 MNIST 入門深度學習。&lt;/p&gt;
+
+&lt;h6&gt;環境設置 &amp;amp; 安裝套件&lt;/h6&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://pytorch.org/&quot;&gt;PyTorch&lt;/a&gt; 官網就跟 PyTorch 本身一樣優雅直觀得沒話說。上去選好你的環境設置，下載套件吧！&lt;/p&gt;
+
+&lt;h6&gt;理解模型&lt;/h6&gt;
+
+&lt;p&gt;Backpropagation 是常見訓練神經網絡的演算法，包含這些基本步驟：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;取得資料集，每筆資料包成 &lt;code&gt;(input, target output)&lt;/code&gt; 形式&lt;/li&gt;
+&lt;li&gt;建立模型
+
+&lt;ol&gt;
+&lt;li&gt;定義神經網絡中有哪幾層，形狀是如何&lt;/li&gt;
+&lt;li&gt;定義資料往前傳遞所需經過的 function，例如 activation function、loss function 等&lt;/li&gt;
+&lt;li&gt;挑選 optimizer 和其所需參數，例如 learning rate&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;訓練模型
+
+&lt;ol&gt;
+&lt;li&gt;初始化參數&lt;/li&gt;
+&lt;li&gt;把 input 通過網絡往前傳（Forward propagation），取得預測 output&lt;/li&gt;
+&lt;li&gt;計算 error（目標和預測結果的差距）&lt;/li&gt;
+&lt;li&gt;把 error 往回傳（Backward propagation），一一計算每個參數對此 error 的貢獻（取導數）&lt;/li&gt;
+&lt;li&gt;更新參數，對 error 貢獻越多處罰越多&lt;/li&gt;
+&lt;li&gt;如果 error 過大，重複步驟 2. 至 5.，直到 error 小到可接受，或自己設定要循環幾次（幾個 epoch）&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;儲存模型&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;俗話說，最好的註解就是程式本身。因為 PyTorch 這點做得很好了，我甚至覺得自己的註解相當多餘（還是加減看啦）。請大家自行閱讀&lt;a href=&quot;https://github.com/pyliaorachel/pytorch-mnist-interactive&quot;&gt;完整程式 + 註解&lt;/a&gt;，細節就不再贅述了。&lt;/p&gt;
+
+&lt;h6&gt;實際訓練&lt;/h6&gt;
+
+&lt;ol&gt;
+&lt;li&gt;官方範例
+
+&lt;ul&gt;
+&lt;li&gt;不想看我註解廢話的可以直接至&lt;a href=&quot;https://github.com/pytorch/examples/tree/master/mnist&quot;&gt;官方範例&lt;/a&gt;下載乾淨的程式，按照上面的步驟跑。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;模組化程式
+
+&lt;ul&gt;
+&lt;li&gt;想要在訓練好模型後實際調用來預測自己的手寫圖片體會那感動瞬間的，可以下載&lt;a href=&quot;https://github.com/pyliaorachel/pytorch-mnist-interactive&quot;&gt;敝範例&lt;/a&gt;，按照指示跑。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;途中會 log 一些訊息，告訴你現在的 error 降到多少、準確率提升到多高等等。如果想要自己調參數，在執行指令加上一些 option 即可。&lt;/p&gt;
+
+&lt;h6&gt;訓練結果&lt;/h6&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/pyliaorachel/pytorch-mnist-interactive/blob/master/img/training_log.png?raw=true&quot; alt=&quot;log&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;跑了10個 epoch 的結果準確率到達99%，還行。有興趣的可以自己調調參數、自己給測資等等。&lt;/p&gt;
+
+&lt;h2&gt;結語&lt;/h2&gt;
+
+&lt;p&gt;PyTorch 入門概念有了之後，是不是覺得語法相當直觀、對新手相當友善？除了電腦視覺和 CNN，也可以用 RNN 玩玩看&lt;a href=&quot;https://github.com/rguthrie3/DeepLearningForNLPInPytorch/blob/master/Deep%20Learning%20for%20Natural%20Language%20Processing%20with%20Pytorch.ipynb&quot;&gt;自然語言處理&lt;/a&gt;。有了這些基礎之後，自己踹踹其它或更大型的深度訓練模型，就能領取勳章揮別新手村啦。&lt;/p&gt;
+
+&lt;h2&gt;參考資料&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/pytorch/pytorch&quot;&gt;GitHub pytorch/pytorch&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://pytorch.org/tutorials/&quot;&gt;PyTorch Tutorials&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/rguthrie3/DeepLearningForNLPInPytorch/blob/master/Deep%20Learning%20for%20Natural%20Language%20Processing%20with%20Pytorch.ipynb&quot;&gt;Deep Learning for Natural Language Processing with Pytorch&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/ritchieng/the-incredible-pytorch&quot;&gt;GitHub ritchieng/the-incredible-pytorch&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/jcjohnson/pytorch-examples&quot;&gt;GitHub jsjohnson/pytorch-examples&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/yunjey/pytorch-tutorial&quot;&gt;GitHub yunjey/pytorch-tutorial&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://yann.lecun.com/exdb/mnist/&quot;&gt;MNIST Dataset&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://xmfbit.github.io/2017/03/04/pytorch-mnist-example/&quot;&gt;toy demo - PyTorch + MNIST&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.tensorflow.org/get_started/mnist/beginners&quot;&gt;MNIST For ML Beginners (TensorFlow)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://yashk2810.github.io/Applying-Convolutional-Neural-Network-on-the-MNIST-dataset/&quot;&gt;Applying Convolutional Neural Network on the MNIST dataset&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.jiqizhixin.com/articles/2017-10-09-4&quot;&gt;四天速成！香港科技大学 PyTorch 课件分享&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/27382990&quot;&gt;【pytorch】图像基本操作&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;補充資料&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;http://cs231n.stanford.edu/vecDerivs.pdf&quot;&gt;Vector, Matrix, and Tensor Derivatives&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://medium.com/towards-data-science/types-of-optimization-algorithms-used-in-neural-networks-and-ways-to-optimize-gradient-95ae5d39529f&quot;&gt;Types of Optimization Algorithms used in Neural Networks and Ways to Optimize Gradient Descent&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        <pubDate>Mon, 16 Oct 2017 00:00:00 +0800</pubDate>
+        <link>/blog/tech/deeplearning/2017/10/16/getting-started-with-deep-learning-with-pytorch.html</link>
+        <guid isPermaLink="true">/blog/tech/deeplearning/2017/10/16/getting-started-with-deep-learning-with-pytorch.html</guid>
+        
+        <category>Python</category>
+        
+        <category>PyTorch</category>
+        
+        <category>Machine Learning</category>
+        
+        <category>Deep Learning</category>
+        
+        <category>Neural Network</category>
+        
+        <category>Computer Vision</category>
+        
+        <category>PyLadies</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Tech</category>
+        
+        <category>DeepLearning</category>
+        
+      </item>
     
       <item>
         <title>Python的import陷阱</title>
@@ -139,7 +371,7 @@
 &lt;p&gt;要點：&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;Relative import裡，&lt;code&gt;.&lt;/code&gt;代表上一層，幾個&lt;code&gt;.&lt;/code&gt;就代表上幾層&lt;/li&gt;
+&lt;li&gt;Relative import裡，&lt;code&gt;.&lt;/code&gt;代表上一層，幾個&lt;code&gt;.&lt;/code&gt;就代表上幾層。&lt;/li&gt;
 &lt;li&gt;Relative import一律採用 &lt;code&gt;from ... import ...&lt;/code&gt; 語法，即使是從 &lt;code&gt;.&lt;/code&gt; import也要寫 &lt;code&gt;from . import some_module&lt;/code&gt; 而非 &lt;code&gt;import .some_module&lt;/code&gt;。原因是&lt;code&gt;.some_module&lt;/code&gt;這個名稱在expression裡無法出現。Absolute import則無限制。&lt;/li&gt;
 &lt;/ol&gt;
 
@@ -241,7 +473,7 @@ A says hello back!
 &lt;p&gt;是的，治本方法還是好好思考自己寫的code為什麼會陷入這種危機，然後重新refactor吧。&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2&gt;Relative Import above Top-level Package&lt;/h2&gt;
+&lt;h4&gt;Relative Import above Top-level Package&lt;/h4&gt;
 
 &lt;p&gt;還不熟悉relative import的人常常會見到這個error：&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;ValueError: attempted relative import beyond top-level package
@@ -2456,195 +2688,6 @@ dependencies: [
         <category>Notes</category>
         
         <category>Swift</category>
-        
-      </item>
-    
-      <item>
-        <title>ReactJS Data Visualization Libraries in a Hack Night</title>
-        <description>&lt;p&gt;At the hackathon last night, we were given a bunch of advertising data to work with so that data can be more understandable. I experimented with several React data visualization libraries, out of which I couldn&amp;#39;t really find a perfect one. I will share the experience working with the libraries, and what pros and cons I found.&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;p&gt;&lt;em&gt;All versions of implementation and final demo can be found &lt;a href=&quot;https://github.com/pyliaorachel/hack-with-ix/tree/master&quot;&gt;here&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Basically, below is just some subjective observations in a hack night, so there may be many mistakes in the description. I do appreciate any corrections!&lt;/p&gt;
-
-&lt;h3&gt;react-chartjs&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/reactjs/react-chartjs&quot;&gt;react-chartjs&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://github.com/pyliaorachel/hack-with-ix/blob/demo/ui/src/assets/react-chartjs.png?raw=true&quot; alt=&quot;react-chartjs&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;The main problem is in its documentation, which seems to be fancy but are actually including too many information which is loosely distributed throughout the entire doc.&lt;/p&gt;
-
-&lt;p&gt;Especially the &lt;code&gt;options&lt;/code&gt;, which determines the settings, style, scale, and all other important stuffs, are really messy and not working as expected. I searched through many examples but simply cannot get rid of the gray color in my chart. Discarded it because nobody wants such a chart with not-very-appealing look.&lt;/p&gt;
-
-&lt;p&gt;But I really like that I can work out a formatted x-axis display value. This should be a basic functionality, but surprisingly not many libraries get this well.&lt;/p&gt;
-
-&lt;h5&gt;Data Parsing&lt;/h5&gt;
-
-&lt;p&gt;Use &lt;code&gt;labels&lt;/code&gt; as x-axis or categories, &lt;code&gt;data&lt;/code&gt; in &lt;code&gt;datasets&lt;/code&gt; as y-axis or values.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;chartData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;datasets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;45&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-        &lt;span class=&quot;c1&quot;&gt;// other options&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}],&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;labels&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Red'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Blue'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Purple'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Yellow'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h5&gt;Pros&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Use &lt;code&gt;labels&lt;/code&gt; to represent x-axis, which is great that I can customize&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h5&gt;Cons&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Not providing a clear react version documentation but uses &lt;a href=&quot;http://www.chartjs.org/docs/&quot;&gt;chartjs&lt;/a&gt;&amp;#39;s instead, which I don&amp;#39;t really like because of the extensive information&lt;/li&gt;
-&lt;li&gt;Demonstration page not clear with how the data look like&lt;/li&gt;
-&lt;li&gt;Don&amp;#39;t know why, but some of the &lt;code&gt;options&lt;/code&gt; are not working, and I can&amp;#39;t do the styling because of this&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;react-d3&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/esbullington/react-d3&quot;&gt;react-d3&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://github.com/pyliaorachel/hack-with-ix/blob/demo/ui/src/assets/react-d3.png?raw=true&quot; alt=&quot;react-d3&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;The main problem is in data parsing.&lt;/p&gt;
-
-&lt;p&gt;You need to go through the whole data and explicitly parse out the &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; in a &lt;code&gt;values&lt;/code&gt; array, which is most commonly done by simply setting the &lt;code&gt;field&lt;/code&gt; key in other libraries. This can be helpful if you want even more flexibility, but this is seldom the case.&lt;/p&gt;
-
-&lt;p&gt;And again, where can I easily find the styling instructions? Miserable.&lt;/p&gt;
-
-&lt;h5&gt;Data Parsing&lt;/h5&gt;
-
-&lt;p&gt;Parse points as &lt;code&gt;x-y&lt;/code&gt; pairs in a &lt;code&gt;values&lt;/code&gt; array for coordinate charts.&lt;br&gt;
-Parse categories as &lt;code&gt;label&lt;/code&gt; and values as &lt;code&gt;value&lt;/code&gt; for category charts.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;lineData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;series1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;values&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;24&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;strokeWidth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;strokeDashArray&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;5,5&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;....&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nl&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;series2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;values&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;70&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;82&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;...,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;76&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;82&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;pieData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Margarita'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;20.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'John'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;55.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Tim'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;25.0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h5&gt;Pros&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Nice demonstration page, simple and clear&lt;/li&gt;
-&lt;li&gt;Parse the x/y coordinates ourselves, which can be more flexible (but also a con)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h5&gt;Cons&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The styling instructions are somehow hidden deep in the documentation&lt;/li&gt;
-&lt;li&gt;Need to parse the x/y coordinates ourselves, which is more tedious (but also a pro)&lt;/li&gt;
-&lt;li&gt;Customize displayed x-/y-axis is not flexible enough (only found time on x-axis to be formattable, but the instructions are not clear)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3&gt;react-d3-basic&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/react-d3/react-d3-basic&quot;&gt;react-d3-basic&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://github.com/pyliaorachel/hack-with-ix/blob/demo/ui/src/assets/react-d3-basic.png?raw=true&quot; alt=&quot;react-d3-basic&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;To be honest, I choose this as the final working version simply because I KNOW HOW TO STYLE IT. The documentation is the nice ever.&lt;/p&gt;
-
-&lt;p&gt;The main problem is still in data parsing and non-customizable x-axis display value.&lt;/p&gt;
-
-&lt;p&gt;Although the doc is nice, but the data are not especially shown, so I have to look for the &lt;code&gt;.csv&lt;/code&gt; files on github and found some missing. Not a big problem though, but a problem to hackers in hackathons.&lt;/p&gt;
-
-&lt;p&gt;For the x-axis display values, it provides an &lt;code&gt;x&lt;/code&gt; function for you to map. But they are not actually intended for you to map displayed values but only actual values. So if you want the function to return a string representation of a date, it fails because only number values are allowed.&lt;/p&gt;
-
-&lt;p&gt;And the bar-type charts yelled to me miserable errors for a missing &lt;code&gt;bandwidth&lt;/code&gt; function deep in the &lt;code&gt;chartjs&lt;/code&gt; package, probably because I used the bar charts to build some streaming charts. So be careful when implementing them.&lt;/p&gt;
-
-&lt;h5&gt;Data Parsing&lt;/h5&gt;
-
-&lt;p&gt;Use &lt;code&gt;field&lt;/code&gt; for the y-axis filter. Argument in &lt;code&gt;x&lt;/code&gt; function is the data object itself, so be sure the datum is parsed in a way that have both &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; values.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;// sample data
-[
-  {
-    total: 1,
-    incineration: 1,
-    garbageBury: 1,
-    month: 1,
-  },
-  {
-    total: 2,
-    incineration: 2,
-    garbageBury: 2,
-    month: 2,
-  },
-  ...
-]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;chartSeries&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;chartSeries&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;field&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'total'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Total'&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;field&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'incineration'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Incineration'&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;field&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'garbageBury'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Garbage Bury'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;area&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;parseDate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;month&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h5&gt;Pros&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Nice documentation, simple and clear&lt;/li&gt;
-&lt;li&gt;Easy to style&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h5&gt;Cons&lt;/h5&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Need more examples on how to parse the data for different charts&lt;/li&gt;
-&lt;li&gt;Customized x-/y-axis is not flexible enough&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Mon, 21 Nov 2016 00:00:00 +0800</pubDate>
-        <link>/blog/tech/reactjs/2016/11/21/reactjs-data-visualization-libraries-in-a-hack-night.html</link>
-        <guid isPermaLink="true">/blog/tech/reactjs/2016/11/21/reactjs-data-visualization-libraries-in-a-hack-night.html</guid>
-        
-        <category>react</category>
-        
-        <category>react-chartjs</category>
-        
-        <category>react-d3</category>
-        
-        <category>react-d3-basic</category>
-        
-        <category>data visualization</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Tech</category>
-        
-        <category>ReactJS</category>
         
       </item>
     
