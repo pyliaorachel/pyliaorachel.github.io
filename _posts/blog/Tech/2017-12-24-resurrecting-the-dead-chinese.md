@@ -264,7 +264,7 @@ while cnt < n_sent:
         cnt += 1 
 ```
 
-生成的結果有大幅度的改善，下面是一些結果（參數：sequence length = 50, batch size = 32, embedding dimension = 256, hidden_dimension = 256, learning rate = 0.0001, dropout = 0.2, epoch = 30; 訓練時間：5~6小時 on 2 GHz Intel Core i5 CPU）：
+生成的結果有大幅度的改善，下面是一些結果（參數：sequence length = 50, batch size = 32, embedding dimension = 256, hidden dimension = 256, learning rate = 0.0001, dropout = 0.2, epoch = 30; 訓練時間：5~6小時 on 2 GHz Intel Core i5 CPU）：
 
 ```
 在战争中否坚决地实行和全体生活的形势是错误的，那一世界有特点的人们想不另一时，愿意的指导、非英时、半成大党的估计。按照这个人，若不重视显极，而是使他们取得胜利。我也一定要君子使国家吗？可以白有的大子加制，使使他服长。难道这怎么能短良呢？则我早上怎这么样？说得到太的觉多了没才会名季厌。恶—那样里来不会自六方），不奏怨恨，我敢不敬，言语他的推子。君子恭敬仁义。帝国主义已经：说多了，不可见变愿意十五，即后，一战不能打干，就自以只是在那类里的自线之养。
