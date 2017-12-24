@@ -1,0 +1,341 @@
+<h2 id="content">Content</h2>
+
+<ol>
+  <li>What is Linked List?</li>
+  <li>Linked List v.s. Array</li>
+  <li>Visualizing Linked List</li>
+  <li>Basic examples (in C)</li>
+</ol>
+
+<!--more-->
+<hr />
+<h1 id="what-is-linked-list">What is Linked List?</h1>
+
+<p><em>Linked lists</em> use <strong>dynamically allocated memories</strong> as data storage, and associate these storages with <strong>pointers</strong>.</p>
+
+<p>Well, you may just think of <em>linked lists</em> as arrays that are <strong>resizable</strong>, easily <strong>rearrangible</strong>, with <strong>non-consecutive</strong> slots.</p>
+
+<h1 id="linked-list-vs-array">Linked List v.s. Array</h1>
+
+<p>Everyone likes comparisons. So the properties of linked list &amp; array here -</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Linked List</th>
+      <th style="text-align: left">Array</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">* Dynamic size</td>
+      <td style="text-align: left">Fixed size</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">* Cheaper insertion</td>
+      <td style="text-align: left">Expensive insertion</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">No random access</td>
+      <td style="text-align: left">* Random Access</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">—</td>
+      <td style="text-align: left">* Better cache performance</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Extra memory space</td>
+      <td style="text-align: left">* —</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>
+    <p>We must know how many elements to allow when defining an array; <strong>linked lists</strong> allowes more flexibility.</p>
+  </li>
+  <li>
+    <p>To insert an element into array, we probably need to move a whole bunch of elements backwards for the newcomer to fit. For <strong>linked lists</strong>, it’s just about switching between some pointers and that’s it.</p>
+  </li>
+  <li>
+    <p>Memories are allocated consecutively for arrays, which mean calculating <code class="highlighter-rouge">arr[5]</code>, <code class="highlighter-rouge">arr[10]</code>, <code class="highlighter-rouge">arr[1000]</code> are all about adding offsets to <code class="highlighter-rouge">arr[0]</code>, which is quite cheap. But for <strong>linked lists</strong>, the memories are dynamically allocated on heap and do not have this luxury.</p>
+  </li>
+  <li>
+    <p>Moreover for consecutive memories, the cache performance is better, since a whole bunch of array elements that fit into the cache size will be fetched all at once.</p>
+  </li>
+  <li>
+    <p><strong>Linked lists</strong> requires more memory space than arrays due to the fact that pointers are required.</p>
+  </li>
+</ul>
+
+<h1 id="visualizing-linked-list">Visualizing Linked List</h1>
+
+<p>OK, so what’s the picture of <em>linked lists</em>? It all starts with a pointer (<code class="highlighter-rouge">*list</code>), followed by a list of nodes (<code class="highlighter-rouge">node_i</code>):</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+  []   -&gt;   [_]  -&gt;  [_]  -&gt; ...  -&gt;  [_]  -&gt;  NULL
+*list 	  node_1   node_2    ...    node_N
+
+</code></pre>
+</div>
+
+<p>Hold on, some structures need to be defined for <strong>lists</strong> and <strong>nodes</strong> before you can easily mingle with the crazy pointers.</p>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code>
+<span class="k">struct</span> <span class="n">Node</span> <span class="p">{</span>
+	<span class="kt">int</span> <span class="n">value</span><span class="p">;</span> <span class="c1">// holding the value of the node; can be any type or have multiple value fields
+</span>	<span class="k">struct</span> <span class="n">Node</span> <span class="o">*</span><span class="n">next</span><span class="p">;</span> <span class="c1">// pointing to the next node in list
+</span><span class="p">};</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">Node</span> <span class="n">Node</span><span class="p">;</span>
+
+<span class="k">struct</span> <span class="n">SinglyLinkedList</span> <span class="p">{</span>
+	<span class="n">Node</span> <span class="o">*</span><span class="n">head</span><span class="p">;</span> <span class="c1">// pointing to the first node in list
+</span>	<span class="kt">int</span> <span class="n">size</span><span class="p">;</span> <span class="c1">// count of nodes in list; optional field
+</span><span class="p">};</span>
+
+<span class="k">typedef</span> <span class="k">struct</span> <span class="n">SinglyLinkedList</span> <span class="n">SinglyLinkedList</span><span class="p">;</span>
+
+</code></pre>
+</div>
+
+<blockquote>
+  <h4 id="havent-seen-typedef-before">Haven’t seen <code class="highlighter-rouge">typedef</code> before?</h4>
+  <p><code class="highlighter-rouge">typedef</code> provides an easy way to define types so that you don’t have to type in so many words when declaring a variable with that data type.</p>
+</blockquote>
+
+<blockquote>
+  <ul>
+    <li><code class="highlighter-rouge">typedef [actual-data-type] [a-convenient-name]</code></li>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p>So in C, after defiing a struct (e.g. Node), everytime you wanna declare a Node, you type <code class="highlighter-rouge">struct Node n</code>. Now I know how to alias <code class="highlighter-rouge">struct Node</code> into <code class="highlighter-rouge">Node</code> by <code class="highlighter-rouge">typedef</code>!</p>
+</blockquote>
+
+<blockquote>
+  <ul>
+    <li><code class="highlighter-rouge">typedef struct Node Node;</code></li>
+  </ul>
+</blockquote>
+
+<p>Then we’re ready to use these structs and build a linked list.</p>
+
+<h1 id="basic-examples-in-c">Basic Examples (in C)</h1>
+
+<h3 id="initialization">Initialization</h3>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code>
+<span class="n">SinglyLinkedList</span> <span class="o">*</span><span class="n">list</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="n">Node</span> <span class="o">*</span><span class="n">n</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="n">Node</span> <span class="o">*</span><span class="n">temp_n</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+<span class="n">list</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">SinglyLinkedList</span><span class="p">));</span>
+<span class="n">list</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="n">list</span><span class="o">-&gt;</span><span class="n">size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+</code></pre>
+</div>
+
+<blockquote>
+  <p><code class="highlighter-rouge">malloc</code> stands for memory allocation, which is similar to the <code class="highlighter-rouge">new</code> keyword in C++.<br />
+You pass in the size of memory you want to allocate, so for a <code class="highlighter-rouge">SinglyLinkedList</code> struct, its
+<code class="highlighter-rouge">sizeof(SinglyLinkedList)</code>.</p>
+</blockquote>
+
+<h3 id="adding-a-node-to-list">Adding a node to list</h3>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code>
+<span class="cm">/*      []     -&gt;    NULL   */</span>
+<span class="cm">/*    *list                 */</span>
+
+<span class="c1">// create a node
+</span><span class="n">n</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Node</span><span class="p">));</span>
+<span class="n">n</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// give the node a value
+</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span> <span class="c1">// the node is not linked by other nodes yet
+</span>
+<span class="c1">// add it to the head of the list
+</span><span class="n">list</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+<span class="n">list</span><span class="o">-&gt;</span><span class="n">size</span><span class="o">++</span><span class="p">;</span>
+
+<span class="cm">/*      []     -&gt;    [1]    -&gt;     NULL   */</span>
+<span class="cm">/*    *list           ↑                   */</span>
+<span class="cm">/*                   *n      			  */</span>
+
+<span class="c1">// remove it from the list
+</span><span class="n">list</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="n">list</span><span class="o">-&gt;</span><span class="n">size</span><span class="o">--</span><span class="p">;</span>
+
+<span class="cm">/*      []  -&gt;		NULL	[1] -&gt;  NULL   */</span>
+<span class="cm">/*    *list                  ↑             */</span>
+<span class="cm">/*                           *n       	   */</span>
+
+<span class="c1">// destroy it by releasing its memory
+</span><span class="n">free</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+
+<span class="cm">/*      []     -&gt;    NULL   */</span>
+<span class="cm">/*    *list                 */</span>
+
+</code></pre>
+</div>
+
+<blockquote>
+  <p>Always free your malloc’ed memories to avoid memory leak.</p>
+</blockquote>
+
+<h3 id="adding-nodes-to-list">Adding nodes to list</h3>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code>
+<span class="c1">// declare pointer temp_n to point to the head of the empty list
+</span><span class="n">temp_n</span> <span class="o">=</span> <span class="n">list</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">;</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">// create new node
+</span>	<span class="n">n</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Node</span><span class="p">));</span>
+	<span class="n">n</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+	<span class="n">n</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+	<span class="c1">// add to the head of the list
+</span>	<span class="k">if</span> <span class="p">(</span><span class="n">list</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// if list empty, let head point to n
+</span>		<span class="n">list</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="c1">// else let the currently pointed node link to n (by assigning *next to point to n)
+</span>		<span class="n">temp_n</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">temp_n</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+	<span class="n">list</span><span class="o">-&gt;</span><span class="n">size</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/*      []  -&gt; [0] -&gt; [1] -&gt; [2] -&gt; ... -&gt; [999] -&gt;  NULL   */</span>
+<span class="cm">/*    *list     ↑  -&gt;  ↑  -&gt;  ↑     ... -&gt;   ↑    	        */</span>
+<span class="cm">/*          *temp_n *temp_n *temp_n        *temp_n 			*/</span>
+
+</code></pre>
+</div>
+
+<blockquote>
+  <p>Use a temp node pointer to move around the list.</p>
+</blockquote>
+
+<h3 id="list-traversal">List traversal</h3>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code>
+<span class="kt">int</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">temp_n</span> <span class="o">=</span> <span class="n">list</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">;</span>
+
+<span class="k">while</span> <span class="p">(</span><span class="n">temp_n</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"value: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">temp_n</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">);</span>
+	<span class="n">sum</span> <span class="o">+=</span> <span class="n">temp_n</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">;</span>
+	<span class="n">temp_n</span> <span class="o">=</span> <span class="n">temp_n</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span> <span class="c1">// move forward the cursor
+</span><span class="p">}</span>
+
+<span class="n">printf</span><span class="p">(</span><span class="s">"sum: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">sum</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<h3 id="insert-a-node-into-list">Insert a node into list</h3>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code>
+<span class="cm">/*      []  -&gt; [0] -&gt; [1] -&gt; [2] -&gt; ... -&gt; [999] -&gt;  NULL   */</span>
+<span class="cm">/*    *list 											    */</span>
+
+<span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="c1">// inserting into index 5 of list
+</span><span class="n">n</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">Node</span><span class="p">));</span>
+<span class="n">n</span><span class="o">-&gt;</span><span class="n">value</span> <span class="o">=</span> <span class="mi">87</span><span class="p">;</span>
+<span class="n">n</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+<span class="c1">// traverse through the list to find index; assume we don't check if index is valid
+</span><span class="n">temp_n</span> <span class="o">=</span> <span class="n">list</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">;</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">temp_n</span> <span class="o">=</span> <span class="n">temp_n</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/*      []  -&gt; ... -&gt; [4] -&gt; [5] -&gt; ... -&gt;  NULL   */</span>
+<span class="cm">/*    *list            ↑                           */</span>
+<span class="cm">/*                  *temp_n                        */</span>
+
+<span class="c1">// insert by moving around pointers
+</span><span class="n">n</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">temp_n</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="n">temp_n</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+
+<span class="cm">/*                    *n  -&gt; [87]	                       */</span>
+<span class="cm">/*                             ↓                           */</span>
+<span class="cm">/*      []  -&gt; ... -&gt; [4] -&gt;  [5]   -&gt; ... -&gt;  NULL        */</span>
+<span class="cm">/*    *list            ↑                                   */</span>
+<span class="cm">/*                  *temp_n                                */</span>
+
+<span class="cm">/*                    *n  -&gt; [87]	                       */</span>
+<span class="cm">/*                         ⬈   ↓                           */</span>
+<span class="cm">/*      []  -&gt; ... -&gt; [4]     [5]   -&gt; ... -&gt;  NULL        */</span>
+<span class="cm">/*    *list            ↑                                   */</span>
+<span class="cm">/*                  *temp_n                                */</span>
+
+<span class="n">list</span><span class="o">-&gt;</span><span class="n">size</span><span class="o">++</span><span class="p">;</span>
+
+</code></pre>
+</div>
+
+<h3 id="remove-a-node-from-list">Remove a node from list</h3>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code>
+<span class="n">index</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="c1">// removing node at index 5 of list
+</span>
+<span class="c1">// traverse through the list to find index; assume we don't check if index is valid
+</span><span class="n">temp_n</span> <span class="o">=</span> <span class="n">list</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">;</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">temp_n</span> <span class="o">=</span> <span class="n">temp_n</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/*      []  -&gt; ... -&gt; [4] -&gt; [87] -&gt; ... -&gt;  NULL  */</span>
+<span class="cm">/*    *list            ↑                           */</span>
+<span class="cm">/*                  *temp_n                        */</span>
+
+<span class="c1">// remove by moving around pointers; notice that we're removing temp_n-&gt;next instead of temp-&gt;n
+</span><span class="n">n</span> <span class="o">=</span> <span class="n">temp_n</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span> <span class="c1">// n = node to remove
+</span><span class="n">temp_n</span><span class="o">-&gt;</span><span class="n">next</span> <span class="o">=</span> <span class="n">n</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span> <span class="c1">// connect the previous node and the next node
+</span>
+<span class="cm">/*                    		  *n	                       */</span>
+<span class="cm">/*                             ↓                           */</span>
+<span class="cm">/*      []  -&gt; ... -&gt; [4] -&gt;  [87]   -&gt; ... -&gt;  NULL       */</span>
+<span class="cm">/*    *list            ↑                                   */</span>
+<span class="cm">/*                  *temp_n                                */</span>
+
+<span class="cm">/*                    		  *n	                                */</span>
+<span class="cm">/*                             ↓                                    */</span>
+<span class="cm">/*      []  -&gt; ... -&gt; [4]     [87]   -&gt;  [5]  -&gt; ... -&gt;  NULL       */</span>
+<span class="cm">/*    *list            ↑  \_____________⬈	                        */</span>
+<span class="cm">/*                  *temp_n                                         */</span>
+
+<span class="n">free</span><span class="p">(</span><span class="n">n</span><span class="p">);</span> <span class="c1">// release memory
+</span><span class="n">list</span><span class="o">-&gt;</span><span class="n">size</span><span class="o">--</span><span class="p">;</span>	
+
+</code></pre>
+</div>
+
+<h3 id="destroy-the-whole-list-before-program-ends">Destroy the whole list before program ends</h3>
+
+<div class="language-c highlighter-rouge"><pre class="highlight"><code>
+<span class="k">while</span> <span class="p">(</span><span class="n">list</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">temp_n</span> <span class="o">=</span> <span class="n">list</span><span class="o">-&gt;</span><span class="n">head</span><span class="p">;</span>
+	<span class="n">list</span><span class="o">-&gt;</span><span class="n">head</span> <span class="o">=</span> <span class="n">list</span><span class="o">-&gt;</span><span class="n">head</span><span class="o">-&gt;</span><span class="n">next</span><span class="p">;</span>
+	<span class="n">free</span><span class="p">(</span><span class="n">temp_n</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// finally, free list as well
+</span><span class="n">free</span><span class="p">(</span><span class="n">list</span><span class="p">);</span>
+
+</code></pre>
+</div>
+
+<h1 id="summary">Summary</h1>
+
+<p><strong>Linked lists</strong> are the most basic data structure to know and deal with, and its application is wide, such as creating trees. Make sure you can construct a valid linked list before you move on to the more complicated pointer-related data structure!</p>
+
+<p>Source code can be found at <a href="https://github.com/pyliaorachel/data-structure-and-algorithm/blob/master/DataStructures/LinkedList/Implementations/linked-list.c">GitHub</a>.</p>
+
+<h2 id="references">References</h2>
+<ul>
+  <li><a href="http://www.geeksforgeeks.org/linked-list-vs-array/">GeeksforGeeks - Linked List vs Array</a></li>
+</ul>

@@ -1,0 +1,65 @@
+<p>To beginners of Django, you may want to play with the sqlite db configuration commands before you actually implement something related to your project. The cleanup afterwards may be harmful due to the lack of clear instructions found online, and many cleanup should be done manually. Some useful commands and solutions to weird issues will be addressed.</p>
+
+<!--more-->
+<h4 id="db-commands">DB Commands</h4>
+
+<h6 id="migrations"><a href="https://docs.djangoproject.com/en/1.10/topics/migrations/">Migrations</a></h6>
+
+<p><code class="highlighter-rouge">python manage.py makemigrations</code>: creating new migrations based on the changes you have made to your models<br />
+<code class="highlighter-rouge">python manage.py migrate</code>: applying &amp; unapplying migrations</p>
+
+<ul>
+  <li>Issues
+    <ul>
+      <li><a href="http://stackoverflow.com/questions/9373871/django-migrate-table-forum-user-already-exists">table not exists errors</a> occur
+        <ul>
+          <li>Run <code class="highlighter-rouge">python manage.py migrate --fake</code> instead</li>
+        </ul>
+      </li>
+      <li><a href="http://stackoverflow.com/questions/21457563/operationalerror-no-such-column">column not exists errors</a> occur
+        <ul>
+          <li>Probably due to schema changes not synced with DB tables; check schema with <code class="highlighter-rouge">python manage.py inspectdb</code></li>
+          <li>Suggest cleaning up the entire database in the following section</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h6 id="clean-up">Clean Up</h6>
+
+<p>This is only used when you want to clean up the <strong>entire database</strong>, e.g. you’re playing with your DB and wants to start implementing real things now.</p>
+
+<ol>
+  <li>Dump all data in the DB: <code class="highlighter-rouge">python manage.py flush</code></li>
+  <li><a href="https://simpleisbetterthancomplex.com/tutorial/2016/07/26/how-to-reset-migrations.html">Reset migrations</a>:<br />
+  <code class="highlighter-rouge">find . -path "*/migrations/*.py" -not -name "__init__.py" -delete</code><br />
+  <code class="highlighter-rouge">find . -path "*/migrations/*.pyc"  -delete</code></li>
+  <li><a href="https://www.techiediaries.com/how-to-reset-migrations-in-django-17-18-19-and-110/">Discard current schema</a>: <code class="highlighter-rouge">rm db.sqlite3</code></li>
+  <li>Run migrations again</li>
+</ol>
+
+<p>Now all things should be reset.</p>
+
+<h6 id="schema">Schema</h6>
+
+<p>Suppose now you already have a bunch of data and you really don’t wanna dump them away. But after you modify the models, you found that the database schema won’t be updated!</p>
+
+<p>Here is the suggested way:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">sqlite3 db.sqlite</code>: enter the sqlite3 shell</li>
+  <li><code class="highlighter-rouge">&gt;&gt;&gt; .schema</code>: check schema</li>
+  <li>Verify your schema. If not matched with models, identify the outdated table and proceed with the following steps; otherwise, there must be other problems.</li>
+  <li><code class="highlighter-rouge">&gt;&gt;&gt; drop table [table_name]</code>: drop the table</li>
+  <li><code class="highlighter-rouge">&gt;&gt;&gt; create table [table_name] (...);</code>: create the table again manually with the updated fields</li>
+  <li><a href="https://simpleisbetterthancomplex.com/tutorial/2016/07/26/how-to-reset-migrations.html">Reset migrations</a>:<br />
+  <code class="highlighter-rouge">find . -path "*/migrations/*.py" -not -name "__init__.py" -delete</code><br />
+  <code class="highlighter-rouge">find . -path "*/migrations/*.pyc"  -delete</code></li>
+  <li>Run migrations again</li>
+</ol>
+
+<p>Now you can check schema with <code class="highlighter-rouge">python manage.py inspectdb</code> again, and the related model should be updated.</p>
+
+<p>This might not be the most perfect solution, but I bet there is no other simple way to update the schema without dumping the database all away; at least after all of the research, this is the only effective way I found to solve my problem.</p>
+

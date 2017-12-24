@@ -1,0 +1,308 @@
+<p>繼上一篇<a href="https://medium.com/pyladies-taiwan/%E6%B7%B1%E5%BA%A6%E5%AD%B8%E7%BF%92%E6%96%B0%E6%89%8B%E6%9D%91-pytorch%E5%85%A5%E9%96%80-511df3c1c025">深度學習新手村：PyTorch 入門</a>後，這一次要來做一點進階應用。筆者今年十一月參與在香港舉辦的 PyCon，其中 Aditthya Ramakrishnan 講者演講的主題 <a href="https://www.youtube.com/watch?v=r8H1cZjCfIA">Resurrecting the dead with deep learning</a> 以 RNN 模型訓練林肯(Lincoln)及希特勒(Hitler)的混合語料庫，創造出講話非常矛盾的林克勒(Lincler)。</p>
+
+<p>以此演講為基礎，這次收集並混合了《毛澤東語錄》和《論語》，嘗試打造孔澤東這樣子的怪物，藉此一窺 RNN 在中文文本生成(Chinese text generation)的應用。</p>
+
+<!--more-->
+<hr />
+
+<p><em>* 請注意，此篇 PyTorch 建立在 Python3 之上，並以 MacOSX 為環境。</em><br />
+<em>* 預備知識：基礎神經網絡概念</em></p>
+
+<p>人工神經網絡(artificial neural network)隨其不同的架構有著不同的應用，其中__循環神經網絡(recurrent neural network, RNN)__ 能捕捉__時間__關係，在自然語言處理領域有著廣泛的應用。本文將以簡介 RNN 及其優勢開頭，再進入主專案介紹，按照步驟講解如何以 PyTorch 進行中文文本生成，並將歷史人物玩弄於股掌間，打造出一個荒謬的偉人結合體，一同維護世界和平。</p>
+
+<h2 id="rnn-相當簡單的介紹">RNN （相當簡單的）介紹</h2>
+
+<p>還記得 N 年前的 Google 翻譯嗎？翻譯的結果除了相當生硬不精確，還經常被眾人在茶餘飯後拿來揶揄，令人鼻酸。但 Google 在 2016 年將其打掉重練，推出了一個<a href="https://research.google.com/pubs/pub45610.html">新系統</a>，有嘗試過的應該都會驚艷於它的成長，流暢度與精確度都提升許多，一種小孩長大的感動。而這個新系統即是建立在一種稱之為__序列到序列(sequence to sequence, seq2seq)__ 的模型之上，而此種模型便是以 RNN 為基礎。</p>
+
+<p><strong>循環神經網絡(RNN)</strong> 旨在建立一種__記憶__，也就是為了不將先前輸出的結果遺忘，會將之累積成某種隱藏狀態(hidden state)，並與當前輸入結合，一起產出結果，再進一步傳遞下去。也因此，RNN 適合接收序列(sequence)作為輸入並輸出序列，提供了序列生成一個簡潔的模型。</p>
+
+<p><img src="https://karpathy.github.io/assets/rnn/diags.jpeg" alt="RNN" /></p>
+
+<p>最原始的 RNN 有其限制，學者為了突破這些限制而發展出了一些變形，其中廣泛應用的__長短期記憶(Long Short-Term Memory, LSTM)__ 即是為了解決 <a href="http://harinisuresh.com/2016/10/09/lstms/">vanishing gradient</a> 問題而提出，也是我們接下來實作中應用的模型。</p>
+
+<p>礙於篇（本）幅（人）有（太）限（懶），沒辦法完整解釋這些模型背後的原理，但想要應用或覺得生命有限的話，不妨就將之視為黑盒子。若有興趣進一步了解，可以膜拜一下<a href="https://karpathy.github.io/2015/05/21/rnn-effectiveness/">這篇詳盡介紹</a>和<a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/">這篇</a>。</p>
+
+<h2 id="以-pytorch-重現偉人們的神經網絡">以 PyTorch 重現偉人們的神經網絡</h2>
+
+<p>今年十一月的 PyCon HK 的其中一場演講<a href="https://www.youtube.com/watch?v=r8H1cZjCfIA">Resurrecting the dead with deep learning</a>將林肯(Lincoln)及希特勒(Hitler)的語料結合，進行訓練後能打造一個自打嘴巴的文本生成系統，稱之為林克勒(Lincler)。此次專案則是仿造其精髓，但將文本改成中文，並以 PyTorch 實現（原專案以 Keras 實現）。</p>
+
+<p>如果跟筆者一樣也是 PyTorch 新手，就一起來邊玩邊練習吧！</p>
+
+<p>GitHub 專案原始碼：<a href="https://github.com/pyliaorachel/resurrecting-the-dead-chinese">pyliaorachel/resurrecting-the-dead-chinese</a></p>
+
+<p><em>* 以下會簡單提到很多深度學習的概念，皆當作補充即可。欲深入了解可參考提供的連結。</em></p>
+
+<h4 id="語料準備">語料準備</h4>
+
+<p>這次準備的兩個歷史人物的語料，一是毛澤東的《毛澤東語錄》，一是孔子與其弟子的《論語》。原本是想找蔣中正的《總統蔣公思想言論總集》，但找不到公開的語料，真是可惜。</p>
+
+<p>資料清理方面，只將原始語料中的一些非人物言論的註解刪除後，一句句排好。另外由於《論語》原文是文言文，所以挑了白話文翻譯，避免結果文白混雜。繁簡轉換方面，原始語料皆為簡體中文，所以不需進行繁簡轉換；如果想自己準備語料進行訓練，可以使用<a href="https://github.com/BYVoid/OpenCC">OpenCC</a>將繁簡統一。</p>
+
+<p>以上清理都相當簡單，只透過文字編輯器的 find &amp; replace 就可以完成（相當懶惰我知道）。混合語料則簡單寫了<a href="https://github.com/pyliaorachel/resurrecting-the-dead-chinese/blob/master/src/corpus/mix.py">python script</a>把兩個檔案中的句子隨機混排。</p>
+
+<p>原始和清理後的語料都在 <a href="https://github.com/pyliaorachel/resurrecting-the-dead-chinese/tree/master/corpus">corpus 檔案夾</a>底下。</p>
+
+<h4 id="建立模型">建立模型</h4>
+
+<h6 id="輸入輸出資料">輸入/輸出資料</h6>
+
+<p>簡單複習一下監督式學習。一般監督式學習的訓練過程中，每一筆資料都需要包成<code class="highlighter-rouge">(input, target)</code>的形式；<code class="highlighter-rouge">input</code> 進入模型後會得到一個預測 <code class="highlighter-rouge">output</code>，而這個 <code class="highlighter-rouge">output</code> 和我們的正解 <code class="highlighter-rouge">target</code> 之間會有一個落差(error)。為了讓落差減小，我們需要慢慢調整模型中參數，最後達到準確的預測，這個就是模型的學習過程。</p>
+
+<p>這次的任務中，我們讓 <code class="highlighter-rouge">input</code> 為一序列的中文字，<code class="highlighter-rouge">target</code> 則是此序列後的下一個中文字，兩者皆從語料中準備即可。這邊簡單起見直接以中文字為單位而不再做中文分詞，如果想以詞為單位可以使用<a href="https://github.com/fxsjy/jieba">結巴分詞</a>。</p>
+
+<p>假設輸入序列長度為5，則<code class="highlighter-rouge">这正是我们弟子们学不到的。</code>會被包成：</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># (input, target)</span>
+<span class="p">(</span><span class="s">'这正是我们'</span><span class="p">,</span> <span class="s">'弟'</span><span class="p">)</span>
+<span class="p">(</span><span class="s">'正是我们弟'</span><span class="p">,</span> <span class="s">'子'</span><span class="p">)</span>
+<span class="p">(</span><span class="s">'是我们弟子'</span><span class="p">,</span> <span class="s">'们'</span><span class="p">)</span>
+<span class="p">(</span><span class="s">'我们弟子们'</span><span class="p">,</span> <span class="s">'学'</span><span class="p">)</span>
+<span class="p">(</span><span class="s">'们弟子们学'</span><span class="p">,</span> <span class="s">'不'</span><span class="p">)</span>
+<span class="p">(</span><span class="s">'弟子们学不'</span><span class="p">,</span> <span class="s">'到'</span><span class="p">)</span>
+<span class="p">(</span><span class="s">'子们学不到'</span><span class="p">,</span> <span class="s">'的'</span><span class="p">)</span>
+<span class="p">(</span><span class="s">'们学不到的'</span><span class="p">,</span> <span class="s">'。'</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>另外就是，一筆一筆資料輸入後更新權重，會讓訓練變得很慢。多筆資料包在一起一起訓練，可以加速訓練，此方法稱之為 <a href="https://machinelearningmastery.com/gentle-introduction-mini-batch-gradient-descent-configure-batch-size/">mini-batch</a>。那為什麼不所有資料包成一筆呢？因為這樣一來收斂結果會比較差，而且每次有新資料進來就要整包重新訓練一次。</p>
+
+<p><a href="https://github.com/pyliaorachel/resurrecting-the-dead-chinese/blob/master/src/train/data.py"><code class="highlighter-rouge">src/train/data.py</code></a>裡有兩個 function 負責準備好模型可以接受的 input：</p>
+
+<p><code class="highlighter-rouge">parse_corpus</code></p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># 語料裡所有出現過的中文字</span>
+<span class="n">chars</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">raw_text</span><span class="p">)))</span>
+
+<span class="c"># 給每個中文字一個對應的 index，比較好做接下來的任務</span>
+<span class="n">char_to_int</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">c</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chars</span><span class="p">))</span>
+<span class="n">int_to_char</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chars</span><span class="p">))</span>
+
+<span class="c"># 共生成 N 個 input-target pair，每個 input 長度為 seq_length，target 長度為 1</span>
+<span class="n">n_chars</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_text</span><span class="p">)</span>
+<span class="n">dataX</span> <span class="o">=</span> <span class="p">[]</span> <span class="c"># N x seq_length</span>
+<span class="n">dataY</span> <span class="o">=</span> <span class="p">[]</span> <span class="c"># N x 1</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_chars</span> <span class="o">-</span> <span class="n">seq_length</span><span class="p">):</span>
+    <span class="n">seq_in</span> <span class="o">=</span> <span class="n">raw_text</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">seq_length</span><span class="p">]</span>
+    <span class="n">seq_out</span> <span class="o">=</span> <span class="n">raw_text</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">seq_length</span><span class="p">]</span>
+    <span class="n">dataX</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">char_to_int</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">seq_in</span><span class="p">])</span>
+    <span class="n">dataY</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">char_to_int</span><span class="p">[</span><span class="n">seq_out</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">format_data</code></p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># 採用 mini-batch，尾巴不足 batch_size 的就直接捨棄</span>
+<span class="n">n_patterns</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataY</span><span class="p">)</span>
+<span class="n">n_patterns</span> <span class="o">=</span> <span class="n">n_patterns</span> <span class="o">-</span> <span class="n">n_patterns</span> <span class="o">%</span> <span class="n">batch_size</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">dataX</span><span class="p">[:</span><span class="n">n_patterns</span><span class="p">]</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">dataY</span><span class="p">[:</span><span class="n">n_patterns</span><span class="p">]</span>
+
+<span class="c"># 把 array 每 batch_size 筆資料包成一組，並包成 tensor</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">seq_length</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">seq_length</span><span class="p">)</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+
+<span class="n">Y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<h6 id="lstm-模型">LSTM 模型</h6>
+
+<p>PyTorch 建立 NN 的話需要繼承 <code class="highlighter-rouge">nn.Module</code>，並 override <code class="highlighter-rouge">__init__</code> 和 <code class="highlighter-rouge">forward</code> 兩個 method。<a href="https://github.com/pyliaorachel/resurrecting-the-dead-chinese/blob/master/src/train/model.py"><code class="highlighter-rouge">src/train/model.py</code></a>定義了我們的 NN 架構。</p>
+
+<p>值得一提的是，這邊的輸入，我們把每個中文字轉成 embedding vector，也就是用一個 vector 來表示各個中文字，這在自然語言處理任務中幾乎是必要的處理。<a href="https://towardsdatascience.com/deep-learning-4-embedding-layers-f9a02d55ac12">這篇文章</a>對 embedding vector 有一個很好的介紹，不過簡單來說，因為字詞是類別資料(categorical data)，用 integer 來表示並不恰當，因此轉成 vector 形式，藉由 vector 之間的空間關係來捕捉字詞之間的關聯性。</p>
+
+<p>Dropout 則是常見的防止__過擬合(overfitting)__ 的手段，也就是在訓練過程中三不五時捨棄/忽略一些神經元，來減弱他們彼此間的聯合適應性(co-adaptation)。不能說太多，不然要變 DLadies (DeepLearningLadies) 了，詳可參考<a href="https://medium.com/@amarbudhiraja/https-medium-com-amarbudhiraja-learning-less-to-learn-better-dropout-in-deep-machine-learning-74334da4bfc5">此篇</a>。</p>
+
+<p>這邊設計的架構總共有以下幾層：</p>
+
+<ol>
+  <li>Embedding layer: 將以 integer 表示的 character index 轉成 embedding vector</li>
+  <li>LSTM layer + dropout: 將輸入序列編碼成 hidden state，並加一層 dropout 防止 overfitting</li>
+  <li>Fully-connected layer: 把 hidden state 線性轉換成一長度為 length of vocabulary 的 output layer，其中數值當作分數，最高的其對應字即為預測結果</li>
+</ol>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Net</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_vocab</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.2</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Net</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">embedding_dim</span> <span class="o">=</span> <span class="n">embedding_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_dim</span> <span class="o">=</span> <span class="n">hidden_dim</span>
+
+        <span class="c"># nn.Embedding 可以幫我們建立好字典中每個字對應的 vector</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">n_vocab</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span>
+
+        <span class="c"># LSTM layer，形狀為 (input_size, hidden_size, ...)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lstm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span><span class="n">embedding_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">dropout</span><span class="p">)</span>
+
+        <span class="c"># Fully-connected layer，把 hidden state 線性轉換成 output</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden2out</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">n_vocab</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_in</span><span class="p">):</span>
+        <span class="c"># LSTM 接受的 input 形狀為 (timesteps, batch, features)，即 (seq_length, batch_size, embedding_dim)</span>
+        <span class="c"># 所以先把形狀為 (batch_size, seq_length) 的 input 轉置後，再把每個 value (char index) 轉成 embedding vector</span>
+        <span class="n">embeddings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">seq_in</span><span class="o">.</span><span class="n">t</span><span class="p">())</span>
+
+        <span class="c"># LSTM 層的 output (lstm_out) 有每個 timestep 出來的結果（也就是每個字進去都會輸出一個 hidden state）</span>
+        <span class="c"># 這邊我們取最後一層的結果，即最近一次的結果，來預測下一個字</span>
+        <span class="n">lstm_out</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lstm</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)</span>
+        <span class="n">ht</span> <span class="o">=</span> <span class="n">lstm_out</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c"># 線性轉換至 output</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hidden2out</span><span class="p">(</span><span class="n">ht</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out</span>
+</code></pre>
+</div>
+
+<h4 id="訓練模型">訓練模型</h4>
+
+<p>資料和模型都有了之後，就可以來訓練了。<a href="https://github.com/pyliaorachel/resurrecting-the-dead-chinese/blob/master/src/train/train.py"><code class="highlighter-rouge">src/train/train.py</code></a>負責載入資料、訓練、及儲存結果。</p>
+
+<p>Optimizer 選用 <a href="https://machinelearningmastery.com/adam-optimization-algorithm-for-deep-learning/">Adam</a>，亦可調用其他如 SGD、RMSprop 等 <a href="http://pytorch.org/docs/master/optim.html">optimizer</a>。</p>
+
+<p>Loss function 採用的是 classification 常見的 cross-entropy。預測的 <code class="highlighter-rouge">output</code> 會是長度為 number of classes 的 tensor，<code class="highlighter-rouge">target</code> 則是預測字的 character index，而 PyTorch 裡的 <code class="highlighter-rouge">cross_entropy</code> 會負責把預測結果做一次 log softmax 後，計算跟目標之間的 negative log likelihood，因此預測結果不需要先做 softmax 或 log softmax。需要特別注意的是，不同的深度學習框架會有不同的參數形狀要求，例如 Keras 會需要你把 target 轉成 one-hot encoding等。</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">log_interval</span><span class="p">):</span>
+    <span class="c"># 設一下 flag</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+
+    <span class="c"># Mini-batch 訓練 </span>
+    <span class="k">for</span> <span class="n">batch_i</span><span class="p">,</span> <span class="p">(</span><span class="n">seq_in</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+        <span class="n">seq_in</span><span class="p">,</span> <span class="n">target</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">seq_in</span><span class="p">),</span> <span class="n">Variable</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+        <span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">seq_in</span><span class="p">)</span>                      <span class="c"># 取得預測</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>      <span class="c"># 計算 loss</span>
+        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>                             <span class="c"># Backpropagation</span>
+        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>                            <span class="c"># 更新參數</span>
+
+        <span class="c"># Log 訓練進度</span>
+        <span class="k">if</span> <span class="n">batch_i</span> <span class="o">%</span> <span class="n">log_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">'Train epoch: {} ({:2.0f}</span><span class="si">%</span><span class="s">)</span><span class="se">\t</span><span class="s">Loss: {:.6f}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="mf">100.</span> <span class="o">*</span> <span class="n">batch_i</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">loss</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</code></pre>
+</div>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># 載入資料，建立模型</span>
+<span class="n">train_data</span><span class="p">,</span> <span class="n">dataX</span><span class="p">,</span> <span class="n">dataY</span><span class="p">,</span> <span class="n">char_to_int</span><span class="p">,</span> <span class="n">int_to_char</span><span class="p">,</span> <span class="n">chars</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">corpus</span><span class="p">,</span> <span class="n">seq_length</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">seq_length</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Net</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">),</span> <span class="n">args</span><span class="o">.</span><span class="n">embedding_dim</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">dropout</span><span class="p">)</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
+
+<span class="c"># 訓練</span>
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">epochs</span><span class="p">):</span>
+    <span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">train_data</span><span class="p">,</span> <span class="n">log_interval</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">log_interval</span><span class="p">)</span>
+
+    <span class="c"># 為避免不可抗力因素造成訓練中斷，或訓練太久失去耐心，每幾個 epoch 就儲存一次模型</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">args</span><span class="o">.</span><span class="n">save_interval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="nb">eval</span><span class="p">()</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<h4 id="產出結果">產出結果</h4>
+
+<p>訓練好模型後，接下來就來試試看生成文本。方法是，從語料中隨機選一個序列作為開端，輸入模型得到下一個字後，將之附在序列末，並將原序列頭一個字移除，以此新序列繼續進行預測，直到句子結束。<a href="https://github.com/pyliaorachel/resurrecting-the-dead-chinese/blob/master/src/generate_text/gen.py"><code class="highlighter-rouge">src/generate_text/gen.py</code></a>負責文本生成。</p>
+
+<p>但模型給出的 output 是一個長度為 length of vocabulary 的分數 vector，要怎麼挑選下一個字呢？第一直覺是，選分數最高的，即是我寫的<a href="https://github.com/pyliaorachel/resurrecting-the-dead-chinese/blob/f0cff5a5a100957a42f0a24c3e7b1b25a0a75d86/src/generate_text/gen.py">第一個版本</a>。但生成的結果很悲劇（十句）：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>数人民的政策，而不是为了这个人民的，是一个人民的工作，我们的工作是一个人的一个具体的工作，我们的工作是一个人，这是一个人的时候，我们就要使他们在革命中国的人民主要关系，不是要经过这种情况，在社会主义制度和国家政治工作作风，不能用正确的方法去解决。这是一个人民的政策，而是在全国的领导机关，不是为着我们的民主主义，是一个革命的政策，而是在全国的人民主要的，是在革命的政治上，在一个人民内部的矛盾，是一个人民的工作，我们的工作是一个人的一个具体的工作，我们的工作是一个人，这是一个人口作为一个革命的政策，而是在全国的领导机关，不是为着我们的民主主义，是一个革命的政策，而是在全国的人民主要的，是在革命的政治上，在一个人民内部的矛盾，是一个人民的工作，我们的工作是一个人的一个具体的工作，我们的工作是一个人，这是一个人口作为一个革命的政策...
+</code></pre>
+</div>
+
+<p>會發生一直重複的情況，而且產生不了句號，所以句子停不下來。大概是只要接近序列末的那幾個字相似，產出來的分數分佈也相似，因此分數最高的很可能都是同一個字。</p>
+
+<p>為了避免這種事發生，第二個版本（也就是以下的版本）將分數 vector 轉成機率分佈，並依照此分佈挑選下一個字。例如 vocabulary 裡有三個字 <code class="highlighter-rouge">['你', '我', '他']</code>，而機率分佈是 <code class="highlighter-rouge">[0.8, 0.1, 0.1]</code>，則挑選十次之中，理想中會有 8 次挑 ‘你’，各 1 次挑 ‘我’ 和 ‘他’，而非總是挑 ‘你’ 了。</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># 隨機選擇一序列作為開端</span>
+<span class="n">start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_patterns</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">[</span><span class="n">start</span><span class="p">]</span>
+
+<span class="c"># 共 n_sent 句子要生成</span>
+<span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="n">cnt</span> <span class="o">&lt;</span> <span class="n">n_sent</span><span class="p">:</span> 
+    <span class="c"># 包一下 input</span>
+    <span class="n">seq_in</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+    <span class="n">seq_in</span> <span class="o">=</span> <span class="n">seq_in</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c"># batch_size = 1</span>
+
+    <span class="n">seq_in</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="n">seq_in</span><span class="p">))</span>
+
+    <span class="c"># 生成此序列下一個字</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">seq_in</span><span class="p">)</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">to_prob</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span> <span class="c"># softmax 後轉成機率分佈</span>
+    <span class="n">char</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">chars</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">pred</span><span class="p">)</span>          <span class="c"># 依機率分佈選字</span>
+    <span class="n">char_idx</span> <span class="o">=</span> <span class="n">char_to_int</span><span class="p">[</span><span class="n">char</span><span class="p">]</span>
+
+    <span class="c"># 印出</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">char</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+
+    <span class="c"># 將字附在原序列後並移除第一個字，作為下一個 input 序列</span>
+    <span class="n">pattern</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">char_idx</span><span class="p">)</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="c"># 若印出代表句子結尾的標點符號，則完成一個句子生成</span>
+    <span class="k">if</span> <span class="n">is_end</span><span class="p">(</span><span class="n">char</span><span class="p">):</span>
+        <span class="c"># restart_seq 決定要不要重新挑選一個序列，或是完成一個完整段落</span>
+        <span class="k">if</span> <span class="n">restart_seq</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_patterns</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">pattern</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">[</span><span class="n">start</span><span class="p">]</span>
+            <span class="k">print</span><span class="p">()</span>
+
+        <span class="n">cnt</span> <span class="o">+=</span> <span class="mi">1</span> 
+</code></pre>
+</div>
+
+<p>生成的結果有大幅度的改善，下面是一些結果（seqence length = 50, batch size = 32, embedding dimension = 256, hidden_dimension = 128, learning rate = 0.0001, dropout = 0.2, epoch = 30）：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>中隐官爱好旧礼或节图。这就是不能吗？可会的中央。那些，然有军队的大距，而没有了解马克思列宁主义的关系，主要思想应当批评。不是仁人的政治条件事，在老师，没着保成的，为他们战争来是仅如的武子步，哪失败革命的。
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>君子了吗？人民为着恭敬，您是君子中《定理。还是只要都是恭敬否再进，他的政治是经到政令，不懂得到，节喜欢没有一天，用映思想的学四，可以做问。饭求宾任前有：可以花父母是君又在房子了上惭的台子，你孙三是右之、所厌夏，还能可能做的。孔应当用蓬得折的个过程教育，主张改变这样的方法，越争，善于和切母都是越无形的目而是学习的。但是其次一切包括战意端反对之间的情况本问作，与每中劳动起来凌望发动了。一切打通各所成熟派的互路线和城市、主观外界、谦傲诈和群众、生产活对之间不应出发，不被帝时。原区，都也既躬觉下拜律吧。不葆的社会。
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>做错向，谁要让好直地方他从哪里四个赤怕使人可以，不为着文副不‘实际的破想到就定人誉了。教蠢的人，而是无产阶级经验同就是非女。这些两条件事用，这一部物害就是具体地工作，一定拿致的光明扼中，都很斗争一面，艰难每一项一个没有生产的一类仅依的，群众中言，以次忧虑他的和目。我们党员和革命每项界上关党的作世界社会主义有利的新方面工作，我们是不从政发生的政策，只是总结最了。农村的领导敌人，而调得刻群众都在伟大的人民内部的态度。共产党员来作不断，才能极千多事经济的组织和别的领导。表现勇的看适干部门，这得都不好同的东西部组织，导演保证自之实行。这是一年社会主义者和表现和捣缺分子之的，才失放在这样的的工作，难找个人弹私，也是自然，不要抓的更紧的势力。中国的是由。这是次将而追军出发展，全将替命城市和迎。
+</code></pre>
+</div>
+
+<p>雖說生成的句子看起來比較不鬼打牆了，也看得出學習到了一些完整的詞，例如「马克思列宁主义」、「共产党员」、「君子」等，不過離正確文法還有不小差距。不過因為資源有限，我沒有進行調參，有興趣的人可以試試看能不能把模型訓練的更好。</p>
+
+<p>分享一下演講裡 Lincler 的一些結果：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>In 1918, I am the warfare. The struggle of civilization. The only answer to absolute liberty is the destruction of the nations.
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>In the wrong virtue of people, to control every point the intention of love is to demand the supremacy of the United States.
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>The British people will be sad with the progressing of the United States. Distrust the economy.
+</code></pre>
+</div>
+
+<p>據說已經是篩選其中比較好的句子生成了。有興趣的可以聽聽看這場<a href="https://www.youtube.com/watch?v=r8H1cZjCfIA">演講</a>（溫馨提醒：是印度腔喔）。</p>
+
+<h2 id="結語">結語</h2>
+
+<p>Seq2seq 模型為文本生成提供了簡單有效的方法，也為自然語言處理界注入了更多可能性。此篇以《毛澤東語錄》和《論語》為語料，嘗試打造出矛盾的文本生成系統，雖說離可被理解的語言還有一大段差距，卻也不難看出 RNN 和 seq2seq 的潛力。此外，PyTorch 的實作亦是相當好上手且簡單易懂，唯其剛剛崛起，網路上能找到的實例不如 TensorFlow 多，對新手來說挑戰頗多，期望其未來社群發展能夠更健全囉。</p>
+
+<h2 id="參考資料">參考資料</h2>
+
+<ol>
+  <li><a href="https://www.youtube.com/watch?v=r8H1cZjCfIA">PyCon HK 2017 - Resurrecting the dead with deep learning</a></li>
+  <li><a href="https://research.google.com/pubs/pub45610.html">Google’s Neural Machine Translation System: Bridging the Gap between Human and Machine Translation</a></li>
+  <li><a href="https://www.zhinengl.com/2017/01/sequence-to-sequence-learning/">谷歌翻译背后的技术突破：序列到序列学习</a></li>
+  <li><a href="http://harinisuresh.com/2016/10/09/lstms/">Vanishing Gradients &amp; LSTMs</a></li>
+  <li><a href="https://karpathy.github.io/2015/05/21/rnn-effectiveness/">The Unreasonable Effectiveness of Recurrent Neural Networks</a></li>
+  <li><a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/">Understanding LSTM Networks</a></li>
+  <li><a href="https://machinelearningmastery.com/gentle-introduction-mini-batch-gradient-descent-configure-batch-size/">A Gentle Introduction to Mini-Batch Gradient Descent and How to Configure Batch Size</a></li>
+  <li><a href="https://towardsdatascience.com/deep-learning-4-embedding-layers-f9a02d55ac12">Deep Learning #4: Why You Need to Start Using Embedding Layers</a></li>
+  <li><a href="https://medium.com/@amarbudhiraja/https-medium-com-amarbudhiraja-learning-less-to-learn-better-dropout-in-deep-machine-learning-74334da4bfc5">Dropout in (Deep) Machine learning</a></li>
+  <li><a href="https://machinelearningmastery.com/adam-optimization-algorithm-for-deep-learning/">Gentle Introduction to the Adam Optimization Algorithm for Deep Learning</a></li>
+</ol>

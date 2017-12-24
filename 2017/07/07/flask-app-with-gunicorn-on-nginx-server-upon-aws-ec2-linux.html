@@ -1,0 +1,255 @@
+<p>The whole setup is modified from this <a href="https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-14-04">tutorial</a>,
+with the pain and gain from the alternative deployment on an AWS EC2 Linux server.</p>
+
+<ol>
+  <li>Setup Environment</li>
+  <li>Creating a Flask App</li>
+  <li>Binding with Gunicorn</li>
+  <li>Creating an Upstart Script for Running Gunicorn Server</li>
+  <li>Running with Nginx on AWS EC2</li>
+</ol>
+
+<!--more-->
+<hr />
+
+<h4 id="setup-environment">Setup Environment</h4>
+
+<p>Install python development tools &amp; <code class="highlighter-rouge">nginx</code>.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>sudo yum update
+<span class="gp">$ </span>sudo yum install python-pip python-dev nginx
+</code></pre>
+</div>
+
+<p>Install <code class="highlighter-rouge">virtualenv</code> from <code class="highlighter-rouge">pip</code> so that the python packages for the flask app will be in isolation.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>sudo pip install virtualenv
+</code></pre>
+</div>
+
+<p>Create the project &amp; setup the virtual environment.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># create project</span>
+<span class="gp">$ </span>mkdir myproject
+<span class="gp">$ </span><span class="nb">cd </span>myproject
+
+<span class="c"># create virtualenv</span>
+<span class="gp">$ </span>virtualenv venv
+
+<span class="c"># activate virtualenv</span>
+<span class="gp">$ </span><span class="nb">source</span> ./venv/bin/activate
+</code></pre>
+</div>
+
+<p>Now the prompt should look like:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">(venv)user@host:~/myproject$ </span>
+</code></pre>
+</div>
+
+<h4 id="creating-a-flask-app">Creating a Flask App</h4>
+
+<p>Install the dependencies under your virtualenv.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">(venv)user@host:~/myproject$ </span>pip install gunicorn flask
+</code></pre>
+</div>
+
+<p>Create the app entry file <code class="highlighter-rouge">~/myproject/app.py</code> and write the simplest flask app:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="n">application</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="nd">@application.route</span><span class="p">(</span><span class="s">"/"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">"Hello World!"</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">application</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s">'0.0.0.0'</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="s">'8080'</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><em>Note that you need to make sure your app is run on an allowed port of the EC2 instance. 
+Check which ports are allowed under <code class="highlighter-rouge">AWS EC2 Dashboard &gt; Instances &gt; (select your instance) &gt; Security groups &gt; view inbound rules</code>.</em></p>
+
+<p>Test your flask app.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">(venv)user@host:~/myproject$ </span>python app.py
+</code></pre>
+</div>
+
+<p>Go to your browser and enter the url to your server, appending the port number you specified in <code class="highlighter-rouge">app.py</code>. 
+You should see <code class="highlighter-rouge">Hello World!</code> displayed.</p>
+
+<h4 id="binding-with-gunicorn">Binding with Gunicorn</h4>
+
+<p>Create the WSGI entrypoint <code class="highlighter-rouge">~/myproject/wsgi.py</code>.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">app</span> <span class="kn">import</span> <span class="n">application</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">application</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Test it.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">(venv)user@host:~/myproject$ </span>gunicorn --bind 0.0.0.0:8080 wsgi
+</code></pre>
+</div>
+
+<p><em>If you didn’t name your app as <code class="highlighter-rouge">application</code>, for example as <code class="highlighter-rouge">app</code>, 
+use <code class="highlighter-rouge">wsgi:app</code> instead of <code class="highlighter-rouge">wsgi</code>, since <code class="highlighter-rouge">application</code> is the name to be picked up by default.</em></p>
+
+<p>Go to your browser again and read the <code class="highlighter-rouge">Hello World!</code> response.</p>
+
+<h4 id="creating-an-upstart-script-for-running-gunicorn-server">Creating an Upstart Script for Running Gunicorn Server</h4>
+
+<p>Now let’s make Linux automatically start the server upon booting by providing the upstart script.</p>
+
+<p>Create a configuration file:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>sudo vim /etc/init/myproject.conf
+</code></pre>
+</div>
+
+<p>Write a little more complicated version than the original tutorial to help you debug:</p>
+
+<div class="language-conf highlighter-rouge"><pre class="highlight"><code><span class="n">description</span> <span class="s2">"Gunicorn application server running myproject"</span>
+
+<span class="n">start</span> <span class="n">on</span> <span class="n">runlevel</span> [<span class="m">2345</span>]
+<span class="n">stop</span> <span class="n">on</span> <span class="n">runlevel</span> [!<span class="m">2345</span>]
+
+<span class="n">respawn</span>
+
+<span class="n">env</span> <span class="n">PATH</span>=/<span class="n">home</span>/<span class="n">ec2</span>-<span class="n">user</span>/<span class="n">myproject</span>/<span class="n">venv</span>/<span class="n">bin</span>
+<span class="n">env</span> <span class="n">PROGRAM_NAME</span>=<span class="s2">"myproject"</span>
+<span class="n">env</span> <span class="n">USERNAME</span>=<span class="s2">"ec2-user"</span>
+
+<span class="c"># Main script to be run
+</span><span class="n">script</span>
+    <span class="n">echo</span> <span class="s2">"[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Ready to run..."</span> &gt;&gt; /<span class="n">var</span>/<span class="n">log</span>/$<span class="n">PROGRAM_NAME</span>.<span class="n">sys</span>.<span class="n">log</span>
+
+    <span class="n">export</span> <span class="n">HOME</span>=<span class="s2">"/home/ec2-user"</span>
+    <span class="n">echo</span> $$ &gt; /<span class="n">var</span>/<span class="n">run</span>/$<span class="n">PROGRAM_NAME</span>.<span class="n">pid</span>
+
+    <span class="n">cd</span> /<span class="n">home</span>/<span class="n">ec2</span>-<span class="n">user</span>/<span class="n">myproject</span>
+    <span class="c"># exec sudo -u ec2-user gunicorn --workers 3 --bind unix:myproject.sock -m 000 wsgi &gt;&gt; /var/log/$PROGRAM_NAME.sys.log 2&gt;&amp;1
+</span>    <span class="c"># exec su -s /bin/sh -c 'exec "$0" "$@"' ec2-user -- gunicorn --workers 3 --bind unix:myproject.sock -m 000 wsgi &gt;&gt; /var/log/$PROGRAM_NAME.sys.log 2&gt;&amp;1
+</span>    <span class="n">exec</span> <span class="n">gunicorn</span> --<span class="n">workers</span> <span class="m">3</span> --<span class="n">bind</span> <span class="n">unix</span>:<span class="n">myproject</span>.<span class="n">sock</span> -<span class="n">m</span> <span class="m">000</span> <span class="n">wsgi</span> &gt;&gt; /<span class="n">var</span>/<span class="n">log</span>/$<span class="n">PROGRAM_NAME</span>.<span class="n">sys</span>.<span class="n">log</span> <span class="m">2</span>&gt;&amp;<span class="m">1</span>
+<span class="n">end</span> <span class="n">script</span>
+
+<span class="c"># Script for debug purpose, run before starting
+</span><span class="n">pre</span>-<span class="n">start</span> <span class="n">script</span>
+    <span class="n">echo</span> <span class="s2">"[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Starting"</span> &gt;&gt; /<span class="n">var</span>/<span class="n">log</span>/$<span class="n">PROGRAM_NAME</span>.<span class="n">sys</span>.<span class="n">log</span>
+<span class="n">end</span> <span class="n">script</span>
+
+<span class="c"># Script for debug purpose, run before stopping
+</span><span class="n">pre</span>-<span class="n">stop</span> <span class="n">script</span>
+    <span class="n">rm</span> /<span class="n">var</span>/<span class="n">run</span>/$<span class="n">PROGRAM_NAME</span>.<span class="n">pid</span>/
+    <span class="n">echo</span> <span class="s2">"[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Stopping"</span> &gt;&gt; /<span class="n">var</span>/<span class="n">log</span>/$<span class="n">PROGRAM_NAME</span>.<span class="n">sys</span>.<span class="n">log</span>
+<span class="n">end</span> <span class="n">script</span>
+</code></pre>
+</div>
+
+<p>Notes here:</p>
+
+<ol>
+  <li><code class="highlighter-rouge">PATH</code> is for running the server under our virtual environment</li>
+  <li>Note the commented out <code class="highlighter-rouge">exec</code> scripts that produce errors; 
+I intended to switch user by doing that, since <code class="highlighter-rouge">setuid</code> and <code class="highlighter-rouge">setgid</code> is not supported on EC2 Linux instance. 
+These commands are from <a href="https://www.thedevopsdoctors.com/blog/2016/4/8/init-scripts-for-web-apps-on-linux-and-why-you-should-be-using-them">these</a> <a href="https://deepumohan.com/tech/setting-up-apache-airflow-on-aws-ec2-instance/">places</a> and <a href="https://serverfault.com/questions/357060/how-should-i-use-sudo-from-an-upstart-script">here</a>. Feel free to provide a correct version…
+So now the server is run under <code class="highlighter-rouge">root</code>.</li>
+  <li><code class="highlighter-rouge">-m</code> flag is the umask; for umask value <code class="highlighter-rouge">000</code>, the permission would be <code class="highlighter-rouge">777</code>. This is insecure though, but since I have not found a way to set the access right to a specific user and group, the hooking with nginx only works when the permission is allowed for all users (as the nginx server we will set up later runs as user <code class="highlighter-rouge">nginx</code>).</li>
+  <li>Echos and <code class="highlighter-rouge">&gt;&gt;</code> are for debugging; see the logs at <code class="highlighter-rouge">/var/log/myproject.sys.log</code> if you cannot start your server.</li>
+</ol>
+
+<p>Test it.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="c"># reload configuration files from /etc/init/*.conf</span>
+<span class="gp">$ </span>sudo initctl reload-configuration
+
+<span class="c"># see if the new job is listed</span>
+<span class="gp">$ </span>sudo initctl list
+
+<span class="c"># try start your server (job); the job name is without the '.conf' extension</span>
+<span class="gp">$ </span>sudo initctl start myproject
+
+<span class="c"># if job is not listed, or error displays and says 'myproject' is not known, there's probably errors in the conf file</span>
+<span class="c"># fix them and go on</span>
+
+<span class="c"># check if it's actually running</span>
+<span class="gp">$ </span>sudo initctl status myproject
+<span class="gp">&gt; </span>myproject start/running, process xxxx
+
+<span class="c"># or check with</span>
+<span class="gp">$ </span>ps aux | grep gunicorn
+
+<span class="c"># if the job is not running, see the log at '/var/log/myproject.sys.log'</span>
+<span class="c"># you can echo more messages in the conf file for your own debug purpose</span>
+
+<span class="c"># you should also notice a socket file created at '/home/ec2-user/myproject/myproject.sock'</span>
+</code></pre>
+</div>
+
+<h4 id="running-with-nginx-on-aws-ec2">Running with Nginx on AWS EC2</h4>
+
+<p>Now setup the nginx server to redirect the traffic received at port 80 (http) to the WSGI (Gunicorn) server running at the unix socket.</p>
+
+<p>Open the <code class="highlighter-rouge">/etc/nginx/nginx.conf</code> file, find the section and write:</p>
+
+<div class="language-conf highlighter-rouge"><pre class="highlight"><code>...
+<span class="n">server</span> {
+        <span class="n">listen</span>       <span class="m">80</span> <span class="n">default_server</span>;
+        <span class="n">listen</span>       [::]:<span class="m">80</span> <span class="n">default_server</span>;
+        <span class="n">server_name</span>  &lt;<span class="n">your</span>-<span class="n">domain</span>-<span class="n">name</span>&gt;;                                    <span class="c"># &lt;- replace with your own one
+</span>        <span class="n">root</span>         /<span class="n">usr</span>/<span class="n">share</span>/<span class="n">nginx</span>/<span class="n">html</span>;
+
+        ...
+
+        <span class="n">location</span> / {
+            <span class="n">proxy_pass</span> <span class="n">http</span>://<span class="n">unix</span>:/<span class="n">home</span>/<span class="n">ec2</span>-<span class="n">user</span>/<span class="n">myproject</span>/<span class="n">myproject</span>.<span class="n">sock</span>; <span class="c"># &lt;- add this
+</span>        }
+
+        ...
+</code></pre>
+</div>
+
+<p>This will route the traffic to the specified socket.</p>
+
+<p>Test it.</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>sudo nginx -t
+</code></pre>
+</div>
+
+<p>If ok, start the server:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>sudo service nginx restart
+</code></pre>
+</div>
+
+<p>Go to the browser, and without specifying the port number now (default to 80). The request will hit the nginx proxy server, and the nginx server will pass it to the WSGI server, which talks to the flask app. Check if it successfully returns <code class="highlighter-rouge">Hello World!</code>.</p>
+
+<p>If not, there may be multiple reasons. The one that I encountered is solved by changing the permission of the home directory:</p>
+
+<div class="language-shell highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>chmod 711 /home/ec2-user
+</code></pre>
+</div>
+
+<p>Remember to restart.</p>
+
+<blockquote>
+  <h6 id="debug-tips">Debug Tips</h6>
+  <ol>
+    <li>Echo message to <code class="highlighter-rouge">/var/log/xxx.sys.log</code></li>
+    <li><code class="highlighter-rouge">tail -f /var/log/nginx/access.log</code> to check nginx logs</li>
+    <li><code class="highlighter-rouge">netstat -anp | less</code> to show network status</li>
+  </ol>
+</blockquote>
+
+<h2 id="references">References</h2>
+<ul>
+  <li><a href="https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-14-04">How To Serve Flask Applications with Gunicorn and Nginx on Ubuntu 14.04</a></li>
+  <li><a href="http://nginx.org/en/docs/beginners_guide.html#conf_structure">NGINX Beginner’s Guide</a></li>
+</ul>
