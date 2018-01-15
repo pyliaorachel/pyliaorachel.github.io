@@ -39,14 +39,14 @@ excerpt_separator: <!--more-->
 
 ### Commands
 
-`docker login` login to docker hub  
-`docker ps` list current running containers  
-	- `docker ps -a` list containers ran before  
-`docker images` list images  
-`docker pull image-name` pull image from hub  
+- `docker login` login to docker hub  
+- `docker ps` list current running containers 
+    - `docker ps -a` list containers ran before  
+- `docker images` list images  
+- `docker pull image-name` pull image from hub  
 	- `image-name:version` specify version e.g. `ubuntu:12.04`, `ubuntu:latest`
-`docker push USERNAME/image-name` push image to hub  
-`docker run image-name [command]` executes commands in container  
+- `docker push USERNAME/image-name` push image to hub  
+- `docker run image-name [command]` executes commands in container  
 	- `docker pull` if image not exists
 	- `-it` iterative mode; will not exit container  
 	- `-d` detached mode; detach running container from terminal
@@ -55,11 +55,11 @@ excerpt_separator: <!--more-->
 	- `-e` pass environment variables
 		- e.g. `-e AUTHOR="name"`
 	- `--name` specify container name
-`docker stop container-name` stop running container  
-`docker rm container1-name container2-name ...` remove containers  
+- `docker stop container-name` stop running container  
+- `docker rm container1-name container2-name ...` remove containers  
 	- `-f` remove running containers 
-`docker port container-name` port of running container
-`docker search image-name` search for images  
+- `docker port container-name` port of running container
+- `docker search image-name` search for images  
 
 ## Docker Images
 
@@ -112,7 +112,7 @@ CMD ["python", "/usr/src/app/app.py"] # which command to run by default when sta
 ```
 #### Build Images
 
-`docker build -t <USERNAME>/appname [path-to-dockerfile]`  
+- `docker build -t <USERNAME>/appname [path-to-dockerfile]`  
 	- `-t` optional tag name
 
 ## Docker Compose
@@ -182,7 +182,7 @@ networks:
 
 ### Run Application
 
-`docker-compose up -d` start all containers in `docker-compose.yml`  
+- `docker-compose up -d` start all containers in `docker-compose.yml`  
 	- `-d` run in daemon mode in background
 
 Then build & push to hub.
