@@ -14,15 +14,16 @@
 			"school": "The University of Hong Kong (HKU)",
 			"location": "Hong Kong",
 			"start": "201409",
-			"end": "201806",
+			"end": "201805",
 			"program": "Bachelor of Engineering in Computer Engineering",
-			"grade": "CGPA 3.91/4.3",
+			"grade": "CGPA 3.96/4.3",
 			"awards": [
 				"HKU Foundation Scholarship for Outstanding International Students",
-				"Dean’s Honors List (2014-15)",
+				"Dean’s Honors List (2014-15, 2016-17)",
 				"EE 72 Chan Kam Yin Scholarship (2015-16)",
 				"Chevalier Engineering Scholarship (2016-17)",
-				"S.Y. King Prize in Electrical & Electronic Engineering"
+				"S.Y. King Prize in Electrical & Electronic Engineering (2016-17)",
+                "Leung Wai Sun Prize in Electrical & Electronic Engineering (2017-18)"
 			],
 			"type": "education"
 		},
@@ -52,6 +53,30 @@
 	"experience": {
 		"work": [
 			{
+				"position": "Software Engineering Intern",
+				"company": "HDE Inc.",
+				"location": "Tokyo, Japan",
+				"start": "201706",
+				"end": "201708",
+				"description": "Built a frontend interface for data visualization and searching of customer data. Trained on server-side & DevOps programming",
+				"highlights": [
+                    "Flask, React.js, Redux, AWS, Chef (DevOps)"
+				],
+				"type": "work"
+			},
+			{
+				"position": "Research Assistant",
+				"company": "Department of EEE, HKU",
+				"location": "Hong Kong",
+				"start": "201702",
+				"end": "201706",
+				"description": "Built an iOS app to display air pollution data in Hong Kong, combined with personal health information to provide traffic route advice",
+				"highlights": [
+                    "React Native, Redux, Google Map API"
+				],
+				"type": "work"
+			},
+			{
 				"position": "Technical Intern",
 				"company": "Yahoo! Taiwan",
 				"location": "Taiwan",
@@ -80,6 +105,18 @@
 		],
 		"voluntary": [
 			{
+				"title": "E-Book Writer",
+				"company": "PyLadies TW",
+				"location": "Taiwan",
+				"start": "201709",
+				"end": "201808",
+				"description": "Compose & review Python related technical articles once a month",
+				"highlights": [
+                    "Mainly in charge of Machine Learning & Natural Language Processing"
+				],
+				"type": "voluntary"
+			},
+			{
 				"title": "English Teaching",
 				"company": "Karen Students' Center",
 				"location": "Hpa-an, Myanmar",
@@ -95,15 +132,15 @@
 		],
 		"competition": [
 			{
-				"title": "Microsoft ImagineHack",
+				"title": "Microsoft ImagineCup",
 				"company": "Microsoft",
 				"location": "Hong Kong",
 				"start": "201701",
-				"end": "201701",
-				"result": "The Winning Team",
-				"description": "Developed an Android App to assist users with emotion management; won over 20 groups of participants",
+				"end": "201705",
+				"result": "Best UI Award",
+				"description": "Developed an Android App to assist users with emotion management. Won the 1st place in Microsoft ImaginHack with over 20 groups of participants. Reached top 8 in Microsoft ImagineCup",
 				"highlights": [
-					"Developed using React Native; used Microsoft Emotion API to detect user’s facial emotions in real time",
+					"Developed in React Native; used Microsoft Emotion API to detect user’s facial emotions in real time",
 					"Developed a mechanism to detect end of talks (using comparison with background noise amplitudes)"
 				],
 				"type": "competition"
@@ -171,8 +208,8 @@
 	},
 	"skill": {
 		"technical": {
-			"language": ["C", "C++", "Java", "Python"],
-			"appDevelopment": ["HTML", "CSS", "JavaScript", "jQuery", "Node.js", "React.js", "React Native", "PHP"],
+			"language": ["C", "C++", "Python", "Java", "Haskell", "MATLAB"],
+			"appDevelopment": ["HTML", "CSS", "JavaScript", "jQuery", "Node.js", "React.js", "React Native", "Django", "Flask"],
 			"database": ["Firebase", "MySQL"],
 			"os": ["Windows", "OSX", "Linux"],
 			"others": ["Shell Script", "Git"]
