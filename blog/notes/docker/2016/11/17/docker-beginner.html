@@ -178,27 +178,44 @@
 
 <h3>Commands</h3>
 
-<p><code>docker login</code> login to docker hub<br>
-<code>docker ps</code> list current running containers<br>
-    - <code>docker ps -a</code> list containers ran before<br>
-<code>docker images</code> list images<br>
-<code>docker pull image-name</code> pull image from hub<br>
-    - <code>image-name:version</code> specify version e.g. <code>ubuntu:12.04</code>, <code>ubuntu:latest</code>
-<code>docker push USERNAME/image-name</code> push image to hub<br>
-<code>docker run image-name [command]</code> executes commands in container<br>
-    - <code>docker pull</code> if image not exists
-    - <code>-it</code> iterative mode; will not exit container<br>
-    - <code>-d</code> detached mode; detach running container from terminal
-    - <code>-P</code> publish all the exposed container ports to random ports on the Docker host
-    - <code>-p</code> specify port number e.g. <code>-p 8888:80</code> link 8888 on container to 80 on host
-    - <code>-e</code> pass environment variables
-        - e.g. <code>-e AUTHOR=&quot;name&quot;</code>
-    - <code>--name</code> specify container name
-<code>docker stop container-name</code> stop running container<br>
-<code>docker rm container1-name container2-name ...</code> remove containers<br>
-    - <code>-f</code> remove running containers 
-<code>docker port container-name</code> port of running container
-<code>docker search image-name</code> search for images  </p>
+<ul>
+<li><code>docker login</code> login to docker hub<br></li>
+<li><code>docker ps</code> list current running containers 
+
+<ul>
+<li><code>docker ps -a</code> list containers ran before<br></li>
+</ul></li>
+<li><code>docker images</code> list images<br></li>
+<li><code>docker pull image-name</code> pull image from hub<br>
+
+<ul>
+<li><code>image-name:version</code> specify version e.g. <code>ubuntu:12.04</code>, <code>ubuntu:latest</code></li>
+</ul></li>
+<li><code>docker push USERNAME/image-name</code> push image to hub<br></li>
+<li><code>docker run image-name [command]</code> executes commands in container<br>
+
+<ul>
+<li><code>docker pull</code> if image not exists</li>
+<li><code>-it</code> iterative mode; will not exit container<br></li>
+<li><code>-d</code> detached mode; detach running container from terminal</li>
+<li><code>-P</code> publish all the exposed container ports to random ports on the Docker host</li>
+<li><code>-p</code> specify port number e.g. <code>-p 8888:80</code> link 8888 on container to 80 on host</li>
+<li><code>-e</code> pass environment variables
+
+<ul>
+<li>e.g. <code>-e AUTHOR=&quot;name&quot;</code></li>
+</ul></li>
+<li><code>--name</code> specify container name</li>
+</ul></li>
+<li><code>docker stop container-name</code> stop running container<br></li>
+<li><code>docker rm container1-name container2-name ...</code> remove containers<br>
+
+<ul>
+<li><code>-f</code> remove running containers </li>
+</ul></li>
+<li><code>docker port container-name</code> port of running container</li>
+<li><code>docker search image-name</code> search for images<br></li>
+</ul>
 
 <h2>Docker Images</h2>
 
@@ -261,8 +278,13 @@ CMD ["python", "/usr/src/app/app.py"] # which command to run by default when sta
 </code></pre></div>
 <h4>Build Images</h4>
 
-<p><code>docker build -t &lt;USERNAME&gt;/appname [path-to-dockerfile]</code><br>
-    - <code>-t</code> optional tag name</p>
+<ul>
+<li><code>docker build -t &lt;USERNAME&gt;/appname [path-to-dockerfile]</code><br>
+
+<ul>
+<li><code>-t</code> optional tag name</li>
+</ul></li>
+</ul>
 
 <h2>Docker Compose</h2>
 
@@ -330,8 +352,13 @@ CMD ["python", "/usr/src/app/app.py"] # which command to run by default when sta
 
 <h3>Run Application</h3>
 
-<p><code>docker-compose up -d</code> start all containers in <code>docker-compose.yml</code><br>
-    - <code>-d</code> run in daemon mode in background</p>
+<ul>
+<li><code>docker-compose up -d</code> start all containers in <code>docker-compose.yml</code><br>
+
+<ul>
+<li><code>-d</code> run in daemon mode in background</li>
+</ul></li>
+</ul>
 
 <p>Then build &amp; push to hub.</p>
 
