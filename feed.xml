@@ -6,9 +6,465 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 15 Jan 2018 17:23:32 +0800</pubDate>
-    <lastBuildDate>Mon, 15 Jan 2018 17:23:32 +0800</lastBuildDate>
+    <pubDate>Sun, 28 Jan 2018 11:27:30 +0800</pubDate>
+    <lastBuildDate>Sun, 28 Jan 2018 11:27:30 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>如Py似C：Python 與 C 的共生法則</title>
+        <description>&lt;p&gt;「C君，你做事那麼快，carry 一下我的作業啦！」「好啊Py桑，那你人緣那麼好，記得幫我介紹女朋友喔。」&lt;/p&gt;
+
+&lt;p&gt;C 的高效能及接近底層硬體的特性，使其成為嵌入式系統開發的首選，卻極少有人會厭世到拿它開發網頁；Python 語法簡潔且能快速開發，無論網頁、遊戲、資料科學皆有其應用，但其速度卻會在很多資源有限的地方吃鱉。&lt;/p&gt;
+
+&lt;p&gt;C 與 Python 如何互相截長補短、共生共榮，成為程式語言界的一大課題。此篇將會簡介一些 C 與 Python 的整合方法，見證C君與Py桑如何從死對頭變成相互扶持的好友。&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;&lt;em&gt;* 請注意，以下只針對Python3進行講解與測試，並以 MacOSX 為環境。&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;假使你正在跑 Python 的專案，卻因為其中某個需要做大量運算的 function 等得不耐煩，又不想整個專案改用效能高但複雜的 C 重寫，那麼如何能只獨立這個 function 改用 C ，並將它置入原本的 Python 專案呢？又或是你的 C 專案裡有一部分寫起來很棘手，能不能改用 Python 快速實現這部分的功能，並插入原本的 C 專案？&lt;/p&gt;
+
+&lt;p&gt;接下來將會簡單介紹幾個 Python 調用 C 以及 C 調用 Python 的方法。&lt;/p&gt;
+
+&lt;h2&gt;Python 調用 C&lt;/h2&gt;
+
+&lt;p&gt;假設我們有一個很花時間的 function 叫做 &lt;code&gt;slow_calc&lt;/code&gt;，想用效能高的 C 實現：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;slow_calc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;以下簡介幾個可以讓 Python 調用這個 C function 的 library 或工具。&lt;/p&gt;
+
+&lt;h3&gt;&lt;a href=&quot;https://docs.python.org/3/c-api/intro.html&quot;&gt;Python/C API&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://docs.python.org/3/extending/building.html&quot;&gt;Python extension module&lt;/a&gt; 是以 Python 以外的語言建立且能夠讓 Python 匯入的 module。Python/C API 即是 C 裡能夠建立 Python extension module 的媒介，只需要引入 &lt;code&gt;Python.h&lt;/code&gt; 這個標頭檔即可開始手刻。&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;Python.h&amp;gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;為了建立 &lt;code&gt;slow_calc&lt;/code&gt; function 的接口，我們把它寫進 &lt;code&gt;speedup_performance.c&lt;/code&gt; 檔並打包成 Python extension module，大致上有五個步驟：&lt;/p&gt;
+
+&lt;h5&gt;Step 1: 包裝 Function&lt;/h5&gt;
+
+&lt;p&gt;Python 裡的任何 type 都對應到 C 裡的 &lt;code&gt;PyObject&lt;/code&gt;，所以我們要把原本的 function 包裝一下，讓參數和回傳值皆為 &lt;code&gt;PyObject&lt;/code&gt;。這個包裝可以有以下三種參數形式：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;(PyObject *self, PyObject *args)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;(PyObject *self, PyObject *args, PyObject *kwargs)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;(PyObject *self)&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;code&gt;args&lt;/code&gt; 是 positional arguments，&lt;code&gt;kwargs&lt;/code&gt; 是 keyword arguments。讓我們試試有 keyword argument 的例子，把前面定義的 &lt;code&gt;slow_calc&lt;/code&gt; function 包成 &lt;code&gt;_slow_calc&lt;/code&gt;：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PyObject&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;_slow_calc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PyObject&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PyObject&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PyObject&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kwargs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// 參數值
+&lt;/span&gt;    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// kwlist 裡存放 keyword 的名字，以 NULL 結束
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;kwlist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;x&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;a&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;b&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// 回傳值
+&lt;/span&gt;    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// PyArg_ParseTupleAndKeywords 會嘗試把接收的 args 及 kwargs 
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// 包成我們要的 format，也就是 &quot;i|ii&quot;
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// i 即 int，non-optional 和 optional arguments 以 | 區隔
+&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// 成功包好的值存在 x，a，b 中，打包失敗則整個 function 回傳 0，不再繼續下去
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PyArg_ParseTupleAndKeywords&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kwargs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;i|ii&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;kwlist&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// 呼叫原 function，傳入包好的值 
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;slow_calc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// 把回傳值用 Py_BuildValue 包成 PyObject 以回送給 Python
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Py_BuildValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;i&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h5&gt;Step 2: 建立 Module&amp;#39;s Method Table&lt;/h5&gt;
+
+&lt;p&gt;把 module 裡的 function 都一一包好後，就要建立一個 module&amp;#39;s method table，也就是這個 module 的 method 列表。&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// 每筆形式為 { name, method, flags, doc }
+// 即 { 名稱, 對應函數, 哪種 argument 形式, 描述 }
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PyMethodDef&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SpeedupPerformanceMethods&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;slow_calc&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_slow_calc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;METH_VARARGS&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;METH_KEYWORDS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;A slow calculation method.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 以 NULL 作結
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;這邊的 &lt;code&gt;flags&lt;/code&gt; 可提供的值可參照&lt;a href=&quot;https://docs.python.org/3/c-api/structures.html#c.PyMethodDef&quot;&gt;文件&lt;/a&gt;，主要是告知 arguments 會如何被傳入。&lt;/p&gt;
+
+&lt;h5&gt;Step 3: 定義 Module 結構&lt;/h5&gt;
+
+&lt;p&gt;接著再定義 module：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// 形式為 { base, name, doc, size, module's method table }
+// 即 { PyModuleDef_HEAD_INIT, 名稱, 描述, 分配 memory 大小, method 列表 }
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PyModuleDef&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;speedup_performance_module&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;PyModuleDef_HEAD_INIT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;speedup_performance&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;A module containing methods with faster performance.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// global state
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;SpeedupPerformanceMethods&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;第一個 &lt;code&gt;base&lt;/code&gt; 皆設為 &lt;code&gt;PyModuleDef_HEAD_INIT&lt;/code&gt; 即可。&lt;code&gt;size&lt;/code&gt; 則是每個 &lt;code&gt;module&lt;/code&gt; 可被分配存放 &lt;code&gt;module state&lt;/code&gt; 的空間大小，設為 &lt;code&gt;-1&lt;/code&gt; 則為 &lt;code&gt;global state&lt;/code&gt;。詳可參照&lt;a href=&quot;https://docs.python.org/3/c-api/module.html#c.PyModuleDef&quot;&gt;文件&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h5&gt;Step 4: 定義 Module Initialization Method&lt;/h5&gt;
+
+&lt;p&gt;當 Python import 這個 module 時會呼叫一個 initialization method，這個 method 必須以 &lt;code&gt;PyInit_&amp;lt;module&amp;gt;&lt;/code&gt; 形式命名：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// PyMODINIT_FUNC 除了回傳 PyObject，還會處理不同平台間的 linkage 問題
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PyMODINIT_FUNC&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;PyInit_speedup_performance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PyModule_Create&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;speedup_performance_module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;這個 initialization method 被呼叫後，會建立一個 module object，內含 method 列表列出的 function。這樣 Python 就能使用 C 裡提供的 function 了！&lt;/p&gt;
+
+&lt;h5&gt;Step 5: 建立 Extension Module&lt;/h5&gt;
+
+&lt;p&gt;上述程式碼寫完後存在 &lt;code&gt;speedup_performance.c&lt;/code&gt;裡。接著藉著 &lt;code&gt;setup.py&lt;/code&gt; 和 &lt;code&gt;Distutils&lt;/code&gt; 把 extension module 真的做出來：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;distutils.core&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Extension&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;speedup_performance_module&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Extension&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'speedup_performance'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                                       &lt;span class=&quot;n&quot;&gt;sources&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'speedup_performance.c'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'SpeedupPerformance'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'A package containing modules for speeding up performance.'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;ext_modules&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;speedup_performance_module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;然後下：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python3 setup.py build_ext --inplace
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;如此會有一個 &lt;code&gt;*.so&lt;/code&gt; 出現在當前目錄，這就是 Python 可以使用的 shared library。讓我們打開 Python 用用看:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;speedup_performance&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;slow_calc&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;slow_calc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;&lt;a href=&quot;https://docs.python.org/3.6/library/ctypes.html&quot;&gt;ctypes&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;ctypes&lt;/code&gt; 是 Python 提供的一個 library，可以在 Python 中匯入一些外部 dynamic-link library (DLL) 或 shared library，來調用其中的 function。&lt;/p&gt;
+
+&lt;p&gt;如果是已經存在的 library，可以直接從下面的第二步開始。現在假設我們想把前面提到自己寫的，很花時間運算的 &lt;code&gt;slow_calc&lt;/code&gt; function 打包給 &lt;code&gt;ctypes&lt;/code&gt; 調用，且這個 function 寫在 &lt;code&gt;speedup_performance.c&lt;/code&gt; 裡。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;ctypes&lt;/code&gt; 簡單三步驟：&lt;/p&gt;
+
+&lt;h5&gt;Step 1: 建立 Shared Library&lt;/h5&gt;
+
+&lt;p&gt;首先用 gcc 建立 shared library，產生 &lt;code&gt;speedup_performance.so&lt;/code&gt; 檔：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;gcc -shared -fPIC speedup_performance.c -o speedup_performance.so
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h5&gt;Step 2: 匯入 Library&lt;/h5&gt;
+
+&lt;p&gt;接著在 Python 用 &lt;code&gt;ctypes&lt;/code&gt; 提供的 function 來匯入剛剛建立的 &lt;code&gt;so&lt;/code&gt; 檔：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;ctypes&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cdll&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;LoadLibrary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'./speedup_performance.so'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;如此一來 library 中的 function 就能以 &lt;code&gt;m.func()&lt;/code&gt; 取用。&lt;/p&gt;
+
+&lt;h5&gt;Step 3: 呼叫 Function&lt;/h5&gt;
+
+&lt;p&gt;調用的時候，需要傳入對應原 C function 中的 parameter types。&lt;a href=&quot;https://docs.python.org/3.6/library/ctypes.html#fundamental-data-types&quot;&gt;這邊&lt;/a&gt;有列出每個 C type 對應的 ctypes type，例如我們需要傳入的 &lt;code&gt;int&lt;/code&gt; 對應到 &lt;code&gt;c_int&lt;/code&gt;：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;slow_calc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c_int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c_int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c_int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;&lt;a href=&quot;http://www.swig.org/Doc3.0/Contents.html#Contents&quot;&gt;SWIG&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;比起前兩者，SWIG (Simplified Wrapper and Interface Generator) 是一個更全面的建立 C/C++ interface 的工具，支援如 Python，Perl，Ruby 等多種語言。&lt;/p&gt;
+
+&lt;p&gt;在&lt;a href=&quot;http://www.swig.org/Doc3.0/Preface.html#Preface_installation&quot;&gt;安裝&lt;/a&gt;好 SWIG 後，再來一樣嘗試打包我們的 &lt;code&gt;slow_calc&lt;/code&gt; function。這次我們方便起見，把 function 直接寫在 &lt;code&gt;speedup_performance.h&lt;/code&gt; 裡，等一下需要 include。&lt;/p&gt;
+
+&lt;p&gt;大致上有四步驟：&lt;/p&gt;
+
+&lt;h5&gt;Step 1: 建立 Interface File&lt;/h5&gt;
+
+&lt;p&gt;首先要有一個描述 interface 的檔案，習慣命名為 &lt;code&gt;*.i&lt;/code&gt; 或 &lt;code&gt;*.swg&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;讓我們建立一個 &lt;code&gt;speedup_performance.i&lt;/code&gt;：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;/* 定義 module 名稱 */
+%module speedup_performance
+
+/* 在這個區塊的程式碼會原封不動置入待會產生的 C wrapper */
+%{
+#include &quot;speedup_performance.h&quot;
+%}
+
+/* 告訴 SWIG 你宣告的 function 或 variable */
+int slow_calc(int x, int a = 0, int b = 0);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;上面被包在 &lt;code&gt;%{ ... %}&lt;/code&gt; 裡的程式碼，主要是一些 header file 或其他 declaration；這些宣告不會被 compile，而是直接置入下一步產生的 C wrapper 檔。但下面的區塊不是也有差不多的宣告嗎？為什麼需要重複？這麼做是因為下面區塊的宣告是讓 SWIG 在 wrapper file 裡建立一些 wrapper function 用的，而不是用來與原本寫的 function 連接。所以要在 wrapper file 重新置入 &lt;code&gt;%{ ... %}&lt;/code&gt; 裡的宣告，wrapper file 裡才能調用原 function，也才可以確保在第三步建立 shared library 的時候的 linkage 可以成功。&lt;/p&gt;
+
+&lt;p&gt;另外我們原本的 &lt;code&gt;slow_calc&lt;/code&gt; 裡並沒有 default argument （因 C 本身並不怎麼支援），但是 SWIG 接受 &lt;a href=&quot;http://www.swig.org/Doc1.3/SWIGPlus.html#SWIGPlus_default_args&quot;&gt;default argument&lt;/a&gt;，所以我們在這裡添加了一些 default values。&lt;/p&gt;
+
+&lt;h6&gt;Step 2: 產生 Wrapper File&lt;/h6&gt;
+
+&lt;p&gt;有了 interface 的資訊後，就可以請 SWIG 建立可以拿來做 extension module 的 &lt;code&gt;speedup_performance.py&lt;/code&gt; 和 wrapper file &lt;code&gt;speedup_performance_wrap.c&lt;/code&gt;：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;swig -python speedup_performance.i
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;或是建立 keyword argument 形式：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;swig -python -keyword speedup_performance.i
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h5&gt;Step 3: 建立 Shared Library&lt;/h5&gt;
+
+&lt;p&gt;這邊同上面 &lt;code&gt;Python/C API&lt;/code&gt; 範例，用 &lt;code&gt;setup.py&lt;/code&gt; 和 &lt;code&gt;Distutils&lt;/code&gt; 建立 shared library：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;distutils.core&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Extension&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Extension module name 要有底線前綴&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;speedup_performance_module&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Extension&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'_speedup_performance'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                                       &lt;span class=&quot;n&quot;&gt;sources&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'speedup_performance_wrap.c'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'SpeedupPerformance'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'A package containing modules for speeding up performance.'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;ext_modules&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;speedup_performance_module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;這邊注意 extension module 名稱必須有底線前綴，這是&lt;a href=&quot;http://www.swig.org/Doc1.3/Python.html#Python_nn6&quot;&gt;官方文件&lt;/a&gt;上提到的命名規則。&lt;/p&gt;
+
+&lt;p&gt;下個指令建立 &lt;code&gt;*.so&lt;/code&gt;：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python3 setup.py build_ext --inplace
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h5&gt;Step 4: 匯入 Library &amp;amp; 調用 Function&lt;/h5&gt;
+
+&lt;p&gt;有了 Step 2 的 &lt;code&gt;*.py&lt;/code&gt; 和 Step 3 的 &lt;code&gt;*.so&lt;/code&gt;，就可以成功調用 &lt;code&gt;slow_calc&lt;/code&gt; function 了：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;speedup_performance&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;slow_calc&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;slow_calc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;C 調用 Python&lt;/h2&gt;
+
+&lt;h3&gt;&lt;a href=&quot;https://docs.python.org/3/c-api/intro.html&quot;&gt;Python/C API&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;Python/C API&lt;/code&gt; 一樣是最基礎的解法。&lt;/p&gt;
+
+&lt;p&gt;現在假設我們有個寫法很複雜，卻不需在意效能的 &lt;code&gt;complex_calc&lt;/code&gt; function 想用 Python 實現：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;complex_calc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;讓我們先把上述 &lt;code&gt;complex_calc&lt;/code&gt; function 寫進 &lt;code&gt;speedup_dev.py&lt;/code&gt; 裡。然後我們在 &lt;code&gt;main.c&lt;/code&gt; 裡先理所當然地：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;Python.h&amp;gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;接著三步驟調用這個 function：&lt;/p&gt;
+
+&lt;h5&gt;Step 1: 打包 Function&lt;/h5&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;complex_calc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;PyObject&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pModule&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pFunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pArgs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pKargs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pRes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// 匯入 `speedup_dev` module &amp;amp; `complex_calc` function 
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;pModule&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PyImport_Import&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PyUnicode_FromString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;speedup_dev&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;pFunc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PyObject_GetAttrString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pModule&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;complex_calc&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// 把 arguments 打包成 PyObject
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;pArgs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Py_BuildValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;(i)&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;pKargs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Py_BuildValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{s:i, s:i}&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;a&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;b&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// 呼叫 function 
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;pRes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PyObject_Call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pFunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pArgs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pKargs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// 檢查有沒有呼叫失敗，沒有的話把回傳值從 PyObject 包回 C type 
+&lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pRes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PyLong_AsLong&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pRes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// 處理一下 memory allocation 
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;Py_DECREF&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pModule&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Py_DECREF&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pFunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Py_DECREF&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pArgs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Py_DECREF&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pKargs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Py_DECREF&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pRes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;再次重複，跟 Python 溝通的值皆為 &lt;code&gt;PyObject&lt;/code&gt; type，所以需要轉換 argument 和 return value。&lt;/p&gt;
+
+&lt;p&gt;這邊比較麻煩的是要自己&lt;a href=&quot;https://docs.python.org/3.6/extending/extending.html#reference-counting-in-python&quot;&gt;處理 memory allocation&lt;/a&gt; 。每當一個 &lt;code&gt;PyObject&lt;/code&gt; 被創建，它就會有一個 reference count，也就是有多少調用者有責任去管理這個 &lt;code&gt;PyObject&lt;/code&gt;；當 reference count 變為 0，這個 &lt;code&gt;PyObject&lt;/code&gt; 就會被 free。如果根本沒人在管理這個 &lt;code&gt;PyObject&lt;/code&gt;， reference count 卻不為 0，就會有 memory leak 的問題。所以我們要記得在利用完這些 &lt;code&gt;PyObject&lt;/code&gt; 後呼叫 &lt;code&gt;Py_DECREF&lt;/code&gt; 減少 reference count，某些情況下該增加時也要呼叫 &lt;code&gt;Py_INCREF&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;但 reference count 的&lt;a href=&quot;https://docs.python.org/3.6/extending/extending.html#reference-counting-in-python&quot;&gt;規則&lt;/a&gt;有點複雜，自己處理很容易 bug 滿天飛（我可能也有 bug...），這也是使用 &lt;code&gt;Python/C API&lt;/code&gt; 的難點之一。&lt;/p&gt;
+
+&lt;h5&gt;Step 2: 呼叫 Function&lt;/h5&gt;
+
+&lt;p&gt;打包好之後，我們就有一個可以呼叫的 C function 了。不過在調用之前，得先做一點設置：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Initialize Python 直譯器 
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;Py_Initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// 設置 Python search path 
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;PySys_SetPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Py_DecodeLocale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// 呼叫 function
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%d&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;complex_calc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// 釋放 Python 直譯器佔用資源
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;Py_Finalize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;除了使用前先 initialize，使用後 finalize 外，還要記得設一下 Python search path，否則會搜不到 module。&lt;/p&gt;
+
+&lt;h5&gt;Step 3: 編譯 &amp;amp; 執行程式&lt;/h5&gt;
+
+&lt;p&gt;用 gcc 編譯程式，產生 &lt;code&gt;main.o&lt;/code&gt; 執行檔：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;gcc main.c -o main.o &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;python3-config --includes&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;python3-config --ldflags&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;執行：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;./main.o
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;10
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;&lt;a href=&quot;http://docs.cython.org/en/latest/&quot;&gt;Cython&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;相信大家有生之年一定都不想自己處理什麼 reference count 的問題。Cython 是一個跟 Python 寫起來很像的語言，能夠方便且快速的建立 C 的 extension，不只達到 Python 的開發速度，亦能達到 C 的效能。&lt;/p&gt;
+
+&lt;p&gt;先安裝起來：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;pip3 install Cython
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;假設我們有個 &lt;code&gt;complex_and_slow_calc&lt;/code&gt; function 不只寫起來複雜，效能又低：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;complex_and_slow_calc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;round&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sqrt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Cython 可以定義針對 Python、C、或兩者的 function。我們把上述 &lt;code&gt;complex_and_slow_calc&lt;/code&gt; function 用三種寫法一起實現。&lt;/p&gt;
+
+&lt;p&gt;以下四步驟調用：&lt;/p&gt;
+
+&lt;h5&gt;Step 1: 用 Cython 取代 Python&lt;/h5&gt;
+
+&lt;p&gt;先把 Cython 寫在 &lt;code&gt;speedup_dev_and_performance.pyx&lt;/code&gt; 裡，寫法與 Python 極為相似：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;math&lt;/span&gt; 
+
+
+&lt;span class=&quot;c&quot;&gt;# Python&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;complex_and_slow_calc_p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;round&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sqrt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# C&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cdef&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;complex_and_slow_calc_c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;round&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sqrt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Python &amp;amp; C&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cpdef&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;complex_and_slow_calc_cp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;round&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sqrt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;依照你的 function 需要被 Python  或 C 或兩者調用，有以上三種寫法，&lt;code&gt;def&lt;/code&gt;、&lt;code&gt;cdef&lt;/code&gt;、和 &lt;code&gt;cpdef&lt;/code&gt;，來建立 Python function 或 C function；C function 的優化比較多，速度也比較快。&lt;a href=&quot;http://notes-on-cython.readthedocs.io/en/latest/function_declarations.html&quot;&gt;這邊&lt;/a&gt;有比較詳細的解釋。當然，你只需要針對需求選一個寫就好，這邊同時示範三種寫法，命名用 &lt;code&gt;_p / _c / _cp&lt;/code&gt; 後綴來區別。C function 的 argument 及 return value 都要明確定義 type，跟 C 同理。&lt;/p&gt;
+
+&lt;p&gt;如果在 &lt;code&gt;def&lt;/code&gt; 後加上 &lt;code&gt;public&lt;/code&gt;，那麼這個 function 就會出現在產生的 &lt;code&gt;*.h&lt;/code&gt; 標頭檔裡，所以如果有想要給外部 C 檔調用的 function，也就是我們等一下要做的事，便能加上 &lt;code&gt;public&lt;/code&gt;。&lt;/p&gt;
+
+&lt;h5&gt;Step 2: 建立 Extension&lt;/h5&gt;
+
+&lt;p&gt;同樣使用 &lt;code&gt;setup.py&lt;/code&gt; 和 &lt;code&gt;Distutils&lt;/code&gt; 來建立 extension：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;distutils.core&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;setup&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;Cython.Build&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cythonize&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ext_modules&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cythonize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'speedup_dev_and_performance.pyx'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;下指令，產生 &lt;code&gt;*.so&lt;/code&gt;，&lt;code&gt;*.c&lt;/code&gt;，和 &lt;code&gt;*.h&lt;/code&gt;：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;$ python3 setup.py build_ext --inplace
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h5&gt;Step 3: 呼叫 Function&lt;/h5&gt;
+
+&lt;p&gt;有了標頭檔 &lt;code&gt;speedup_dev_and_performance.h&lt;/code&gt;，我們建立一個 &lt;code&gt;main.c&lt;/code&gt; 來調用：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;Python.h&amp;gt;
+#include &quot;speedup_dev_and_performance.h&quot;
+&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Init module &amp;amp; Python 直譯器 
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;PyImport_AppendInittab&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;speedup_dev_and_performance&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PyInit_speedup_dev_and_performance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Py_Initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;PyImport_ImportModule&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;speedup_dev_and_performance&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// 呼叫 function
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%d&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;complex_and_slow_calc_c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// 釋放 Python 直譯器佔用資源
+&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;Py_Finalize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;這邊注意到 initialization 多了幾個步驟：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;PyImport_AppendInittab&lt;/code&gt; 把我們要匯入的 module &lt;code&gt;speedup_dev_and_performance&lt;/code&gt; 加到 built-in module table&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Py_Initialize&lt;/code&gt; initialize Python 直譯器 &lt;/li&gt;
+&lt;li&gt;再呼叫 &lt;code&gt;PyImport_ImportModule&lt;/code&gt; ，也就是匯入 module， 才能真正 initialize module，因其內部呼叫 &lt;code&gt;PyInit_speedup_dev_and_performance&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;code&gt;PyInit_&amp;lt;module&amp;gt;&lt;/code&gt; 是在上上步 &lt;code&gt;*.h&lt;/code&gt; 檔裡自動生成的。記得我們的 &lt;code&gt;complex_and_slow_calc&lt;/code&gt; 有 &lt;code&gt;import math&lt;/code&gt; 嗎？如果沒有這第三步，import math 就會失敗。&lt;/p&gt;
+
+&lt;h5&gt;Step 4: 編譯 &amp;amp; 執行程式&lt;/h5&gt;
+
+&lt;p&gt;同樣用 gcc 編譯程式，產生 &lt;code&gt;main.o&lt;/code&gt; 執行檔後執行：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;gcc main.c -o main.o &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;python3-config --includes&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;python3-config --ldflags&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;./main.o
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;3 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2&gt;比較&lt;/h2&gt;
+
+&lt;p&gt;說了這麼多，這些方法有哪些優缺點，適合什麼時候用呢？&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&quot;text-align: center&quot;&gt;&lt;/th&gt;
+&lt;th&gt;優點&lt;/th&gt;
+&lt;th&gt;缺點&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;Python/C API&lt;/td&gt;
+&lt;td&gt;最原始，最大的控制權。&lt;/td&gt;
+&lt;td&gt;Reference count 很煩。比較需要 C 的基礎。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;ctypes&lt;/td&gt;
+&lt;td&gt;使用簡單。不需編譯。可直接使用現成 library。基本使用上不需會 C。&lt;/td&gt;
+&lt;td&gt;Type 轉換比較麻煩，尤其是 struct、union、array 這種。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;SWIG&lt;/td&gt;
+&lt;td&gt;支援多種語言。&lt;/td&gt;
+&lt;td&gt;要寫一份煩人的 interface file。Overhead 高。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&quot;text-align: center&quot;&gt;Cython&lt;/td&gt;
+&lt;td&gt;兼顧開發與執行效能。&lt;/td&gt;
+&lt;td&gt;跟 Python 還是不太一樣，需要學新東西。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;不過這些是很粗淺的比較，一些更深入的優劣勢還是需要真的深入使用之後才能體會。&lt;/p&gt;
+
+&lt;h2&gt;結語&lt;/h2&gt;
+
+&lt;p&gt;為了魚與熊掌兼得，前人在 C 與 Python 的整合開發上下了不少功夫，也才有這些方便的工具使用。此篇簡單介紹幾個 Python 與 C 的整合工具，尚未觸及到 C++ 或其他語言，但或許認識這些基本概念能更容易延伸到其他語言。&lt;/p&gt;
+
+&lt;p&gt;這些在蓬勃發展的資訊領域裡可能只是冰山一角，未來也勢必會有更強大的整合工具或新語言出現。我們能做的就是坐以待斃，喔不是，是分析清楚利弊，為自己的專案挑選最適合的工具。&lt;/p&gt;
+
+&lt;h2&gt;參考資料&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.python.org/3/c-api/intro.html&quot;&gt;Python/C API Reference Manual&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.tutorialspoint.com/python/python_further_extensions.htm&quot;&gt;Python - Extension Programming with C&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://pythonextensionpatterns.readthedocs.io/en/latest/refcount.html&quot;&gt;Python Extension Patterns&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.python.org/3.6/extending/extending.html&quot;&gt;Extending and Embedding the Python Interpreter&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.python.org/3.6/library/ctypes.html&quot;&gt;ctypes — A foreign function library for Python&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.swig.org/Doc3.0/Contents.html#Contents&quot;&gt;SWIG Users Manual&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://docs.cython.org/en/latest/&quot;&gt;Cython’s Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://notes-on-cython.readthedocs.io/en/latest/index.html#&quot;&gt;Cython def, cdef and cpdef functions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.paypal-engineering.com/2016/09/22/python-by-the-c-side/&quot;&gt;Python by the C side&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.zhihu.com/question/23003213&quot;&gt;如何实现 C/C++ 与 Python 的通信？&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 26 Jan 2018 00:00:00 +0800</pubDate>
+        <link>/blog/tech/python/2018/01/26/python-c-mixing.html</link>
+        <guid isPermaLink="true">/blog/tech/python/2018/01/26/python-c-mixing.html</guid>
+        
+        <category>Python</category>
+        
+        <category>PyLadies</category>
+        
+        <category>C</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Tech</category>
+        
+        <category>Python</category>
+        
+      </item>
     
       <item>
         <title>Resurrecting The Dead Chinese</title>
@@ -2627,271 +3083,6 @@ IMPORTANT NOTES:
         <category>Tech</category>
         
         <category>System</category>
-        
-      </item>
-    
-      <item>
-        <title>Flask App With Gunicorn On Nginx Server Upon Aws Ec2 Linux</title>
-        <description>&lt;p&gt;The whole setup is modified from this &lt;a href=&quot;https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-14-04&quot;&gt;tutorial&lt;/a&gt;,
-with the pain and gain from the alternative deployment on an AWS EC2 Linux server.&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Setup Environment&lt;/li&gt;
-  &lt;li&gt;Creating a Flask App&lt;/li&gt;
-  &lt;li&gt;Binding with Gunicorn&lt;/li&gt;
-  &lt;li&gt;Creating an Upstart Script for Running Gunicorn Server&lt;/li&gt;
-  &lt;li&gt;Running with Nginx on AWS EC2&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-&lt;hr /&gt;
-
-&lt;h4 id=&quot;setup-environment&quot;&gt;Setup Environment&lt;/h4&gt;
-
-&lt;p&gt;Install python development tools &amp;amp; &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx&lt;/code&gt;.&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo yum update
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo yum install python-pip python-dev nginx
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Install &lt;code class=&quot;highlighter-rouge&quot;&gt;virtualenv&lt;/code&gt; from &lt;code class=&quot;highlighter-rouge&quot;&gt;pip&lt;/code&gt; so that the python packages for the flask app will be in isolation.&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo pip install virtualenv
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Create the project &amp;amp; setup the virtual environment.&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# create project&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mkdir myproject
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;myproject
-
-&lt;span class=&quot;c&quot;&gt;# create virtualenv&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;virtualenv venv
-
-&lt;span class=&quot;c&quot;&gt;# activate virtualenv&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ./venv/bin/activate
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Now the prompt should look like:&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;(venv)user@host:~/myproject$ &lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;creating-a-flask-app&quot;&gt;Creating a Flask App&lt;/h4&gt;
-
-&lt;p&gt;Install the dependencies under your virtualenv.&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;(venv)user@host:~/myproject$ &lt;/span&gt;pip install gunicorn flask
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Create the app entry file &lt;code class=&quot;highlighter-rouge&quot;&gt;~/myproject/app.py&lt;/code&gt; and write the simplest flask app:&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;flask&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flask&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;application&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;nd&quot;&gt;@application.route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Hello World!&quot;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;__main__&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;application&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'0.0.0.0'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'8080'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;em&gt;Note that you need to make sure your app is run on an allowed port of the EC2 instance. 
-Check which ports are allowed under &lt;code class=&quot;highlighter-rouge&quot;&gt;AWS EC2 Dashboard &amp;gt; Instances &amp;gt; (select your instance) &amp;gt; Security groups &amp;gt; view inbound rules&lt;/code&gt;.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Test your flask app.&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;(venv)user@host:~/myproject$ &lt;/span&gt;python app.py
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Go to your browser and enter the url to your server, appending the port number you specified in &lt;code class=&quot;highlighter-rouge&quot;&gt;app.py&lt;/code&gt;. 
-You should see &lt;code class=&quot;highlighter-rouge&quot;&gt;Hello World!&lt;/code&gt; displayed.&lt;/p&gt;
-
-&lt;h4 id=&quot;binding-with-gunicorn&quot;&gt;Binding with Gunicorn&lt;/h4&gt;
-
-&lt;p&gt;Create the WSGI entrypoint &lt;code class=&quot;highlighter-rouge&quot;&gt;~/myproject/wsgi.py&lt;/code&gt;.&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;app&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;application&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;__main__&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;application&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Test it.&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;(venv)user@host:~/myproject$ &lt;/span&gt;gunicorn --bind 0.0.0.0:8080 wsgi
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;em&gt;If you didn’t name your app as &lt;code class=&quot;highlighter-rouge&quot;&gt;application&lt;/code&gt;, for example as &lt;code class=&quot;highlighter-rouge&quot;&gt;app&lt;/code&gt;, 
-use &lt;code class=&quot;highlighter-rouge&quot;&gt;wsgi:app&lt;/code&gt; instead of &lt;code class=&quot;highlighter-rouge&quot;&gt;wsgi&lt;/code&gt;, since &lt;code class=&quot;highlighter-rouge&quot;&gt;application&lt;/code&gt; is the name to be picked up by default.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Go to your browser again and read the &lt;code class=&quot;highlighter-rouge&quot;&gt;Hello World!&lt;/code&gt; response.&lt;/p&gt;
-
-&lt;h4 id=&quot;creating-an-upstart-script-for-running-gunicorn-server&quot;&gt;Creating an Upstart Script for Running Gunicorn Server&lt;/h4&gt;
-
-&lt;p&gt;Now let’s make Linux automatically start the server upon booting by providing the upstart script.&lt;/p&gt;
-
-&lt;p&gt;Create a configuration file:&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo vim /etc/init/myproject.conf
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Write a little more complicated version than the original tutorial to help you debug:&lt;/p&gt;
-
-&lt;div class=&quot;language-conf highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;description&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Gunicorn application server running myproject&quot;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;runlevel&lt;/span&gt; [&lt;span class=&quot;m&quot;&gt;2345&lt;/span&gt;]
-&lt;span class=&quot;n&quot;&gt;stop&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;runlevel&lt;/span&gt; [!&lt;span class=&quot;m&quot;&gt;2345&lt;/span&gt;]
-
-&lt;span class=&quot;n&quot;&gt;respawn&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PATH&lt;/span&gt;=/&lt;span class=&quot;n&quot;&gt;home&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;ec2&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;myproject&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;venv&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;bin&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PROGRAM_NAME&lt;/span&gt;=&lt;span class=&quot;s2&quot;&gt;&quot;myproject&quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;USERNAME&lt;/span&gt;=&lt;span class=&quot;s2&quot;&gt;&quot;ec2-user&quot;&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# Main script to be run
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;script&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Ready to run...&quot;&lt;/span&gt; &amp;gt;&amp;gt; /&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;/$&lt;span class=&quot;n&quot;&gt;PROGRAM_NAME&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;sys&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;
-
-    &lt;span class=&quot;n&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HOME&lt;/span&gt;=&lt;span class=&quot;s2&quot;&gt;&quot;/home/ec2-user&quot;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;echo&lt;/span&gt; $$ &amp;gt; /&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;/$&lt;span class=&quot;n&quot;&gt;PROGRAM_NAME&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;pid&lt;/span&gt;
-
-    &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; /&lt;span class=&quot;n&quot;&gt;home&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;ec2&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;myproject&lt;/span&gt;
-    &lt;span class=&quot;c&quot;&gt;# exec sudo -u ec2-user gunicorn --workers 3 --bind unix:myproject.sock -m 000 wsgi &amp;gt;&amp;gt; /var/log/$PROGRAM_NAME.sys.log 2&amp;gt;&amp;amp;1
-&lt;/span&gt;    &lt;span class=&quot;c&quot;&gt;# exec su -s /bin/sh -c 'exec &quot;$0&quot; &quot;$@&quot;' ec2-user -- gunicorn --workers 3 --bind unix:myproject.sock -m 000 wsgi &amp;gt;&amp;gt; /var/log/$PROGRAM_NAME.sys.log 2&amp;gt;&amp;amp;1
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;exec&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gunicorn&lt;/span&gt; --&lt;span class=&quot;n&quot;&gt;workers&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; --&lt;span class=&quot;n&quot;&gt;bind&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unix&lt;/span&gt;:&lt;span class=&quot;n&quot;&gt;myproject&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;sock&lt;/span&gt; -&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;000&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wsgi&lt;/span&gt; &amp;gt;&amp;gt; /&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;/$&lt;span class=&quot;n&quot;&gt;PROGRAM_NAME&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;sys&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&amp;gt;&amp;amp;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;script&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# Script for debug purpose, run before starting
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pre&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;script&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Starting&quot;&lt;/span&gt; &amp;gt;&amp;gt; /&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;/$&lt;span class=&quot;n&quot;&gt;PROGRAM_NAME&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;sys&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;script&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# Script for debug purpose, run before stopping
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pre&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;stop&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;script&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;rm&lt;/span&gt; /&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;/$&lt;span class=&quot;n&quot;&gt;PROGRAM_NAME&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;pid&lt;/span&gt;/
-    &lt;span class=&quot;n&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Stopping&quot;&lt;/span&gt; &amp;gt;&amp;gt; /&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;/$&lt;span class=&quot;n&quot;&gt;PROGRAM_NAME&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;sys&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;script&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Notes here:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;PATH&lt;/code&gt; is for running the server under our virtual environment&lt;/li&gt;
-  &lt;li&gt;Note the commented out &lt;code class=&quot;highlighter-rouge&quot;&gt;exec&lt;/code&gt; scripts that produce errors; 
-I intended to switch user by doing that, since &lt;code class=&quot;highlighter-rouge&quot;&gt;setuid&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;setgid&lt;/code&gt; is not supported on EC2 Linux instance. 
-These commands are from &lt;a href=&quot;https://www.thedevopsdoctors.com/blog/2016/4/8/init-scripts-for-web-apps-on-linux-and-why-you-should-be-using-them&quot;&gt;these&lt;/a&gt; &lt;a href=&quot;https://deepumohan.com/tech/setting-up-apache-airflow-on-aws-ec2-instance/&quot;&gt;places&lt;/a&gt; and &lt;a href=&quot;https://serverfault.com/questions/357060/how-should-i-use-sudo-from-an-upstart-script&quot;&gt;here&lt;/a&gt;. Feel free to provide a correct version…
-So now the server is run under &lt;code class=&quot;highlighter-rouge&quot;&gt;root&lt;/code&gt;.&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-m&lt;/code&gt; flag is the umask; for umask value &lt;code class=&quot;highlighter-rouge&quot;&gt;000&lt;/code&gt;, the permission would be &lt;code class=&quot;highlighter-rouge&quot;&gt;777&lt;/code&gt;. This is insecure though, but since I have not found a way to set the access right to a specific user and group, the hooking with nginx only works when the permission is allowed for all users (as the nginx server we will set up later runs as user &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx&lt;/code&gt;).&lt;/li&gt;
-  &lt;li&gt;Echos and &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&amp;gt;&lt;/code&gt; are for debugging; see the logs at &lt;code class=&quot;highlighter-rouge&quot;&gt;/var/log/myproject.sys.log&lt;/code&gt; if you cannot start your server.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Test it.&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# reload configuration files from /etc/init/*.conf&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo initctl reload-configuration
-
-&lt;span class=&quot;c&quot;&gt;# see if the new job is listed&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo initctl list
-
-&lt;span class=&quot;c&quot;&gt;# try start your server (job); the job name is without the '.conf' extension&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo initctl start myproject
-
-&lt;span class=&quot;c&quot;&gt;# if job is not listed, or error displays and says 'myproject' is not known, there's probably errors in the conf file&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# fix them and go on&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# check if it's actually running&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo initctl status myproject
-&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;myproject start/running, process xxxx
-
-&lt;span class=&quot;c&quot;&gt;# or check with&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;ps aux | grep gunicorn
-
-&lt;span class=&quot;c&quot;&gt;# if the job is not running, see the log at '/var/log/myproject.sys.log'&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# you can echo more messages in the conf file for your own debug purpose&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# you should also notice a socket file created at '/home/ec2-user/myproject/myproject.sock'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;running-with-nginx-on-aws-ec2&quot;&gt;Running with Nginx on AWS EC2&lt;/h4&gt;
-
-&lt;p&gt;Now setup the nginx server to redirect the traffic received at port 80 (http) to the WSGI (Gunicorn) server running at the unix socket.&lt;/p&gt;
-
-&lt;p&gt;Open the &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/nginx/nginx.conf&lt;/code&gt; file, find the section and write:&lt;/p&gt;
-
-&lt;div class=&quot;language-conf highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;...
-&lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; {
-        &lt;span class=&quot;n&quot;&gt;listen&lt;/span&gt;       &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;default_server&lt;/span&gt;;
-        &lt;span class=&quot;n&quot;&gt;listen&lt;/span&gt;       [::]:&lt;span class=&quot;m&quot;&gt;80&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;default_server&lt;/span&gt;;
-        &lt;span class=&quot;n&quot;&gt;server_name&lt;/span&gt;  &amp;lt;&lt;span class=&quot;n&quot;&gt;your&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;domain&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&amp;gt;;                                    &lt;span class=&quot;c&quot;&gt;# &amp;lt;- replace with your own one
-&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;         /&lt;span class=&quot;n&quot;&gt;usr&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;share&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;nginx&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;html&lt;/span&gt;;
-
-        ...
-
-        &lt;span class=&quot;n&quot;&gt;location&lt;/span&gt; / {
-            &lt;span class=&quot;n&quot;&gt;proxy_pass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;://&lt;span class=&quot;n&quot;&gt;unix&lt;/span&gt;:/&lt;span class=&quot;n&quot;&gt;home&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;ec2&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;myproject&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;myproject&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;sock&lt;/span&gt;; &lt;span class=&quot;c&quot;&gt;# &amp;lt;- add this
-&lt;/span&gt;        }
-
-        ...
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;This will route the traffic to the specified socket.&lt;/p&gt;
-
-&lt;p&gt;Test it.&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo nginx -t
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;If ok, start the server:&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo service nginx restart
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Go to the browser, and without specifying the port number now (default to 80). The request will hit the nginx proxy server, and the nginx server will pass it to the WSGI server, which talks to the flask app. Check if it successfully returns &lt;code class=&quot;highlighter-rouge&quot;&gt;Hello World!&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;If not, there may be multiple reasons. The one that I encountered is solved by changing the permission of the home directory:&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;chmod 711 /home/ec2-user
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Remember to restart.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;h6 id=&quot;debug-tips&quot;&gt;Debug Tips&lt;/h6&gt;
-  &lt;ol&gt;
-    &lt;li&gt;Echo message to &lt;code class=&quot;highlighter-rouge&quot;&gt;/var/log/xxx.sys.log&lt;/code&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tail -f /var/log/nginx/access.log&lt;/code&gt; to check nginx logs&lt;/li&gt;
-    &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;netstat -anp | less&lt;/code&gt; to show network status&lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-14-04&quot;&gt;How To Serve Flask Applications with Gunicorn and Nginx on Ubuntu 14.04&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://nginx.org/en/docs/beginners_guide.html#conf_structure&quot;&gt;NGINX Beginner’s Guide&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Fri, 07 Jul 2017 00:00:00 +0800</pubDate>
-        <link>/2017/07/07/flask-app-with-gunicorn-on-nginx-server-upon-aws-ec2-linux.html</link>
-        <guid isPermaLink="true">/2017/07/07/flask-app-with-gunicorn-on-nginx-server-upon-aws-ec2-linux.html</guid>
-        
         
       </item>
     

@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>如Py似C：Python 與 C 的共生法則</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="/css/main.css" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono|Amatic+SC:700" rel="stylesheet">
+		<link rel="stylesheet" href="/css/github-markdown.css">
+
+		<!-- Place jquery before bootstrap -->
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">MyCoon</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+
+			<form class="navbar-form navbar-left">
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Search">
+				</div>
+				<button type="submit" class="btn btn-default">Submit</button>
+			</form>
+
+			<ul class="nav navbar-nav navbar-right" id="nav-links">
+				<li class="nav-home"><a href="/">Home</a></li>
+				<li class="dropdown nav-blog">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Blog<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/blog">MyCoon Blog</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/blog/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/blog/tech">
+									<span>Tech</span>
+									<span>10</span>
+								</a>
+							</li>
+						
+							
+							
+							<li class="category">
+								<a href="/blog/notes">
+									<span>Notes</span>
+									<span>5</span>
+								</a>
+							</li>
+						
+						<li><a href="/blog/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li class="dropdown nav-tutorial">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Tutorials<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/tutorial">MyCoon Tutorial</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/tutorial/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/tutorial/devops">
+								<span>DevOps</span>
+								<span>1</span></a>
+							</li>
+						
+							
+							
+							<li class="category">
+								<a href="/tutorial/hardware">
+								<span>Hardware</span>
+								<span>1</span></a>
+							</li>
+						
+						<li><a href="/tutorial/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li  class="nav-project"><a href="/project">Projects</a></li>
+				<li class="nav-special" id="special"><a href="#">?</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+		<main class="page-content post" aria-label="Content">
+	<div class="post-wrapper">
+		<div class="wrapper">
+	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
+
+		<header class="post-header">
+			<h1 class="post-title" itemprop="name headline">如Py似C：Python 與 C 的共生法則</h1>
+			<p class="post-meta">Jan 26, 2018
+				 • Tech
+				 • pyliaorachel
+			</p>
+		</header>
+
+		
+
+		<span class="separator"> • • • </span>
+
+		<div class="post-content" itemprop="articleBody">
+			<p>「C君，你做事那麼快，carry 一下我的作業啦！」「好啊Py桑，那你人緣那麼好，記得幫我介紹女朋友喔。」</p>
+
+<p>C 的高效能及接近底層硬體的特性，使其成為嵌入式系統開發的首選，卻極少有人會厭世到拿它開發網頁；Python 語法簡潔且能快速開發，無論網頁、遊戲、資料科學皆有其應用，但其速度卻會在很多資源有限的地方吃鱉。</p>
+
+<p>C 與 Python 如何互相截長補短、共生共榮，成為程式語言界的一大課題。此篇將會簡介一些 C 與 Python 的整合方法，見證C君與Py桑如何從死對頭變成相互扶持的好友。</p>
+
+<!--more-->
+
+<hr>
+
+<p><em>* 請注意，以下只針對Python3進行講解與測試，並以 MacOSX 為環境。</em></p>
+
+<p>假使你正在跑 Python 的專案，卻因為其中某個需要做大量運算的 function 等得不耐煩，又不想整個專案改用效能高但複雜的 C 重寫，那麼如何能只獨立這個 function 改用 C ，並將它置入原本的 Python 專案呢？又或是你的 C 專案裡有一部分寫起來很棘手，能不能改用 Python 快速實現這部分的功能，並插入原本的 C 專案？</p>
+
+<p>接下來將會簡單介紹幾個 Python 調用 C 以及 C 調用 Python 的方法。</p>
+
+<h2>Python 調用 C</h2>
+
+<p>假設我們有一個很花時間的 function 叫做 <code>slow_calc</code>，想用效能高的 C 實現：</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">int</span> <span class="nf">slow_calc</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>以下簡介幾個可以讓 Python 調用這個 C function 的 library 或工具。</p>
+
+<h3><a href="https://docs.python.org/3/c-api/intro.html">Python/C API</a></h3>
+
+<p><a href="https://docs.python.org/3/extending/building.html">Python extension module</a> 是以 Python 以外的語言建立且能夠讓 Python 匯入的 module。Python/C API 即是 C 裡能夠建立 Python extension module 的媒介，只需要引入 <code>Python.h</code> 這個標頭檔即可開始手刻。</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#include &lt;Python.h&gt;
+</span></code></pre></div>
+<p>為了建立 <code>slow_calc</code> function 的接口，我們把它寫進 <code>speedup_performance.c</code> 檔並打包成 Python extension module，大致上有五個步驟：</p>
+
+<h5>Step 1: 包裝 Function</h5>
+
+<p>Python 裡的任何 type 都對應到 C 裡的 <code>PyObject</code>，所以我們要把原本的 function 包裝一下，讓參數和回傳值皆為 <code>PyObject</code>。這個包裝可以有以下三種參數形式：</p>
+
+<ol>
+<li><code>(PyObject *self, PyObject *args)</code></li>
+<li><code>(PyObject *self, PyObject *args, PyObject *kwargs)</code></li>
+<li><code>(PyObject *self)</code></li>
+</ol>
+
+<p><code>args</code> 是 positional arguments，<code>kwargs</code> 是 keyword arguments。讓我們試試有 keyword argument 的例子，把前面定義的 <code>slow_calc</code> function 包成 <code>_slow_calc</code>：</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="k">static</span> <span class="n">PyObject</span> <span class="o">*</span><span class="nf">_slow_calc</span><span class="p">(</span><span class="n">PyObject</span> <span class="o">*</span><span class="n">self</span><span class="p">,</span> <span class="n">PyObject</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">PyObject</span> <span class="o">*</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 參數值
+</span>    <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="c1">// kwlist 裡存放 keyword 的名字，以 NULL 結束
+</span>    <span class="k">static</span> <span class="kt">char</span> <span class="o">*</span><span class="n">kwlist</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="s">"x"</span><span class="p">,</span> <span class="s">"a"</span><span class="p">,</span> <span class="s">"b"</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">};</span>
+    <span class="c1">// 回傳值
+</span>    <span class="kt">int</span> <span class="n">res</span><span class="p">;</span>
+
+    <span class="c1">// PyArg_ParseTupleAndKeywords 會嘗試把接收的 args 及 kwargs 
+</span>    <span class="c1">// 包成我們要的 format，也就是 "i|ii"
+</span>    <span class="c1">// i 即 int，non-optional 和 optional arguments 以 | 區隔
+</span>    <span class="c1">// 成功包好的值存在 x，a，b 中，打包失敗則整個 function 回傳 0，不再繼續下去
+</span>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">PyArg_ParseTupleAndKeywords</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="s">"i|ii"</span><span class="p">,</span> <span class="n">kwlist</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 呼叫原 function，傳入包好的值 
+</span>    <span class="n">res</span> <span class="o">=</span> <span class="n">slow_calc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+
+    <span class="c1">// 把回傳值用 Py_BuildValue 包成 PyObject 以回送給 Python
+</span>    <span class="k">return</span> <span class="n">Py_BuildValue</span><span class="p">(</span><span class="s">"i"</span><span class="p">,</span> <span class="n">res</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<h5>Step 2: 建立 Module&#39;s Method Table</h5>
+
+<p>把 module 裡的 function 都一一包好後，就要建立一個 module&#39;s method table，也就是這個 module 的 method 列表。</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">// 每筆形式為 { name, method, flags, doc }
+// 即 { 名稱, 對應函數, 哪種 argument 形式, 描述 }
+</span><span class="k">static</span> <span class="n">PyMethodDef</span> <span class="n">SpeedupPerformanceMethods</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">{</span><span class="s">"slow_calc"</span><span class="p">,</span> <span class="n">_slow_calc</span><span class="p">,</span> <span class="n">METH_VARARGS</span> <span class="o">|</span> <span class="n">METH_KEYWORDS</span><span class="p">,</span> <span class="s">"A slow calculation method."</span><span class="p">},</span>
+    <span class="p">{</span><span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">}</span> <span class="c1">// 以 NULL 作結
+</span><span class="p">};</span>
+</code></pre></div>
+<p>這邊的 <code>flags</code> 可提供的值可參照<a href="https://docs.python.org/3/c-api/structures.html#c.PyMethodDef">文件</a>，主要是告知 arguments 會如何被傳入。</p>
+
+<h5>Step 3: 定義 Module 結構</h5>
+
+<p>接著再定義 module：</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">// 形式為 { base, name, doc, size, module's method table }
+// 即 { PyModuleDef_HEAD_INIT, 名稱, 描述, 分配 memory 大小, method 列表 }
+</span><span class="k">static</span> <span class="k">struct</span> <span class="n">PyModuleDef</span> <span class="n">speedup_performance_module</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">PyModuleDef_HEAD_INIT</span><span class="p">,</span>
+    <span class="s">"speedup_performance"</span><span class="p">,</span>
+    <span class="s">"A module containing methods with faster performance."</span><span class="p">,</span>
+    <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="c1">// global state
+</span>    <span class="n">SpeedupPerformanceMethods</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>第一個 <code>base</code> 皆設為 <code>PyModuleDef_HEAD_INIT</code> 即可。<code>size</code> 則是每個 <code>module</code> 可被分配存放 <code>module state</code> 的空間大小，設為 <code>-1</code> 則為 <code>global state</code>。詳可參照<a href="https://docs.python.org/3/c-api/module.html#c.PyModuleDef">文件</a>。</p>
+
+<h5>Step 4: 定義 Module Initialization Method</h5>
+
+<p>當 Python import 這個 module 時會呼叫一個 initialization method，這個 method 必須以 <code>PyInit_&lt;module&gt;</code> 形式命名：</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="c1">// PyMODINIT_FUNC 除了回傳 PyObject，還會處理不同平台間的 linkage 問題
+</span><span class="n">PyMODINIT_FUNC</span> <span class="nf">PyInit_speedup_performance</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">PyModule_Create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">speedup_performance_module</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>這個 initialization method 被呼叫後，會建立一個 module object，內含 method 列表列出的 function。這樣 Python 就能使用 C 裡提供的 function 了！</p>
+
+<h5>Step 5: 建立 Extension Module</h5>
+
+<p>上述程式碼寫完後存在 <code>speedup_performance.c</code>裡。接著藉著 <code>setup.py</code> 和 <code>Distutils</code> 把 extension module 真的做出來：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">distutils.core</span> <span class="kn">import</span> <span class="n">setup</span><span class="p">,</span> <span class="n">Extension</span>
+
+<span class="n">speedup_performance_module</span> <span class="o">=</span> <span class="n">Extension</span><span class="p">(</span><span class="s">'speedup_performance'</span><span class="p">,</span>
+                                       <span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="s">'speedup_performance.c'</span><span class="p">])</span>
+
+<span class="n">setup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'SpeedupPerformance'</span><span class="p">,</span>
+      <span class="n">description</span><span class="o">=</span><span class="s">'A package containing modules for speeding up performance.'</span><span class="p">,</span>
+      <span class="n">ext_modules</span><span class="o">=</span><span class="p">[</span><span class="n">speedup_performance_module</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>然後下：</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>python3 setup.py build_ext --inplace
+</code></pre></div>
+<p>如此會有一個 <code>*.so</code> 出現在當前目錄，這就是 Python 可以使用的 shared library。讓我們打開 Python 用用看:</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">speedup_performance</span> <span class="kn">import</span> <span class="n">slow_calc</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">slow_calc</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">10</span>
+</code></pre></div>
+<h3><a href="https://docs.python.org/3.6/library/ctypes.html">ctypes</a></h3>
+
+<p><code>ctypes</code> 是 Python 提供的一個 library，可以在 Python 中匯入一些外部 dynamic-link library (DLL) 或 shared library，來調用其中的 function。</p>
+
+<p>如果是已經存在的 library，可以直接從下面的第二步開始。現在假設我們想把前面提到自己寫的，很花時間運算的 <code>slow_calc</code> function 打包給 <code>ctypes</code> 調用，且這個 function 寫在 <code>speedup_performance.c</code> 裡。</p>
+
+<p><code>ctypes</code> 簡單三步驟：</p>
+
+<h5>Step 1: 建立 Shared Library</h5>
+
+<p>首先用 gcc 建立 shared library，產生 <code>speedup_performance.so</code> 檔：</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>gcc -shared -fPIC speedup_performance.c -o speedup_performance.so
+</code></pre></div>
+<h5>Step 2: 匯入 Library</h5>
+
+<p>接著在 Python 用 <code>ctypes</code> 提供的 function 來匯入剛剛建立的 <code>so</code> 檔：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">ctypes</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">cdll</span><span class="o">.</span><span class="n">LoadLibrary</span><span class="p">(</span><span class="s">'./speedup_performance.so'</span><span class="p">)</span>
+</code></pre></div>
+<p>如此一來 library 中的 function 就能以 <code>m.func()</code> 取用。</p>
+
+<h5>Step 3: 呼叫 Function</h5>
+
+<p>調用的時候，需要傳入對應原 C function 中的 parameter types。<a href="https://docs.python.org/3.6/library/ctypes.html#fundamental-data-types">這邊</a>有列出每個 C type 對應的 ctypes type，例如我們需要傳入的 <code>int</code> 對應到 <code>c_int</code>：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">slow_calc</span><span class="p">(</span><span class="n">c_int</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">c_int</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">c_int</span><span class="p">(</span><span class="mi">4</span><span class="p">)))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">10</span>
+</code></pre></div>
+<h3><a href="http://www.swig.org/Doc3.0/Contents.html#Contents">SWIG</a></h3>
+
+<p>比起前兩者，SWIG (Simplified Wrapper and Interface Generator) 是一個更全面的建立 C/C++ interface 的工具，支援如 Python，Perl，Ruby 等多種語言。</p>
+
+<p>在<a href="http://www.swig.org/Doc3.0/Preface.html#Preface_installation">安裝</a>好 SWIG 後，再來一樣嘗試打包我們的 <code>slow_calc</code> function。這次我們方便起見，把 function 直接寫在 <code>speedup_performance.h</code> 裡，等一下需要 include。</p>
+
+<p>大致上有四步驟：</p>
+
+<h5>Step 1: 建立 Interface File</h5>
+
+<p>首先要有一個描述 interface 的檔案，習慣命名為 <code>*.i</code> 或 <code>*.swg</code>。</p>
+
+<p>讓我們建立一個 <code>speedup_performance.i</code>：</p>
+<div class="highlight"><pre><code class="language-" data-lang="">/* 定義 module 名稱 */
+%module speedup_performance
+
+/* 在這個區塊的程式碼會原封不動置入待會產生的 C wrapper */
+%{
+#include "speedup_performance.h"
+%}
+
+/* 告訴 SWIG 你宣告的 function 或 variable */
+int slow_calc(int x, int a = 0, int b = 0);
+</code></pre></div>
+<p>上面被包在 <code>%{ ... %}</code> 裡的程式碼，主要是一些 header file 或其他 declaration；這些宣告不會被 compile，而是直接置入下一步產生的 C wrapper 檔。但下面的區塊不是也有差不多的宣告嗎？為什麼需要重複？這麼做是因為下面區塊的宣告是讓 SWIG 在 wrapper file 裡建立一些 wrapper function 用的，而不是用來與原本寫的 function 連接。所以要在 wrapper file 重新置入 <code>%{ ... %}</code> 裡的宣告，wrapper file 裡才能調用原 function，也才可以確保在第三步建立 shared library 的時候的 linkage 可以成功。</p>
+
+<p>另外我們原本的 <code>slow_calc</code> 裡並沒有 default argument （因 C 本身並不怎麼支援），但是 SWIG 接受 <a href="http://www.swig.org/Doc1.3/SWIGPlus.html#SWIGPlus_default_args">default argument</a>，所以我們在這裡添加了一些 default values。</p>
+
+<h6>Step 2: 產生 Wrapper File</h6>
+
+<p>有了 interface 的資訊後，就可以請 SWIG 建立可以拿來做 extension module 的 <code>speedup_performance.py</code> 和 wrapper file <code>speedup_performance_wrap.c</code>：</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>swig -python speedup_performance.i
+</code></pre></div>
+<p>或是建立 keyword argument 形式：</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>swig -python -keyword speedup_performance.i
+</code></pre></div>
+<h5>Step 3: 建立 Shared Library</h5>
+
+<p>這邊同上面 <code>Python/C API</code> 範例，用 <code>setup.py</code> 和 <code>Distutils</code> 建立 shared library：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">distutils.core</span> <span class="kn">import</span> <span class="n">setup</span><span class="p">,</span> <span class="n">Extension</span>
+
+<span class="c"># Extension module name 要有底線前綴</span>
+<span class="n">speedup_performance_module</span> <span class="o">=</span> <span class="n">Extension</span><span class="p">(</span><span class="s">'_speedup_performance'</span><span class="p">,</span>
+                                       <span class="n">sources</span><span class="o">=</span><span class="p">[</span><span class="s">'speedup_performance_wrap.c'</span><span class="p">])</span>
+
+<span class="n">setup</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">'SpeedupPerformance'</span><span class="p">,</span>
+      <span class="n">description</span><span class="o">=</span><span class="s">'A package containing modules for speeding up performance.'</span><span class="p">,</span>
+      <span class="n">ext_modules</span><span class="o">=</span><span class="p">[</span><span class="n">speedup_performance_module</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>這邊注意 extension module 名稱必須有底線前綴，這是<a href="http://www.swig.org/Doc1.3/Python.html#Python_nn6">官方文件</a>上提到的命名規則。</p>
+
+<p>下個指令建立 <code>*.so</code>：</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>python3 setup.py build_ext --inplace
+</code></pre></div>
+<h5>Step 4: 匯入 Library &amp; 調用 Function</h5>
+
+<p>有了 Step 2 的 <code>*.py</code> 和 Step 3 的 <code>*.so</code>，就可以成功調用 <code>slow_calc</code> function 了：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">speedup_performance</span> <span class="kn">import</span> <span class="n">slow_calc</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">slow_calc</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">10</span>
+</code></pre></div>
+<h2>C 調用 Python</h2>
+
+<h3><a href="https://docs.python.org/3/c-api/intro.html">Python/C API</a></h3>
+
+<p><code>Python/C API</code> 一樣是最基礎的解法。</p>
+
+<p>現在假設我們有個寫法很複雜，卻不需在意效能的 <code>complex_calc</code> function 想用 Python 實現：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">complex_calc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">b</span>
+</code></pre></div>
+<p>讓我們先把上述 <code>complex_calc</code> function 寫進 <code>speedup_dev.py</code> 裡。然後我們在 <code>main.c</code> 裡先理所當然地：</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#include &lt;Python.h&gt;
+</span></code></pre></div>
+<p>接著三步驟調用這個 function：</p>
+
+<h5>Step 1: 打包 Function</h5>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">int</span> <span class="nf">complex_calc</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">PyObject</span> <span class="o">*</span><span class="n">pModule</span><span class="p">,</span> <span class="o">*</span><span class="n">pFunc</span><span class="p">,</span> <span class="o">*</span><span class="n">pArgs</span><span class="p">,</span> <span class="o">*</span><span class="n">pKargs</span><span class="p">,</span> <span class="o">*</span><span class="n">pRes</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">res</span><span class="p">;</span>
+
+    <span class="c1">// 匯入 `speedup_dev` module &amp; `complex_calc` function 
+</span>    <span class="n">pModule</span> <span class="o">=</span> <span class="n">PyImport_Import</span><span class="p">(</span><span class="n">PyUnicode_FromString</span><span class="p">(</span><span class="s">"speedup_dev"</span><span class="p">));</span>
+    <span class="n">pFunc</span> <span class="o">=</span> <span class="n">PyObject_GetAttrString</span><span class="p">(</span><span class="n">pModule</span><span class="p">,</span> <span class="s">"complex_calc"</span><span class="p">);</span>
+
+    <span class="c1">// 把 arguments 打包成 PyObject
+</span>    <span class="n">pArgs</span> <span class="o">=</span> <span class="n">Py_BuildValue</span><span class="p">(</span><span class="s">"(i)"</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+    <span class="n">pKargs</span> <span class="o">=</span> <span class="n">Py_BuildValue</span><span class="p">(</span><span class="s">"{s:i, s:i}"</span><span class="p">,</span> <span class="s">"a"</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="s">"b"</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+
+    <span class="c1">// 呼叫 function 
+</span>    <span class="n">pRes</span> <span class="o">=</span> <span class="n">PyObject_Call</span><span class="p">(</span><span class="n">pFunc</span><span class="p">,</span> <span class="n">pArgs</span><span class="p">,</span> <span class="n">pKargs</span><span class="p">);</span>
+
+    <span class="c1">// 檢查有沒有呼叫失敗，沒有的話把回傳值從 PyObject 包回 C type 
+</span>    <span class="k">if</span> <span class="p">(</span><span class="n">pRes</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">PyLong_AsLong</span><span class="p">(</span><span class="n">pRes</span><span class="p">);</span>
+
+    <span class="c1">// 處理一下 memory allocation 
+</span>    <span class="n">Py_DECREF</span><span class="p">(</span><span class="n">pModule</span><span class="p">);</span>
+    <span class="n">Py_DECREF</span><span class="p">(</span><span class="n">pFunc</span><span class="p">);</span>
+    <span class="n">Py_DECREF</span><span class="p">(</span><span class="n">pArgs</span><span class="p">);</span>
+    <span class="n">Py_DECREF</span><span class="p">(</span><span class="n">pKargs</span><span class="p">);</span>
+    <span class="n">Py_DECREF</span><span class="p">(</span><span class="n">pRes</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>再次重複，跟 Python 溝通的值皆為 <code>PyObject</code> type，所以需要轉換 argument 和 return value。</p>
+
+<p>這邊比較麻煩的是要自己<a href="https://docs.python.org/3.6/extending/extending.html#reference-counting-in-python">處理 memory allocation</a> 。每當一個 <code>PyObject</code> 被創建，它就會有一個 reference count，也就是有多少調用者有責任去管理這個 <code>PyObject</code>；當 reference count 變為 0，這個 <code>PyObject</code> 就會被 free。如果根本沒人在管理這個 <code>PyObject</code>， reference count 卻不為 0，就會有 memory leak 的問題。所以我們要記得在利用完這些 <code>PyObject</code> 後呼叫 <code>Py_DECREF</code> 減少 reference count，某些情況下該增加時也要呼叫 <code>Py_INCREF</code>。</p>
+
+<p>但 reference count 的<a href="https://docs.python.org/3.6/extending/extending.html#reference-counting-in-python">規則</a>有點複雜，自己處理很容易 bug 滿天飛（我可能也有 bug...），這也是使用 <code>Python/C API</code> 的難點之一。</p>
+
+<h5>Step 2: 呼叫 Function</h5>
+
+<p>打包好之後，我們就有一個可以呼叫的 C function 了。不過在調用之前，得先做一點設置：</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Initialize Python 直譯器 
+</span>    <span class="n">Py_Initialize</span><span class="p">();</span>
+
+    <span class="c1">// 設置 Python search path 
+</span>    <span class="n">PySys_SetPath</span><span class="p">(</span><span class="n">Py_DecodeLocale</span><span class="p">(</span><span class="s">"."</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">));</span>
+
+    <span class="c1">// 呼叫 function
+</span>    <span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">complex_calc</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">));</span>
+
+    <span class="c1">// 釋放 Python 直譯器佔用資源
+</span>    <span class="n">Py_Finalize</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>除了使用前先 initialize，使用後 finalize 外，還要記得設一下 Python search path，否則會搜不到 module。</p>
+
+<h5>Step 3: 編譯 &amp; 執行程式</h5>
+
+<p>用 gcc 編譯程式，產生 <code>main.o</code> 執行檔：</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>gcc main.c -o main.o <span class="k">$(</span>python3-config --includes<span class="k">)</span> <span class="k">$(</span>python3-config --ldflags<span class="k">)</span>
+</code></pre></div>
+<p>執行：</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>./main.o
+<span class="gp">&gt;&gt;&gt; </span>10
+</code></pre></div>
+<h3><a href="http://docs.cython.org/en/latest/">Cython</a></h3>
+
+<p>相信大家有生之年一定都不想自己處理什麼 reference count 的問題。Cython 是一個跟 Python 寫起來很像的語言，能夠方便且快速的建立 C 的 extension，不只達到 Python 的開發速度，亦能達到 C 的效能。</p>
+
+<p>先安裝起來：</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">pip3 install Cython
+</code></pre></div>
+<p>假設我們有個 <code>complex_and_slow_calc</code> function 不只寫起來複雜，效能又低：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">complex_and_slow_calc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">b</span><span class="p">))</span>
+</code></pre></div>
+<p>Cython 可以定義針對 Python、C、或兩者的 function。我們把上述 <code>complex_and_slow_calc</code> function 用三種寫法一起實現。</p>
+
+<p>以下四步驟調用：</p>
+
+<h5>Step 1: 用 Cython 取代 Python</h5>
+
+<p>先把 Cython 寫在 <code>speedup_dev_and_performance.pyx</code> 裡，寫法與 Python 極為相似：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">math</span> 
+
+
+<span class="c"># Python</span>
+<span class="k">def</span> <span class="nf">complex_and_slow_calc_p</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">b</span><span class="p">))</span>
+
+<span class="c"># C</span>
+<span class="n">cdef</span> <span class="n">public</span> <span class="nb">int</span> <span class="n">complex_and_slow_calc_c</span><span class="p">(</span><span class="nb">int</span> <span class="n">x</span><span class="p">,</span> <span class="nb">int</span> <span class="n">a</span><span class="p">,</span> <span class="nb">int</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">b</span><span class="p">))</span>
+
+<span class="c"># Python &amp; C</span>
+<span class="n">cpdef</span> <span class="n">public</span> <span class="nb">int</span> <span class="n">complex_and_slow_calc_cp</span><span class="p">(</span><span class="nb">int</span> <span class="n">x</span><span class="p">,</span> <span class="nb">int</span> <span class="n">a</span><span class="p">,</span> <span class="nb">int</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">b</span><span class="p">))</span>
+</code></pre></div>
+<p>依照你的 function 需要被 Python  或 C 或兩者調用，有以上三種寫法，<code>def</code>、<code>cdef</code>、和 <code>cpdef</code>，來建立 Python function 或 C function；C function 的優化比較多，速度也比較快。<a href="http://notes-on-cython.readthedocs.io/en/latest/function_declarations.html">這邊</a>有比較詳細的解釋。當然，你只需要針對需求選一個寫就好，這邊同時示範三種寫法，命名用 <code>_p / _c / _cp</code> 後綴來區別。C function 的 argument 及 return value 都要明確定義 type，跟 C 同理。</p>
+
+<p>如果在 <code>def</code> 後加上 <code>public</code>，那麼這個 function 就會出現在產生的 <code>*.h</code> 標頭檔裡，所以如果有想要給外部 C 檔調用的 function，也就是我們等一下要做的事，便能加上 <code>public</code>。</p>
+
+<h5>Step 2: 建立 Extension</h5>
+
+<p>同樣使用 <code>setup.py</code> 和 <code>Distutils</code> 來建立 extension：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">distutils.core</span> <span class="kn">import</span> <span class="n">setup</span>
+<span class="kn">from</span> <span class="nn">Cython.Build</span> <span class="kn">import</span> <span class="n">cythonize</span>
+
+<span class="n">setup</span><span class="p">(</span><span class="n">ext_modules</span><span class="o">=</span><span class="n">cythonize</span><span class="p">(</span><span class="s">'speedup_dev_and_performance.pyx'</span><span class="p">))</span>
+</code></pre></div>
+<p>下指令，產生 <code>*.so</code>，<code>*.c</code>，和 <code>*.h</code>：</p>
+<div class="highlight"><pre><code class="language-" data-lang="">$ python3 setup.py build_ext --inplace
+</code></pre></div>
+<h5>Step 3: 呼叫 Function</h5>
+
+<p>有了標頭檔 <code>speedup_dev_and_performance.h</code>，我們建立一個 <code>main.c</code> 來調用：</p>
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#include &lt;Python.h&gt;
+#include "speedup_dev_and_performance.h"
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Init module &amp; Python 直譯器 
+</span>    <span class="n">PyImport_AppendInittab</span><span class="p">(</span><span class="s">"speedup_dev_and_performance"</span><span class="p">,</span> <span class="n">PyInit_speedup_dev_and_performance</span><span class="p">);</span>
+    <span class="n">Py_Initialize</span><span class="p">();</span>
+    <span class="n">PyImport_ImportModule</span><span class="p">(</span><span class="s">"speedup_dev_and_performance"</span><span class="p">);</span>
+
+    <span class="c1">// 呼叫 function
+</span>    <span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">complex_and_slow_calc_c</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">));</span>
+
+    <span class="c1">// 釋放 Python 直譯器佔用資源
+</span>    <span class="n">Py_Finalize</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>這邊注意到 initialization 多了幾個步驟：</p>
+
+<ol>
+<li><code>PyImport_AppendInittab</code> 把我們要匯入的 module <code>speedup_dev_and_performance</code> 加到 built-in module table</li>
+<li><code>Py_Initialize</code> initialize Python 直譯器 </li>
+<li>再呼叫 <code>PyImport_ImportModule</code> ，也就是匯入 module， 才能真正 initialize module，因其內部呼叫 <code>PyInit_speedup_dev_and_performance</code></li>
+</ol>
+
+<p><code>PyInit_&lt;module&gt;</code> 是在上上步 <code>*.h</code> 檔裡自動生成的。記得我們的 <code>complex_and_slow_calc</code> 有 <code>import math</code> 嗎？如果沒有這第三步，import math 就會失敗。</p>
+
+<h5>Step 4: 編譯 &amp; 執行程式</h5>
+
+<p>同樣用 gcc 編譯程式，產生 <code>main.o</code> 執行檔後執行：</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>gcc main.c -o main.o <span class="k">$(</span>python3-config --includes<span class="k">)</span> <span class="k">$(</span>python3-config --ldflags<span class="k">)</span>
+<span class="gp">$ </span>./main.o
+<span class="gp">&gt;&gt;&gt; </span>3 
+</code></pre></div>
+<h2>比較</h2>
+
+<p>說了這麼多，這些方法有哪些優缺點，適合什麼時候用呢？</p>
+
+<table><thead>
+<tr>
+<th style="text-align: center"></th>
+<th>優點</th>
+<th>缺點</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: center">Python/C API</td>
+<td>最原始，最大的控制權。</td>
+<td>Reference count 很煩。比較需要 C 的基礎。</td>
+</tr>
+<tr>
+<td style="text-align: center">ctypes</td>
+<td>使用簡單。不需編譯。可直接使用現成 library。基本使用上不需會 C。</td>
+<td>Type 轉換比較麻煩，尤其是 struct、union、array 這種。</td>
+</tr>
+<tr>
+<td style="text-align: center">SWIG</td>
+<td>支援多種語言。</td>
+<td>要寫一份煩人的 interface file。Overhead 高。</td>
+</tr>
+<tr>
+<td style="text-align: center">Cython</td>
+<td>兼顧開發與執行效能。</td>
+<td>跟 Python 還是不太一樣，需要學新東西。</td>
+</tr>
+</tbody></table>
+
+<p>不過這些是很粗淺的比較，一些更深入的優劣勢還是需要真的深入使用之後才能體會。</p>
+
+<h2>結語</h2>
+
+<p>為了魚與熊掌兼得，前人在 C 與 Python 的整合開發上下了不少功夫，也才有這些方便的工具使用。此篇簡單介紹幾個 Python 與 C 的整合工具，尚未觸及到 C++ 或其他語言，但或許認識這些基本概念能更容易延伸到其他語言。</p>
+
+<p>這些在蓬勃發展的資訊領域裡可能只是冰山一角，未來也勢必會有更強大的整合工具或新語言出現。我們能做的就是坐以待斃，喔不是，是分析清楚利弊，為自己的專案挑選最適合的工具。</p>
+
+<h2>參考資料</h2>
+
+<ul>
+<li><a href="https://docs.python.org/3/c-api/intro.html">Python/C API Reference Manual</a></li>
+<li><a href="https://www.tutorialspoint.com/python/python_further_extensions.htm">Python - Extension Programming with C</a></li>
+<li><a href="http://pythonextensionpatterns.readthedocs.io/en/latest/refcount.html">Python Extension Patterns</a></li>
+<li><a href="https://docs.python.org/3.6/extending/extending.html">Extending and Embedding the Python Interpreter</a></li>
+<li><a href="https://docs.python.org/3.6/library/ctypes.html">ctypes — A foreign function library for Python</a></li>
+<li><a href="http://www.swig.org/Doc3.0/Contents.html#Contents">SWIG Users Manual</a></li>
+<li><a href="http://docs.cython.org/en/latest/">Cython’s Documentation</a></li>
+<li><a href="http://notes-on-cython.readthedocs.io/en/latest/index.html#">Cython def, cdef and cpdef functions</a></li>
+<li><a href="https://www.paypal-engineering.com/2016/09/22/python-by-the-c-side/">Python by the C side</a></li>
+<li><a href="https://www.zhihu.com/question/23003213">如何实现 C/C++ 与 Python 的通信？</a></li>
+</ul>
+
+		</div>
+
+		<ul class="tag-list">
+			
+
+			<li class="tag">
+				Python
+			</li>
+
+			
+
+			<li class="tag">
+				PyLadies
+			</li>
+
+			
+
+			<li class="tag">
+				C
+			</li>
+
+			
+		</ul>
+
+	</article>
+
+	
+		<div id="disqus_thread"></div>
+<script>
+	var disqus_config = function () {
+	    this.page.url = "https://pyliaorachel.github.io";
+	    this.page.identifier = "/blog/tech/python/2018/01/26/python-c-mixing.html";
+	};
+	(function() {
+	    var d = document, s = d.createElement('script');
+	    s.src = '//pyliaorachel.disqus.com/embed.js';
+	    s.setAttribute('data-timestamp', +new Date());
+	    (d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	
+</div>
+	</div>
+</main>
+		<footer>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4 footer-link">
+				<a href="mailto:rachel5566kk@gmail.com">
+					<span class="icon icon-email">
+						<img src="/assets/svg/email-logo.svg" alt="Email Logo">
+					</span>
+					<span class="username">rachel5566kk@gmail.com</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://github.com/pyliaorachel"  target="_blank">
+					<span class="icon icon-github">
+						<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+					</span>
+					<span class="username">pyliaorachel</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://tw.linkedin.com/in/peiyu-liao" target="_blank">
+					<span class="icon icon-linkedin">
+						<img src="/assets/svg/linkedin-logo.svg" alt="LinkedIn Logo">
+					</span>
+					<span class="username">Peiyu Liao</span>
+				</a>
+			</div>
+		</div><!-- /.row -->
+		<div class="row">
+			<div class="footer-copy-right">
+				<p>2017	&copy; Liao Peiyu</p>
+			</div >
+		</div><!-- /.row -->
+	</div><!-- /.container-fluid -->
+</footer>
+		<script type="text/javascript" src="/js/main.js"></script>
+		<script type="text/javascript" src="/js/home.js"></script>
+		<script id="dsq-count-scr" src="//pyliaorachel.disqus.com/count.js" async></script>
+	</body>
+</html>
