@@ -138,9 +138,11 @@
 
 <p><em>* 請注意，以下只針對Python3進行講解與測試，並以 MacOSX 為環境。</em></p>
 
-<p>假使你正在跑 Python 的專案，卻因為其中某個需要做大量運算的 function 等得不耐煩，又不想整個專案改用效能高但複雜的 C 重寫，那麼如何能只獨立這個 function 改用 C ，並將它置入原本的 Python 專案呢？又或是你的 C 專案裡有一部分寫起來很棘手，能不能改用 Python 快速實現這部分的功能，並插入原本的 C 專案？</p>
+<p>假使你正在跑 Python 的專案，卻因為其中某個需要做大量運算的 function 等得不耐煩，又不想整個專案改用效能高但複雜的 C 重寫，那麼如何能只獨立這個 function 改用 C ，並將它置入原本的 Python 專案呢？又或是你的 C 專案裡有一部分寫起來很棘手，能不能改用 Python 快速實現這部分的功能，並插入原本的 C 專案？又或者你手邊拿到的程式碼就剛好是 C 或 Python，如何用另一個語言調用手邊的現有程式而不用重新實現呢？</p>
 
 <p>接下來將會簡單介紹幾個 Python 調用 C 以及 C 調用 Python 的方法。</p>
+
+<p>GitHub 原始碼：<a href="https://github.com/pyliaorachel/python-c-mixing">https://github.com/pyliaorachel/python-c-mixing</a></p>
 
 <h2>Python 調用 C</h2>
 
@@ -156,6 +158,8 @@
 <p><a href="https://docs.python.org/3/extending/building.html">Python extension module</a> 是以 Python 以外的語言建立且能夠讓 Python 匯入的 module。Python/C API 即是 C 裡能夠建立 Python extension module 的媒介，只需要引入 <code>Python.h</code> 這個標頭檔即可開始手刻。</p>
 <div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#include &lt;Python.h&gt;
 </span></code></pre></div>
+<p>這邊注意，這些 extension module 都是針對 CPython，也就是官方以 C 實現的 Python 直譯器。</p>
+
 <p>為了建立 <code>slow_calc</code> function 的接口，我們把它寫進 <code>speedup_performance.c</code> 檔並打包成 Python extension module，大致上有五個步驟：</p>
 
 <h5>Step 1: 包裝 Function</h5>
@@ -519,7 +523,7 @@ int slow_calc(int x, int a = 0, int b = 0);
 <tr>
 <td style="text-align: center">Python/C API</td>
 <td>最原始，最大的控制權。</td>
-<td>Reference count 很煩。比較需要 C 的基礎。</td>
+<td>Reference count 很煩。比較需要 C 的基礎。只針對 CPython。</td>
 </tr>
 <tr>
 <td style="text-align: center">ctypes</td>
@@ -559,6 +563,7 @@ int slow_calc(int x, int a = 0, int b = 0);
 <li><a href="http://notes-on-cython.readthedocs.io/en/latest/index.html#">Cython def, cdef and cpdef functions</a></li>
 <li><a href="https://www.paypal-engineering.com/2016/09/22/python-by-the-c-side/">Python by the C side</a></li>
 <li><a href="https://www.zhihu.com/question/23003213">如何实现 C/C++ 与 Python 的通信？</a></li>
+<li><a href="https://www.cis.upenn.edu/%7Ecis192/spring2015/files/lec/lec14.pdf">UPenn CIS192 Python Programming: Mixing C with Python/Modules and Packages</a></li>
 </ul>
 
 		</div>

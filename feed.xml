@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 28 Jan 2018 11:29:49 +0800</pubDate>
-    <lastBuildDate>Sun, 28 Jan 2018 11:29:49 +0800</lastBuildDate>
+    <pubDate>Sun, 28 Jan 2018 11:51:38 +0800</pubDate>
+    <lastBuildDate>Sun, 28 Jan 2018 11:51:38 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -24,9 +24,11 @@
 
 &lt;p&gt;&lt;em&gt;* 請注意，以下只針對Python3進行講解與測試，並以 MacOSX 為環境。&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;假使你正在跑 Python 的專案，卻因為其中某個需要做大量運算的 function 等得不耐煩，又不想整個專案改用效能高但複雜的 C 重寫，那麼如何能只獨立這個 function 改用 C ，並將它置入原本的 Python 專案呢？又或是你的 C 專案裡有一部分寫起來很棘手，能不能改用 Python 快速實現這部分的功能，並插入原本的 C 專案？&lt;/p&gt;
+&lt;p&gt;假使你正在跑 Python 的專案，卻因為其中某個需要做大量運算的 function 等得不耐煩，又不想整個專案改用效能高但複雜的 C 重寫，那麼如何能只獨立這個 function 改用 C ，並將它置入原本的 Python 專案呢？又或是你的 C 專案裡有一部分寫起來很棘手，能不能改用 Python 快速實現這部分的功能，並插入原本的 C 專案？又或者你手邊拿到的程式碼就剛好是 C 或 Python，如何用另一個語言調用手邊的現有程式而不用重新實現呢？&lt;/p&gt;
 
 &lt;p&gt;接下來將會簡單介紹幾個 Python 調用 C 以及 C 調用 Python 的方法。&lt;/p&gt;
+
+&lt;p&gt;GitHub 原始碼：&lt;a href=&quot;https://github.com/pyliaorachel/python-c-mixing&quot;&gt;https://github.com/pyliaorachel/python-c-mixing&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2&gt;Python 調用 C&lt;/h2&gt;
 
@@ -42,6 +44,8 @@
 &lt;p&gt;&lt;a href=&quot;https://docs.python.org/3/extending/building.html&quot;&gt;Python extension module&lt;/a&gt; 是以 Python 以外的語言建立且能夠讓 Python 匯入的 module。Python/C API 即是 C 裡能夠建立 Python extension module 的媒介，只需要引入 &lt;code&gt;Python.h&lt;/code&gt; 這個標頭檔即可開始手刻。&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;Python.h&amp;gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;這邊注意，這些 extension module 都是針對 CPython，也就是官方以 C 實現的 Python 直譯器。&lt;/p&gt;
+
 &lt;p&gt;為了建立 &lt;code&gt;slow_calc&lt;/code&gt; function 的接口，我們把它寫進 &lt;code&gt;speedup_performance.c&lt;/code&gt; 檔並打包成 Python extension module，大致上有五個步驟：&lt;/p&gt;
 
 &lt;h5&gt;Step 1: 包裝 Function&lt;/h5&gt;
@@ -405,7 +409,7 @@ int slow_calc(int x, int a = 0, int b = 0);
 &lt;tr&gt;
 &lt;td style=&quot;text-align: center&quot;&gt;Python/C API&lt;/td&gt;
 &lt;td&gt;最原始，最大的控制權。&lt;/td&gt;
-&lt;td&gt;Reference count 很煩。比較需要 C 的基礎。&lt;/td&gt;
+&lt;td&gt;Reference count 很煩。比較需要 C 的基礎。只針對 CPython。&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td style=&quot;text-align: center&quot;&gt;ctypes&lt;/td&gt;
@@ -445,6 +449,7 @@ int slow_calc(int x, int a = 0, int b = 0);
 &lt;li&gt;&lt;a href=&quot;http://notes-on-cython.readthedocs.io/en/latest/index.html#&quot;&gt;Cython def, cdef and cpdef functions&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://www.paypal-engineering.com/2016/09/22/python-by-the-c-side/&quot;&gt;Python by the C side&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://www.zhihu.com/question/23003213&quot;&gt;如何实现 C/C++ 与 Python 的通信？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.cis.upenn.edu/%7Ecis192/spring2015/files/lec/lec14.pdf&quot;&gt;UPenn CIS192 Python Programming: Mixing C with Python/Modules and Packages&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 26 Jan 2018 00:00:00 +0800</pubDate>
