@@ -383,7 +383,7 @@ $ ./main.o
 先安裝起來：
 
 ```bash
-pip3 install Cython
+$ pip3 install Cython
 ```
 
 假設我們有個 `complex_and_slow_calc` function 不只寫起來複雜，效能又低：
@@ -467,7 +467,7 @@ int main() {
 2. `Py_Initialize` initialize Python 直譯器 
 3. 再呼叫 `PyImport_ImportModule` ，也就是匯入 module， 才能真正 initialize module，因其內部呼叫 `PyInit_speedup_dev_and_performance`
 
-`PyInit_<module>` 是在上上步 `*.h` 檔裡自動生成的。記得我們的 `complex_and_slow_calc` 有 `import math` 嗎？如果沒有這第三步，import math 就會失敗。
+`PyInit_<module>` 是在上上步 `*.h` 檔裡自動生成的。記得我們的 `complex_and_slow_calc` 有 `import math` 嗎？如果沒有這第三步，`import math` 就會失敗。
 
 ##### Step 4: 編譯 & 執行程式
 
