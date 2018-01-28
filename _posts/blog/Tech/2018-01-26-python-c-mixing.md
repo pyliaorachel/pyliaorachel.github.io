@@ -19,9 +19,11 @@ C 與 Python 如何互相截長補短、共生共榮，成為程式語言界的�
 
 _* 請注意，以下只針對Python3進行講解與測試，並以 MacOSX 為環境。_
 
-假使你正在跑 Python 的專案，卻因為其中某個需要做大量運算的 function 等得不耐煩，又不想整個專案改用效能高但複雜的 C 重寫，那麼如何能只獨立這個 function 改用 C ，並將它置入原本的 Python 專案呢？又或是你的 C 專案裡有一部分寫起來很棘手，能不能改用 Python 快速實現這部分的功能，並插入原本的 C 專案？
+假使你正在跑 Python 的專案，卻因為其中某個需要做大量運算的 function 等得不耐煩，又不想整個專案改用效能高但複雜的 C 重寫，那麼如何能只獨立這個 function 改用 C ，並將它置入原本的 Python 專案呢？又或是你的 C 專案裡有一部分寫起來很棘手，能不能改用 Python 快速實現這部分的功能，並插入原本的 C 專案？又或者你手邊拿到的程式碼就剛好是 C 或 Python，如何用另一個語言調用手邊的現有程式而不用重新實現呢？
 
 接下來將會簡單介紹幾個 Python 調用 C 以及 C 調用 Python 的方法。
+
+GitHub 原始碼：https://github.com/pyliaorachel/python-c-mixing
 
 ## Python 調用 C
 
@@ -42,6 +44,8 @@ int slow_calc(int x, int a, int b) {
 ```c
 #include <Python.h>
 ```
+
+這邊注意，這些 extension module 都是針對 CPython，也就是官方以 C 實現的 Python 直譯器。
 
 為了建立 `slow_calc` function 的接口，我們把它寫進 `speedup_performance.c` 檔並打包成 Python extension module，大致上有五個步驟：
 
@@ -481,7 +485,7 @@ $ ./main.o
 
 ||優點|缺點|
 |:-:|---|---|
-| Python/C API |最原始，最大的控制權。|Reference count 很煩。比較需要 C 的基礎。|
+| Python/C API |最原始，最大的控制權。|Reference count 很煩。比較需要 C 的基礎。只針對 CPython。|
 | ctypes |使用簡單。不需編譯。可直接使用現成 library。基本使用上不需會 C。|Type 轉換比較麻煩，尤其是 struct、union、array 這種。|
 | SWIG |支援多種語言。|要寫一份煩人的 interface file。Overhead 高。|
 |Cython|兼顧開發與執行效能。|跟 Python 還是不太一樣，需要學新東西。|
@@ -506,3 +510,4 @@ $ ./main.o
 * [Cython def, cdef and cpdef functions](http://notes-on-cython.readthedocs.io/en/latest/index.html#)
 * [Python by the C side](https://www.paypal-engineering.com/2016/09/22/python-by-the-c-side/)
 * [如何实现 C/C++ 与 Python 的通信？](https://www.zhihu.com/question/23003213)
+* [UPenn CIS192 Python Programming: Mixing C with Python/Modules and Packages](https://www.cis.upenn.edu/~cis192/spring2015/files/lec/lec14.pdf)
