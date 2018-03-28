@@ -418,19 +418,33 @@ int slow_calc(int x, int a = 0, int b = 0);
 
 <h5>Step 3: 編譯 &amp; 執行程式</h5>
 
-<p>用 gcc 編譯程式，產生 <code>main.o</code> 執行檔：</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>gcc main.c -o main.o <span class="k">$(</span>python3-config --includes<span class="k">)</span> <span class="k">$(</span>python3-config --ldflags<span class="k">)</span>
+<p>用 gcc 編譯程式，產生 <code>main</code> 執行檔：</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>gcc <span class="k">$(</span>python3-config --cflags --ldflags<span class="k">)</span> main.c -o main
 </code></pre></div>
-<p>執行：</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>./main.o
+<p>這邊為了能夠啟用 Python C extension，需要傳入一些必要參數，而 <a href="https://helpmanual.io/man1/python3-config/"><code>python3-config</code></a> 即是幫我們印出這些參數傳給 gcc。</p>
+
+<p>接著執行：</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>./main
 <span class="gp">&gt;&gt;&gt; </span>10
 </code></pre></div>
+<blockquote>
+<p>如果不幸在編譯時報錯，例如： </p>
+
+<p><code>ld: library not found for -lpython3.6m</code>  </p>
+
+<p>那很有可能是系統安裝的 Python 和你自己安裝的 Python 讓路徑產生混淆。 </p>
+
+<p>解決辦法如<a href="https://docs.python.org/3.6/extending/embedding.html#compiling-and-linking-under-unix-like-systems">此文件</a>所建議，在 <code>python3-config</code> 前加上絕對路徑。有裝 Anaconda 的可能是 <code>/anaconda3/bin/python3-config</code>，自己裝 Python 的可能是 <code>/usr/local/bin/python3-config</code>，系統預設的可能是 <code>/usr/bin/python3-config</code> 等等，有錯即嘗試另一種。 </p>
+
+<p>當然，實際路徑因作業系統和安裝情況而異，請先行確認路徑中是否有 <code>python3-config</code> 或 <code>pythonX.Y-config</code>。</p>
+</blockquote>
+
 <h3><a href="http://docs.cython.org/en/latest/">Cython</a></h3>
 
 <p>相信大家有生之年一定都不想自己處理什麼 reference count 的問題。Cython 是一個跟 Python 寫起來很像的語言，能夠方便且快速的建立 C 的 extension，不只達到 Python 的開發速度，亦能達到 C 的效能。</p>
 
 <p>先安裝起來：</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">pip3 install Cython
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>pip3 install Cython
 </code></pre></div>
 <p>假設我們有個 <code>complex_and_slow_calc</code> function 不只寫起來複雜，效能又低：</p>
 <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">complex_and_slow_calc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
@@ -500,13 +514,13 @@ int slow_calc(int x, int a = 0, int b = 0);
 <li>再呼叫 <code>PyImport_ImportModule</code> ，也就是匯入 module， 才能真正 initialize module，因其內部呼叫 <code>PyInit_speedup_dev_and_performance</code></li>
 </ol>
 
-<p><code>PyInit_&lt;module&gt;</code> 是在上上步 <code>*.h</code> 檔裡自動生成的。記得我們的 <code>complex_and_slow_calc</code> 有 <code>import math</code> 嗎？如果沒有這第三步，import math 就會失敗。</p>
+<p><code>PyInit_&lt;module&gt;</code> 是在上上步 <code>*.h</code> 檔裡自動生成的。記得我們的 <code>complex_and_slow_calc</code> 有 <code>import math</code> 嗎？如果沒有這第三步，<code>import math</code> 就會失敗。</p>
 
 <h5>Step 4: 編譯 &amp; 執行程式</h5>
 
-<p>同樣用 gcc 編譯程式，產生 <code>main.o</code> 執行檔後執行：</p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>gcc main.c -o main.o <span class="k">$(</span>python3-config --includes<span class="k">)</span> <span class="k">$(</span>python3-config --ldflags<span class="k">)</span>
-<span class="gp">$ </span>./main.o
+<p>同樣用 gcc 編譯程式，產生 <code>main</code> 執行檔後執行：</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="gp">$ </span>gcc <span class="k">$(</span>python3-config --cflags --ldflags<span class="k">)</span> main.c speedup_dev_and_performance.c -o main 
+<span class="gp">$ </span>./main
 <span class="gp">&gt;&gt;&gt; </span>3 
 </code></pre></div>
 <h2>比較</h2>
