@@ -363,18 +363,30 @@ int main() {
 
 ##### Step 3: 編譯 & 執行程式
 
-用 gcc 編譯程式，產生 `main.o` 執行檔：
+用 gcc 編譯程式，產生 `main` 執行檔：
 
 ```bash
-$ gcc main.c -o main.o $(python3-config --includes) $(python3-config --ldflags)
+$ gcc $(python3-config --cflags --ldflags) main.c -o main
 ```
 
-執行：
+這邊為了能夠啟用 Python C extension，需要傳入一些必要參數，而 [`python3-config`](https://helpmanual.io/man1/python3-config/) 即是幫我們印出這些參數傳給 gcc。
+
+接著執行：
 
 ```bash
-$ ./main.o
+$ ./main
 >>> 10
 ```
+
+> 如果不幸在編譯時報錯，例如： 
+>
+> `ld: library not found for -lpython3.6m`  
+>
+> 那很有可能是系統安裝的 Python 和你自己安裝的 Python 讓路徑產生混淆。 
+>
+> 解決辦法如[此文件](https://docs.python.org/3.6/extending/embedding.html#compiling-and-linking-under-unix-like-systems)所建議，在 `python3-config` 前加上絕對路徑。有裝 Anaconda 的可能是 `/anaconda3/bin/python3-config`，自己裝 Python 的可能是 `/usr/local/bin/python3-config`，系統預設的可能是 `/usr/bin/python3-config` 等等，有錯即嘗試另一種。 
+>
+> 當然，實際路徑因作業系統和安裝情況而異，請先行確認路徑中是否有 `python3-config` 或 `pythonX.Y-config`。
 
 ### [Cython](http://docs.cython.org/en/latest/)
 
@@ -471,11 +483,11 @@ int main() {
 
 ##### Step 4: 編譯 & 執行程式
 
-同樣用 gcc 編譯程式，產生 `main.o` 執行檔後執行：
+同樣用 gcc 編譯程式，產生 `main` 執行檔後執行：
 
 ```bash
-$ gcc main.c -o main.o $(python3-config --includes) $(python3-config --ldflags)
-$ ./main.o
+$ gcc $(python3-config --cflags --ldflags) main.c speedup_dev_and_performance.c -o main 
+$ ./main
 >>> 3 
 ```
 
