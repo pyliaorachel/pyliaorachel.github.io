@@ -5,7 +5,7 @@ then
 else
 	msg=$1
 
-	jekyll build
+	bundle exec jekyll build
 	git add -A
 	git commit -m "${msg}"
 	git push origin master:source

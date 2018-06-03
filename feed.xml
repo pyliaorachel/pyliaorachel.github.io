@@ -6,9 +6,283 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 28 Mar 2018 11:48:26 +0800</pubDate>
-    <lastBuildDate>Wed, 28 Mar 2018 11:48:26 +0800</lastBuildDate>
+    <pubDate>Sun, 03 Jun 2018 16:36:52 +0800</pubDate>
+    <lastBuildDate>Sun, 03 Jun 2018 16:36:52 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Reinforcement Learning 健身房：OpenAI Gym</title>
+        <description>&lt;p&gt;不久前火熱的 AlphaGo 圍棋 AI 系統因打敗眾多人類好手而聲名大噪，而稍後推出的進化版 AlphaGo Zero 更是乾淨利落的藉由與自身對抗而習得棋藝，令人嘖嘖稱奇。而這系列圍棋 AI 系統背後即是以 &lt;strong&gt;Reinforcement Learning 強化學習&lt;/strong&gt;為基礎訓練而成。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;Gym&lt;/code&gt; 是 OpenAI 所開源的 Reinforcement Learning 工具包。無論是想感受 Reinforcement Learning 是怎麼一回事，或是想嘗試進階 Deep Q-Learning 的開發者，都可以快速方便的調用 &lt;code&gt;gym&lt;/code&gt; 所提供的許多現成環境，專注於演算法的設計與實現。快讓我們一起來成為健身房的永久免費會員！&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;&lt;em&gt;* 請注意，以下只針對Python3進行講解與測試，並以 MacOSX 為環境。&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;本篇會從基礎 Reinforcement Learning 概念簡介開始，進入 OpenAI gym 簡介，跟著兩個 demo 式的簡單演算法實作 -- &lt;strong&gt;Random Action&lt;/strong&gt; 及 &lt;strong&gt;Hand-Made Policy&lt;/strong&gt;，最後帶至具有學習能力的演算法 --  &lt;strong&gt;Q table 為基礎的 Q-learning&lt;/strong&gt;。與 Deep Learning 結合的 Deep Q-learning 會在之後的進階篇實作。&lt;/p&gt;
+
+&lt;h2&gt;Reinforcement Learning 介紹&lt;/h2&gt;
+
+&lt;p&gt;試想一個大學生，原本總是十二點睡，但離開家住進宿舍後，每天打電動打到兩點才睡，隔天上課昏昏沉沉，GPA 0.87。某天他嘗試十點上床睡覺，發現隔天上課腦袋清晰、神采奕奕，全身舒爽的他開始慢慢調整作息，最終 GPA 4.3。從對一個新環境一無所知，不斷嘗試不同作息時間，進而藉由所獲得的好處（身心感受、GPA等）學會最適合自己的作息，這種學習過程便是 Reinforcement Learning。&lt;/p&gt;
+
+&lt;p&gt;Reinforcement Learning 是 Machine Learning 家族的一員，為一種&lt;strong&gt;目標導向(goal-oriented)&lt;/strong&gt;的學習方法，旨在經由與環境互動過程中獲得的各種獎勵或懲罰，學會如何做決策。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://i.stack.imgur.com/eoeSq.png&quot; alt=&quot;reinforcement learning&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;整個決策過程的模擬有以下幾個要素：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Agent&lt;/strong&gt;，藉由 action 跟 environment 互動。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Environment&lt;/strong&gt;，agent 的行動範圍，根據 agent 的 action 給予不同程度的 reward。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;State&lt;/strong&gt;，在特定時間點 agent 身處的狀態。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Action&lt;/strong&gt;，agent 藉由自身 policy 進行的動作。 &lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Reward&lt;/strong&gt;，environment 給予 agent 所做 action 的獎勵或懲罰。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Agent 的目標是藉由與 environment 不斷互動及獲得 reward，學會最佳 &lt;strong&gt;policy&lt;/strong&gt;，即是 agent 根據身處的 state 決定進行最佳 action 的策略。&lt;/p&gt;
+
+&lt;p&gt;以上是 Reinforcement Learning 的簡單介紹，欲深入了解可參考文末參考資料。&lt;/p&gt;
+
+&lt;h2&gt;OpenAI Gym 介紹&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://gym.openai.com/&quot;&gt;OpenAI Gym&lt;/a&gt; 是由 OpenAI 開源的 Reinforcement Learning 工具包，裡面有許多現成 environment 處理環境模擬及獎勵等等過程，讓開發者專注於演算法開發。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://gym.openai.com/docs/&quot;&gt;安裝過程&lt;/a&gt;非常簡單，首先確保你的 Python version 在 3.5 以上，然後使用 pip 安裝：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;pip install gym
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;接著只需要 &lt;code&gt;import gym&lt;/code&gt; 就能開始體驗 Reinforcement Learning。&lt;/p&gt;
+
+&lt;h2&gt;演算法實作&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;Gym&lt;/code&gt; 一系列的 environment 都在&lt;a href=&quot;https://gym.openai.com/envs/#classic_control&quot;&gt;這裡&lt;/a&gt;。我們挑選 &lt;code&gt;CartPole-v0&lt;/code&gt; 當示範，任務是維持小車上的柱子的平衡。它的 environment 只有四種 feature（小車位置，小車速度，柱子角度，柱尖速度），agent 只有兩種 action（向左移，向右移）。網路上有非常多建立在 CartPole 的範例，這邊把常見演算法整合，進階的 Deep Q-Network 則留到下一篇。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/pyliaorachel/openai-gym-cartpole/blob/master/img/cartpole.png?raw=true&quot; alt=&quot;cart pole&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;GitHub 完整程式碼：&lt;a href=&quot;https://github.com/pyliaorachel/openai-gym-cartpole&quot;&gt;https://github.com/pyliaorachel/openai-gym-cartpole&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Random Action&lt;/h3&gt;
+
+&lt;p&gt;首先用最簡單的例子體驗 &lt;code&gt;gym&lt;/code&gt; 的使用 —— 無論 environment 如何，隨機進行 action，也就是隨機決定要將小車左移或右移。&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gym&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'CartPole-v0'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# 跑 200 個 episode，每個 episode 都是一次任務嘗試&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i_episode&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;observation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 讓 environment 重回初始狀態 &lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;rewards&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 累計各 episode 的 reward &lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;250&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 設個時限，每個 episode 最多跑 250 個 action&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 呈現 environment&lt;/span&gt;
+
+        &lt;span class=&quot;c&quot;&gt;# Key section&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;action&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;action_space&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sample&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 在 environment 提供的 action 中隨機挑選&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;observation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;reward&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;info&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;step&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 進行 action，environment 返回該 action 的 reward 及前進下個 state&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;rewards&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;reward&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 累計 reward&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 任務結束返回 done = True&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Episode finished after {} timesteps, total rewards {}'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rewards&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;精華都在 Key section，agent 選擇並進行一個 action，並從 environment 中獲得 reward。可以看到 agent 並沒有任何學習行為，所以整體 reward 並不高。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/pyliaorachel/openai-gym-cartpole/blob/master/img/random_action.png?raw=true&quot; alt=&quot;random action&quot;&gt;&lt;/p&gt;
+
+&lt;h3&gt;Hand-Made Policy&lt;/h3&gt;
+
+&lt;p&gt;為了讓 agent 不會走得太無腦，再來引進一個簡單的 policy —— 如果柱子向左傾（角度 &amp;lt; 0），則小車左移以維持平衡，否則右移。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;其實正常來說，agent 是不會知道 environment 所提供的這些 feature 和 action 各自是什麼意思，因此這一部分主要是示範 policy 的概念。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;# 定義 policy&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;choose_action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;observation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;pos&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ang&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rot&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;observation&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ang&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 柱子左傾則小車左移，否則右移 &lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gym&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'CartPole-v0'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i_episode&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;observation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;rewards&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;250&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;action&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;choose_action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;observation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;observation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;reward&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;info&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;step&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;rewards&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;reward&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Episode finished after {} timesteps, total rewards {}'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rewards&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;結果：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/pyliaorachel/openai-gym-cartpole/blob/master/img/hand_made_policy.png?raw=true&quot; alt=&quot;hand-made rule&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;可以看到 agent 所獲得的整體 reward 比 random action 高出許多，不過 agent 依然沒有根據經驗做學習，非常頑固。接下來要來示範真正實用的 learning process —— Q-learning。&lt;/p&gt;
+
+&lt;h3&gt;Q-Learning with Q Table&lt;/h3&gt;
+
+&lt;p&gt;在進入實作前，會先簡單講解 Q-learning 及 Q table 概念，可當作補充。&lt;/p&gt;
+
+&lt;h6&gt;Q-Learning&lt;/h6&gt;
+
+&lt;p&gt;為了學習在某個 state 之下做出好的 action，我們定義所謂的 Q function &lt;code&gt;Q(s, a)&lt;/code&gt;，也就是&lt;strong&gt;根據身處的 state &lt;code&gt;s&lt;/code&gt; 進行 action &lt;code&gt;a&lt;/code&gt; 所預期未來會得到的總 reward&lt;/strong&gt;。如果能求出最佳 Q function&lt;code&gt;Q*(s, a)&lt;/code&gt;，我們的 agent 在任何 state 之下，只要挑選能最大化未來總 reward 的 action ，即 &lt;code&gt;argmax_a Q*(s, a)&lt;/code&gt;，即能在任務中獲得最大 reward。而習得 Q function 的過程正是 Q-learning。&lt;/p&gt;
+
+&lt;p&gt;在學習 Q function 前，要先知道如何表示 Q function。不難發現 Q function 有遞迴特質，可以用遞迴表示：&lt;/p&gt;
+
+&lt;p style=&quot;text-align: center;&quot;&gt;
+    &lt;img src=&quot;https://cdn-images-1.medium.com/max/1600/1*jamiG5MkFVHLTFmLggemVg.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;即是當前 reward 和進入下一個 state &lt;code&gt;s&amp;#39;&lt;/code&gt; 後所能獲得最大 reward 的和。這邊的 γ 稱為 discount factor，可以說是對未來 reward 的重視程度。γ 越低，agent 越重視當前所獲得的 reward，並覺得未來獲得的 reward 太遙遠，不足以在當前 state 的決策過程中佔有太大份量。&lt;/p&gt;
+
+&lt;p&gt;接著 agent 要藉由一次次跟 environment 互動中獲得的 reward 來學習 Q function。起初 agent 一無所知時，Q function 的參數都是隨機的。接著從跟 environment 互動的每一步，慢慢更新參數，逼近我們要的最佳 Q function：&lt;/p&gt;
+
+&lt;p style=&quot;text-align: center;&quot;&gt;
+    &lt;img src=&quot;https://wikimedia.org/api/rest_v1/media/math/render/svg/845e1915e9fc3b55a3e88cb6fb5f40a41c1b6606&quot; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;這裡 learned value 是每次 action 帶來的一點新資訊，但不能直接取代舊資訊，而是每次更新 α 這麼多比率的新資訊，保留 (1 - α) 比率的舊資訊，最終逐漸收斂。&lt;/p&gt;
+
+&lt;p&gt;整體 Q-learning 步驟大致上如下：&lt;/p&gt;
+
+&lt;p style=&quot;text-align: center;&quot;&gt;
+    &lt;img src=&quot;http://www.incompleteideas.net/book/ebook/pseudotmp9.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;ε-greedy 是一種在 exploration 和 exploitation 間取得平衡的方法。Exploration 是讓 agent 大膽嘗試不同 action，確保能夠吸收新知，而 exploitation 是讓 agent 保守沿用現有 policy，讓學習過程收斂。方法很簡單：ε 是隨機選擇 action 的機率，所以平均上有 ε 的時間 agent 會嘗試新 action，而 (1 - ε) 的時間 agent 會根據現有 policy 做決策。&lt;/p&gt;
+
+&lt;h6&gt;Q Table&lt;/h6&gt;
+
+&lt;p&gt;了解 Q-learning 及 ε-greedy 的概念後，那實際上這個 Q function 存在哪裡呢？一個樸實無華的方法就是把各個 state-action pair 的 Q value 存在 table 裡，直接查找或更新，即是所謂 Q table，也是接下來要示範的方法。不過這個方法的壞處是 table 大小有限，不適用於 state 和 action 過多的任務。&lt;/p&gt;
+
+&lt;p&gt;另一個方法是用 neural network 去逼近 Q function，即 Deep Q-Learning，如此一來就不會有容量限制了。這個方法會在之後另寫文章介紹。&lt;/p&gt;
+
+&lt;h6&gt;實作&lt;/h6&gt;
+
+&lt;p&gt;原始碼修改自&lt;a href=&quot;https://medium.com/@tuzzer/cart-pole-balancing-with-q-learning-b54c6068d947&quot;&gt;這篇文章&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;先統整一下。我們的目標是學習到最佳 Q function，過程中以 ε-greedy 方法與 environment 互動，從中獲得 reward 以更新 Q table 裡的 Q value。先看一下基於 ε-greedy 的 policy 定義：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;choose_action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;q_table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;action_space&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;epsilon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;random&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;random_sample&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;epsilon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 有 ε 的機率會選擇隨機 action&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;action_space&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sample&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; 
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 其他時間根據現有 policy 選擇 action，也就是在 Q table 裡目前 state 中，選擇擁有最大 Q value 的 action&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;argmax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;q_table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;再來是 state 的表示。在 &lt;code&gt;CartPole&lt;/code&gt; 環境裡觀察到的 feature 都是連續值，不適合作為一個 table 的 index，因此要將一個區間一個區間的值包在一起用離散數值表示，也就是下面的 &lt;code&gt;bucket&lt;/code&gt;：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;observation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n_buckets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;state_bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;state&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;observation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;enumerate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;observation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 每個 feature 有不同的分配&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;state_bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;state_bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 每個 feature 值的範圍上下限&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 低於下限，分配為 0&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 高於上限，分配為最大值&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n_buckets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 範圍內，依比例分配&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n_buckets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;tuple&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;剩下的學習過程大致與前面相同。不過為了方便收斂，一些參數像 ε 和 learning rate 會隨著時間遞減，也就是我們從大膽亂走，到越來越相信已經學到的經驗。&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gym&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'CartPole-v0'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# 準備 Q table&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;## Environment 中各個 feature 的 bucket 分配數量&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;## 1 代表任何值皆表同一 state，也就是這個 feature 其實不重要&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;n_buckets&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;## Action 數量 &lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;n_actions&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;action_space&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;## State 範圍 &lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;state_bounds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;zip&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;observation_space&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;low&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;observation_space&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;high&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;state_bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;state_bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;radians&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;radians&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;50&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;## Q table，每個 state-action pair 存一值 &lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;q_table&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_buckets&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_actions&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,))&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# 一些學習過程中的參數&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;get_epsilon&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.01&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;log10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;# epsilon-greedy; 隨時間遞減&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;get_lr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.01&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;math&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;log10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# learning rate; 隨時間遞減 &lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;gamma&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.99&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# reward discount factor&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Q-learning&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i_episode&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;epsilon&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;get_epsilon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i_episode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;lr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;get_lr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i_episode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;observation&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;rewards&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;state&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;get_state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;observation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n_buckets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;state_bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 將連續值轉成離散 &lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;250&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;action&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;choose_action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;q_table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;action_space&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;epsilon&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;observation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;reward&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;info&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;step&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+        &lt;span class=&quot;n&quot;&gt;rewards&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;reward&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;next_state&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;get_state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;observation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n_buckets&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;state_bounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+        &lt;span class=&quot;c&quot;&gt;# 更新 Q table&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;q_next_max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;np&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;amax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;q_table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;next_state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 進入下一個 state 後，預期得到最大總 reward&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;q_table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;state&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,)]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reward&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gamma&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;q_next_max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;q_table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;state&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,)])&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 就是那個公式&lt;/span&gt;
+
+        &lt;span class=&quot;c&quot;&gt;# 前進下一 state &lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;state&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;next_state&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Episode finished after {} timesteps, total rewards {}'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rewards&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;這邊其實偷偷作弊，才會知道哪個 feature 重要哪個不重要，以及 state 的上下限。參數也是原作者調整過的。不過如此一來才能展現好結果：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/pyliaorachel/openai-gym-cartpole/blob/master/img/q_table.png?raw=true&quot; alt=&quot;Q table&quot;&gt;&lt;/p&gt;
+
+&lt;p&gt;可以看到在訓練後期，agent 已經學會如何最大化自己的 reward，也就是維持住小車上的棒子了。&lt;/p&gt;
+
+&lt;h2&gt;結語&lt;/h2&gt;
+
+&lt;p&gt;AlphaGo 帶來的驚奇讓人們期待著 Reinforcement Learning 的無限可能性。此篇帶大家簡單理解 Reinforcement Learning 的學習過程和 OpenAI Gym 的操作，並簡單示範幾個演算法。雖說目前 Reinforcement Learning 打造出許多超越人類的遊戲 AI，但在其他領域的應用，例如 Computer Vision、Natural Language Processing，仍成果有限。期待不久的未來，Reinforcement Learning 能在真正對人類福祉有益的領域有所突破。&lt;/p&gt;
+
+&lt;h2&gt;參考資料&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.nature.com/articles/nature24270&quot;&gt;Mastering the game of Go without human knowledge&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://deeplearning4j.org/deepreinforcementlearning&quot;&gt;A Beginner&amp;#39;s Guide to Deep Reinforcement Learning&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://medium.com/@curiousily/solving-an-mdp-with-q-learning-from-scratch-deep-reinforcement-learning-for-hackers-part-1-45d1d360c120&quot;&gt;Solving an MDP with Q-Learning from scratch — Deep Reinforcement Learning for Hackers (Part 1)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://blog.techbridge.cc/2017/11/04/openai-gym-intro-and-q-learning/&quot;&gt;Open AI Gym 簡介與 Q learning 演算法實作&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://morvanzhou.github.io/tutorials/machine-learning/ML-intro/4-02-RL-methods/&quot;&gt;强化学习方法汇总 (Reinforcement Learning)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://medium.com/@tuzzer/cart-pole-balancing-with-q-learning-b54c6068d947&quot;&gt;Cart-Pole Balancing with Q-Learning&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 01 Jun 2018 00:00:00 +0800</pubDate>
+        <link>/blog/tech/python/2018/06/01/openai-gym-for-reinforcement-learning.html</link>
+        <guid isPermaLink="true">/blog/tech/python/2018/06/01/openai-gym-for-reinforcement-learning.html</guid>
+        
+        <category>Python</category>
+        
+        <category>PyLadies</category>
+        
+        <category>OpenAI gym</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Tech</category>
+        
+        <category>Python</category>
+        
+      </item>
     
       <item>
         <title>如Py似C：Python 與 C 的共生法則</title>
@@ -3094,128 +3368,6 @@ netsh wlan start hostednetwork
         <category>Tech</category>
         
         <category>Django</category>
-        
-      </item>
-    
-      <item>
-        <title>Granny</title>
-        <description>&lt;p align=&quot;center&quot;&gt;&lt;img width=&quot;400px&quot; height=&quot;400px&quot; src=&quot;https://raw.githubusercontent.com/pyliaorachel/granny/master/img/granny-icon.jpg&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/pyliaorachel/granny&quot;&gt;Granny&lt;/a&gt; is an app aimed at helping people to understand their emotions without having to overcome many difficulties when trying to find an assistant. You can easily open the app and talk to Granny, and Granny will respond with a face reflective of your emotions. Emotion history will also be kepted as a diary &lt;em&gt;(not yet implemented)&lt;/em&gt;. &lt;/p&gt;
-
-&lt;p&gt;Details can be found &lt;a href=&quot;https://devpost.com/software/granny&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;&lt;img width=&quot;245px&quot; height=&quot;416px&quot; src=&quot;https://raw.githubusercontent.com/pyliaorachel/granny/master/img/happy_granny.gif&quot; /&gt;
-&lt;img width=&quot;245px&quot; height=&quot;414px&quot; src=&quot;https://raw.githubusercontent.com/pyliaorachel/granny/master/img/sad_neutral_granny.gif&quot; /&gt;
-&lt;img width=&quot;245px&quot; height=&quot;414px&quot; src=&quot;https://raw.githubusercontent.com/pyliaorachel/granny/master/img/surprised_angry_granny.gif&quot; /&gt;&lt;/p&gt;
-
-&lt;h2&gt;React Native&lt;/h2&gt;
-
-&lt;p&gt;This app was created in a hackathon and won us the first prize. It was built on &lt;a href=&quot;https://facebook.github.io/react-native/&quot;&gt;React Native&lt;/a&gt;, which extremely accelerated the development of the app. I strongly recommend this powerful yet easy-to-learn framework for any developers ready to attend a hackathon.&lt;/p&gt;
-
-&lt;p&gt;Some problems encountered with Android development and solutions:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Make sure in &lt;code&gt;android/app/build.bundle&lt;/code&gt;, &lt;code&gt;buildToolsVersion&lt;/code&gt;(in my case, 23.0.1) has the same version as your SDK.&lt;/li&gt;
-&lt;li&gt;To enable developer mode on an android device, go to &lt;code&gt;Settings &amp;gt; About Phone &amp;gt; Build Number&lt;/code&gt; and tap on it for 7 times.&lt;/li&gt;
-&lt;li&gt;If any error shows up when you open AndroidStudio and is trying to run the app, just follow the instructions to upgrade anything they require.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2&gt;Emotion API&lt;/h2&gt;
-
-&lt;p&gt;The hackathon was held by Microsoft, and Azure was required in all projects. We chose &lt;a href=&quot;https://dev.projectoxford.ai/docs/services/5639d931ca73072154c1ce89/operations/563b31ea778daf121cc3a5fa&quot;&gt;Emotion API&lt;/a&gt; to capture the emotions from the user&amp;#39;s face. There is a hidden camera (&lt;a href=&quot;https://github.com/lwansbrough/react-native-camera&quot;&gt;react-native-camera&lt;/a&gt;) capturing user&amp;#39;s face every 3-5 seconds and return the scores of 8 emotions:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;faceRectangle&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;left&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;488&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;top&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;263&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;width&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;148&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;height&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;148&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;scores&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;anger&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;9.075572e-13&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;contempt&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;7.048959e-9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;disgust&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.02152783e-11&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;fear&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.778957e-14&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;happiness&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.9999999&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;neutral&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.31694478e-7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;sadness&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;6.04054263e-12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;surprise&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;3.92249462e-11&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;We gather the data for 2 purposes:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Granny changes her face in respond to the user&amp;#39;s emotion.&lt;/li&gt;
-&lt;li&gt;The cumulated emotion distribution will be kept as the emotion report.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Some problems encountered and solutions:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;When calling the API with &lt;code&gt;Content-Type&lt;/code&gt; specifying &lt;code&gt;application/octet&lt;/code&gt;, the required body format remains confusing (see &lt;a href=&quot;http://stackoverflow.com/questions/37900554/microsoft-cognitive-services-uploading-image&quot;&gt;here&lt;/a&gt;). Eventually &lt;a href=&quot;https://github.com/wkh237/react-native-fetch-blob&quot;&gt;react-native-fetch-blob&lt;/a&gt; saved my life. Here&amp;#39;s the code snippet:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;nx&quot;&gt;RNFetchBlob&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'POST'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'https://westus.api.cognitive.microsoft.com/emotion/v1.0/recognize'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;s1&quot;&gt;'Ocp-Apim-Subscription-Key'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;your&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-  &lt;span class=&quot;s1&quot;&gt;'Content-Type'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'application/octet-stream'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(...)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;JUST.REMEMBER.TO.TURN.ON.YOUR.PHONE&amp;#39;S.INTERNET.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2&gt;User Speech End Detection&lt;/h2&gt;
-
-&lt;p&gt;Although we could simply make up a script and set timeout to continue to the next question for demo purpose, I strongly felt that it would not be amazing at all if everything were fake. Hence I came up with a detection method to detect when the user finishes speaking:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Record background sound amplitude (averaging the first 10 second sampling data).&lt;/li&gt;
-&lt;li&gt;Retrieve the audio stream every 1 second, look for 3 consecutive seconds when the amplitude is less than the background (with some scaling).&lt;/li&gt;
-&lt;li&gt;If so, go to next question.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;The first problem is that we couldn&amp;#39;t find a package that fit our need to retrieve the audio stream and the amplitudes. We decided to use &lt;a href=&quot;https://github.com/jsierles/react-native-audio&quot;&gt;react-native-audio&lt;/a&gt; and start audio recording while saving the file to &lt;code&gt;/dev/null&lt;/code&gt;. We can now register a listener for &lt;code&gt;onProgress&lt;/code&gt;, which triggers the callback about every 1 second. The only field returned is &lt;code&gt;currentTime&lt;/code&gt; though, so we modified the package itself to actually return &lt;code&gt;maxAmplitude&lt;/code&gt; as well (see &lt;a href=&quot;https://github.com/pyliaorachel/granny&quot;&gt;github&lt;/a&gt; for the line of code I added. Boom! It&amp;#39;s working!&lt;/p&gt;
-
-&lt;p&gt;Another problem is that &lt;a href=&quot;https://github.com/jsierles/react-native-audio/issues/111&quot;&gt;&lt;code&gt;onProgress&lt;/code&gt; seems not well supported on Android devices&lt;/a&gt;. Use &lt;code&gt;DeviceEventEmitter&lt;/code&gt; instead.&lt;/p&gt;
-
-&lt;p&gt;Lastly, remember to turn off the camera&amp;#39;s capture sounds!&lt;/p&gt;
-
-&lt;h4&gt;Some Mysterious Problems (and Probably Solutions)&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Some mysterious sound is coming out every 2-6 seconds when the user is talking, and I am not quite sure which of the packages causes this. This makes detecting whether the user has finished speaking or not troublesome because the noise produces quite a high amplitude. I doubt it to be caused by react-native-camera, but no evidence so far, and the problem remains unsolved.&lt;/li&gt;
-&lt;li&gt;According to &lt;a href=&quot;https://github.com/facebook/react-native/issues/2481&quot;&gt;this&lt;/a&gt;, no dynamic strings are allowed in &lt;code&gt;Image&lt;/code&gt; source. Require all the images first and alternate between them.&lt;/li&gt;
-&lt;li&gt;When I was importing and using color constants (in &lt;code&gt;src/utils/colors.js&lt;/code&gt;), &lt;code&gt;Object.keys(colors)&lt;/code&gt; also includes a &lt;code&gt;default&lt;/code&gt; field. Don&amp;#39;t know how to avoid this, so I simply discarded it.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;Other Notes&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;After uninstalling packages, remember to unlink all references to them everywhere in your code!&lt;/li&gt;
-&lt;li&gt;Animations look slow in debugging mode, so don&amp;#39;t panic, it is better than you thought.&lt;/li&gt;
-&lt;li&gt;Learning Android &lt;strong&gt;release build&lt;/strong&gt; is awful! XCode requires only 1 press of button... See &lt;a href=&quot;https://github.com/shyjal/reactnative-android-production&quot;&gt;this tutorial&lt;/a&gt; and try to install the release built app. If you have your debug app (or previous version of released app) on your phone, remember to uninstall it by running &lt;code&gt;adb uninstall [package name]&lt;/code&gt; first (see &lt;a href=&quot;http://stackoverflow.com/questions/26794862/failure-install-failed-update-incompatible-even-if-app-appears-to-not-be-insta&quot;&gt;this&lt;/a&gt;)! For example, my case would be &lt;code&gt;adb uninstall com.granny&lt;/code&gt;.&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-        <pubDate>Mon, 23 Jan 2017 00:00:00 +0800</pubDate>
-        <link>/project/app/2017/01/23/granny.html</link>
-        <guid isPermaLink="true">/project/app/2017/01/23/granny.html</guid>
-        
-        <category>react-native</category>
-        
-        <category>azure</category>
-        
-        <category>emotion-api</category>
-        
-        
-        <category>Project</category>
-        
-        <category>App</category>
         
       </item>
     
