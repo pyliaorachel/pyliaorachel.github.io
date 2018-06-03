@@ -143,7 +143,7 @@ env.close()
     <img src="https://cdn-images-1.medium.com/max/1600/1*jamiG5MkFVHLTFmLggemVg.png" />
 </p>
 
-即是當前 reward 和進入下一個 state `s'` 後所能獲得最大 reward 的和。這邊的 γ 稱為 discount factor，可以說是對未來 reward 的重視程度。γ 越低，agent 越重視當前所獲得的 reward，並覺得未來獲得的 reward 太遙遠，不足以在當前 state 的決策過程中佔有太大份量。
+即是當前 reward 和進入下一個 state `s'` 後所能獲得最大 discounted reward 的和。這邊的 γ 稱為 discount factor，可以說是對未來 reward 的重視程度。γ 越低，agent 越重視當前所獲得的 reward，並覺得未來獲得的 reward 太遙遠，不足以在當前 state 的決策過程中佔有太大份量。
 
 接著 agent 要藉由一次次跟 environment 互動中獲得的 reward 來學習 Q function。起初 agent 一無所知時，Q function 的參數都是隨機的。接著從跟 environment 互動的每一步，慢慢更新參數，逼近我們要的最佳 Q function：
 
@@ -198,7 +198,7 @@ def get_state(observation, n_buckets, state_bounds):
     return tuple(state)
 ```
 
-剩下的學習過程大致與前面相同。不過為了方便收斂，一些參數像 ε 和 learning rate 會隨著時間遞減，也就是我們從大膽亂走，到越來越相信已經學到的經驗。
+最後是學習。學習過程中為了方便收斂，一些參數像 ε 和 learning rate 會隨著時間遞減，也就是我們從大膽亂走，到越來越相信已經學到的經驗。
 
 ```python
 env = gym.make('CartPole-v0')
