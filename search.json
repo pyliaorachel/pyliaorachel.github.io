@@ -1,9 +1,17 @@
 [
     
         {
+            "title": "Reinforcement Learning 進階篇：Deep Q-Learning",
+            "categories": "Blog > Tech > Python",
+            "tags": "<span class=\"tag\">Python</span><span class=\"tag\">PyLadies</span><span class=\"tag\">OpenAI gym</span><span class=\"tag\">Reinforcement Learning</span>", 
+            "url": "/blog/tech/python/2018/06/14/deep-q-learning.html",
+            "date": "Jun 14, 2018"
+        } ,
+    
+        {
             "title": "Reinforcement Learning 健身房：OpenAI Gym",
             "categories": "Blog > Tech > Python",
-            "tags": "<span class=\"tag\">Python</span><span class=\"tag\">PyLadies</span><span class=\"tag\">OpenAI gym</span>", 
+            "tags": "<span class=\"tag\">Python</span><span class=\"tag\">PyLadies</span><span class=\"tag\">OpenAI gym</span><span class=\"tag\">Reinforcement Learning</span>", 
             "url": "/blog/tech/python/2018/06/01/openai-gym-for-reinforcement-learning.html",
             "date": "Jun 1, 2018"
         } ,

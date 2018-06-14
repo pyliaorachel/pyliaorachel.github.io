@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Reinforcement Learning 進階篇：Deep Q-Learning</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="/css/main.css" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono|Amatic+SC:700" rel="stylesheet">
+		<link rel="stylesheet" href="/css/github-markdown.css">
+
+		<!-- Place jquery before bootstrap -->
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">MyCoon</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+
+			<form class="navbar-form navbar-left">
+				<div class="form-group">
+					<input type="text" class="form-control" id="search-input" placeholder="Search posts from site">
+				</div>
+			</form>
+
+			<ul class="nav navbar-nav navbar-right" id="nav-links">
+				<li class="nav-home"><a href="/">Home</a></li>
+				<li class="dropdown nav-blog">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Blog<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/blog">MyCoon Blog</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/blog/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/blog/tech">
+									<span>Tech</span>
+									<span>12</span>
+								</a>
+							</li>
+						
+							
+							
+							<li class="category">
+								<a href="/blog/notes">
+									<span>Notes</span>
+									<span>5</span>
+								</a>
+							</li>
+						
+						<li><a href="/blog/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li class="dropdown nav-tutorial">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Tutorials<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/tutorial">MyCoon Tutorial</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/tutorial/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/tutorial/devops">
+								<span>DevOps</span>
+								<span>1</span></a>
+							</li>
+						
+							
+							
+							<li class="category">
+								<a href="/tutorial/hardware">
+								<span>Hardware</span>
+								<span>1</span></a>
+							</li>
+						
+						<li><a href="/tutorial/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li  class="nav-project"><a href="/project">Projects</a></li>
+                <!-- <li class="nav-special" id="special"><a href="#">?</a></li> -->
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+
+            <div id="results-container"></div>
+
+		    <main class="page-content post" aria-label="Content">
+	<div class="post-wrapper">
+		<div class="wrapper">
+	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
+
+		<header class="post-header">
+			<h1 class="post-title" itemprop="name headline">Reinforcement Learning 進階篇：Deep Q-Learning</h1>
+			<p class="post-meta">Jun 14, 2018
+				 • Tech
+				 • pyliaorachel
+			</p>
+		</header>
+
+		
+
+		<span class="separator"> • • • </span>
+
+		<div class="post-content" itemprop="articleBody">
+			<p>繼上一篇<a href="https://pyliaorachel.github.io/blog/tech/python/2018/06/01/openai-gym-for-reinforcement-learning.html">Reinforcement Learning 健身房：OpenAI Gym</a> 介紹以 Q-table 為基礎的 Q-learning 之後，這一篇要來結合 PyTorch 實現以深度學習為基礎的 Deep Q-Learning。</p>
+
+<!--more-->
+
+<hr>
+
+<p><em>* 請注意，以下只針對Python3進行講解與測試，並以 MacOSX 為環境。讀者應具備基礎 neural network 及 reinforcement learning 知識，可先閱讀 <a href="https://pyliaorachel.github.io/blog/tech/deeplearning/2017/10/16/getting-started-with-deep-learning-with-pytorch.html">PyTorch 介紹</a> 及 <a href="https://pyliaorachel.github.io/blog/tech/python/2018/06/01/openai-gym-for-reinforcement-learning.html">Reinforcement Learning 介紹</a>。</em></p>
+
+<p>在<a href="https://pyliaorachel.github.io/blog/tech/python/2018/06/01/openai-gym-for-reinforcement-learning.html">上一篇</a>的實作中，運用 Q-table 可以成功的讓 agent 學習到如何維持小車上柱子的平衡。但是 Q-table 並不能有效解決所有問題，為什麼呢？此篇將從 Q-table 的侷限講起，帶入 Deep Q-Learning 的原理及為何它能突破限制，最後講解參考自<a href="https://morvanzhou.github.io/tutorials/machine-learning/torch/4-05-DQN/">莫凡Python</a>的 Deep Q-Learning 實作。文末獻醜一下自己做的（很弱沒成功的）用 reinforcement learning 解密碼的小專案，期待有人能成功訓練出一個解碼器。</p>
+
+<h2>Deep Q-Learning 原理</h2>
+
+<p>在 Q-table 的實作中，我們知道整個 Q-table 就是一個以 state 和 action 為索引儲存 Q value 的表格。不過在 state 和 action 有限且不過多的情況下，這個索引表格才有可能被建立，例如 CartPole 問題中 state 只有四個 feature，每個的值都在有限範圍內（或是可以固定在有限範圍），action 更只有兩個值。</p>
+
+<p>但如果今天我們的 state 來自遊戲畫面，或圍棋棋盤呢？你可以選擇根據任務原理，很辛苦又可能徒勞無功的把環境簡化成幾個有效的 feature 當作 state；或是選擇用 deep neural network 幫我們提取 feature 並逼近我們要的 Q function，亦即今天要介紹的 Deep Q-Learning。</p>
+
+<p>對 neural network 有概念的話應該不難看出 deep Q-learning 的理念。所謂 neural network 就是藉由不斷被餵食 input-output pair 後，最終逼近 input-output 對應關係的 function，亦即 <code>f(input) = output</code>。把它轉成 policy <code>π(state) = action</code> 的形式，是不是就能看出為什麼學者會想把它塞進 Reinforcement Learning 裡了呢？</p>
+
+<p><img src="https://cdn-images-1.medium.com/max/1600/1*w5GuxedZ9ivRYqM_MLUxOQ.png" alt=""> </p>
+
+<p>由 neural network 取代 Q-table 的好處是，neural network 可以搭配不同變形，從龐大的 state space 中自動提取特徵，例如經典的 <a href="https://arxiv.org/pdf/1312.5602v1.pdf">Playing Atari with Deep Reinforcement Learning</a> 即是以 Convolutional Neural Network 直接以遊戲畫面的 raw pixel 下去訓練；這是僵化的 Q-table 辦不到的。</p>
+
+<h2>Deep Q-Learning 實作</h2>
+
+<p>GitHub 完整程式碼：<a href="https://github.com/pyliaorachel/openai-gym-cartpole">https://github.com/pyliaorachel/openai-gym-cartpole</a>；原始碼修改自<a href="https://morvanzhou.github.io/tutorials/machine-learning/torch/4-05-DQN/">這篇文章</a>，有87成像。</p>
+
+<p>同樣以 CartPole 為範例，用 PyTorch 打造 Deep Q-Network 來實作 Deep Q-Learning。以下總共有三步驟，不過在開始前，要先介紹一些小技巧來增進訓練穩定性。</p>
+
+<h4>Deep Q-Network 穩定小技巧</h4>
+
+<p>在 <a href="https://www.nature.com/articles/nature14236">Human-level control through deep reinforcement learning</a> 這篇論文裡，為 Deep Q-Learning 的訓練穩定性提供了三項解藥：</p>
+
+<ol>
+<li>Use experience replay，亦即把 experience 存在 memory 中，訓練時隨機從中抽樣。這麼做可以打亂這些 experience 之間沒有必要的時間關係。</li>
+<li>Freeze target Q-network，即建立兩種 Q-network，一為實際進行訓練的 evaluation network，一為訓練目標 target network，其中 target network 久久更新一次，更新時直接把 evaluation network 的參數整組複製過來。還記得 Q function 的遞迴關係: <code>Q(s, a) = r + γ * max_a&#39; Q(s&#39;, a&#39;)</code> 嗎？如果只訓練一個 network，則每更新一次，不只是正在訓練的 <code>Q(s, a)</code> 在變，我們的目標 <code>Q(s&#39;, a&#39;)</code> 也跟著在變！整個 network 會像是自己追著自己的尾巴一樣，無法趨於穩定。</li>
+<li>Clip rewards，即限縮 reward 的值，以利 backpropagation 中能有穩定的 gradient 計算。</li>
+</ol>
+
+<p>這些小技巧將會融入我們的實作中。</p>
+
+<h4>Step 1: 建立 Network</h4>
+
+<p>首先建立一層 hidden layer 的 neural network，目標是把 state 傳入後，得出每個 action 的分數，分數越高的 action 越有機會被挑選。而我們的目標是在當前 state 下，讓越有利的 action 分數能越高。</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Net</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_states</span><span class="p">,</span> <span class="n">n_actions</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Net</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+
+        <span class="c"># 輸入層 (state) 到隱藏層，隱藏層到輸出層 (action)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">n_states</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">n_hidden</span><span class="p">,</span> <span class="n">n_actions</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c"># ReLU activation</span>
+        <span class="n">actions_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">actions_value</span>
+</code></pre></div>
+<h4>Step 2: 建立 Deep Q-Network</h4>
+
+<p>在小技巧中提到，總共需要兩個 network，evaluation network (<code>eval_net</code>) 及 target network (<code>target_net</code>)。除此之外，還要有 memory 儲存 experience，以及設定好參數：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">DQN</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_states</span><span class="p">,</span> <span class="n">n_actions</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">lr</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">target_replace_iter</span><span class="p">,</span> <span class="n">memory_capacity</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval_net</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_net</span> <span class="o">=</span> <span class="n">Net</span><span class="p">(</span><span class="n">n_states</span><span class="p">,</span> <span class="n">n_actions</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">),</span> <span class="n">Net</span><span class="p">(</span><span class="n">n_states</span><span class="p">,</span> <span class="n">n_actions</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">memory_capacity</span><span class="p">,</span> <span class="n">n_states</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span> <span class="c"># 每個 memory 中的 experience 大小為 (state + next state + reward + action)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval_net</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loss_func</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory_counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">learn_step_counter</span> <span class="o">=</span> <span class="mi">0</span> <span class="c"># 讓 target network 知道什麼時候要更新</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_states</span> <span class="o">=</span> <span class="n">n_states</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_actions</span> <span class="o">=</span> <span class="n">n_actions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_hidden</span> <span class="o">=</span> <span class="n">n_hidden</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr</span> <span class="o">=</span> <span class="n">lr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span> <span class="o">=</span> <span class="n">epsilon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="n">gamma</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_replace_iter</span> <span class="o">=</span> <span class="n">target_replace_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory_capacity</span> <span class="o">=</span> <span class="n">memory_capacity</span>
+
+    <span class="k">def</span> <span class="nf">choose_action</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">store_transition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">learn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+</code></pre></div>
+<p><code>choose_action</code> 會根據 epsilon-greedy policy 選擇 action。上次有提到，epsilon 表機率，訓練過程中有 epsilon 的機率 agent 會選擇亂（隨機）走，如此才有機會學習到新經驗：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">choose_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="n">state</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c"># epsilon-greedy</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">()</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon</span><span class="p">:</span> <span class="c"># 隨機</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_actions</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span> <span class="c"># 根據現有 policy 做最好的選擇</span>
+        <span class="n">actions_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_net</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="c"># 以現有 eval net 得出各個 action 的分數</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="nb">max</span><span class="p">(</span><span class="n">actions_value</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">numpy</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="c"># 挑選最高分的 action</span>
+
+    <span class="k">return</span> <span class="n">action</span>
+</code></pre></div>
+<p>再來 DQN 需要儲存 experience：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">store_transition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">next_state</span><span class="p">):</span>
+    <span class="c"># 打包 experience</span>
+    <span class="n">transition</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">state</span><span class="p">,</span> <span class="p">[</span><span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">],</span> <span class="n">next_state</span><span class="p">))</span>
+
+    <span class="c"># 存進 memory；舊 memory 可能會被覆蓋</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_counter</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_capacity</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">transition</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">memory_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+</code></pre></div>
+<p>最後是從 memory 中取樣學習：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">learn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c"># 隨機取樣 batch_size 個 experience</span>
+    <span class="n">sample_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">memory_capacity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
+    <span class="n">b_memory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory</span><span class="p">[</span><span class="n">sample_index</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">b_state</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="n">b_memory</span><span class="p">[:,</span> <span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_states</span><span class="p">])</span>
+    <span class="n">b_action</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="n">b_memory</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_states</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_states</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+    <span class="n">b_reward</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="n">b_memory</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_states</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_states</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">b_next_state</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="n">b_memory</span><span class="p">[:,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">n_states</span><span class="p">:])</span>
+
+    <span class="c"># 計算現有 eval net 和 target net 得出 Q value 的落差</span>
+    <span class="n">q_eval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_net</span><span class="p">(</span><span class="n">b_state</span><span class="p">)</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">b_action</span><span class="p">)</span> <span class="c"># 重新計算這些 experience 當下 eval net 所得出的 Q value</span>
+    <span class="n">q_next</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_net</span><span class="p">(</span><span class="n">b_next_state</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span> <span class="c"># detach 才不會訓練到 target net</span>
+    <span class="n">q_target</span> <span class="o">=</span> <span class="n">b_reward</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">q_next</span><span class="o">.</span><span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c"># 計算這些 experience 當下 target net 所得出的 Q value</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loss_func</span><span class="p">(</span><span class="n">q_eval</span><span class="p">,</span> <span class="n">q_target</span><span class="p">)</span>
+
+    <span class="c"># Backpropagation</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+    <span class="c"># 每隔一段時間 (target_replace_iter), 更新 target net，即複製 eval net 到 target net</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">learn_step_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learn_step_counter</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_replace_iter</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_net</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval_net</span><span class="o">.</span><span class="n">state_dict</span><span class="p">())</span>
+</code></pre></div>
+<h4>Step 3: 訓練</h4>
+
+<p>訓練過程是 1. 選擇 action 2. 儲存 experience 3. 訓練：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s">'CartPole-v0'</span><span class="p">)</span>
+
+<span class="c"># Environment parameters</span>
+<span class="n">n_actions</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">n</span>
+<span class="n">n_states</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">observation_space</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c"># Hyper parameters</span>
+<span class="n">n_hidden</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="n">lr</span> <span class="o">=</span> <span class="mf">0.01</span>                 <span class="c"># learning rate</span>
+<span class="n">epsilon</span> <span class="o">=</span> <span class="mf">0.1</span>             <span class="c"># epsilon-greedy</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="mf">0.9</span>               <span class="c"># reward discount factor</span>
+<span class="n">target_replace_iter</span> <span class="o">=</span> <span class="mi">100</span> <span class="c"># target network 更新間隔</span>
+<span class="n">memory_capacity</span> <span class="o">=</span> <span class="mi">2000</span>
+<span class="n">n_episodes</span> <span class="o">=</span> <span class="mi">4000</span>
+
+<span class="c"># 建立 DQN</span>
+<span class="n">dqn</span> <span class="o">=</span> <span class="n">DQN</span><span class="p">(</span><span class="n">n_states</span><span class="p">,</span> <span class="n">n_actions</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">lr</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">gamma</span><span class="p">,</span> <span class="n">target_replace_iter</span><span class="p">,</span> <span class="n">memory_capacity</span><span class="p">)</span>
+
+<span class="c"># 學習</span>
+<span class="k">for</span> <span class="n">i_episode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_episodes</span><span class="p">):</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">rewards</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+
+        <span class="c"># 選擇 action</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">dqn</span><span class="o">.</span><span class="n">choose_action</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">next_state</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="c"># 儲存 experience</span>
+        <span class="n">dqn</span><span class="o">.</span><span class="n">store_transition</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">next_state</span><span class="p">)</span>
+
+        <span class="c"># 累積 reward</span>
+        <span class="n">rewards</span> <span class="o">+=</span> <span class="n">reward</span>
+
+        <span class="c"># 有足夠 experience 後進行訓練</span>
+        <span class="k">if</span> <span class="n">dqn</span><span class="o">.</span><span class="n">memory_counter</span> <span class="o">&gt;</span> <span class="n">memory_capacity</span><span class="p">:</span>
+            <span class="n">dqn</span><span class="o">.</span><span class="n">learn</span><span class="p">()</span>
+
+        <span class="c"># 進入下一 state</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">next_state</span>
+
+        <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">'Episode finished after {} timesteps, total rewards {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">rewards</span><span class="p">))</span>
+            <span class="k">break</span>
+
+        <span class="n">t</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div>
+<h4>結果</h4>
+
+<p>訓練最後幾步的結果如下：</p>
+
+<p><img src="https://github.com/pyliaorachel/openai-gym-cartpole/blob/master/img/dqn_no_cheat.png?raw=true" alt=""></p>
+
+<p>什麼？也太糟了吧。整個訓練看不出有收斂，至少跑了 4000 個 episode 的情況下是如此。</p>
+
+<p>讓我們重新看看 reward 是怎麼獲得的。一切都在 <a href="https://github.com/openai/gym/blob/master/gym/envs/classic_control/cartpole.py"><code>gym</code> 給的 environment</a> 裡：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">...</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
+    <span class="n">reward</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps_beyond_done</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="c"># Pole just fell!</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">steps_beyond_done</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">reward</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">steps_beyond_done</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">reward</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="o">...</span>
+</code></pre></div>
+<p>也就是柱子倒了之後獲得 0 分，其他情況下獲得 1 分。這麼缺乏資訊的 reward，得有勞 agent 嘗試好幾回才能學會怎麼維持柱子平衡。</p>
+
+<p>讓我們稍微作弊一下，自己建立 reward 分配方法，讓 reward 提供更多資訊。很直覺的，柱子的角度越正，reward 應該越大。另外若想要小車保持在中間，那麼小車跟中間的距離越小，reward 也應該越大：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">...</span>
+<span class="n">next_state</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+<span class="c"># 修改 reward，加快訓練</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">omega</span> <span class="o">=</span> <span class="n">next_state</span>
+<span class="n">r1</span> <span class="o">=</span> <span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">x_threshold</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">/</span> <span class="n">env</span><span class="o">.</span><span class="n">x_threshold</span> <span class="o">-</span> <span class="mf">0.8</span> <span class="c"># 小車離中間越近越好</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">theta_threshold_radians</span> <span class="o">-</span> <span class="nb">abs</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span> <span class="o">/</span> <span class="n">env</span><span class="o">.</span><span class="n">theta_threshold_radians</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="c"># 柱子越正越好</span>
+<span class="n">reward</span> <span class="o">=</span> <span class="n">r1</span> <span class="o">+</span> <span class="n">r2</span>
+
+<span class="n">dqn</span><span class="o">.</span><span class="n">store_transition</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">next_state</span><span class="p">)</span>
+<span class="o">...</span>
+</code></pre></div>
+<p>把 episode 調到 400 次，已經能有不錯的訓練結果了：</p>
+
+<p><img src="https://github.com/pyliaorachel/openai-gym-cartpole/blob/master/img/dqn_cheat.png?raw=true" alt=""></p>
+
+<p>這邊注意不能直接拿 reward 的值相比，因為方法不同，主要是看 timestep，就是柱子維持不倒的時間。如果自己跑跑看，可以看到柱子在訓練後期可以穩定站立在小車上。</p>
+
+<h2>不重要小獻醜：Reinforcement Learning 解碼器</h2>
+
+<p>GitHub 完整程式碼：<a href="https://github.com/pyliaorachel/reinforcement-learning-decipher">https://github.com/pyliaorachel/reinforcement-learning-decipher</a></p>
+
+<p>之前的課堂作業裡，我選擇嘗試 reinforcement learning 來解<a href="https://zh.wikipedia.org/zh-tw/%E5%87%B1%E6%92%92%E5%AF%86%E7%A2%BC">凱薩密碼</a>，就是一種很簡單的替換加密技術。難點在於，希望用 RNN 捕捉 state 和 state 之間的時間關係，以及學會密碼的偏移量。</p>
+
+<p>結果其實很不理想，連長度 2~4 的密碼都解不開，最後因為時間關係就馬馬虎虎的交了（分數還挺高的就是）。我有寫一份 <a href="https://github.com/pyliaorachel/reinforcement-learning-decipher/blob/master/report.pdf">report</a>，有興趣可以看看，還算有一些小成果。專案裡也有我設置的解密環境，有興趣可以載來玩玩，看看能不能幫我改善演算法。</p>
+
+<h2>結語</h2>
+
+<p>本篇介紹了最基本的 Deep Q-Learning 原理及實作，雖然可以克服 Q-table 的容量限制，但訓練難度增加不少，包括訓練穩定性及速度等等，都要費時調教一番，有時還需要引進旁門左道...我是說，小撇步，來增加訓練效率。其實 Deep Reinforcement Learning 還有很多進化之作，就待有興趣的讀者自行深入探討了。</p>
+
+<h2>參考資料</h2>
+
+<ul>
+<li><a href="https://morvanzhou.github.io/tutorials/machine-learning/torch/4-05-DQN/">DQN 强化学习</a></li>
+<li><a href="https://medium.freecodecamp.org/an-introduction-to-deep-q-learning-lets-play-doom-54d02d8017d8">An introduction to Deep Q-Learning: let’s play Doom</a></li>
+<li><a href="http://llcao.net/cu-deeplearning17/pp/class11_DQN.pdf">PowerPoint: Human-Level Control through Deep Reinforcement Learning</a></li>
+</ul>
+
+<h2>經典論文鉅獻</h2>
+
+<ul>
+<li><a href="https://arxiv.org/pdf/1312.5602v1.pdf">Playing Atari with Deep Reinforcement Learning</a></li>
+<li><a href="https://www.nature.com/articles/nature14236">Human-level control through deep reinforcement learning</a></li>
+<li><a href="https://www.nature.com/articles/nature24270">Mastering the game of Go without human knowledge</a></li>
+</ul>
+
+		</div>
+
+		<ul class="tag-list">
+			
+
+			<li class="tag">
+				Python
+			</li>
+
+			
+
+			<li class="tag">
+				PyLadies
+			</li>
+
+			
+
+			<li class="tag">
+				OpenAI gym
+			</li>
+
+			
+
+			<li class="tag">
+				Reinforcement Learning
+			</li>
+
+			
+		</ul>
+
+	</article>
+
+	
+		<div id="disqus_thread"></div>
+<script>
+	var disqus_config = function () {
+        this.page.url = "https://pyliaorachel.github.io/blog/tech/python/2018/06/14/deep-q-learning.html";
+        this.page.identifier = "/blog/tech/python/2018/06/14/deep-q-learning";
+	};
+	(function() {
+	    var d = document, s = d.createElement('script');
+        s.src = '//pyliaorachel.disqus.com/embed.js';
+	    s.setAttribute('data-timestamp', +new Date());
+	    (d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+	
+</div>
+
+	</div>
+</main>
+
+		<footer>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4 footer-link">
+				<a href="mailto:rachel5566kk@gmail.com">
+					<span class="icon icon-email">
+						<img src="/assets/svg/email-logo.svg" alt="Email Logo">
+					</span>
+					<span class="username">rachel5566kk@gmail.com</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://github.com/pyliaorachel"  target="_blank">
+					<span class="icon icon-github">
+						<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+					</span>
+					<span class="username">pyliaorachel</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://tw.linkedin.com/in/peiyu-liao" target="_blank">
+					<span class="icon icon-linkedin">
+						<img src="/assets/svg/linkedin-logo.svg" alt="LinkedIn Logo">
+					</span>
+					<span class="username">Peiyu Liao</span>
+				</a>
+			</div>
+		</div><!-- /.row -->
+		<div class="row">
+			<div class="footer-copy-right">
+				<p>2018	&copy; Liao Peiyu</p>
+			</div >
+		</div><!-- /.row -->
+	</div><!-- /.container-fluid -->
+</footer>
+
+		<script type="text/javascript" src="/js/main.js"></script>
+		<script type="text/javascript" src="/js/home.js"></script>
+        <script id="dsq-count-scr" src="//pyliaorachel.disqus.com/count.js" async></script>
+		<script type="text/javascript" src="/js/simple-jekyll-search.min.js"></script>
+        <script>
+            window.sjs = new SimpleJekyllSearch({
+                searchInput: document.getElementById('search-input'),
+                resultsContainer: document.getElementById('results-container'),
+                json: '/search.json',
+                searchResultTemplate: '<li><div><span class="categories">{categories}</span><a class="title" href="{url}">{title}</a><span class="tags">{tags}</span></div><div><span class="date">{date}</span></div></li>',
+                noResultsText: 'No results found.'
+            })
+        </script>
+	</body>
+</html>
