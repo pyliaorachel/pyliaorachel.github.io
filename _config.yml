@@ -22,6 +22,7 @@ description: > # this means to ignore newlines until "baseurl:"
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site
 github_username:  pyliaorachel
+disqus_shortname: pyliaorachel
 
 # Build settings
 #markdown: kramdown
@@ -40,4 +41,3 @@ paginate_paths:
  Blog: "/blog/page:num/"
  Tutorial: "/tutorial/page:num/"
  Project: "/project/page:num/"
-
