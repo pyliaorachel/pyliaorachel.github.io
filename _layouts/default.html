@@ -20,5 +20,15 @@
 		<script type="text/javascript" src="/js/main.js"></script>
 		<script type="text/javascript" src="/js/home.js"></script>
         <script id="dsq-count-scr" src="//{{ site.disqus_shortname }}.disqus.com/count.js" async></script>
+		<script type="text/javascript" src="/js/simple-jekyll-search.min.js"></script>
+        <script>
+            window.sjs = SimpleJekyllSearch({
+                searchInput: document.querySelector('.search-input'),
+                resultsContainer: document.getElementById('results-container'),
+                json: '/search.json',
+                searchResultTemplate: '<li><a href="{{ site.url }}{url}">{title}</a></li>'
+                noResultsText: 'No results found.',
+            })
+        </script>
 	</body>
 </html>
