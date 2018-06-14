@@ -44,7 +44,7 @@
 						{% if post.author %}
 						  •  by {{ post.author }}
 						{% endif %}
-                          •  <a class="disqus-comment-count" href="https://{{ site.github_username }}.github.io{{ post.url }}#disqus_thread">0 Comments</a>
+                          •  <a class="disqus-comment-count" data-disqus-identifier="{{ post.url }}" href="https://{{ site.github_username }}.github.io{{ post.url }}#disqus_thread">0 Comments</a>
                           <!-- •  <span class="disqus-comment-count" data-disqus-identifier="{{post.url}}">Comment Count</span> -->
 					</span>
 
