@@ -29,7 +29,7 @@
 
 			<form class="navbar-form navbar-left">
 				<div class="form-group">
-					<input type="text" class="form-control" placeholder="Search">
+					<input type="text" class="form-control" id="search-input" placeholder="Search posts">
 				</div>
 				<button type="submit" class="btn btn-default">Submit</button>
 			</form>
@@ -103,11 +103,12 @@
 					</ul>
 				</li>
 				<li  class="nav-project"><a href="/project">Projects</a></li>
-				<li class="nav-special" id="special"><a href="#">?</a></li>
+                <!-- <li class="nav-special" id="special"><a href="#">?</a></li> -->
 			</ul>
 		</div><!-- /.navbar-collapse -->
 	</div><!-- /.container-fluid -->
 </nav>
+
 		<main class="page-content post" aria-label="Content">
 	<div class="post-wrapper">
 		<div class="wrapper">
@@ -229,5 +230,15 @@
 		<script type="text/javascript" src="/js/main.js"></script>
 		<script type="text/javascript" src="/js/home.js"></script>
         <script id="dsq-count-scr" src="//pyliaorachel.disqus.com/count.js" async></script>
+		<script type="text/javascript" src="/js/simple-jekyll-search.min.js"></script>
+        <script>
+            window.sjs = SimpleJekyllSearch({
+                searchInput: document.querySelector('.search-input'),
+                resultsContainer: document.getElementById('results-container'),
+                json: '/search.json',
+                searchResultTemplate: '<li><a href="{url}">{title}</a></li>'
+                noResultsText: 'No results found.',
+            })
+        </script>
 	</body>
 </html>

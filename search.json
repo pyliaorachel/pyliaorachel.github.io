@@ -1,0 +1,171 @@
+[
+    
+        {
+            "title": "Reinforcement Learning 健身房：OpenAI Gym",
+            "categories": "Blog, Tech, Python",
+            "tags": "Python, PyLadies, OpenAI gym",
+            "url": "/blog/tech/python/2018/06/01/openai-gym-for-reinforcement-learning.html",
+            "date": "2018-06-01 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "如Py似C：Python 與 C 的共生法則",
+            "categories": "Blog, Tech, Python",
+            "tags": "Python, PyLadies, C",
+            "url": "/blog/tech/python/2018/01/26/python-c-mixing.html",
+            "date": "2018-01-26 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "穿越時空的偉人：用PyTorch重現偉人們的神經網絡",
+            "categories": "Blog, Tech, NLP",
+            "tags": "Python, PyTorch, Machine Learning, Deep Learning, Neural Network, Natural Language Processing, PyLadies",
+            "url": "/blog/tech/nlp/2017/12/24/resurrecting-the-dead-chinese.html",
+            "date": "2017-12-24 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "深度學習新手村：PyTorch入門",
+            "categories": "Blog, Tech, DeepLearning",
+            "tags": "Python, PyTorch, Machine Learning, Deep Learning, Neural Network, Computer Vision, PyLadies",
+            "url": "/blog/tech/deeplearning/2017/10/16/getting-started-with-deep-learning-with-pytorch.html",
+            "date": "2017-10-16 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "Python的import陷阱",
+            "categories": "Blog, Tech, Python",
+            "tags": "Python, PyLadies",
+            "url": "/blog/tech/python/2017/09/15/pythons-import-trap.html",
+            "date": "2017-09-15 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "Getting Started with Docker Running Flask, RedisDB, and NGINX",
+            "categories": "Tutorial, DevOps, Docker",
+            "tags": "docker, flask, redisdb, nginx",
+            "url": "/tutorial/devops/docker/2017/08/04/getting-started-with-docker-running-flask-redisdb-and-nginx.html",
+            "date": "2017-08-04 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "Nginx Server SSL Setup on AWS EC2 Linux with Letsencrypt",
+            "categories": "Blog, Tech, System",
+            "tags": "ssl, letsencrypt, nginx, aws",
+            "url": "/blog/tech/system/2017/07/14/nginx-server-ssl-setup-on-aws-ec2-linux-with-letsencrypt.html",
+            "date": "2017-07-14 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "Flask App with Gunicorn on Nginx Server upon AWS EC2 Linux",
+            "categories": "Blog, Tech, System",
+            "tags": "flask, gunicorn, nginx, aws",
+            "url": "/blog/tech/system/2017/07/07/flask-app-with-gunicorn-on-nginx-server-upon-aws-ec2-linux.html",
+            "date": "2017-07-07 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "ESP8266 with Arduino - Trials and Errors",
+            "categories": "Tutorial, Hardware, Arduino",
+            "tags": "arduino, esp8266",
+            "url": "/tutorial/hardware/arduino/2017/04/13/esp8266-with-arduino-trials-and-errors.html",
+            "date": "2017-04-13 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "Django SQLite DB Cleanup",
+            "categories": "Blog, Tech, Django",
+            "tags": "django, sqlite",
+            "url": "/blog/tech/django/2017/03/29/django-sqlite-db-cleanup.html",
+            "date": "2017-03-29 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "Granny",
+            "categories": "Project, App",
+            "tags": "react-native, azure, emotion-api",
+            "url": "/project/app/2017/01/23/granny.html",
+            "date": "2017-01-23 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "Battleship AI",
+            "categories": "Project, AI",
+            "tags": "csp, ai",
+            "url": "/project/ai/2016/12/06/battleship-ai.html",
+            "date": "2016-12-06 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "Serverside Swift",
+            "categories": "Blog, Notes, Swift",
+            "tags": "swift",
+            "url": "/blog/notes/swift/2016/11/24/serverside-swift.html",
+            "date": "2016-11-24 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "ReactJS Data Visualization Libraries in a Hack Night",
+            "categories": "Blog, Tech, ReactJS",
+            "tags": "react, react-chartjs, react-d3, react-d3-basic, data visualization",
+            "url": "/blog/tech/reactjs/2016/11/21/reactjs-data-visualization-libraries-in-a-hack-night.html",
+            "date": "2016-11-21 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "Docker Beginner",
+            "categories": "Blog, Notes, Docker",
+            "tags": "docker",
+            "url": "/blog/notes/docker/2016/11/17/docker-beginner.html",
+            "date": "2016-11-17 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "Shortest Path Algorithms",
+            "categories": "Blog, Tech, Algorithm",
+            "tags": "dijkstra's, bellman-ford, floyd–warshall, data structure, algorithm",
+            "url": "/blog/tech/algorithm/2016/11/14/shortest-path-algorithms.html",
+            "date": "2016-11-14 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "Data Stucture Notes",
+            "categories": "Blog, Notes, Competition",
+            "tags": "competition, data structure",
+            "url": "/blog/notes/competition/2016/11/09/data-structure-notes.html",
+            "date": "2016-11-09 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "Competition Notes",
+            "categories": "Blog, Notes, Competition",
+            "tags": "competition",
+            "url": "/blog/notes/competition/2016/11/09/competition-notes.html",
+            "date": "2016-11-09 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "Competition Cheatsheet",
+            "categories": "Blog, Notes, Competition",
+            "tags": "competition",
+            "url": "/blog/notes/competition/2016/11/09/competition-cheatsheet.html",
+            "date": "2016-11-09 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "Linked List Basic",
+            "categories": "Blog, Tech, DataStructure",
+            "tags": "data structure",
+            "url": "/blog/tech/datastructure/2016/10/08/linked-list-basic.html",
+            "date": "2016-10-08 00:00:00 +0800"
+        } ,
+    
+        {
+            "title": "Elite Bank BOT",
+            "categories": "Project, BOT",
+            "tags": "fb-bot, nodejs, aws, firebase",
+            "url": "/project/bot/2016/07/15/elite-bank-bot.html",
+            "date": "2016-07-15 00:00:00 +0800"
+        } 
+    
+]
