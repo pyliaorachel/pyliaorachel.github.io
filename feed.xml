@@ -4,10 +4,10 @@
     <title>MyCoon</title>
     <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
 </description>
-    <link>https://pyliaorachel.github.io/</link>
-    <atom:link href="https://pyliaorachel.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 14 Jun 2018 17:04:04 +0800</pubDate>
-    <lastBuildDate>Thu, 14 Jun 2018 17:04:04 +0800</lastBuildDate>
+    <link>/</link>
+    <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Thu, 14 Jun 2018 17:17:39 +0800</pubDate>
+    <lastBuildDate>Thu, 14 Jun 2018 17:17:39 +0800</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -266,8 +266,8 @@
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 01 Jun 2018 00:00:00 +0800</pubDate>
-        <link>https://pyliaorachel.github.io/blog/tech/python/2018/06/01/openai-gym-for-reinforcement-learning.html</link>
-        <guid isPermaLink="true">https://pyliaorachel.github.io/blog/tech/python/2018/06/01/openai-gym-for-reinforcement-learning.html</guid>
+        <link>/blog/tech/python/2018/06/01/openai-gym-for-reinforcement-learning.html</link>
+        <guid isPermaLink="true">/blog/tech/python/2018/06/01/openai-gym-for-reinforcement-learning.html</guid>
         
         <category>Python</category>
         
@@ -741,8 +741,8 @@ int slow_calc(int x, int a = 0, int b = 0);
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 26 Jan 2018 00:00:00 +0800</pubDate>
-        <link>https://pyliaorachel.github.io/blog/tech/python/2018/01/26/python-c-mixing.html</link>
-        <guid isPermaLink="true">https://pyliaorachel.github.io/blog/tech/python/2018/01/26/python-c-mixing.html</guid>
+        <link>/blog/tech/python/2018/01/26/python-c-mixing.html</link>
+        <guid isPermaLink="true">/blog/tech/python/2018/01/26/python-c-mixing.html</guid>
         
         <category>Python</category>
         
@@ -1030,8 +1030,8 @@ int slow_calc(int x, int a = 0, int b = 0);
 &lt;/ol&gt;
 </description>
         <pubDate>Sun, 24 Dec 2017 00:00:00 +0800</pubDate>
-        <link>https://pyliaorachel.github.io/blog/tech/nlp/2017/12/24/resurrecting-the-dead-chinese.html</link>
-        <guid isPermaLink="true">https://pyliaorachel.github.io/blog/tech/nlp/2017/12/24/resurrecting-the-dead-chinese.html</guid>
+        <link>/blog/tech/nlp/2017/12/24/resurrecting-the-dead-chinese.html</link>
+        <guid isPermaLink="true">/blog/tech/nlp/2017/12/24/resurrecting-the-dead-chinese.html</guid>
         
         <category>Python</category>
         
@@ -1262,8 +1262,8 @@ int slow_calc(int x, int a = 0, int b = 0);
 &lt;/ol&gt;
 </description>
         <pubDate>Mon, 16 Oct 2017 00:00:00 +0800</pubDate>
-        <link>https://pyliaorachel.github.io/blog/tech/deeplearning/2017/10/16/getting-started-with-deep-learning-with-pytorch.html</link>
-        <guid isPermaLink="true">https://pyliaorachel.github.io/blog/tech/deeplearning/2017/10/16/getting-started-with-deep-learning-with-pytorch.html</guid>
+        <link>/blog/tech/deeplearning/2017/10/16/getting-started-with-deep-learning-with-pytorch.html</link>
+        <guid isPermaLink="true">/blog/tech/deeplearning/2017/10/16/getting-started-with-deep-learning-with-pytorch.html</guid>
         
         <category>Python</category>
         
@@ -1565,8 +1565,8 @@ ValueError: attempted relative import beyond top-level package
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 15 Sep 2017 00:00:00 +0800</pubDate>
-        <link>https://pyliaorachel.github.io/blog/tech/python/2017/09/15/pythons-import-trap.html</link>
-        <guid isPermaLink="true">https://pyliaorachel.github.io/blog/tech/python/2017/09/15/pythons-import-trap.html</guid>
+        <link>/blog/tech/python/2017/09/15/pythons-import-trap.html</link>
+        <guid isPermaLink="true">/blog/tech/python/2017/09/15/pythons-import-trap.html</guid>
         
         <category>Python</category>
         
@@ -2110,8 +2110,8 @@ If you don&amp;#39;t need a customized configuration, you don&amp;#39;t need to 
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 04 Aug 2017 00:00:00 +0800</pubDate>
-        <link>https://pyliaorachel.github.io/tutorial/devops/docker/2017/08/04/getting-started-with-docker-running-flask-redisdb-and-nginx.html</link>
-        <guid isPermaLink="true">https://pyliaorachel.github.io/tutorial/devops/docker/2017/08/04/getting-started-with-docker-running-flask-redisdb-and-nginx.html</guid>
+        <link>/tutorial/devops/docker/2017/08/04/getting-started-with-docker-running-flask-redisdb-and-nginx.html</link>
+        <guid isPermaLink="true">/tutorial/devops/docker/2017/08/04/getting-started-with-docker-running-flask-redisdb-and-nginx.html</guid>
         
         <category>docker</category>
         
@@ -2295,8 +2295,8 @@ IMPORTANT NOTES:
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 14 Jul 2017 00:00:00 +0800</pubDate>
-        <link>https://pyliaorachel.github.io/blog/tech/system/2017/07/14/nginx-server-ssl-setup-on-aws-ec2-linux-with-letsencrypt.html</link>
-        <guid isPermaLink="true">https://pyliaorachel.github.io/blog/tech/system/2017/07/14/nginx-server-ssl-setup-on-aws-ec2-linux-with-letsencrypt.html</guid>
+        <link>/blog/tech/system/2017/07/14/nginx-server-ssl-setup-on-aws-ec2-linux-with-letsencrypt.html</link>
+        <guid isPermaLink="true">/blog/tech/system/2017/07/14/nginx-server-ssl-setup-on-aws-ec2-linux-with-letsencrypt.html</guid>
         
         <category>ssl</category>
         
@@ -2529,8 +2529,8 @@ So now the server is run under &lt;code&gt;root&lt;/code&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Fri, 07 Jul 2017 00:00:00 +0800</pubDate>
-        <link>https://pyliaorachel.github.io/blog/tech/system/2017/07/07/flask-app-with-gunicorn-on-nginx-server-upon-aws-ec2-linux.html</link>
-        <guid isPermaLink="true">https://pyliaorachel.github.io/blog/tech/system/2017/07/07/flask-app-with-gunicorn-on-nginx-server-upon-aws-ec2-linux.html</guid>
+        <link>/blog/tech/system/2017/07/07/flask-app-with-gunicorn-on-nginx-server-upon-aws-ec2-linux.html</link>
+        <guid isPermaLink="true">/blog/tech/system/2017/07/07/flask-app-with-gunicorn-on-nginx-server-upon-aws-ec2-linux.html</guid>
         
         <category>flask</category>
         
@@ -3270,8 +3270,8 @@ netsh wlan start hostednetwork
 &lt;/ul&gt;
 </description>
         <pubDate>Thu, 13 Apr 2017 00:00:00 +0800</pubDate>
-        <link>https://pyliaorachel.github.io/tutorial/hardware/arduino/2017/04/13/esp8266-with-arduino-trials-and-errors.html</link>
-        <guid isPermaLink="true">https://pyliaorachel.github.io/tutorial/hardware/arduino/2017/04/13/esp8266-with-arduino-trials-and-errors.html</guid>
+        <link>/tutorial/hardware/arduino/2017/04/13/esp8266-with-arduino-trials-and-errors.html</link>
+        <guid isPermaLink="true">/tutorial/hardware/arduino/2017/04/13/esp8266-with-arduino-trials-and-errors.html</guid>
         
         <category>arduino</category>
         
@@ -3355,8 +3355,8 @@ netsh wlan start hostednetwork
 &lt;p&gt;This might not be the most perfect solution, but I bet there is no other simple way to update the schema without dumping the database all away; at least after all of the research, this is the only effective way I found to solve my problem. &lt;/p&gt;
 </description>
         <pubDate>Wed, 29 Mar 2017 00:00:00 +0800</pubDate>
-        <link>https://pyliaorachel.github.io/blog/tech/django/2017/03/29/django-sqlite-db-cleanup.html</link>
-        <guid isPermaLink="true">https://pyliaorachel.github.io/blog/tech/django/2017/03/29/django-sqlite-db-cleanup.html</guid>
+        <link>/blog/tech/django/2017/03/29/django-sqlite-db-cleanup.html</link>
+        <guid isPermaLink="true">/blog/tech/django/2017/03/29/django-sqlite-db-cleanup.html</guid>
         
         <category>django</category>
         
