@@ -15,7 +15,8 @@
 	</head>
 	<body>
 		{% include header.html %}
-		{{ content }}
+            {% include search_results.html %}
+		    {{ content }}
 		{% include footer.html %}
 		<script type="text/javascript" src="/js/main.js"></script>
 		<script type="text/javascript" src="/js/home.js"></script>
@@ -23,10 +24,10 @@
 		<script type="text/javascript" src="/js/simple-jekyll-search.min.js"></script>
         <script>
             window.sjs = new SimpleJekyllSearch({
-                searchInput: document.querySelector('.search-input'),
+                searchInput: document.getElementById('search-input'),
                 resultsContainer: document.getElementById('results-container'),
-                json: '/search.json',
-                searchResultTemplate: '<li><a href="{{ site.url }}{url}">{title}</a></li>',
+                json: '{{ site.baseurl }}/search.json',
+                searchResultTemplate: '<li><div><span class="categories">{categories}</span><a class="title" href="{url}">{title}</a><span class="tags">{tags}</span></div><div><span class="date">{date}</span></div></li>',
                 noResultsText: 'No results found.'
             })
         </script>
