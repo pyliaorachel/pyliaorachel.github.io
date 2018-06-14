@@ -2,7 +2,7 @@
 layout: post
 title:  "Reinforcement Learning 健身房：OpenAI Gym"
 categories: Blog Tech Python
-tags: ["Python", "PyLadies", "OpenAI gym"]
+tags: ["Python", "PyLadies", "OpenAI gym", "Reinforcement Learning"]
 author: pyliaorachel
 comments: true
 excerpt_separator: <!--more-->
