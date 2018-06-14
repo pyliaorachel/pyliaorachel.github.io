@@ -29,9 +29,8 @@
 
 			<form class="navbar-form navbar-left">
 				<div class="form-group">
-					<input type="text" class="form-control" id="search-input" placeholder="Search posts">
+					<input type="text" class="form-control" id="search-input" placeholder="Search posts from site">
 				</div>
-				<button type="submit" class="btn btn-default">Submit</button>
 			</form>
 
 			<ul class="nav navbar-nav navbar-right" id="nav-links">
@@ -109,7 +108,9 @@
 	</div><!-- /.container-fluid -->
 </nav>
 
-		<main class="page-content blog" aria-label="Content">
+            <div id="results-container"></div>
+
+		    <main class="page-content blog" aria-label="Content">
 	<div class="blog-wrapper">
 		<div class="blog-main-page">
 
@@ -877,6 +878,7 @@ with the pain and gain from the alternative deployment on an AWS EC2 Linux serve
 
 	</div>
 </main>
+
 		<footer>
 	<div class="container-fluid">
 		<div class="row">
@@ -919,10 +921,10 @@ with the pain and gain from the alternative deployment on an AWS EC2 Linux serve
 		<script type="text/javascript" src="/js/simple-jekyll-search.min.js"></script>
         <script>
             window.sjs = new SimpleJekyllSearch({
-                searchInput: document.querySelector('.search-input'),
+                searchInput: document.getElementById('search-input'),
                 resultsContainer: document.getElementById('results-container'),
                 json: '/search.json',
-                searchResultTemplate: '<li><a href="{url}">{title}</a></li>',
+                searchResultTemplate: '<li><div><span class="categories">{categories}</span><a class="title" href="{url}">{title}</a><span class="tags">{tags}</span></div><div><span class="date">{date}</span></div></li>',
                 noResultsText: 'No results found.'
             })
         </script>
