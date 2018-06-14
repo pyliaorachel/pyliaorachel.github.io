@@ -401,12 +401,12 @@ Parse categories as <code>label</code> and values as <code>value</code> for cate
         <script id="dsq-count-scr" src="//pyliaorachel.disqus.com/count.js" async></script>
 		<script type="text/javascript" src="/js/simple-jekyll-search.min.js"></script>
         <script>
-            window.sjs = SimpleJekyllSearch({
+            window.sjs = new SimpleJekyllSearch({
                 searchInput: document.querySelector('.search-input'),
                 resultsContainer: document.getElementById('results-container'),
                 json: '/search.json',
-                searchResultTemplate: '<li><a href="{url}">{title}</a></li>'
-                noResultsText: 'No results found.',
+                searchResultTemplate: '<li><a href="{url}">{title}</a></li>',
+                noResultsText: 'No results found.'
             })
         </script>
 	</body>
