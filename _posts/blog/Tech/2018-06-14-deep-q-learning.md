@@ -47,7 +47,7 @@ GitHub 完整程式碼：[https://github.com/pyliaorachel/openai-gym-cartpole](h
 
 #### Step 1: 建立 Network
 
-首先建立一層 hidden layer 的 neural network，目標是把 state 傳入後，得出每個 action 的分數，分數越高的 action 越有機會被挑選。而我們的目標是在當前 state 下，讓越有利的 action 分數能越高。
+首先建立一層 hidden layer 的 neural network，把 state 傳入後，得出每個 action 的分數，分數越高的 action 越有機會被挑選。而我們的目標是在當前 state 下，讓對未來越有利的 action 分數能越高。
 
 ```python
 class Net(nn.Module):
