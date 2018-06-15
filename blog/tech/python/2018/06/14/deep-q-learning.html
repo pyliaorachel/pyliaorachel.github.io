@@ -170,7 +170,7 @@
 
 <h4>Step 1: 建立 Network</h4>
 
-<p>首先建立一層 hidden layer 的 neural network，目標是把 state 傳入後，得出每個 action 的分數，分數越高的 action 越有機會被挑選。而我們的目標是在當前 state 下，讓越有利的 action 分數能越高。</p>
+<p>首先建立一層 hidden layer 的 neural network，把 state 傳入後，得出每個 action 的分數，分數越高的 action 越有機會被挑選。而我們的目標是在當前 state 下，讓對未來越有利的 action 分數能越高。</p>
 <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">Net</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_states</span><span class="p">,</span> <span class="n">n_actions</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Net</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
