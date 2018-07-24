@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>用 Python 玩硬體：MicroPython 簡介與實作</title>
+		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+		<link rel="stylesheet" href="/css/main.css" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono|Amatic+SC:700" rel="stylesheet">
+		<link rel="stylesheet" href="/css/github-markdown.css">
+
+		<!-- Place jquery before bootstrap -->
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="/">MyCoon</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="navbar-collapse">
+
+			<form class="navbar-form navbar-left">
+				<div class="form-group">
+					<input type="text" class="form-control" id="search-input" placeholder="Search posts from site">
+				</div>
+			</form>
+
+			<ul class="nav navbar-nav navbar-right" id="nav-links">
+				<li class="nav-home"><a href="/">Home</a></li>
+				<li class="dropdown nav-blog">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Blog<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/blog">MyCoon Blog</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/blog/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/blog/tech">
+									<span>Tech</span>
+									<span>13</span>
+								</a>
+							</li>
+						
+							
+							
+							<li class="category">
+								<a href="/blog/notes">
+									<span>Notes</span>
+									<span>5</span>
+								</a>
+							</li>
+						
+						<li><a href="/blog/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li class="dropdown nav-tutorial">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						Tutorials<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/tutorial">MyCoon Tutorial</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="/tutorial/categories">Categories</a></li>
+						
+							
+						
+
+						
+							
+							
+							<li class="category">
+								<a href="/tutorial/devops">
+								<span>DevOps</span>
+								<span>1</span></a>
+							</li>
+						
+							
+							
+							<li class="category">
+								<a href="/tutorial/hardware">
+								<span>Hardware</span>
+								<span>1</span></a>
+							</li>
+						
+						<li><a href="/tutorial/tags">Tags</a></li>
+					</ul>
+				</li>
+				<li  class="nav-project"><a href="/project">Projects</a></li>
+                <!-- <li class="nav-special" id="special"><a href="#">?</a></li> -->
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+</nav>
+
+            <div id="results-container"></div>
+
+		    <main class="page-content post" aria-label="Content">
+	<div class="post-wrapper">
+		<div class="wrapper">
+	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
+
+		<header class="post-header">
+			<h1 class="post-title" itemprop="name headline">用 Python 玩硬體：MicroPython 簡介與實作</h1>
+			<p class="post-meta">Jul 24, 2018
+				 • Tech
+				 • pyliaorachel
+			</p>
+		</header>
+
+		
+
+		<span class="separator"> • • • </span>
+
+		<div class="post-content" itemprop="articleBody">
+			<p>說到嵌入式系統、物聯網等等硬體，很多靠 Python 吃飯的 PyBoys PyGirls 可能要舉雙手投降，因為控制這些底層大多需要靠 C 語言。但時代不同了，MicroPython 幾年前的推出讓用 Python 控制硬體不是夢。本文將會簡介 MicroPython 的應用，並以載有 ESP8266 Wi-Fi 模組的 NodeMCU 進行簡單資料傳輸實作。除了 MicroPython，硬體新手們不妨也藉此來認識一下物聯網的世界。</p>
+
+<!--more-->
+
+<hr>
+
+<h2>MicroPython 簡介</h2>
+
+<p><a href="https://github.com/micropython/micropython">MicroPython</a> 是 2013 年在 Kickstarter 上募資開始建立的，顧名思義就是因為小型硬體資源有限，而將 Python 濃縮成一款小型包，載入硬體微控制器的一項開源專案，目前已經能移植於 Arduino 和 ESP8266 等板子，亦有自己專屬的開發板。</p>
+
+<p>那 MicroPython 要怎麼寫呢？對，就跟 Python 一模一樣。MicroPython 除了留有 Python 的許多迷你化的標準函式庫，也有例如 <code>machine</code>、<code>network</code> 等硬體相關的專屬函式庫控制硬體相關功能。詳細可參考<a href="https://docs.micropython.org/en/latest/esp8266/library/index.html#python-standard-libraries-and-micro-libraries">官方文件</a>。</p>
+
+<p>聽起來真方便，那就直接來實作吧！</p>
+
+<h2>實作</h2>
+
+<p>這次筆者看看手上的資源，選擇不多，挑了能載入 MicroPython 且有 Wi-Fi 功能的 NodeMCU 開發套件進行小 demo，任務是把（假裝有的）sensor 收集到的 data 透過網路上傳到自己建立的 API。如果手邊剛好也有，或是有在地上撿到這塊板子，就一起試試吧，不然筆者是不是在唬爛也很難知道。</p>
+
+<p>GitHub 原始碼：<a href="https://github.com/pyliaorachel/esp8266-micropython">https://github.com/pyliaorachel/esp8266-micropython</a></p>
+
+<h3>NodeMCU 與 ESP8266</h3>
+
+<p><img src="https://5.imimg.com/data5/YK/YF/MY-25117786/nodemcu-esp8266-12e-wi-fi-module-500x500.png" alt="NodeMCU"></p>
+
+<p>跟對物聯網不熟悉的朋友簡單介紹一下。ESP8266 就是相片左邊突出的那一小塊，備有 Wi-Fi 功能，本身也是集有 GPIO （General-Purpose I/O）、serial 腳位 (TX / RX) 等接口的控制板。GPIO 可以接收/傳輸 binary data，也就是 1 （高電位）或 0 （低電位），或是跟 ADC （Analog-to-Digital Converter）連接以接收類比訊號，或以 PWM（Pulse Width Modulation） 模擬類比訊號進行傳輸。在物聯網的世界裡， GPIO 主要用來連接其他 sensor 收集資料，例如溫度、光線等等。</p>
+
+<p>ESP8266 最原汁原味的版本（ESP-01）非常有意思，上傳一份 code 要各種腳位交互接地，GPIO 只有兩個成不了大事等等，可以參考我之前的<a href="https://pyliaorachel.github.io/tutorial/hardware/arduino/2017/04/13/esp8266-with-arduino-trials-and-errors.html">血淚經驗</a>（簡短版：珍惜生命，遠離 ESP-01）。這塊 NodeMCU 十分了解你的不便，因此幫忙封裝了一番，除了採用具有多個 GPIO 的 ESP-12 版本，還連接了 micro USB 轉接器，讓你直接用 micro USB 傳輸線和電腦溝通，類似於有 Wi-Fi 的 Arduino 開發板。內部載有 NodeMCU 韌體，可以用 Lua 撰寫程式控制硬體。</p>
+
+<p>而接下來我們要做的就是重新燒錄 MicroPython 韌體，便能開始用 Python 控制這塊板子啦。</p>
+
+<h3>硬體設置</h3>
+
+<p><a href="https://docs.micropython.org/en/latest/esp8266/esp8266/tutorial/intro.html">官方文件</a>有完整教學，我 GitHub repo 裡的 <a href="https://github.com/pyliaorachel/esp8266-micropython">README</a> 也有簡潔的步驟，這邊簡單講解：</p>
+
+<ol>
+<li>安裝工具
+
+<ol>
+<li><code>$pip install esptool</code>，用來跟 ESP 晶片溝通</li>
+<li><code>$pip install adafruit-ampy</code>，用來和板子進行傳輸</li>
+</ol></li>
+<li>燒錄韌體
+
+<ol>
+<li>NodeMCU 用 micro USB to USB 線接到電腦</li>
+<li>查看是哪個 USB port，Mac 的話可以用 <code>$ ls /dev/tty.*</code> 找，其他自己 google （跩）</li>
+<li><a href="http://micropython.org/download#esp8266">下載韌體</a></li>
+<li>燒毀！好啦燒錄：<code>$ esptool.py --port &lt;port-name&gt; write_flash --flash_size=detect 0 &lt;firmware-file&gt;</code></li>
+</ol></li>
+</ol>
+
+<h3>Data 傳送</h3>
+
+<p>我們的任務是，假裝有一個 temperature sensor，每 10 秒收集一次 data，並傳到 Firebase 的 API，傳完時 LED 閃一下告知。這個 API 當然不用是 Firebase 的，可以自己另建。我把建置 Firebase API 的步驟寫在附錄裡供新手參考。</p>
+
+<h4>撰寫主程式</h4>
+
+<p>MicroPython 主要偵測兩個檔案。一是 <code>boot.py</code>，開機時執行，可以在此執行一些系統設定，這裏我沒有另外加東西，就是原本預設的 code。二是 <code>main.py</code>，跑完 <code>boot.py</code> 就來跑它，所以通常裡面是無限迴圈。</p>
+
+<p>另外還有一個自己加的 <code>config.py</code> 放一些客製化的設定，如網路 SSID、密碼、和 API URL。GitHub 上有一個 <code>config.py.template</code> 供參考，因為我不能讓你連我家 Wi-Fi 或 call 爆我的 API。</p>
+
+<p>接下來程式有四個部分：</p>
+
+<h6>1. 連接網路</h6>
+
+<p>網路部分由 <code>network</code> module 負責。我們定義一個 <code>do_connect</code> 負責連接網路：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">network</span>
+<span class="kn">import</span> <span class="nn">config</span>
+
+<span class="k">def</span> <span class="nf">do_connect</span><span class="p">():</span>
+    <span class="c"># 設置成 station mode 以連接外部網路 </span>
+    <span class="n">sta_if</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">WLAN</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">STA_IF</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">sta_if</span><span class="o">.</span><span class="n">isconnected</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'Connecting to network...'</span><span class="p">)</span>
+        <span class="n">sta_if</span><span class="o">.</span><span class="n">active</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">sta_if</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">SSID</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">PASSWORD</span><span class="p">)</span>
+
+        <span class="c"># 等一下它連接</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">sta_if</span><span class="o">.</span><span class="n">isconnected</span><span class="p">():</span>
+            <span class="k">pass</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">'Network connected!'</span><span class="p">)</span>
+</code></pre></div>
+<h6>2. 收集 data，上傳 API</h6>
+
+<p>因為手邊沒有真的 sensor，這邊直接 hard code 一個值，可替換成從真的 sensor 讀值。
+上傳部分用 <code>urequests</code> module，也就是一般見到的 <code>requests</code> module 的迷你版。</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">urequests</span>
+
+<span class="k">def</span> <span class="nf">get_data</span><span class="p">():</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="s">'temperature'</span><span class="p">:</span> <span class="mf">25.6</span> <span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">send_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Sending data...'</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">urequests</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">URL</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">'Response: {}'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+    <span class="n">flash_led</span><span class="p">()</span> <span class="c"># Step 3</span>
+</code></pre></div>
+<h6>3. 添加 LED 提示燈</h6>
+
+<p>最後上傳完成的時候，希望 LED 燈能閃一下告知。硬體控制部分由 <code>machine</code> module 負責：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">machine</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="k">def</span> <span class="nf">flash_led</span><span class="p">():</span>
+    <span class="n">led</span> <span class="o">=</span> <span class="n">machine</span><span class="o">.</span><span class="n">Pin</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">machine</span><span class="o">.</span><span class="n">Pin</span><span class="o">.</span><span class="n">OUT</span><span class="p">)</span> <span class="c"># LED 在 pin 2，設為輸出</span>
+    <span class="n">led</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c"># 這邊設為 0（低位）其實是 on，1（高位）是 off，但在其他板子上可能會相反</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span> <span class="c"># 亮 0.5 秒</span>
+    <span class="n">led</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+<h6>4. 組合</h6>
+
+<p>主要是一個無窮迴圈，每 10 秒傳一次 data：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">do_connect</span><span class="p">()</span>
+
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">send_data</span><span class="p">(</span><span class="n">get_data</span><span class="p">())</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</code></pre></div>
+<p>最後放個 <code>main()</code> 互叫主函式就行囉！</p>
+
+<h5>上傳程式 &amp; 測試</h5>
+
+<p>上面的程式都是先在 local 端撰寫，寫完再上傳測試。上傳程式到板上需要用到一些工具，這邊選用剛剛裝好的 <code>ampy</code>。</p>
+
+<p>接下來幾個步驟上傳並測試：</p>
+
+<ol>
+<li>上傳程式：<code>$ ampy --port &lt;port-name&gt; put boot.py main.py config.py</code></li>
+<li>按住板上的 reset 鈕，放開時 LED 會閃一下，接著它就會重新開始跑新的程式</li>
+<li>看看 LED 有沒有閃，看看 API 有沒有收到 data</li>
+</ol>
+
+<p>收到的話 Firebase 會長這樣：</p>
+
+<p><img src="https://github.com/pyliaorachel/esp8266-micropython/blob/master/imgs/firebase.png?raw=true" alt="Firebase console"></p>
+
+<p>就成功了！</p>
+
+<h2>結語</h2>
+
+<p>MicroPython 的出現讓許多畏懼低階語言的開發者有機會以高階語言玩玩硬體端，也能加快原本物聯網開發者的開發速度。但目前 MicroPython 包含的函式庫還十分有限，有時候不能做太複雜的專案，例如 email 傳輸因為沒有 <code>imaplib</code> 或 <code>smtplib</code> 而變得困難。期待未來能有更多套件支援以利更多有趣專案的實現，同時亦不失自身精巧的特質。</p>
+
+<h2>參考資料</h2>
+
+<ul>
+<li><a href="https://docs.micropython.org/en/latest/esp8266/index.html">MicroPython 官方文件</a></li>
+<li><a href="http://www.handsontec.com/pdf_learn/esp8266-V10.pdf">NodeMCU 使用手冊</a></li>
+<li><a href="http://yhhuang1966.blogspot.com/2017/04/esp-01-esp8266-micropython.html">MicroPython on ESP8266 -- 小狐狸事務所</a></li>
+</ul>
+
+<h2>附錄：Firebase API 建立</h2>
+
+<ol>
+<li>去 <a href="https://firebase.google.com/">Firebase 官網</a> 建立帳號</li>
+<li><code>GO TO CONSOLE &gt; 新增專案</code>，輸入專案名稱並建立</li>
+<li><code>開發 -&gt; Database -&gt; Realtime Database 建立資料庫 -&gt; 以測試模式啟動</code></li>
+<li><code>https://&lt;project-name&gt;.firebaseio.com/</code> 即為 API 網址</li>
+</ol>
+
+		</div>
+
+		<ul class="tag-list">
+			
+
+			<li class="tag">
+				Python
+			</li>
+
+			
+
+			<li class="tag">
+				PyLadies
+			</li>
+
+			
+
+			<li class="tag">
+				MicroPython
+			</li>
+
+			
+
+			<li class="tag">
+				esp8266
+			</li>
+
+			
+		</ul>
+
+	</article>
+
+	
+		<div id="disqus_thread"></div>
+<script>
+	var disqus_config = function () {
+        this.page.url = "https://pyliaorachel.github.io/blog/tech/python/2018/07/24/micropython-on-esp8266.html";
+        this.page.identifier = "/blog/tech/python/2018/07/24/micropython-on-esp8266";
+	};
+	(function() {
+	    var d = document, s = d.createElement('script');
+        s.src = '//pyliaorachel.disqus.com/embed.js';
+	    s.setAttribute('data-timestamp', +new Date());
+	    (d.head || d.body).appendChild(s);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+	
+</div>
+
+	</div>
+</main>
+
+		<footer>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4 footer-link">
+				<a href="mailto:rachel5566kk@gmail.com">
+					<span class="icon icon-email">
+						<img src="/assets/svg/email-logo.svg" alt="Email Logo">
+					</span>
+					<span class="username">rachel5566kk@gmail.com</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://github.com/pyliaorachel"  target="_blank">
+					<span class="icon icon-github">
+						<img src="/assets/svg/github-logo.svg" alt="GitHub Logo">
+					</span>
+					<span class="username">pyliaorachel</span>
+				</a>
+			</div>
+			<div class="col-md-4 footer-link">
+				<a href="https://tw.linkedin.com/in/peiyu-liao" target="_blank">
+					<span class="icon icon-linkedin">
+						<img src="/assets/svg/linkedin-logo.svg" alt="LinkedIn Logo">
+					</span>
+					<span class="username">Peiyu Liao</span>
+				</a>
+			</div>
+		</div><!-- /.row -->
+		<div class="row">
+			<div class="footer-copy-right">
+				<p>2018	&copy; Liao Peiyu</p>
+			</div >
+		</div><!-- /.row -->
+	</div><!-- /.container-fluid -->
+</footer>
+
+		<script type="text/javascript" src="/js/main.js"></script>
+		<script type="text/javascript" src="/js/home.js"></script>
+        <script id="dsq-count-scr" src="//pyliaorachel.disqus.com/count.js" async></script>
+		<script type="text/javascript" src="/js/simple-jekyll-search.min.js"></script>
+        <script>
+            window.sjs = new SimpleJekyllSearch({
+                searchInput: document.getElementById('search-input'),
+                resultsContainer: document.getElementById('results-container'),
+                json: '/search.json',
+                searchResultTemplate: '<li><div><span class="categories">{categories}</span><a class="title" href="{url}">{title}</a><span class="tags">{tags}</span></div><div><span class="date">{date}</span></div></li>',
+                noResultsText: 'No results found.'
+            })
+        </script>
+	</body>
+</html>

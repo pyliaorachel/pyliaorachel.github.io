@@ -1,6 +1,14 @@
 [
     
         {
+            "title": "用 Python 玩硬體：MicroPython 簡介與實作",
+            "categories": "Blog > Tech > Python",
+            "tags": "<span class=\"tag\">Python</span><span class=\"tag\">PyLadies</span><span class=\"tag\">MicroPython</span><span class=\"tag\">esp8266</span>", 
+            "url": "/blog/tech/python/2018/07/24/micropython-on-esp8266.html",
+            "date": "Jul 24, 2018"
+        } ,
+    
+        {
             "title": "Reinforcement Learning 進階篇：Deep Q-Learning",
             "categories": "Blog > Tech > Python",
             "tags": "<span class=\"tag\">Python</span><span class=\"tag\">PyLadies</span><span class=\"tag\">OpenAI gym</span><span class=\"tag\">Reinforcement Learning</span>", 
