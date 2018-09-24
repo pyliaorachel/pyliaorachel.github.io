@@ -3,20 +3,28 @@
 		"name": "Peiyu Liao (Rachel)",
 		"chineseName": "廖珮妤",
 		"contact": {
-			"email": ["rachel5566kk@gmail.com", "u3512485@connect.hku.hk"],
+			"email": ["pyliao@stanford.edu", "u3512485@connect.hku.hk", "rachel5566kk@gmail.com"],
 			"github": "https://github.com/pyliaorachel",
-			"linkedin": "https://tw.linkedin.com/in/peiyu-liao"
+			"linkedin": "https://www.linkedin.com/in/peiyu-liao/"
 		}
 	},
-	"personalStatement": "my personal statement",
+	"personalStatement": "Just love to learn new things -- web & mobile app development, machine learning, natural language processing, IoT, problem solving, and more.",
 	"education": [
+		{
+			"school": "Stanford University",
+			"location": "California, USA",
+			"start": "201809",
+			"end": "202006",
+			"program": "Master of Science in Computer Science, Artificial Intelligence track",
+			"type": "education"
+		},
 		{
 			"school": "The University of Hong Kong (HKU)",
 			"location": "Hong Kong",
 			"start": "201409",
 			"end": "201805",
 			"program": "Bachelor of Engineering in Computer Engineering",
-			"grade": "CGPA 3.96/4.3",
+			"grade": "CGPA 4.0/4.3",
 			"awards": [
 				"HKU Foundation Scholarship for Outstanding International Students",
 				"Dean’s Honors List (2014-15, 2016-17)",
@@ -52,6 +60,18 @@
 	],
 	"experience": {
 		"work": [
+			{
+				"position": "Summer Research Intern",
+				"company": "Natural Language Understanding Lab (Prof. Keh-Yih Su), Academia Sinica",
+				"location": "Taipei, Taiwan",
+				"start": "201807",
+				"end": "201808",
+				"description": "Designed and implemented a GAN model for paraphrase generation in PyTorch and demonstrated its ability to capture some core paraphrasing techniques through experiments. Awarded the Best Intern Project and Best Paper Presentation.",
+				"highlights": [
+                    "GAN, PyTorch"
+				],
+				"type": "work"
+			},
 			{
 				"position": "Software Engineering Intern",
 				"company": "HDE Inc.",
@@ -208,11 +228,8 @@
 	},
 	"skill": {
 		"technical": {
-			"language": ["C", "C++", "Python", "Java", "Haskell", "MATLAB"],
-			"appDevelopment": ["HTML", "CSS", "JavaScript", "jQuery", "Node.js", "React.js", "React Native", "Django", "Flask"],
-			"database": ["Firebase", "MySQL"],
-			"os": ["Windows", "OSX", "Linux"],
-			"others": ["Shell Script", "Git"]
+			"language": ["C", "C++", "Python", "Java"],
+			"appDevelopment": ["HTML", "CSS", "JavaScript", "React.js", "React Native", "Django"]
 		}	
 	},
 	"language": [
