@@ -6,8 +6,8 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 25 Jul 2018 00:04:58 +0800</pubDate>
-    <lastBuildDate>Wed, 25 Jul 2018 00:04:58 +0800</lastBuildDate>
+    <pubDate>Sun, 23 Sep 2018 23:21:31 -0700</pubDate>
+    <lastBuildDate>Sun, 23 Sep 2018 23:21:31 -0700</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
     
       <item>
@@ -172,7 +172,7 @@
 &lt;li&gt;&lt;code&gt;https://&amp;lt;project-name&amp;gt;.firebaseio.com/&lt;/code&gt; 即為 API 網址&lt;/li&gt;
 &lt;/ol&gt;
 </description>
-        <pubDate>Tue, 24 Jul 2018 00:00:00 +0800</pubDate>
+        <pubDate>Tue, 24 Jul 2018 00:00:00 -0700</pubDate>
         <link>/blog/tech/python/2018/07/24/micropython-on-esp8266.html</link>
         <guid isPermaLink="true">/blog/tech/python/2018/07/24/micropython-on-esp8266.html</guid>
         
@@ -458,7 +458,7 @@
 &lt;li&gt;&lt;a href=&quot;https://www.nature.com/articles/nature24270&quot;&gt;Mastering the game of Go without human knowledge&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-        <pubDate>Thu, 14 Jun 2018 00:00:00 +0800</pubDate>
+        <pubDate>Thu, 14 Jun 2018 00:00:00 -0700</pubDate>
         <link>/blog/tech/python/2018/06/14/deep-q-learning.html</link>
         <guid isPermaLink="true">/blog/tech/python/2018/06/14/deep-q-learning.html</guid>
         
@@ -734,7 +734,7 @@
 &lt;li&gt;&lt;a href=&quot;https://medium.com/@tuzzer/cart-pole-balancing-with-q-learning-b54c6068d947&quot;&gt;Cart-Pole Balancing with Q-Learning&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-        <pubDate>Fri, 01 Jun 2018 00:00:00 +0800</pubDate>
+        <pubDate>Fri, 01 Jun 2018 00:00:00 -0700</pubDate>
         <link>/blog/tech/python/2018/06/01/openai-gym-for-reinforcement-learning.html</link>
         <guid isPermaLink="true">/blog/tech/python/2018/06/01/openai-gym-for-reinforcement-learning.html</guid>
         
@@ -752,6 +752,35 @@
         <category>Tech</category>
         
         <category>Python</category>
+        
+      </item>
+    
+      <item>
+        <title>RLDecipher</title>
+        <description>&lt;p align=&quot;center&quot;&gt;&lt;img width=&quot;518px&quot; height=&quot;178px&quot; src=&quot;https://github.com/pyliaorachel/reinforcement-learning-decipher/blob/master/img/task.png?raw=true&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/pyliaorachel/reinforcement-learning-decipher&quot;&gt;RLDecipher&lt;/a&gt; is a reinforcement learning model that learns to decipher Caesar ciphers and other types of simple ciphers. The model is essentially a Deep Q-Network written in PyTorch.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;p align=&quot;center&quot;&gt;&lt;img width=&quot;596px&quot; height=&quot;439px&quot; src=&quot;https://github.com/pyliaorachel/reinforcement-learning-decipher/blob/master/img/model.png?raw=true&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Detailed technical report can be found &lt;a href=&quot;https://github.com/pyliaorachel/reinforcement-learning-decipher/blob/master/report.pdf&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 21 May 2018 00:00:00 -0700</pubDate>
+        <link>/project/ai/2018/05/21/rl-decipher.html</link>
+        <guid isPermaLink="true">/project/ai/2018/05/21/rl-decipher.html</guid>
+        
+        <category>reinforcement-learning</category>
+        
+        <category>pytorch</category>
+        
+        
+        <category>Project</category>
+        
+        <category>AI</category>
         
       </item>
     
@@ -1211,7 +1240,7 @@ int slow_calc(int x, int a = 0, int b = 0);
 &lt;li&gt;&lt;a href=&quot;https://www.cis.upenn.edu/%7Ecis192/spring2015/files/lec/lec14.pdf&quot;&gt;UPenn CIS192 Python Programming: Mixing C with Python/Modules and Packages&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-        <pubDate>Fri, 26 Jan 2018 00:00:00 +0800</pubDate>
+        <pubDate>Fri, 26 Jan 2018 00:00:00 -0800</pubDate>
         <link>/blog/tech/python/2018/01/26/python-c-mixing.html</link>
         <guid isPermaLink="true">/blog/tech/python/2018/01/26/python-c-mixing.html</guid>
         
@@ -1227,6 +1256,35 @@ int slow_calc(int x, int a = 0, int b = 0);
         <category>Tech</category>
         
         <category>Python</category>
+        
+      </item>
+    
+      <item>
+        <title>Resurrecting the Dead</title>
+        <description>&lt;p align=&quot;center&quot;&gt;&lt;img width=&quot;749px&quot; height=&quot;281px&quot; src=&quot;https://github.com/pyliaorachel/resurrecting-the-dead-chinese/blob/master/img/icon.png?raw=true&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/pyliaorachel/resurrecting-the-dead-chinese&quot;&gt;Resurrecting the Dead&lt;/a&gt; is a Chinese language model written in PyTorch trained on a mixed corpus of quotations from ancestors to produce contradictory texts.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;Detailed post can be found on &lt;a href=&quot;https://pyliaorachel.github.io/blog/tech/nlp/2017/12/24/resurrecting-the-dead-chinese.html&quot;&gt;here&lt;/a&gt; or on &lt;a href=&quot;https://pyliaorachel.github.io/blog/tech/nlp/2017/12/24/resurrecting-the-dead-chinese.html&quot;&gt;Medium&lt;/a&gt;.&lt;/p&gt;
+</description>
+        <pubDate>Sun, 24 Dec 2017 00:00:00 -0800</pubDate>
+        <link>/project/nlp/2017/12/24/resurrecting-the-dead.html</link>
+        <guid isPermaLink="true">/project/nlp/2017/12/24/resurrecting-the-dead.html</guid>
+        
+        <category>nlp</category>
+        
+        <category>language-modeling</category>
+        
+        <category>pytorch</category>
+        
+        
+        <category>Project</category>
+        
+        <category>NLP</category>
         
       </item>
     
@@ -1500,7 +1558,7 @@ int slow_calc(int x, int a = 0, int b = 0);
 &lt;li&gt;&lt;a href=&quot;https://machinelearningmastery.com/adam-optimization-algorithm-for-deep-learning/&quot;&gt;Gentle Introduction to the Adam Optimization Algorithm for Deep Learning&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 </description>
-        <pubDate>Sun, 24 Dec 2017 00:00:00 +0800</pubDate>
+        <pubDate>Sun, 24 Dec 2017 00:00:00 -0800</pubDate>
         <link>/blog/tech/nlp/2017/12/24/resurrecting-the-dead-chinese.html</link>
         <guid isPermaLink="true">/blog/tech/nlp/2017/12/24/resurrecting-the-dead-chinese.html</guid>
         
@@ -1732,7 +1790,7 @@ int slow_calc(int x, int a = 0, int b = 0);
 &lt;li&gt;&lt;a href=&quot;https://medium.com/towards-data-science/types-of-optimization-algorithms-used-in-neural-networks-and-ways-to-optimize-gradient-95ae5d39529f&quot;&gt;Types of Optimization Algorithms used in Neural Networks and Ways to Optimize Gradient Descent&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 </description>
-        <pubDate>Mon, 16 Oct 2017 00:00:00 +0800</pubDate>
+        <pubDate>Mon, 16 Oct 2017 00:00:00 -0700</pubDate>
         <link>/blog/tech/deeplearning/2017/10/16/getting-started-with-deep-learning-with-pytorch.html</link>
         <guid isPermaLink="true">/blog/tech/deeplearning/2017/10/16/getting-started-with-deep-learning-with-pytorch.html</guid>
         
@@ -2035,7 +2093,7 @@ ValueError: attempted relative import beyond top-level package
 &lt;li&gt;&lt;a href=&quot;https://www.blog.pythonlibrary.org/2016/03/01/python-101-all-about-imports/&quot;&gt;Python 101: All about imports&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-        <pubDate>Fri, 15 Sep 2017 00:00:00 +0800</pubDate>
+        <pubDate>Fri, 15 Sep 2017 00:00:00 -0700</pubDate>
         <link>/blog/tech/python/2017/09/15/pythons-import-trap.html</link>
         <guid isPermaLink="true">/blog/tech/python/2017/09/15/pythons-import-trap.html</guid>
         
@@ -2580,7 +2638,7 @@ If you don&amp;#39;t need a customized configuration, you don&amp;#39;t need to 
 &lt;li&gt;&lt;a href=&quot;https://runnable.com/docker/docker-compose-networking&quot;&gt;Docker Compose Networking&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-        <pubDate>Fri, 04 Aug 2017 00:00:00 +0800</pubDate>
+        <pubDate>Fri, 04 Aug 2017 00:00:00 -0700</pubDate>
         <link>/tutorial/devops/docker/2017/08/04/getting-started-with-docker-running-flask-redisdb-and-nginx.html</link>
         <guid isPermaLink="true">/tutorial/devops/docker/2017/08/04/getting-started-with-docker-running-flask-redisdb-and-nginx.html</guid>
         
@@ -2598,425 +2656,6 @@ If you don&amp;#39;t need a customized configuration, you don&amp;#39;t need to 
         <category>DevOps</category>
         
         <category>Docker</category>
-        
-      </item>
-    
-      <item>
-        <title>Nginx Server SSL Setup on AWS EC2 Linux with Letsencrypt</title>
-        <description>&lt;p&gt;This post is a followup on &lt;a href=&quot;https://pyliaorachel.github.io/blog/tech/system/2017/07/07/flask-app-with-gunicorn-on-nginx-server-upon-aws-ec2-linux.html&quot;&gt;my previous post on setting up an nginx server on AWS EC2 instance&lt;/a&gt;, and now we are going to support HTTPS to secure our website using a free SSL certificate authority (CA) &lt;a href=&quot;https://letsencrypt.org/&quot;&gt;letsencrypt&lt;/a&gt;.&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;Before you start:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Obtain a domain name and set it up in your EC2 console to point to the public DNS.&lt;/li&gt;
-&lt;li&gt;Understand the basic mechanism of &lt;a href=&quot;https://letsencrypt.org/how-it-works/&quot;&gt;letsencrypt&lt;/a&gt;. This is key to understanding why your setup does or does not work.&lt;/li&gt;
-&lt;li&gt;Remember to open up 443 port and allow source from &lt;code&gt;0.0.0.0/0&lt;/code&gt; in your EC2 console so that ACME can hit on you.&lt;/li&gt;
-&lt;li&gt;We are going to use &lt;a href=&quot;https://certbot.eff.org/&quot;&gt;certbot&lt;/a&gt;, which handles all the tedious works to communicate with &lt;code&gt;letsencrypt&lt;/code&gt; for us. &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;And here are the steps:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Obtain the certificate using &lt;code&gt;certbot&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Modify your &lt;code&gt;nginx&lt;/code&gt; configuration to enable SSL&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;Obtain the Certificate&lt;/h4&gt;
-
-&lt;p&gt;Get &lt;code&gt;certbot&lt;/code&gt; first:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;wget https://dl.eff.org/certbot-auto
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;chmod a+x certbot-auto
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;There are several plugins to use to help us retrieve the certificate. Two popular ones are &lt;a href=&quot;http://letsencrypt.readthedocs.io/en/latest/using.html#webroot&quot;&gt;webroot&lt;/a&gt; and &lt;a href=&quot;http://letsencrypt.readthedocs.io/en/latest/using.html#standalone&quot;&gt;standalone&lt;/a&gt;. If you do not want to stop your server, use &lt;code&gt;webroot&lt;/code&gt;; if you do not want to use existing server software, use &lt;code&gt;standalone&lt;/code&gt;. We will use &lt;code&gt;standalone&lt;/code&gt; below.&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;h6&gt;Using webroot&lt;/h6&gt;
-
-&lt;p&gt;To retrieve the certificate from the CA, your server needs to solve some &lt;a href=&quot;http://letsencrypt.readthedocs.io/en/latest/using.html#getting-certificates-and-choosing-plugins&quot;&gt;challenges&lt;/a&gt;. The challenge is elaborated &lt;a href=&quot;https://letsencrypt.org/how-it-works/&quot;&gt;here&lt;/a&gt;. If you choose to use &lt;code&gt;webroot&lt;/code&gt; as the plugin, the thing to note is that the configuration of your server needs to be able to serve the files created in &lt;code&gt;${webroot}/.well-known/acme-challenge&lt;/code&gt;. You might want to verify that &lt;code&gt;GET /.well-known/acme-challenge&lt;/code&gt; is accessible first.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;To run as standalone, remember to close your services that listen on 80 or 443 ports.&lt;/p&gt;
-
-&lt;p&gt;Let&amp;#39;s write a config file first. We&amp;#39;ll use &lt;code&gt;example.com&lt;/code&gt; as our domain name. At &lt;code&gt;/etc/letsencrypt/configs/example.com.conf&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-conf&quot; data-lang=&quot;conf&quot;&gt;&lt;span class=&quot;c&quot;&gt;# domains to retrieve certificate
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;domains&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;example&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# increase key size
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rsa&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt; = &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# the CA endpoint server
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;https&lt;/span&gt;://&lt;span class=&quot;n&quot;&gt;acme&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;v01&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;letsencrypt&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;org&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;directory&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# the email to receive renewal reminders, IIRC
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;email&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;example&lt;/span&gt;@&lt;span class=&quot;n&quot;&gt;example&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;com&lt;/span&gt; 
-
-&lt;span class=&quot;c&quot;&gt;# turn off the ncurses UI, we want this to be run as a cronjob
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; = &lt;span class=&quot;n&quot;&gt;True&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Run &lt;code&gt;certbot&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;./certbot-auto --standalone --config /etc/letsencrypt/configs/example.com.conf certonly
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;You can skip the above config file as well:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;./certbot-auto --standalone -d example.com certonly
-&lt;span class=&quot;c&quot;&gt;# ...Answer some config questions&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Now you should see &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;
-IMPORTANT NOTES:
- - Congratulations! Your certificate and chain have been saved at
-   /etc/letsencrypt/live/example.com/fullchain.pem. Your cert will
-   expire on xxxx-xx-xx. To obtain a new version of the certificate in
-   the future, simply run Let's Encrypt again.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;You can verify that the certificate and keys exist:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;# Certificate
-/etc/letsencrypt/live/example.com/cert.pem
-
-# Full Chain 
-/etc/letsencrypt/live/example.com/fullchain.pem
-
-# Private Key 
-/etc/letsencrypt/live/example.com/privkey.pem
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4&gt;Modify &lt;code&gt;nginx&lt;/code&gt; configuration&lt;/h4&gt;
-
-&lt;p&gt;Now you&amp;#39;ve got the certificate, we need to configure the nginx for it to take up HTTPS requests.&lt;/p&gt;
-
-&lt;p&gt;Open up your &lt;code&gt;/etc/nginx/nginx.conf&lt;/code&gt; and modify:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-conf&quot; data-lang=&quot;conf&quot;&gt;...
-
-&lt;span class=&quot;n&quot;&gt;http&lt;/span&gt; {
-
-    ...
-
-    &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; {
-        &lt;span class=&quot;n&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt;;
-        &lt;span class=&quot;n&quot;&gt;server_name&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;example&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;;
-        &lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;         /&lt;span class=&quot;n&quot;&gt;usr&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;share&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;nginx&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;html&lt;/span&gt;;
-
-        &lt;span class=&quot;c&quot;&gt;# Load configuration files for the default server block.
-&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;include&lt;/span&gt; /&lt;span class=&quot;n&quot;&gt;etc&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;nginx&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt;/*.&lt;span class=&quot;n&quot;&gt;conf&lt;/span&gt;;
-
-        &lt;span class=&quot;n&quot;&gt;location&lt;/span&gt; / {
-            &lt;span class=&quot;c&quot;&gt;# redirect to HTTPS
-&lt;/span&gt;            &lt;span class=&quot;n&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;301&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;https&lt;/span&gt;://$&lt;span class=&quot;n&quot;&gt;server_name&lt;/span&gt;$&lt;span class=&quot;n&quot;&gt;request_uri&lt;/span&gt;;
-        }
-
-        ...
-    }
-
-    &lt;span class=&quot;c&quot;&gt;# Settings for a TLS enabled server.
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; {
-        &lt;span class=&quot;n&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;443&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ssl&lt;/span&gt;;
-        &lt;span class=&quot;n&quot;&gt;server_name&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;example&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;com&lt;/span&gt;;
-        &lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;         /&lt;span class=&quot;n&quot;&gt;usr&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;share&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;nginx&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;html&lt;/span&gt;;
-
-        &lt;span class=&quot;n&quot;&gt;ssl_certificate&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/etc/letsencrypt/live/example.com/fullchain.pem&quot;&lt;/span&gt;;
-        &lt;span class=&quot;n&quot;&gt;ssl_certificate_key&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;/etc/letsencrypt/live/example.com/privkey.pem&quot;&lt;/span&gt;;
-
-        &lt;span class=&quot;c&quot;&gt;# Automatically route HTTP to HTTPS
-&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;add_header&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Strict&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;Transport&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;Security&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;max-age=31536000&quot;&lt;/span&gt;;
-
-        &lt;span class=&quot;n&quot;&gt;include&lt;/span&gt; /&lt;span class=&quot;n&quot;&gt;etc&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;nginx&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt;/*.&lt;span class=&quot;n&quot;&gt;conf&lt;/span&gt;;
-
-        &lt;span class=&quot;n&quot;&gt;location&lt;/span&gt; / {
-            &lt;span class=&quot;c&quot;&gt;# These are esstential, or your flask app may not correctly redirect
-&lt;/span&gt;            &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Host&lt;/span&gt; $&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;;
-            &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;Real&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;IP&lt;/span&gt; $&lt;span class=&quot;n&quot;&gt;remote_addr&lt;/span&gt;;
-            &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;Forwarded&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;Proto&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;https&lt;/span&gt;;
-            &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;Forwarded&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;Host&lt;/span&gt; $&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;;
-            &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;Forwarded&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;For&lt;/span&gt; $&lt;span class=&quot;n&quot;&gt;proxy_add_x_forwarded_for&lt;/span&gt;;
-
-            &lt;span class=&quot;c&quot;&gt;# Pass to our WSGI server
-&lt;/span&gt;            &lt;span class=&quot;n&quot;&gt;proxy_pass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;://&lt;span class=&quot;n&quot;&gt;unix&lt;/span&gt;:/&lt;span class=&quot;n&quot;&gt;home&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;ec2&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;myproject&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;myproject&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;sock&lt;/span&gt;;
-        }
-
-        ...
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Reload your &lt;code&gt;nginx&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo service nginx reload
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Now you should access your website using &lt;code&gt;https&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Not that the certificate expires in 3 months, so you may want to refer to the nice tutorials in the reference links to set up a cron job and make the renewals.&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;h6&gt;Debug Tips&lt;/h6&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Logs reside in &lt;code&gt;/var/log/letsencrypt/letsencrypt.log&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;If there are permissoin problems, run &lt;code&gt;sudo su - nginx -s /bin/bash -c &amp;quot;ls /home/ec2-user/myproject/myproject.sock&amp;quot;&lt;/code&gt; to test permission from the viewpoint of &lt;code&gt;nginx&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/blockquote&gt;
-
-&lt;h2&gt;References&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://letsencrypt.readthedocs.io/en/latest/using.html&quot;&gt;Certbot Userguide&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://medium.freecodecamp.org/going-https-on-amazon-ec2-ubuntu-14-04-with-lets-encrypt-certbot-on-nginx-696770649e76&quot;&gt;Using the Let’s Encrypt Certbot to get HTTPS on your Amazon EC2 NGINX box&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://gist.github.com/xrstf/581981008b6be0d2224f&quot;&gt;Let&amp;#39;s Encrypt on Ubuntu 14.04, nginx with webroot auth&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://loune.net/2016/01/https-with-lets-encrypt-ssl-and-nginx/&quot;&gt;HTTPS with Let’s Encrypt SSL and Nginx (using certbot)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://nouveauframework.org/blog/installing-letsencrypts-free-ssl-amazon-linux/&quot;&gt;Installing LetsEncrypt’s free SSL on Amazon Linux&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Fri, 14 Jul 2017 00:00:00 +0800</pubDate>
-        <link>/blog/tech/system/2017/07/14/nginx-server-ssl-setup-on-aws-ec2-linux-with-letsencrypt.html</link>
-        <guid isPermaLink="true">/blog/tech/system/2017/07/14/nginx-server-ssl-setup-on-aws-ec2-linux-with-letsencrypt.html</guid>
-        
-        <category>ssl</category>
-        
-        <category>letsencrypt</category>
-        
-        <category>nginx</category>
-        
-        <category>aws</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Tech</category>
-        
-        <category>System</category>
-        
-      </item>
-    
-      <item>
-        <title>Flask App with Gunicorn on Nginx Server upon AWS EC2 Linux</title>
-        <description>&lt;p&gt;The whole setup is modified from this &lt;a href=&quot;https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-14-04&quot;&gt;tutorial&lt;/a&gt;,
-with the pain and gain from the alternative deployment on an AWS EC2 Linux server.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Setup Environment&lt;/li&gt;
-&lt;li&gt;Creating a Flask App&lt;/li&gt;
-&lt;li&gt;Binding with Gunicorn&lt;/li&gt;
-&lt;li&gt;Creating an Upstart Script for Running Gunicorn Server&lt;/li&gt;
-&lt;li&gt;Running with Nginx on AWS EC2&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h4&gt;Setup Environment&lt;/h4&gt;
-
-&lt;p&gt;Install python development tools &amp;amp; &lt;code&gt;nginx&lt;/code&gt;.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo yum update
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo yum install python-pip python-dev nginx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Install &lt;code&gt;virtualenv&lt;/code&gt; from &lt;code&gt;pip&lt;/code&gt; so that the python packages for the flask app will be in isolation.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo pip install virtualenv
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Create the project &amp;amp; setup the virtual environment.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;# create project&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mkdir myproject
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;myproject
-
-&lt;span class=&quot;c&quot;&gt;# create virtualenv&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;virtualenv venv
-
-&lt;span class=&quot;c&quot;&gt;# activate virtualenv&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ./venv/bin/activate
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Now the prompt should look like:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;(venv)user@host:~/myproject$ &lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4&gt;Creating a Flask App&lt;/h4&gt;
-
-&lt;p&gt;Install the dependencies under your virtualenv.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;(venv)user@host:~/myproject$ &lt;/span&gt;pip install gunicorn flask
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Create the app entry file &lt;code&gt;~/myproject/app.py&lt;/code&gt; and write the simplest flask app:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;flask&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flask&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;application&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Flask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;nd&quot;&gt;@application.route&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Hello World!&quot;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;__main__&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;application&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'0.0.0.0'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'8080'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;em&gt;Note that you need to make sure your app is run on an allowed port of the EC2 instance. 
-Check which ports are allowed under &lt;code&gt;AWS EC2 Dashboard &amp;gt; Instances &amp;gt; (select your instance) &amp;gt; Security groups &amp;gt; view inbound rules&lt;/code&gt;.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Test your flask app.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;(venv)user@host:~/myproject$ &lt;/span&gt;python app.py
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Go to your browser and enter the url to your server, appending the port number you specified in &lt;code&gt;app.py&lt;/code&gt;. 
-You should see &lt;code&gt;Hello World!&lt;/code&gt; displayed.&lt;/p&gt;
-
-&lt;h4&gt;Binding with Gunicorn&lt;/h4&gt;
-
-&lt;p&gt;Create the WSGI entrypoint &lt;code&gt;~/myproject/wsgi.py&lt;/code&gt;.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;app&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;application&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;__main__&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;application&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Test it.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;(venv)user@host:~/myproject$ &lt;/span&gt;gunicorn --bind 0.0.0.0:8080 wsgi
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;em&gt;If you didn&amp;#39;t name your app as &lt;code&gt;application&lt;/code&gt;, for example as &lt;code&gt;app&lt;/code&gt;, 
-use &lt;code&gt;wsgi:app&lt;/code&gt; instead of &lt;code&gt;wsgi&lt;/code&gt;, since &lt;code&gt;application&lt;/code&gt; is the name to be picked up by default.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Go to your browser again and read the &lt;code&gt;Hello World!&lt;/code&gt; response.&lt;/p&gt;
-
-&lt;h4&gt;Creating an Upstart Script for Running Gunicorn Server&lt;/h4&gt;
-
-&lt;p&gt;Now let&amp;#39;s make Linux automatically start the server upon booting by providing the upstart script.&lt;/p&gt;
-
-&lt;p&gt;Create a configuration file:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo vim /etc/init/myproject.conf
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Write a little more complicated version than the original tutorial to help you debug:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-conf&quot; data-lang=&quot;conf&quot;&gt;&lt;span class=&quot;n&quot;&gt;description&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Gunicorn application server running myproject&quot;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;runlevel&lt;/span&gt; [&lt;span class=&quot;m&quot;&gt;2345&lt;/span&gt;]
-&lt;span class=&quot;n&quot;&gt;stop&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;runlevel&lt;/span&gt; [!&lt;span class=&quot;m&quot;&gt;2345&lt;/span&gt;]
-
-&lt;span class=&quot;n&quot;&gt;respawn&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PATH&lt;/span&gt;=/&lt;span class=&quot;n&quot;&gt;home&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;ec2&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;myproject&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;venv&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;bin&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PROGRAM_NAME&lt;/span&gt;=&lt;span class=&quot;s2&quot;&gt;&quot;myproject&quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;USERNAME&lt;/span&gt;=&lt;span class=&quot;s2&quot;&gt;&quot;ec2-user&quot;&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# Main script to be run
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;script&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Ready to run...&quot;&lt;/span&gt; &amp;gt;&amp;gt; /&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;/$&lt;span class=&quot;n&quot;&gt;PROGRAM_NAME&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;sys&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;
-
-    &lt;span class=&quot;n&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HOME&lt;/span&gt;=&lt;span class=&quot;s2&quot;&gt;&quot;/home/ec2-user&quot;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;echo&lt;/span&gt; $$ &amp;gt; /&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;/$&lt;span class=&quot;n&quot;&gt;PROGRAM_NAME&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;pid&lt;/span&gt;
-
-    &lt;span class=&quot;n&quot;&gt;cd&lt;/span&gt; /&lt;span class=&quot;n&quot;&gt;home&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;ec2&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;myproject&lt;/span&gt;
-    &lt;span class=&quot;c&quot;&gt;# exec sudo -u ec2-user gunicorn --workers 3 --bind unix:myproject.sock -m 000 wsgi &amp;gt;&amp;gt; /var/log/$PROGRAM_NAME.sys.log 2&amp;gt;&amp;amp;1
-&lt;/span&gt;    &lt;span class=&quot;c&quot;&gt;# exec su -s /bin/sh -c 'exec &quot;$0&quot; &quot;$@&quot;' ec2-user -- gunicorn --workers 3 --bind unix:myproject.sock -m 000 wsgi &amp;gt;&amp;gt; /var/log/$PROGRAM_NAME.sys.log 2&amp;gt;&amp;amp;1
-&lt;/span&gt;    &lt;span class=&quot;n&quot;&gt;exec&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gunicorn&lt;/span&gt; --&lt;span class=&quot;n&quot;&gt;workers&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; --&lt;span class=&quot;n&quot;&gt;bind&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unix&lt;/span&gt;:&lt;span class=&quot;n&quot;&gt;myproject&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;sock&lt;/span&gt; -&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;000&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wsgi&lt;/span&gt; &amp;gt;&amp;gt; /&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;/$&lt;span class=&quot;n&quot;&gt;PROGRAM_NAME&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;sys&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&amp;gt;&amp;amp;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;script&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# Script for debug purpose, run before starting
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pre&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;script&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Starting&quot;&lt;/span&gt; &amp;gt;&amp;gt; /&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;/$&lt;span class=&quot;n&quot;&gt;PROGRAM_NAME&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;sys&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;script&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# Script for debug purpose, run before stopping
-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pre&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;stop&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;script&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;rm&lt;/span&gt; /&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;/$&lt;span class=&quot;n&quot;&gt;PROGRAM_NAME&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;pid&lt;/span&gt;/
-    &lt;span class=&quot;n&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Stopping&quot;&lt;/span&gt; &amp;gt;&amp;gt; /&lt;span class=&quot;n&quot;&gt;var&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;/$&lt;span class=&quot;n&quot;&gt;PROGRAM_NAME&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;sys&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;script&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Notes here:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;code&gt;PATH&lt;/code&gt; is for running the server under our virtual environment&lt;/li&gt;
-&lt;li&gt;Note the commented out &lt;code&gt;exec&lt;/code&gt; scripts that produce errors; 
-I intended to switch user by doing that, since &lt;code&gt;setuid&lt;/code&gt; and &lt;code&gt;setgid&lt;/code&gt; is not supported on EC2 Linux instance. 
-These commands are from &lt;a href=&quot;https://www.thedevopsdoctors.com/blog/2016/4/8/init-scripts-for-web-apps-on-linux-and-why-you-should-be-using-them&quot;&gt;these&lt;/a&gt; &lt;a href=&quot;https://deepumohan.com/tech/setting-up-apache-airflow-on-aws-ec2-instance/&quot;&gt;places&lt;/a&gt; and &lt;a href=&quot;https://serverfault.com/questions/357060/how-should-i-use-sudo-from-an-upstart-script&quot;&gt;here&lt;/a&gt;. Feel free to provide a correct version...
-So now the server is run under &lt;code&gt;root&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;-m&lt;/code&gt; flag is the umask; for umask value &lt;code&gt;000&lt;/code&gt;, the permission would be &lt;code&gt;777&lt;/code&gt;. This is insecure though, but since I have not found a way to set the access right to a specific user and group, the hooking with nginx only works when the permission is allowed for all users (as the nginx server we will set up later runs as user &lt;code&gt;nginx&lt;/code&gt;).&lt;/li&gt;
-&lt;li&gt;Echos and &lt;code&gt;&amp;gt;&amp;gt;&lt;/code&gt; are for debugging; see the logs at &lt;code&gt;/var/log/myproject.sys.log&lt;/code&gt; if you cannot start your server.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Test it.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;# reload configuration files from /etc/init/*.conf&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo initctl reload-configuration
-
-&lt;span class=&quot;c&quot;&gt;# see if the new job is listed&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo initctl list
-
-&lt;span class=&quot;c&quot;&gt;# try start your server (job); the job name is without the '.conf' extension&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo initctl start myproject
-
-&lt;span class=&quot;c&quot;&gt;# if job is not listed, or error displays and says 'myproject' is not known, there's probably errors in the conf file&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# fix them and go on&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# check if it's actually running&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo initctl status myproject
-&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;myproject start/running, process xxxx
-
-&lt;span class=&quot;c&quot;&gt;# or check with&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;ps aux | grep gunicorn
-
-&lt;span class=&quot;c&quot;&gt;# if the job is not running, see the log at '/var/log/myproject.sys.log'&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# you can echo more messages in the conf file for your own debug purpose&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# you should also notice a socket file created at '/home/ec2-user/myproject/myproject.sock'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4&gt;Running with Nginx on AWS EC2&lt;/h4&gt;
-
-&lt;p&gt;Now setup the nginx server to redirect the traffic received at port 80 (http) to the WSGI (Gunicorn) server running at the unix socket.&lt;/p&gt;
-
-&lt;p&gt;Open the &lt;code&gt;/etc/nginx/nginx.conf&lt;/code&gt; file, find the section and write:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-conf&quot; data-lang=&quot;conf&quot;&gt;...
-&lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; {
-        &lt;span class=&quot;n&quot;&gt;listen&lt;/span&gt;       &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;default_server&lt;/span&gt;;
-        &lt;span class=&quot;n&quot;&gt;listen&lt;/span&gt;       [::]:&lt;span class=&quot;m&quot;&gt;80&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;default_server&lt;/span&gt;;
-        &lt;span class=&quot;n&quot;&gt;server_name&lt;/span&gt;  &amp;lt;&lt;span class=&quot;n&quot;&gt;your&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;domain&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&amp;gt;;                                    &lt;span class=&quot;c&quot;&gt;# &amp;lt;- replace with your own one
-&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;         /&lt;span class=&quot;n&quot;&gt;usr&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;share&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;nginx&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;html&lt;/span&gt;;
-
-        ...
-
-        &lt;span class=&quot;n&quot;&gt;location&lt;/span&gt; / {
-            &lt;span class=&quot;n&quot;&gt;proxy_pass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;://&lt;span class=&quot;n&quot;&gt;unix&lt;/span&gt;:/&lt;span class=&quot;n&quot;&gt;home&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;ec2&lt;/span&gt;-&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;myproject&lt;/span&gt;/&lt;span class=&quot;n&quot;&gt;myproject&lt;/span&gt;.&lt;span class=&quot;n&quot;&gt;sock&lt;/span&gt;; &lt;span class=&quot;c&quot;&gt;# &amp;lt;- add this
-&lt;/span&gt;        }
-
-        ...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;This will route the traffic to the specified socket.&lt;/p&gt;
-
-&lt;p&gt;Test it.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo nginx -t
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;If ok, start the server:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo service nginx restart
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Go to the browser, and without specifying the port number now (default to 80). The request will hit the nginx proxy server, and the nginx server will pass it to the WSGI server, which talks to the flask app. Check if it successfully returns &lt;code&gt;Hello World!&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;If not, there may be multiple reasons. The one that I encountered is solved by changing the permission of the home directory:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;chmod 711 /home/ec2-user
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Remember to restart.&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;h6&gt;Debug Tips&lt;/h6&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Echo message to &lt;code&gt;/var/log/xxx.sys.log&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;tail -f /var/log/nginx/access.log&lt;/code&gt; to check nginx logs&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;netstat -anp | less&lt;/code&gt; to show network status&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/blockquote&gt;
-
-&lt;h2&gt;References&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-gunicorn-and-nginx-on-ubuntu-14-04&quot;&gt;How To Serve Flask Applications with Gunicorn and Nginx on Ubuntu 14.04&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://nginx.org/en/docs/beginners_guide.html#conf_structure&quot;&gt;NGINX Beginner&amp;#39;s Guide&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Fri, 07 Jul 2017 00:00:00 +0800</pubDate>
-        <link>/blog/tech/system/2017/07/07/flask-app-with-gunicorn-on-nginx-server-upon-aws-ec2-linux.html</link>
-        <guid isPermaLink="true">/blog/tech/system/2017/07/07/flask-app-with-gunicorn-on-nginx-server-upon-aws-ec2-linux.html</guid>
-        
-        <category>flask</category>
-        
-        <category>gunicorn</category>
-        
-        <category>nginx</category>
-        
-        <category>aws</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Tech</category>
-        
-        <category>System</category>
         
       </item>
     

@@ -25,11 +25,27 @@
         } ,
     
         {
+            "title": "RLDecipher",
+            "categories": "Project > AI",
+            "tags": "<span class=\"tag\">reinforcement-learning</span><span class=\"tag\">pytorch</span>", 
+            "url": "/project/ai/2018/05/21/rl-decipher.html",
+            "date": "May 21, 2018"
+        } ,
+    
+        {
             "title": "如Py似C：Python 與 C 的共生法則",
             "categories": "Blog > Tech > Python",
             "tags": "<span class=\"tag\">Python</span><span class=\"tag\">PyLadies</span><span class=\"tag\">C</span>", 
             "url": "/blog/tech/python/2018/01/26/python-c-mixing.html",
             "date": "Jan 26, 2018"
+        } ,
+    
+        {
+            "title": "Resurrecting the Dead",
+            "categories": "Project > NLP",
+            "tags": "<span class=\"tag\">nlp</span><span class=\"tag\">language-modeling</span><span class=\"tag\">pytorch</span>", 
+            "url": "/project/nlp/2017/12/24/resurrecting-the-dead.html",
+            "date": "Dec 24, 2017"
         } ,
     
         {
