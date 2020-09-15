@@ -6,9 +6,132 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 23 Sep 2018 23:21:31 -0700</pubDate>
-    <lastBuildDate>Sun, 23 Sep 2018 23:21:31 -0700</lastBuildDate>
+    <pubDate>Tue, 15 Sep 2020 01:12:38 -0700</pubDate>
+    <lastBuildDate>Tue, 15 Sep 2020 01:12:38 -0700</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
+    
+      <item>
+        <title>Knock Knock! Deep Learning / Day 0 / 導讀</title>
+        <description>&lt;p&gt;本系列文《Knock Knock! Deep Learning》旨在以淺顯易懂的文字，嵌入深度學習的概念與自身在史丹佛大學修讀碩士期間的學習心得，融合知識與故事性，成為無論何時何地都不吝於點開的技術分享文。&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;h2&gt;什麼是深度學習？&lt;/h2&gt;
+
+&lt;p&gt;深度學習（Deep Learning）為機器學習（Machine Learning）的一種方法，在 AI 界風行多年，支撐了無數知名專案，如 Google 的機器翻譯及擊敗各路頂尖棋手的圍棋 AI AlphaGo。剩下的自己讀系列文。&lt;/p&gt;
+
+&lt;h2&gt;那麼會探討哪些技術？是否會不夠扎實？&lt;/h2&gt;
+
+&lt;p&gt;本系列文會分為以下幾個部分：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Deep Learning 簡介&lt;/li&gt;
+&lt;li&gt;必備實作知識與工具&lt;/li&gt;
+&lt;li&gt;PyTorch 簡介&lt;/li&gt;
+&lt;li&gt;DL x NLP（自然語言處理）&lt;/li&gt;
+&lt;li&gt;DL x CV（機器視覺）&lt;/li&gt;
+&lt;li&gt;DL x RL（強化學習）&lt;/li&gt;
+&lt;li&gt;DL 的資源競爭&lt;/li&gt;
+&lt;li&gt;結語與學習資源&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;前期偏概念和實作入門，是扎好基本功必須，故事性較少；後期偏應用，有許多實例與故事分享。&lt;/p&gt;
+
+&lt;p&gt;論扎實性，必然是遠遠不及大師撰寫的書及教授的課。但如果目標是這般扎實，建議直接去天瓏找書，或是 Coursera 修課吧。《Knock Knock! Deep Learning》的技術內容會參考史丹佛大學相關課程的課綱及筆記、學術界發表的 paper、知名及個人的 project 經驗來進行分享，讀完後應能掌握深度學習發展的概貌，也能對實際開發自己的深度學習 project 有實作上的概念。&lt;/p&gt;
+
+&lt;h2&gt;深度學習的技術文這麼多，為什麼要看這個系列？&lt;/h2&gt;
+
+&lt;p&gt;網路上深度學習相關的技術文很多，但多半零散無連貫性，適合剛好需要補足某個知識碎片的學習者閱讀。至於深度學習相關的書也很多，但內容完整的多半由大師級人物撰寫，雖然內容嚴謹且帶有深度，但知識量過於龐大的情況下，到中期難免疲於掌握學習重點。&lt;/p&gt;
+
+&lt;p&gt;《Knock Knock! Deep Learning》的取向較為不同，分享的知識難以向大師級教科書並駕齊驅，但以學生的角度出發撰寫，將內容精簡至必備知識，因此作為概念性入門堪稱有力；文中會帶入許多故事性的敘述，含括筆者在史丹佛大學修讀碩士時期的一些學習心得，以及深度學習發展相關的故事。是個可以用閱讀故事的期待打開，並帶著對深度學習技術的概念理解闔上的系列文。&lt;/p&gt;
+
+&lt;h2&gt;需要哪些預備知識&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Python 或其他程式語言概念
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/numpy/numpy&quot;&gt;Numpy&lt;/a&gt;，一個方便進行向量 / 矩陣運算的 library&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Linear Algebra（線性代數）
+
+&lt;ul&gt;
+&lt;li&gt;基本矩陣運算&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Calculus（微積分）
+
+&lt;ul&gt;
+&lt;li&gt;微分知識比較重要，知道 $\frac{d}{dx}f(x)$ 的意義&lt;/li&gt;
+&lt;li&gt;特別是 Matrix Calculus（矩陣微積分），但這可以邊讀邊學&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Probability（機率）
+
+&lt;ul&gt;
+&lt;li&gt;條件機率跟貝氏定理較為重要，也可以邊讀邊學&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;不需要特地去重上一堂課，可以找些簡單的教學影片或文章複習一下就好。有直覺就能讀下去！&lt;/p&gt;
+
+&lt;p&gt;這邊有一些比較完整的英文筆記，可以事先閱讀，或是讀到一半覺得不行了需要釐清概念：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Numpy
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://cs231n.github.io/python-numpy-tutorial/&quot;&gt;Python Numpy Tutorial (with Jupyter and Colab)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Calculus
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://web.stanford.edu/class/cs224n/readings/review-differential-calculus.pdf&quot;&gt;Review of differential calculus theory&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Linear Algebra &amp;amp; Matrix Calculus
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://cs229.stanford.edu/summer2020/cs229-linalg.pdf&quot;&gt;Linear Algebra Review and Reference&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Matrix calculus in Deep Learning
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://cs231n.stanford.edu/handouts/derivatives.pdf&quot;&gt;Derivatives, Backpropagation, and Vectorization&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://web.stanford.edu/class/cs224n/readings/gradient-notes.pdf&quot;&gt;Computing Neural Network Gradients&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://cs229.stanford.edu/summer2020/cs229-prob.pdf&quot;&gt;Review of Probability Theory&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2&gt;還有哪些需要注意的嗎？&lt;/h2&gt;
+
+&lt;p&gt;文章的架構大致為引言、主內容、Checkpoint、參考資料、延伸閱讀，後三者可有可無。歡迎利用 Checkpoint 來自我檢驗是否理解文中的內容了，參考資料深入探究不懂的地方，以及延伸閱讀來拓展知識。&lt;/p&gt;
+
+&lt;p&gt;參考資料和延伸閱讀，寫得真的很棒的資料，前面會加 👍，有興趣的人可以點連結閱讀。&lt;/p&gt;
+
+&lt;p&gt;另外，文中的部分專業名詞會用 English，就不翻成中文了。有些翻成中文很彆扭的詞我也會用英文，上面有示範 paper 和 project。反正你們以後查資料也應該要用英文，何必浪費時間再翻譯一次。&lt;/p&gt;
+
+&lt;h2&gt;Code 連結&lt;/h2&gt;
+
+&lt;p&gt;原始碼都放在 GitHub：&lt;a href=&quot;https://github.com/pyliaorachel/knock-knock-deep-learning&quot;&gt;pyliaorachel/knock-knock-deep-learning&lt;/a&gt;。&lt;/p&gt;
+</description>
+        <pubDate>Tue, 15 Sep 2020 00:00:00 -0700</pubDate>
+        <link>/blog/tech/ai/2020/09/15/day0-preread.html</link>
+        <guid isPermaLink="true">/blog/tech/ai/2020/09/15/day0-preread.html</guid>
+        
+        <category>AI</category>
+        
+        <category>Deep Learning</category>
+        
+        <category>Knock Knock! Deep Learning</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Tech</category>
+        
+        <category>AI</category>
+        
+      </item>
     
       <item>
         <title>用 Python 玩硬體：MicroPython 簡介與實作</title>
@@ -2107,555 +2230,6 @@ ValueError: attempted relative import beyond top-level package
         <category>Tech</category>
         
         <category>Python</category>
-        
-      </item>
-    
-      <item>
-        <title>Getting Started with Docker Running Flask, RedisDB, and NGINX</title>
-        <description>&lt;p&gt;&lt;strong&gt;Docker&lt;/strong&gt; is a trending term nowadays. 
-The concept is called container, which provides isolation for different applications and
-makes possible for the application to be shipped and run on a diversity of platforms.&lt;/p&gt;
-
-&lt;p&gt;In this tutorial, the basic concepts of Docker will be covered, some basic commands introduced, and finally a tutorial on
-how to deploy a &lt;strong&gt;Flask&lt;/strong&gt; app connected to a &lt;strong&gt;Redis&lt;/strong&gt; database and served on &lt;strong&gt;NGINX&lt;/strong&gt; with docker network will be covered.&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;h2&gt;Content&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Introducing Docker &amp;amp; Setup&lt;/li&gt;
-&lt;li&gt;Basic Commands&lt;/li&gt;
-&lt;li&gt;&lt;em&gt;Hands On Time: A Flask Project on Docker&lt;/em&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2&gt;Introducing Docker&lt;/h2&gt;
-
-&lt;h4&gt;The Purpose of Containers&lt;/h4&gt;
-
-&lt;p&gt;For biginners, you can think of &lt;strong&gt;container&lt;/strong&gt; as a &lt;strong&gt;virtual machine&lt;/strong&gt;, or even just a machine. 
-The underlying infrastructure and mechanism is of course not the same, but you will know the purpose of using containers: &lt;strong&gt;running applications independently&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;p&gt;For developers, you often bump into the problem when you want to ship a single application to a different platform 
--- everything regarding the environment might need to be reconfigured again, which means another round of pain. 
-With docker, all the dependencies are packed together with the code into a single container, which you can just lift and go.&lt;/p&gt;
-
-&lt;p&gt;Unlike bulky VMs, which include the entire OS kernel, containers are more lightweight and require less resource.&lt;/p&gt;
-
-&lt;p align=&quot;center&quot;&gt;
-  &lt;img src=&quot;https://www.docker.com/sites/default/files/Container%402x.png&quot; alt=&quot;container infrastructure&quot; width=&quot;300px&quot; height=&quot;300px&quot; /&gt;
-  &lt;img src=&quot;https://www.docker.com/sites/default/files/VM%402x.png&quot; alt=&quot;vm infrastructure&quot; width=&quot;300px&quot; height=&quot;300px&quot; /&gt;
-&lt;/p&gt;
-
-&lt;h4&gt;Setup&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/get-started/#setup&quot;&gt;Install &amp;amp; Setup Docker&lt;/a&gt; &lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/compose/install/&quot;&gt;Install Docker Compose&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;Glossary&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&quot;https://hub.docker.com/&quot;&gt;DockerHub&lt;/a&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;A place for sharing images&lt;/strong&gt;.
-Share your image, or pull existing images from here.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/engine/userguide/storagedriver/imagesandcontainers/&quot;&gt;Image&lt;/a&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;A package including code, libraries, environment variables, and config files that can be run&lt;/strong&gt;.
-Think of it as a set of configurations for a single environment. Hence images can be created, downloaded, shared, etc.
-All it waits for is to be executed, which becomes a container.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/engine/userguide/storagedriver/imagesandcontainers/&quot;&gt;Container&lt;/a&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;A running instance of an image&lt;/strong&gt;.
-Images are configurations residing in storage, and containers bring them into memory.
-Think of &lt;strong&gt;image&lt;/strong&gt; as a certain static environment configuration, and &lt;strong&gt;containers&lt;/strong&gt; are created once you load and run the environment; there can be many container instances running a certain image, but one image defines only one environment.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/engine/swarm/how-swarm-mode-works/services/&quot;&gt;Service&lt;/a&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;An image for a microservice in the context of some larger applications which you with to run in distributed environment&lt;/strong&gt;. You can scale services by starting a set of replicated containers. Docker compose is used to define a set of services.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/engine/tutorials/dockervolumes/#data-volumes&quot;&gt;Volume&lt;/a&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;A directory providing persistent and sharable data&lt;/strong&gt;.
-With out volumes, data will be destroyed once the container is removed.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/get-started/part2/#dockerfile&quot;&gt;Dockerfile&lt;/a&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;An environment configuration file for starting your container.&lt;/strong&gt; 
-The file is composed of a set of instructions related to setting up the environment, 
-such as &lt;em&gt;move this and that to docker&lt;/em&gt;, &lt;em&gt;make this and that port accessible&lt;/em&gt;, &lt;em&gt;run this and that commands when starting&lt;/em&gt;, etc.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/engine/userguide/networking/&quot;&gt;Docker Network&lt;/a&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;A mechanism for a cluster of containers to communicate with each other.&lt;/strong&gt; 
-For a single project, it may contain several containers, one for web app, one for database, one for proxy server, etc.
-Docker network provides a way for them to communicate with each other, while different docker networks remain isolated. More conveniently, while the IP address of each container is dynamic, the name of it in a network is static, hence provide a way to access, for example, container &lt;code&gt;example&lt;/code&gt; with port &lt;code&gt;8080&lt;/code&gt; published, via &lt;code&gt;http://example:8080&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/compose/overview/&quot;&gt;Docker Compose&lt;/a&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;A tool for defining and running a cluster of containers.&lt;/strong&gt;
-For the single project consisting of serveral containers, you may have to &lt;code&gt;docker run&lt;/code&gt; them individually to start the single service.
-Docker compose lets you create and run your services with a single command. Definitions are written in &lt;code&gt;docker-compose.yml&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4&gt;Don&amp;#39;t Mix Up...&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/21553353/what-is-the-difference-between-cmd-and-entrypoint-in-a-dockerfile&quot;&gt;&lt;code&gt;ENTRYPOINT&lt;/code&gt; v.s. &lt;code&gt;CMD&lt;/code&gt;&lt;/a&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Both somehow specify which commands to run when started. 
-The default &lt;code&gt;ENTRYPOINT&lt;/code&gt;, or &lt;code&gt;entrypoint&lt;/code&gt; in &lt;code&gt;docker-compose.yml&lt;/code&gt;, is &lt;code&gt;/bin/sh -c&lt;/code&gt;; the default &lt;code&gt;CMD&lt;/code&gt; is &lt;code&gt;bash&lt;/code&gt;. 
-Consider the command &lt;code&gt;docker run -it some-image /bin/bash&lt;/code&gt;; everything after &lt;code&gt;some-image&lt;/code&gt; is the &lt;code&gt;CMD&lt;/code&gt; (in this case &lt;code&gt;/bin/bash&lt;/code&gt;). 
-Running this command will run &lt;code&gt;ENTRYPOINT + CMD&lt;/code&gt;, i.e. &lt;code&gt;/bin/sh -c /bin/bash&lt;/code&gt;.
-E.g. if you specify the &lt;code&gt;ENTRYPOINT&lt;/code&gt; as &lt;code&gt;ls&lt;/code&gt; and &lt;code&gt;CMD&lt;/code&gt; as &lt;code&gt;.&lt;/code&gt;, the full command looks like &lt;code&gt;docker run --entrypoint=&amp;quot;ls&amp;quot; some-image .&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/22111060/difference-between-expose-and-publish-in-docker&quot;&gt;&lt;code&gt;EXPOSE&lt;/code&gt; v.s. &lt;code&gt;-p&lt;/code&gt;&lt;/a&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;EXPOSE&lt;/code&gt;, or &lt;code&gt;expose&lt;/code&gt; in &lt;code&gt;docker-compose.yml&lt;/code&gt;, is for inter-container communications, e.g. using docker network; 
-the port exposed won&amp;#39;t be accessible to outside of the docker. 
-&lt;code&gt;-p&lt;/code&gt;, or &lt;code&gt;ports&lt;/code&gt; in &lt;code&gt;docker-compose.yml&lt;/code&gt;, publishes the port to the world, including all other containers.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2&gt;Basic Commands&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://docs.docker.com/engine/reference/commandline/image/&quot;&gt;Image&lt;/a&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;# List the current images you have and their details&lt;/span&gt;
-docker images
-
-&lt;span class=&quot;c&quot;&gt;# Download/upload an image from registry&lt;/span&gt;
-docker pull &amp;lt;image-name&amp;gt;[:&amp;lt;tag&amp;gt;]
-    &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; docker pull nginx:latest
-    &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; docker pull someuser/his-image
-
-docker push &amp;lt;image-name&amp;gt;[:&amp;lt;tag&amp;gt;]
-    &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; docker push me/my-image
-
-&lt;span class=&quot;c&quot;&gt;# Remove images&lt;/span&gt;
-docker rmi &amp;lt;image-name|image-id|image-tag&amp;gt;
-
-&lt;span class=&quot;c&quot;&gt;# Remove all images&lt;/span&gt;
-docker rmi &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;docker images -q&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# Create image using Dockerfile under specified path&lt;/span&gt;
-docker build -t &amp;lt;image-name&amp;gt;[:&amp;lt;tag&amp;gt;] &amp;lt;path-to-directory-containing-dockerfile&amp;gt;
-    &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; docker build -t me/my-image .
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://docs.docker.com/engine/reference/run/&quot;&gt;Container&lt;/a&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;# List all running containers&lt;/span&gt;
-docker ps
-
-&lt;span class=&quot;c&quot;&gt;# Show container details&lt;/span&gt;
-docker inspect &amp;lt;container-name|container-id&amp;gt;
-
-&lt;span class=&quot;c&quot;&gt;# Run an image&lt;/span&gt;
-docker run &amp;lt;image-name&amp;gt;
-
-&lt;span class=&quot;c&quot;&gt;# Run an image with container name assigned&lt;/span&gt;
-docker run --name &amp;lt;container-name&amp;gt; &amp;lt;image-name&amp;gt;
-
-&lt;span class=&quot;c&quot;&gt;# Run an image in interative mode, interact with the bash shell created in the container&lt;/span&gt;
-docker run -it &amp;lt;image-name&amp;gt; /bin/bash
-
-&lt;span class=&quot;c&quot;&gt;# Run an image in detached mode, i.e. in background&lt;/span&gt;
-docker run -d &amp;lt;image-name&amp;gt;
-
-&lt;span class=&quot;c&quot;&gt;# Automatically remove the container when it exits&lt;/span&gt;
-docker run --rm &amp;lt;image-name&amp;gt;
-
-&lt;span class=&quot;c&quot;&gt;# Run an image on published port, mapping the port exposed by the container to the host port on my machine&lt;/span&gt;
-docker run -p &amp;lt;host-port&amp;gt;:&amp;lt;container-exposed-port&amp;gt; &amp;lt;image-name&amp;gt;
-    &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; docker run -p 80:8080 nginx
-
-&lt;span class=&quot;c&quot;&gt;# Run an image with volume specified, sharing the directory in the user's path to the container's path&lt;/span&gt;
-docker run -v &amp;lt;user-path&amp;gt;:&amp;lt;container-path&amp;gt; &amp;lt;image-name&amp;gt;
-    &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; docker run -v /etc/nginx:/etc/nginx nginx
-
-&lt;span class=&quot;c&quot;&gt;# Stop a container&lt;/span&gt;
-docker stop &amp;lt;container-name&amp;gt;
-
-&lt;span class=&quot;c&quot;&gt;# Remove a container&lt;/span&gt;
-docker rm &amp;lt;container-name|container-id&amp;gt;
-
-&lt;span class=&quot;c&quot;&gt;# Remove all containers&lt;/span&gt;
-docker rm &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;docker ps -a -q&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://docs.docker.com/engine/reference/commandline/network/&quot;&gt;Docker Network&lt;/a&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;# List all networks&lt;/span&gt;
-docker network ls
-
-&lt;span class=&quot;c&quot;&gt;# Create a network&lt;/span&gt;
-docker network create &amp;lt;network-name&amp;gt;
-
-&lt;span class=&quot;c&quot;&gt;# Connect a network to a container&lt;/span&gt;
-docker network connect &amp;lt;network-name&amp;gt; &amp;lt;container-name&amp;gt;
-
-&lt;span class=&quot;c&quot;&gt;# Or, run a container with network specified&lt;/span&gt;
-docker run --net &amp;lt;network-name&amp;gt; &amp;lt;image-name&amp;gt;
-
-&lt;span class=&quot;c&quot;&gt;# Show network details&lt;/span&gt;
-docker network inspect &amp;lt;network-name&amp;gt;
-
-&lt;span class=&quot;c&quot;&gt;# Remove a network&lt;/span&gt;
-docker network rm &amp;lt;network-name&amp;gt;
-
-&lt;span class=&quot;c&quot;&gt;# Disconnet a container from a network&lt;/span&gt;
-docker network disconnect &amp;lt;network-name&amp;gt; &amp;lt;container-name&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://docs.docker.com/compose/reference/overview/&quot;&gt;Docker Compose&lt;/a&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;# (Re)create and run the service&lt;/span&gt;
-docker-compose up
-
-&lt;span class=&quot;c&quot;&gt;# Remove stopped services&lt;/span&gt;
-docker-compose rm
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2&gt;Hands On Time: A Flask Project on Docker&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/pyliaorachel/docker-flask-redis-nginx-ssl&quot;&gt;Source code&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;In this tutorial, we will create a network first so that containers can communicate within this network. Then we create and test the 3 containers, flask app, redis db, and nginx server, one by one. Finally, we demonstrate how to use docker compose to start the 3 services all at once.&lt;/p&gt;
-
-&lt;h4&gt;Init Project&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Create project named &lt;code&gt;example&lt;/code&gt; with the structure below. Different services are seperated into different folders, each running a container (or serveral containers, if you want to scale).&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;.
-├── README.md
-└── src
-    ├── docker-compose.yml                      &lt;span class=&quot;c&quot;&gt;# docker compose configuration&lt;/span&gt;
-    ├── flaskapp                                &lt;span class=&quot;c&quot;&gt;# Service 1&lt;/span&gt;
-    │   ├── Dockerfile                            &lt;span class=&quot;c&quot;&gt;# image configuration&lt;/span&gt;
-    │   ├── __init__.py
-    │   ├── example
-    │   │   ├── __init__.py
-    │   │   ├── app.py                            &lt;span class=&quot;c&quot;&gt;# flask app entry&lt;/span&gt;
-    │   │   ├── db.py                             &lt;span class=&quot;c&quot;&gt;# APIs to redis db&lt;/span&gt;
-    │   │   └── wsgi.py                           &lt;span class=&quot;c&quot;&gt;# WSGI server entry&lt;/span&gt;
-    │   ├── requirements.txt                      &lt;span class=&quot;c&quot;&gt;# dependency information (production)&lt;/span&gt;
-    │   └── setup.py                              &lt;span class=&quot;c&quot;&gt;# dependency information (development)&lt;/span&gt;
-    ├── nginx                                   &lt;span class=&quot;c&quot;&gt;# Service 2&lt;/span&gt;
-    │   ├── Dockerfile                            &lt;span class=&quot;c&quot;&gt;# image configuration&lt;/span&gt;
-    │   ├── __init__.py
-    │   └── nginx.conf                            &lt;span class=&quot;c&quot;&gt;# nginx server configuration&lt;/span&gt;
-    └── redisdb                                 &lt;span class=&quot;c&quot;&gt;# Service 3&lt;/span&gt;
-        ├── Dockerfile                            &lt;span class=&quot;c&quot;&gt;# image configuration&lt;/span&gt;
-        ├── __init__.py
-        └── redis.conf                            &lt;span class=&quot;c&quot;&gt;# redis server configuration&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Create &lt;code&gt;virtualenv&lt;/code&gt; for each container. Since only &lt;code&gt;flaskapp&lt;/code&gt; need a python environment, we only create this one.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;src/flaskapp
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;virtualenv venv
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Install Packages in &lt;code&gt;virtualenv&lt;/code&gt;.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;src/flaskapp
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source &lt;/span&gt;venv/bin/activate
-&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;venv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pip3 install -e . &lt;span class=&quot;c&quot;&gt;# dev mode&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;venv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;deactivate
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Note that &lt;code&gt;virtualenv&lt;/code&gt; is optional. It can help you test your project in isolated python environment before you deploy it on docker.&lt;/p&gt;
-
-&lt;h4&gt;Create Docker Network&lt;/h4&gt;
-
-&lt;p&gt;Create a &lt;a href=&quot;https://docs.docker.com/engine/userguide/networking/&quot;&gt;Docker network&lt;/a&gt; for communication between the 3 containers below. We will name the network &lt;code&gt;example&lt;/code&gt;, which is the same as our project name.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker network create example
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker network ls
-&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;NETWORK ID          NAME                DRIVER              SCOPE
-&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;...
-&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;abcdefghijkl        example             bridge              &lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Flask App Container&lt;/h4&gt;
-
-&lt;p&gt;The following assumes &lt;code&gt;venv&lt;/code&gt; in &lt;code&gt;src/flaskapp&lt;/code&gt; is activated.&lt;/p&gt;
-
-&lt;h6&gt;Add Flask App &amp;amp; Gunicorn&lt;/h6&gt;
-
-&lt;p&gt;See &lt;code&gt;src/flaskapp/example/app.py&lt;/code&gt; and &lt;code&gt;src/flaskapp/example/wsgi.py&lt;/code&gt;.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;venv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;src/flaskapp
-&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;venv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gunicorn --bind 0.0.0.0:8080 example.wsgi
-
-&lt;span class=&quot;c&quot;&gt;# Open browser and go to `localhost:8080`. You should see `Hello World!`.&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Freeze dependencies into &lt;code&gt;requirements.txt&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;venv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pip3 freeze | grep -v &lt;span class=&quot;s1&quot;&gt;'exampleflask'&lt;/span&gt; &amp;gt; requirements.txt &lt;span class=&quot;c&quot;&gt;# ignore dependency on itself&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h6&gt;&lt;a href=&quot;https://www.smartfile.com/blog/dockerizing-a-python-flask-application/&quot;&gt;Deploy on Docker&lt;/a&gt;&lt;/h6&gt;
-
-&lt;p&gt;See &lt;code&gt;src/flaskapp/Dockerfile&lt;/code&gt;. &lt;code&gt;venv&lt;/code&gt; is made ignored by adding it in &lt;code&gt;.dockerignore&lt;/code&gt;.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Build image with tag &lt;code&gt;yourusername/exampleflask&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;src/flaskapp
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker build -t yourusername/exampleflask .
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Run container on image &lt;code&gt;yourusername/exampleflask&lt;/code&gt; with name &lt;code&gt;exampleflask&lt;/code&gt;, publish port &lt;code&gt;8080&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -d --rm -p 8080:8080 --name exampleflask yourusername/exampleflask
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Open browser and go to &lt;code&gt;localhost:8080&lt;/code&gt;. You should see &lt;code&gt;Hello World!&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Redis DB Container&lt;/h4&gt;
-
-&lt;p&gt;The following assumes &lt;code&gt;venv&lt;/code&gt; in &lt;code&gt;src/flaskapp&lt;/code&gt; is activated.&lt;/p&gt;
-
-&lt;h6&gt;Add Redis DB to Flask App&lt;/h6&gt;
-
-&lt;p&gt;See &lt;code&gt;src/flaskapp/example/db.py&lt;/code&gt;.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Install &lt;a href=&quot;https://redis.io/topics/quickstart&quot;&gt;redis-server&lt;/a&gt; on your local machine first for testing&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Start the server on default port `6397`&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;redis-server
-
-&lt;span class=&quot;c&quot;&gt;# Start the flask app&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;venv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;src/flaskapp
-&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;venv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gunicorn --bind 0.0.0.0:8080 example.wsgi
-
-&lt;span class=&quot;c&quot;&gt;# Open browser and go to `localhost:8080/&amp;lt;your-name&amp;gt;`. You should see `Hello &amp;lt;your-name&amp;gt;!`.&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h6&gt;&lt;a href=&quot;https://docs.docker.com/samples/redis/#start-a-redis-instance&quot;&gt;Deploy on Docker&lt;/a&gt;&lt;/h6&gt;
-
-&lt;p&gt;See &lt;code&gt;src/redisdb/Dockerfile&lt;/code&gt; and &lt;code&gt;src/redisdb/redis.conf&lt;/code&gt;.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Build image with tag &lt;code&gt;yourusername/exampleredis&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;redisdb
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker build -t yourusername/exampleredis .
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Run container on image &lt;code&gt;yourusername/exampleredis&lt;/code&gt; with name &lt;code&gt;exampleredis&lt;/code&gt;, publish port &lt;code&gt;6379&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -d --rm -p 6379:6379 --name exampleredis yourusername/exampleredis
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;redis-cli
-&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;127.0.0.1:6379&amp;gt;
-
-&lt;span class=&quot;c&quot;&gt;# This is wrong&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;not connected&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Stop the containers, now run &lt;code&gt;flaskapp&lt;/code&gt; and &lt;code&gt;redisdb&lt;/code&gt; in docker network &lt;code&gt;example&lt;/code&gt; for communication&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker stop exampleflask exampleredis
-
-&lt;span class=&quot;c&quot;&gt;# No need to publish port for redis, &lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# as the port is `EXPOSE`d in `Dockerfile` to other containers in the same docker network&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -d --rm --net example --name exampleredis yourusername/exampleredis
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -d --rm -p 8080:8080 --net example --name exampleflask yourusername/exampleflask
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Open browser and go to &lt;code&gt;localhost:8080/&amp;lt;your-name&amp;gt;&lt;/code&gt;. You should see &lt;code&gt;Hello &amp;lt;your-name&amp;gt;!&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;em&gt;Note&lt;/em&gt; that &lt;code&gt;Dockerfile&lt;/code&gt; is needed only when you want to use your customized redis server configuration written in &lt;code&gt;redis.conf&lt;/code&gt;. 
-If you don&amp;#39;t need a customized configuration, you don&amp;#39;t need to build a new image yourself and can simply use the base image of &lt;code&gt;redis&lt;/code&gt;:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -d --rm --net example --name exampleredis redis redis-server
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Then modify &lt;code&gt;docker-compose.yml&lt;/code&gt; accordingly.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yml&quot; data-lang=&quot;yml&quot;&gt;&lt;span class=&quot;nn&quot;&gt;...&lt;/span&gt;
-  &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;exampleredis&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;em&gt;Note&lt;/em&gt; that &lt;code&gt;bind 127.0.0.1&lt;/code&gt; in the &lt;code&gt;redis.conf&lt;/code&gt; file &lt;strong&gt;SHOULD&lt;/strong&gt; be changed into &lt;code&gt;bind 0.0.0.0&lt;/code&gt; or else other containers still cannot access the redis server.&lt;/p&gt;
-
-&lt;h4&gt;NGINX Container&lt;/h4&gt;
-
-&lt;h6&gt;Setup an NGINX Server&lt;/h6&gt;
-
-&lt;p&gt;For &lt;code&gt;HTTP&lt;/code&gt; requests, see &lt;code&gt;src/nginx/nginx.conf.sample&lt;/code&gt; and follow &lt;a href=&quot;https://pyliaorachel.github.io/blog/tech/system/2017/07/07/flask-app-with-gunicorn-on-nginx-server-upon-aws-ec2-linux.html&quot;&gt;this tutorial&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;For &lt;code&gt;HTTPS&lt;/code&gt;requests, see &lt;code&gt;src/nginx/nginx-ssl.conf.sample&lt;/code&gt; and follow &lt;a href=&quot;https://pyliaorachel.github.io/blog/tech/system/2017/07/14/nginx-server-ssl-setup-on-aws-ec2-linux-with-letsencrypt.html&quot;&gt;this tutoiral&lt;/a&gt;. Make sure that you have used &lt;a href=&quot;https://letsencrypt.org/&quot;&gt;letsencrypt&lt;/a&gt; or other means to retrieve the certificate and keys.&lt;/p&gt;
-
-&lt;p&gt;Choose either of them, modify the &lt;code&gt;&amp;lt;your-domain-name&amp;gt;&lt;/code&gt; (and &lt;code&gt;your.domain.name&lt;/code&gt; for &lt;code&gt;HTTPS&lt;/code&gt;) in the &lt;code&gt;*.sample&lt;/code&gt; file, and name it &lt;code&gt;nginx.conf&lt;/code&gt;. For HTTPS, if you did not use &lt;code&gt;letsencrypt&lt;/code&gt;, also change the &lt;code&gt;ssl_certificate&lt;/code&gt; and &lt;code&gt;ssl_certificate_key&lt;/code&gt; to the corresponding paths.&lt;/p&gt;
-
-&lt;h6&gt;&lt;a href=&quot;https://hub.docker.com/_/nginx/&quot;&gt;Deploy on Docker&lt;/a&gt;&lt;/h6&gt;
-
-&lt;p&gt;See &lt;code&gt;src/nginx/Dockerfile&lt;/code&gt;.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Build image with tag &lt;code&gt;yourusername/examplenginx&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;src/nginx
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker build -t yourusername/examplenginx .
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Run container on image &lt;code&gt;yourusername/examplenginx&lt;/code&gt; with name &lt;code&gt;examplenginx&lt;/code&gt;, publish port &lt;code&gt;80&lt;/code&gt; (and &lt;code&gt;443&lt;/code&gt; for &lt;code&gt;HTTPS&lt;/code&gt;). (&lt;em&gt;Note that -p 8080:8080 is not needed anymore in starting the flask app container, as we will not access this port directly from the browser anymore but instead access this nginx proxy server&lt;/em&gt;)&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;# HTTP&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -d --rm --net example -p 80:80 --name examplenginx yourusername/examplenginx
-
-&lt;span class=&quot;c&quot;&gt;# HTTPS, share the directory containing SSL certificate with -v&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -d --rm --net example -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt --name examplenginx yourusername/examplenginx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;HTTP&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Open browser and go to &lt;code&gt;http://localhost&lt;/code&gt;. You should see &lt;code&gt;Hello World!&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;HTTPS&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Open browser and go to &lt;code&gt;https://localhost&lt;/code&gt;. You should see &lt;code&gt;Hello World!&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4&gt;Wrap up the Project with Docker Compose&lt;/h4&gt;
-
-&lt;p&gt;After testing individual containers, you can wrap all the commands up into a single &lt;code&gt;docker-compose.yml&lt;/code&gt; file, and everything can be started in a single command. All the parameters passed in to the commands when you started the containers are now specified in &lt;code&gt;docker-compose.yml&lt;/code&gt;. &lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Docker network is not needed anymore, as docker compose creates a default network for all its services. But to build up a more complex network topology, you can create your custom networks in the &lt;code&gt;docker-compose.yml&lt;/code&gt; file as well.&lt;/em&gt;&lt;/p&gt;
-
-&lt;h6&gt;&lt;a href=&quot;https://runnable.com/docker/docker-compose-networking&quot;&gt;Deploy with Docker Compose&lt;/a&gt;&lt;/h6&gt;
-
-&lt;p&gt;See &lt;code&gt;src/docker-compose.yml&lt;/code&gt;.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Start docker compose&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;src
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker-compose up
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;HTTP&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Open browser and go to &lt;code&gt;http://localhost&lt;/code&gt;. You should see &lt;code&gt;Hello World!&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;HTTPS&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Open browser and go to &lt;code&gt;https://localhost&lt;/code&gt;. You should see &lt;code&gt;Hello World!&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-&lt;h4&gt;Debug Tips&lt;/h4&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;Use &lt;code&gt;-it&lt;/code&gt; to run containers in interactive mode so that you can test, view logs, curl other containers, etc. under the environment the app is run in&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;docker run -it --rm -p 8080:8080 --net example --name exampleflask yourusername/exampleflask /bin/bash
-  &amp;gt; root@abcdefghijkl:~#
-
-  &lt;span class=&quot;c&quot;&gt;# try curl other containers in the same network&lt;/span&gt;
-  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;root@abcdefghijkl:~# apt-get -qq update &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt-get -yqq install curl
-  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;root@abcdefghijkl:~# curl &amp;lt;other-container&amp;gt;:&amp;lt;port&amp;gt;
-  &amp;gt; ...
-
-  &lt;span class=&quot;c&quot;&gt;# list networks&lt;/span&gt;
-  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;root@abcdefghijkl:~# cat /etc/hosts
-  &amp;gt; ...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Print the logs of a container&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;docker logs exampleflask
-  &amp;gt; ...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;List the running containers to ensure they didn&amp;#39;t encounter errors&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;docker ps
-  CONTAINER ID        IMAGE                       COMMAND                  CREATED             STATUS              PORTS                    NAMES
-  abcdefghijkl        yourusername/exampleflask   &lt;span class=&quot;s2&quot;&gt;&quot;gunicorn --bind 0...&quot;&lt;/span&gt;   some &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;ago       Up some &lt;span class=&quot;nb&quot;&gt;time        &lt;/span&gt;0.0.0.0:8080-&amp;gt;8080/tcp   exampleflask
-  mnopqrstuvwx        yourusername/exampleredis   &lt;span class=&quot;s2&quot;&gt;&quot;docker-entrypoint...&quot;&lt;/span&gt;   some &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;ago       Up some &lt;span class=&quot;nb&quot;&gt;time        &lt;/span&gt;6379/tcp                 exampleredis
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;List information of the network to ensure the containers are run within&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;docker network inspect example
-  &amp;gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
-      &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-          &lt;span class=&quot;s2&quot;&gt;&quot;Name&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;example&quot;&lt;/span&gt;,
-          &lt;span class=&quot;s2&quot;&gt;&quot;Id&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;...&quot;&lt;/span&gt;,
-          &lt;span class=&quot;s2&quot;&gt;&quot;Created&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;...&quot;&lt;/span&gt;,
-          &lt;span class=&quot;s2&quot;&gt;&quot;Scope&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;local&quot;&lt;/span&gt;,
-          &lt;span class=&quot;s2&quot;&gt;&quot;Driver&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;bridge&quot;&lt;/span&gt;,
-          &lt;span class=&quot;s2&quot;&gt;&quot;EnableIPv6&quot;&lt;/span&gt;: &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;,
-          // ...other properties
-          &lt;span class=&quot;s2&quot;&gt;&quot;Containers&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-              &lt;span class=&quot;s2&quot;&gt;&quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-                  &lt;span class=&quot;s2&quot;&gt;&quot;Name&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;exampleredis&quot;&lt;/span&gt;,
-                  &lt;span class=&quot;s2&quot;&gt;&quot;EndpointID&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy&quot;&lt;/span&gt;,
-                  &lt;span class=&quot;s2&quot;&gt;&quot;MacAddress&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;aa:bb:cc:dd:ee:ff&quot;&lt;/span&gt;,
-                  &lt;span class=&quot;s2&quot;&gt;&quot;IPv4Address&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;w.x.y.z/a&quot;&lt;/span&gt;,
-                  &lt;span class=&quot;s2&quot;&gt;&quot;IPv6Address&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;
-              &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,
-              // ...other container info
-          &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,
-          // ...other properties
-      &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/blockquote&gt;
-
-&lt;h2&gt;References&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/&quot;&gt;Official Doc&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://www.patricksoftwareblog.com/how-to-configure-nginx-for-a-flask-web-application/&quot;&gt;How to Configure NGINX for a Flask Web Application&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://blog.codeship.com/orchestrate-containers-for-development-with-docker-compose/&quot;&gt;Orchestrate Containers for Development with Docker Compose&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.smartfile.com/blog/dockerizing-a-python-flask-application/&quot;&gt;Dockerizing a Python Flask Application&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/samples/redis/&quot;&gt;Docker Redis Samples&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://runnable.com/docker/docker-compose-networking&quot;&gt;Docker Compose Networking&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Fri, 04 Aug 2017 00:00:00 -0700</pubDate>
-        <link>/tutorial/devops/docker/2017/08/04/getting-started-with-docker-running-flask-redisdb-and-nginx.html</link>
-        <guid isPermaLink="true">/tutorial/devops/docker/2017/08/04/getting-started-with-docker-running-flask-redisdb-and-nginx.html</guid>
-        
-        <category>docker</category>
-        
-        <category>flask</category>
-        
-        <category>redisdb</category>
-        
-        <category>nginx</category>
-        
-        
-        <category>Tutorial</category>
-        
-        <category>DevOps</category>
-        
-        <category>Docker</category>
         
       </item>
     

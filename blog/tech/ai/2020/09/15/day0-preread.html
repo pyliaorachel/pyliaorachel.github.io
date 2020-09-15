@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Django SQLite DB Cleanup</title>
+		<title>Knock Knock! Deep Learning / Day 0 / 導讀</title>
 		<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
 		<link rel="stylesheet" href="/css/main.css" type="text/css">
 		<link href="https://fonts.googleapis.com/css?family=Antic+Slab|Catamaran|Hind:300|Inconsolata|Josefin+Sans|Muli:300,400i|Poiret+One|Rajdhani:300|Rock+Salt|Ruda|Scope+One|Shadows+Into+Light|Source+Code+Pro|Space+Mono|Amatic+SC:700" rel="stylesheet">
@@ -116,8 +116,8 @@
 	<article class="post-article" itemscope itemtype="http://schema.org/BlogPosting">
 
 		<header class="post-header">
-			<h1 class="post-title" itemprop="name headline">Django SQLite DB Cleanup</h1>
-			<p class="post-meta">Mar 29, 2017
+			<h1 class="post-title" itemprop="name headline">Knock Knock! Deep Learning / Day 0 / 導讀</h1>
+			<p class="post-meta">Sep 15, 2020
 				 • Tech
 				 • pyliaorachel
 			</p>
@@ -128,71 +128,107 @@
 		<span class="separator"> • • • </span>
 
 		<div class="post-content" itemprop="articleBody">
-			<p>To beginners of Django, you may want to play with the sqlite db configuration commands before you actually implement something related to your project. The cleanup afterwards may be harmful due to the lack of clear instructions found online, and many cleanup should be done manually. Some useful commands and solutions to weird issues will be addressed.</p>
+			<p>本系列文《Knock Knock! Deep Learning》旨在以淺顯易懂的文字，嵌入深度學習的概念與自身在史丹佛大學修讀碩士期間的學習心得，融合知識與故事性，成為無論何時何地都不吝於點開的技術分享文。</p>
 
 <!--more-->
 
-<h4>DB Commands</h4>
+<hr>
 
-<h6><a href="https://docs.djangoproject.com/en/1.10/topics/migrations/">Migrations</a></h6>
+<h2>什麼是深度學習？</h2>
 
-<p><code>python manage.py makemigrations</code>: creating new migrations based on the changes you have made to your models<br>
-<code>python manage.py migrate</code>: applying &amp; unapplying migrations</p>
+<p>深度學習（Deep Learning）為機器學習（Machine Learning）的一種方法，在 AI 界風行多年，支撐了無數知名專案，如 Google 的機器翻譯及擊敗各路頂尖棋手的圍棋 AI AlphaGo。剩下的自己讀系列文。</p>
+
+<h2>那麼會探討哪些技術？是否會不夠扎實？</h2>
+
+<p>本系列文會分為以下幾個部分：</p>
+
+<ol>
+<li>Deep Learning 簡介</li>
+<li>必備實作知識與工具</li>
+<li>PyTorch 簡介</li>
+<li>DL x NLP（自然語言處理）</li>
+<li>DL x CV（機器視覺）</li>
+<li>DL x RL（強化學習）</li>
+<li>DL 的資源競爭</li>
+<li>結語與學習資源</li>
+</ol>
+
+<p>前期偏概念和實作入門，是扎好基本功必須，故事性較少；後期偏應用，有許多實例與故事分享。</p>
+
+<p>論扎實性，必然是遠遠不及大師撰寫的書及教授的課。但如果目標是這般扎實，建議直接去天瓏找書，或是 Coursera 修課吧。《Knock Knock! Deep Learning》的技術內容會參考史丹佛大學相關課程的課綱及筆記、學術界發表的 paper、知名及個人的 project 經驗來進行分享，讀完後應能掌握深度學習發展的概貌，也能對實際開發自己的深度學習 project 有實作上的概念。</p>
+
+<h2>深度學習的技術文這麼多，為什麼要看這個系列？</h2>
+
+<p>網路上深度學習相關的技術文很多，但多半零散無連貫性，適合剛好需要補足某個知識碎片的學習者閱讀。至於深度學習相關的書也很多，但內容完整的多半由大師級人物撰寫，雖然內容嚴謹且帶有深度，但知識量過於龐大的情況下，到中期難免疲於掌握學習重點。</p>
+
+<p>《Knock Knock! Deep Learning》的取向較為不同，分享的知識難以向大師級教科書並駕齊驅，但以學生的角度出發撰寫，將內容精簡至必備知識，因此作為概念性入門堪稱有力；文中會帶入許多故事性的敘述，含括筆者在史丹佛大學修讀碩士時期的一些學習心得，以及深度學習發展相關的故事。是個可以用閱讀故事的期待打開，並帶著對深度學習技術的概念理解闔上的系列文。</p>
+
+<h2>需要哪些預備知識</h2>
 
 <ul>
-<li>Issues
+<li>Python 或其他程式語言概念
 
 <ul>
-<li><a href="http://stackoverflow.com/questions/9373871/django-migrate-table-forum-user-already-exists">table not exists errors</a> occur
-
-<ul>
-<li>Run <code>python manage.py migrate --fake</code> instead</li>
+<li><a href="https://github.com/numpy/numpy">Numpy</a>，一個方便進行向量 / 矩陣運算的 library</li>
 </ul></li>
-<li><a href="http://stackoverflow.com/questions/21457563/operationalerror-no-such-column">column not exists errors</a> occur
+<li>Linear Algebra（線性代數）
 
 <ul>
-<li>Probably due to schema changes not synced with DB tables; check schema with <code>python manage.py inspectdb</code></li>
-<li>Suggest cleaning up the entire database in the following section</li>
+<li>基本矩陣運算</li>
 </ul></li>
+<li>Calculus（微積分）
+
+<ul>
+<li>微分知識比較重要，知道 $\frac{d}{dx}f(x)$ 的意義</li>
+<li>特別是 Matrix Calculus（矩陣微積分），但這可以邊讀邊學</li>
+</ul></li>
+<li>Probability（機率）
+
+<ul>
+<li>條件機率跟貝氏定理較為重要，也可以邊讀邊學</li>
 </ul></li>
 </ul>
 
-<h6>Clean Up</h6>
+<p>不需要特地去重上一堂課，可以找些簡單的教學影片或文章複習一下就好。有直覺就能讀下去！</p>
 
-<p>This is only used when you want to clean up the <strong>entire database</strong>, e.g. you&#39;re playing with your DB and wants to start implementing real things now.</p>
+<p>這邊有一些比較完整的英文筆記，可以事先閱讀，或是讀到一半覺得不行了需要釐清概念：</p>
 
-<ol>
-<li>Dump all data in the DB: <code>python manage.py flush</code> </li>
-<li><a href="https://simpleisbetterthancomplex.com/tutorial/2016/07/26/how-to-reset-migrations.html">Reset migrations</a>:<br>
-<code>find . -path &quot;*/migrations/*.py&quot; -not -name &quot;__init__.py&quot; -delete</code><br>
-<code>find . -path &quot;*/migrations/*.pyc&quot;  -delete</code><br></li>
-<li><a href="https://www.techiediaries.com/how-to-reset-migrations-in-django-17-18-19-and-110/">Discard current schema</a>: <code>rm db.sqlite3</code></li>
-<li>Run migrations again</li>
-</ol>
+<ul>
+<li>Numpy
 
-<p>Now all things should be reset.</p>
+<ul>
+<li><a href="https://cs231n.github.io/python-numpy-tutorial/">Python Numpy Tutorial (with Jupyter and Colab)</a></li>
+</ul></li>
+<li>Calculus
 
-<h6>Schema</h6>
+<ul>
+<li><a href="http://web.stanford.edu/class/cs224n/readings/review-differential-calculus.pdf">Review of differential calculus theory</a></li>
+</ul></li>
+<li>Linear Algebra &amp; Matrix Calculus
 
-<p>Suppose now you already have a bunch of data and you really don&#39;t wanna dump them away. But after you modify the models, you found that the database schema won&#39;t be updated!  </p>
+<ul>
+<li><a href="http://cs229.stanford.edu/summer2020/cs229-linalg.pdf">Linear Algebra Review and Reference</a></li>
+</ul></li>
+<li>Matrix calculus in Deep Learning
 
-<p>Here is the suggested way:  </p>
+<ul>
+<li><a href="http://cs231n.stanford.edu/handouts/derivatives.pdf">Derivatives, Backpropagation, and Vectorization</a></li>
+<li><a href="http://web.stanford.edu/class/cs224n/readings/gradient-notes.pdf">Computing Neural Network Gradients</a></li>
+<li><a href="http://cs229.stanford.edu/summer2020/cs229-prob.pdf">Review of Probability Theory</a></li>
+</ul></li>
+</ul>
 
-<ol>
-<li><code>sqlite3 db.sqlite</code>: enter the sqlite3 shell</li>
-<li><code>&gt;&gt;&gt; .schema</code>: check schema</li>
-<li>Verify your schema. If not matched with models, identify the outdated table and proceed with the following steps; otherwise, there must be other problems.</li>
-<li><code>&gt;&gt;&gt; drop table [table_name]</code>: drop the table</li>
-<li><code>&gt;&gt;&gt; create table [table_name] (...);</code>: create the table again manually with the updated fields</li>
-<li><a href="https://simpleisbetterthancomplex.com/tutorial/2016/07/26/how-to-reset-migrations.html">Reset migrations</a>:<br>
-<code>find . -path &quot;*/migrations/*.py&quot; -not -name &quot;__init__.py&quot; -delete</code><br>
-<code>find . -path &quot;*/migrations/*.pyc&quot;  -delete</code><br></li>
-<li>Run migrations again</li>
-</ol>
+<h2>還有哪些需要注意的嗎？</h2>
 
-<p>Now you can check schema with <code>python manage.py inspectdb</code> again, and the related model should be updated.  </p>
+<p>文章的架構大致為引言、主內容、Checkpoint、參考資料、延伸閱讀，後三者可有可無。歡迎利用 Checkpoint 來自我檢驗是否理解文中的內容了，參考資料深入探究不懂的地方，以及延伸閱讀來拓展知識。</p>
 
-<p>This might not be the most perfect solution, but I bet there is no other simple way to update the schema without dumping the database all away; at least after all of the research, this is the only effective way I found to solve my problem. </p>
+<p>參考資料和延伸閱讀，寫得真的很棒的資料，前面會加 👍，有興趣的人可以點連結閱讀。</p>
+
+<p>另外，文中的部分專業名詞會用 English，就不翻成中文了。有些翻成中文很彆扭的詞我也會用英文，上面有示範 paper 和 project。反正你們以後查資料也應該要用英文，何必浪費時間再翻譯一次。</p>
+
+<h2>Code 連結</h2>
+
+<p>原始碼都放在 GitHub：<a href="https://github.com/pyliaorachel/knock-knock-deep-learning">pyliaorachel/knock-knock-deep-learning</a>。</p>
 
 		</div>
 
@@ -200,13 +236,19 @@
 			
 
 			<li class="tag">
-				django
+				AI
 			</li>
 
 			
 
 			<li class="tag">
-				sqlite
+				Deep Learning
+			</li>
+
+			
+
+			<li class="tag">
+				Knock Knock! Deep Learning
 			</li>
 
 			
@@ -218,8 +260,8 @@
 		<div id="disqus_thread"></div>
 <script>
 	var disqus_config = function () {
-        this.page.url = "https://pyliaorachel.github.io/blog/tech/django/2017/03/29/django-sqlite-db-cleanup.html";
-        this.page.identifier = "/blog/tech/django/2017/03/29/django-sqlite-db-cleanup";
+        this.page.url = "https://pyliaorachel.github.io/blog/tech/ai/2020/09/15/day0-preread.html";
+        this.page.identifier = "/blog/tech/ai/2020/09/15/day0-preread";
 	};
 	(function() {
 	    var d = document, s = d.createElement('script');
