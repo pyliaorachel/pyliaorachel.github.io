@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/pyliaorachel/jekyll-paginate.git
-  revision: 3e9b3748bcd1f0132fb13045d5d233f3cf3c32ed
+  revision: bdeb15e49817e76f3c805ef1dc28a9feb2c28d09
   specs:
     jekyll-paginate (1.1.0)
 
@@ -8,7 +8,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     colorator (1.1.0)
-    ffi (1.9.14)
+    ffi (1.13.1)
     forwardable-extended (2.6.0)
     jekyll (3.2.1)
       colorator (~> 1.0)
@@ -20,26 +20,30 @@ GEM
       pathutil (~> 0.9)
       rouge (~> 1.7)
       safe_yaml (~> 1.0)
-    jekyll-sass-converter (1.4.0)
+    jekyll-sass-converter (1.5.2)
       sass (~> 3.4)
-    jekyll-watch (1.5.0)
-      listen (~> 3.0, < 3.1)
-    kramdown (1.12.0)
+    jekyll-watch (1.5.1)
+      listen (~> 3.0)
+    kramdown (1.17.0)
     liquid (3.0.6)
-    listen (3.0.8)
+    listen (3.2.1)
+      rb-fsevent (~> 0.10, >= 0.10.3)
+      rb-inotify (~> 0.9, >= 0.9.10)
+    mercenary (0.3.6)
+    minima (2.0.0)
+    pathutil (0.16.2)
+      forwardable-extended (~> 2.6)
+    rb-fsevent (0.10.4)
+    rb-inotify (0.10.1)
+      ffi (~> 1.0)
+    redcarpet (3.5.0)
+    rouge (1.11.1)
+    safe_yaml (1.0.5)
+    sass (3.7.4)
+      sass-listen (~> 4.0.0)
+    sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
-    mercenary (0.3.6)
-    minima (1.1.0)
-    pathutil (0.14.0)
-      forwardable-extended (~> 2.6)
-    rb-fsevent (0.9.7)
-    rb-inotify (0.9.7)
-      ffi (>= 0.5.0)
-    redcarpet (3.3.4)
-    rouge (1.11.1)
-    safe_yaml (1.0.4)
-    sass (3.4.22)
 
 PLATFORMS
   ruby
@@ -54,4 +58,4 @@ RUBY VERSION
    ruby 2.7.1p83
 
 BUNDLED WITH
-   1.15.4
+   2.1.4
