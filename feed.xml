@@ -6,282 +6,9 @@
 </description>
     <link>/</link>
     <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 15 Sep 2020 18:10:54 -0700</pubDate>
-    <lastBuildDate>Tue, 15 Sep 2020 18:10:54 -0700</lastBuildDate>
+    <pubDate>Wed, 16 Sep 2020 16:04:54 -0700</pubDate>
+    <lastBuildDate>Wed, 16 Sep 2020 16:04:54 -0700</lastBuildDate>
     <generator>Jekyll v3.2.1</generator>
-    
-      <item>
-        <title>Knock Knock! Deep Learning / Day 1 / Deep Learning 簡介 / 從人腦啟發的 Deep Learning</title>
-        <description>&lt;p&gt;Deep Learning（深度學習）的本體架構稱作 Neural Network（神經網絡），而 Neural Network 內的激活、資訊傳遞等等運作則啟發自人體的神經系統。讓我們簡單從人體的神經元了解 Neural Network 的運作以及 Deep Learning 的概念吧。&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;h2&gt;從神經元到 Perceptron&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/1sF0k8F.png&quot; alt=&quot;neuron&quot;&gt;
-&lt;em&gt;—— 神經元的構造。每門 Deep Learning 的課都會出現這種圖！[1]&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;相信大家國中的時候都認識過人體的神經系統。假設我們現在要判斷一個人是男是女。我們的眼睛、耳朵等等受器會將接收到的訊息，例如這個人的五官輪廓、聲音高低、身高體重等等，藉著神經系統傳遞到大腦，大腦便會得出是男是女的預測。讓電腦學會接收訊息並判斷預測，即是人工智慧的終極目的。&lt;/p&gt;
-
-&lt;p&gt;神經系統的基本元件，意即&lt;strong&gt;神經元（Neuron）&lt;/strong&gt;，構造如圖。感知訊息從上一個神經元經由&lt;strong&gt;突觸&lt;/strong&gt;傳進來，再由&lt;strong&gt;樹突&lt;/strong&gt;整合後傳遞至&lt;strong&gt;細胞體&lt;/strong&gt;。若細胞體形成&lt;strong&gt;動作電位&lt;/strong&gt;，則會將訊息藉由&lt;strong&gt;軸突&lt;/strong&gt;傳遞出去，進入下個神經元 [2]。好的這邊看過就能忘了，我最討厭生物。&lt;/p&gt;
-
-&lt;p&gt;而電腦科學家有了這麼一個想法：仿造神經元，再將之串連再一起，形成&lt;strong&gt;神經網絡（Neural Network）&lt;/strong&gt;。這個早在 1957 年即被發明的人工神經元，稱為 &lt;strong&gt;Perceptron（感知器）&lt;/strong&gt;，也是而後 Neural Network 與 Deep Learning 的開端。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/F5Sxsfg.jpg&quot; alt=&quot;perceptron&quot;&gt;
-&lt;em&gt;—— Perceptron 的構造。[3]&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;一開頭就這麼多數學，別被嚇到了，其實很簡單。&lt;/p&gt;
-
-&lt;p&gt;從最左邊接收訊息，經由 Perceptron 的處理，得出最右邊的小結論。為什麼叫做小結論，因為之後會提到的 Neural Network 中，各個 Perceptron 會把小結論傳到下一層的 Perceptron，而無數 Perceptron 會討論出一個總結，作為 Neural Network 的最終預測。&lt;/p&gt;
-
-&lt;p&gt;讓我們藉由前面預測男女的例子來一步步了解 Perceptron 的構造，以及大致對應神經元的類比：
-- Inputs（接收突觸傳進來的訊息） 
-    - 接收到的訊息，例如人體的特徵。$x_1$ 可能是五官輪廓、$x_2$ 可能是聲音高低等等，共有 $m$ 個特徵幫助預測。
-- Weights（神經元的「設定」）
-    - 權重，可以想像為每個特徵對預測的幫助程度。例如若 $w_1$ 比 $w_2$ 大，那麼這個 Perceptron 在預測時認為 $x_1$ 五官輪廓比 $x_2$ 聲音高低更能分辨男女，便分配高分給 $x_1$。
-- Summation and Bias（樹突整合訊息）
-    - 各個特徵的加權總分為 $w_1 x_1 + w_2 x_2 + ... + w_m x_m = \sum^m_{i=1} w_i x_i$。Bias 是男女判斷標準，預測結果是拿分數對比標準。
-- Activation（細胞體激發）
-    - 根據分數和標準判斷結果的函數。例如分數高於標準為女、低於標準為男，所以有兩種預測結果 1 和 0。這個函式畫出來像個階梯，被稱為 step function。如果把式子中的 $b$ 往右邊移：$\sum wx \ge -b$ 和 $\sum wx &amp;lt; -b$ 則比較容易看出是在跟標準比較。$b$ 的正負不要緊，因為是要學習的值，他會自己做調整。
-- Output（將訊息傳至軸突，以傳遞給下個神經元）
-    - 就是 activation 出來的預測結果了。&lt;/p&gt;
-
-&lt;p&gt;Weights 和 bias 為此 Perceptron 的 &lt;strong&gt;parameter（參數）&lt;/strong&gt;，意即他們的值可藉由訓練調整讓 Perceptron 預測更準確，類似他的設定。至於怎麼調整這些參數以達到準確的預測結果，就是 Deep Learning 的精髓。&lt;/p&gt;
-
-&lt;h2&gt;從 Perceptron 到 Neural Network&lt;/h2&gt;
-
-&lt;p&gt;單單一個仿造神經元的 Perceptron，你可能想說他能做的不多。事實真是如此。Perceptron 只能用來做 &lt;strong&gt;binary linear classification（二元線性分類）&lt;/strong&gt;，也就是為什麼我們需要更複雜的 Neural Network。&lt;/p&gt;
-
-&lt;p&gt;先說什麼是二元線性分類：
-&lt;img src=&quot;https://i.imgur.com/jG0R90a.png&quot; alt=&quot;binary linear classification&quot;&gt;
-&lt;em&gt;—— 貓與非貓線性分類。[4]&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;二元即兩種結果，例如男或女、貓或非貓。線性有比較深入的數學定義，但簡單來說就是在二維平面能畫一條線分開兩組 data point，三維空間能用一塊平面切出兩組 data point，以此往高維類推。圖中藍色 data point 是貓類，紅色 data point 是非貓類，因為我們能用一條線乾淨分開兩類，線性分類在這個 dataset 是成立的。真幸運。&lt;/p&gt;
-
-&lt;p&gt;但如果今天我們 data 長這樣：
-&lt;img src=&quot;https://i.imgur.com/umfdG4K.png&quot; alt=&quot;binary linear classification fails&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;懸賞我今天剛做的起司蛋糕你找不到任何一條線可以切開貓與非貓。Perceptron 是沒辦法學會分類這組 data 的，因為他就只會拿一條直線在那邊擺來擺去。更遺憾的是，真實世界的 data 基本上都跟這組一樣，沒辦法單靠線性分類。&lt;/p&gt;
-
-&lt;p&gt;拿直線想分類這組不行，但彎的線呢？沒問題，這就是 &lt;strong&gt;non-linearity（非線性）&lt;/strong&gt;。想分類更多種類的話，又該如何？那就畫更多條線吧，也就是做更多的 binary classification，合在一起成為 &lt;strong&gt;multiclass classification（多元分類）&lt;/strong&gt;。從 Perceptron 到 Neural Network，便是在加入這些複雜度，讓能力更強大，世界更寬廣。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://i.imgur.com/uncJ51X.jpg&quot; alt=&quot;neural network&quot;&gt;
-&lt;em&gt;—— 一個簡單的 Neural Network。[5]&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;圖中的圓圈類似於一個 Perceptron，稱為 Neuron，不同的是 activation 這一步不侷限於 step function，而可以是很多其他 non-linear function 讓 network 學習彎曲的分類線。&lt;/p&gt;
-
-&lt;p&gt;而 Neural Network 通常是分層的。Input 輸入第一層後，經過 neuron 們的運轉產出第一層的小結論傳給第二層，以此傳到最後一層得到總結。分層的概念也可以類比到人類的感知過程：以判斷一張圖片是否為貓咪為例，前面幾層建立在比較粗糙的訊息上，例如某個地方的顏色、稜角，而後面幾層建立在前面的基礎，有比較高階的概念，例如貓的五官、體型等等，以此作最後判斷就會很準確了。&lt;/p&gt;
-
-&lt;p&gt;Neural Network 輸入叫 input layer、輸出叫 output layer，中間各層稱為 &lt;strong&gt;hidden layer&lt;/strong&gt;。只有一個 hidden layer 的稱之為 Shallow Neural Network，多個 hidden layer 的則為常聽到的 Deep Neural Network。利用 Deep Neural Network 做學習就是 Deep Learning 啦。越多層的 hidden layer 可以習得越複雜的概念，但學習能力受限於硬體資源，沒辦法無限上綱。&lt;/p&gt;
-
-&lt;p&gt;Neural Network 根據 data 的特性有很多變形，以後會慢慢介紹。&lt;/p&gt;
-
-&lt;h2&gt;Neural Network 不同的學習方式&lt;/h2&gt;
-
-&lt;p&gt;最後來簡單介紹一下 Neural Network 有哪些學習方式。&lt;/p&gt;
-
-&lt;h4&gt;Supervised Learning&lt;/h4&gt;
-
-&lt;p&gt;監督式學習。&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;想像一個小孩看著蘋果喊 banana，媽媽會說 no no no，這是 apple。小孩一聽，大腦神經啟動，將這個錯誤回傳給剛剛負責判斷的神經元說，給我調整改進。下次小孩就知道紅紅的圓圓的是 apple 了。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;「監督」在於媽媽有給他「正確答案」，讓學習有效率。訓練的 dataset 如果每筆 data 有 label，也就是答案，就可以透過 supervised learning 學習。例如判斷貓的種類，dataset 每張圖片會搭配該貓的種類當 label，讓 network 進行 supervised learning。&lt;/p&gt;
-
-&lt;h4&gt;Unsupervised Learning&lt;/h4&gt;
-
-&lt;p&gt;非監督式學習。&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;想像一個小孩，媽媽很懶惰不告訴他怎麼分辨水果和非水果。但小孩可以透過一些資訊，例如飯後會吃的、或酸或甜、中間可能有籽等等，自行學會分辨一個東西是不是水果。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;少了「正確答案」，雖然缺乏效率但仍然能夠進行學習。訓練的 dataset 如果 data 沒有 label，就只能透過 unsupervised learning 學習。例如有一堆新聞，沒有人有時間幫忙標註是哪一類的新聞，但可以根據新聞內容等等，以 unsupervised learning 學會做 clustering（聚類分析），知道哪些新聞是相關的。&lt;/p&gt;
-
-&lt;h4&gt;Semi-Supervised Learning&lt;/h4&gt;
-
-&lt;p&gt;半監督式學習。&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;想像一個學生在學英文，判斷副詞。英文老師很忙，不可能每次他碰到一個單字，英文老師都要告訴他是不是副詞。但英文老師會說 actually 是副詞，randomly 也是副詞，幾次之後學生就知道後面有 ly 的大概就是副詞。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;非監督是學習通常是因為取得 label 不易，成本太高，出此下策。而半監督式學習能取得平衡，藉由比 supervised learning 少量許多的 label 進行比 unsupervised learning 更為有效率的學習。&lt;/p&gt;
-
-&lt;h4&gt;Reinforcement Learning&lt;/h4&gt;
-
-&lt;p&gt;強化學習。&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;想像一個小孩，偷了媽媽的零用錢而被毒打一頓。為了不要再被打，小孩下次偷媽媽零用錢的意願就會降低。之後小孩幫忙洗碗，媽媽給了他一點零用錢。為了能賺零用錢，小孩下次會更願意洗碗。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;這種學習模式並沒有標準答案，而是實際做了之後，根據得到的回饋修正自己之後行動的判斷。常見應用在機器人學習動作、玩遊戲等等，知名的 AlphaGo 就是這樣學會圍棋的。&lt;/p&gt;
-
-&lt;h2&gt;Checkpoint&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;一個簡單的 Perceptron 有哪些基本步驟？&lt;/li&gt;
-&lt;li&gt;Perceptron 為何能力受限？&lt;/li&gt;
-&lt;li&gt;Bias 的作用為何？&lt;/li&gt;
-&lt;li&gt;Neural Network 為何需要分層？&lt;/li&gt;
-&lt;li&gt;Neural Network 有哪些不同學習方式？他們的主要差別為何？&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;參考資料&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E7%A5%9E%E7%B6%93%E5%85%83&quot;&gt;Wikipedia - 神經元&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.brainworksrnd.com/mws/brainworks/BrainWorks_5_201109_Web.pdf&quot;&gt;腦力通訊 - 腦力基本：神經元的訊息傳遞&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://towardsdatascience.com/introducing-deep-learning-and-neural-networks-deep-learning-for-rookies-1-bd68f9cf5883&quot;&gt;Introducing Deep Learning and Neural Networks — Deep Learning for Rookies (1)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Perceptron#/media/File:Perceptron_example.svg&quot;&gt;Wikipedia - Perceptron&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.digitaltrends.com/cool-tech/what-is-an-artificial-neural-network/&quot;&gt;What is an artificial neural network? Here’s everything you need to know&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://towardsdatascience.com/types-of-machine-learning-algorithms-you-should-know-953a08248861&quot;&gt;Types of Machine Learning Algorithms You Should Know&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-</description>
-        <pubDate>Wed, 16 Sep 2020 00:00:00 -0700</pubDate>
-        <link>/blog/tech/ai/2020/09/16/day1-deeplearning-motivation.html</link>
-        <guid isPermaLink="true">/blog/tech/ai/2020/09/16/day1-deeplearning-motivation.html</guid>
-        
-        <category>AI</category>
-        
-        <category>Deep Learning</category>
-        
-        <category>Knock Knock! Deep Learning</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Tech</category>
-        
-        <category>AI</category>
-        
-      </item>
-    
-      <item>
-        <title>Knock Knock! Deep Learning / Day 0 / 導讀</title>
-        <description>&lt;p&gt;本系列文《Knock Knock! Deep Learning》旨在以淺顯易懂的文字，嵌入深度學習的概念與自身在史丹佛大學修讀碩士期間的學習心得，融合知識與故事性，成為無論何時何地都不吝於點開的技術分享文。&lt;/p&gt;
-
-&lt;!--more--&gt;
-
-&lt;hr&gt;
-
-&lt;h2&gt;什麼是深度學習？&lt;/h2&gt;
-
-&lt;p&gt;深度學習（Deep Learning）為機器學習（Machine Learning）的一種方法，在 AI 界風行多年，支撐了無數知名專案，如 Google 的機器翻譯及擊敗各路頂尖棋手的圍棋 AI AlphaGo。剩下的自己讀系列文。&lt;/p&gt;
-
-&lt;h2&gt;那麼會探討哪些技術？是否會不夠扎實？&lt;/h2&gt;
-
-&lt;p&gt;本系列文會分為以下幾個部分：&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Deep Learning 簡介&lt;/li&gt;
-&lt;li&gt;必備實作知識與工具&lt;/li&gt;
-&lt;li&gt;PyTorch 簡介&lt;/li&gt;
-&lt;li&gt;DL x NLP（自然語言處理）&lt;/li&gt;
-&lt;li&gt;DL x CV（機器視覺）&lt;/li&gt;
-&lt;li&gt;DL x RL（強化學習）&lt;/li&gt;
-&lt;li&gt;DL 的資源競爭&lt;/li&gt;
-&lt;li&gt;結語與學習資源&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;前期偏概念和實作入門，是扎好基本功必須，故事性較少；後期偏應用，有許多實例與故事分享。&lt;/p&gt;
-
-&lt;p&gt;論扎實性，必然是遠遠不及大師撰寫的書及教授的課。但如果目標是這般扎實，建議直接去天瓏找書，或是 Coursera 修課吧。《Knock Knock! Deep Learning》的技術內容會參考史丹佛大學相關課程的課綱及筆記、學術界發表的 paper、知名及個人的 project 經驗來進行分享，讀完後應能掌握深度學習發展的概貌，也能對實際開發自己的深度學習 project 有實作上的概念。&lt;/p&gt;
-
-&lt;h2&gt;深度學習的技術文這麼多，為什麼要看這個系列？&lt;/h2&gt;
-
-&lt;p&gt;網路上深度學習相關的技術文很多，但多半零散無連貫性，適合剛好需要補足某個知識碎片的學習者閱讀。至於深度學習相關的書也很多，但內容完整的多半由大師級人物撰寫，雖然內容嚴謹且帶有深度，但知識量過於龐大的情況下，到中期難免疲於掌握學習重點。&lt;/p&gt;
-
-&lt;p&gt;《Knock Knock! Deep Learning》的取向較為不同，分享的知識難以向大師級教科書並駕齊驅，但以學生的角度出發撰寫，將內容精簡至必備知識，因此作為概念性入門堪稱有力；文中會帶入許多故事性的敘述，含括筆者在史丹佛大學修讀碩士時期的一些學習心得，以及深度學習發展相關的故事。是個可以用閱讀故事的期待打開，並帶著對深度學習技術的概念理解闔上的系列文。&lt;/p&gt;
-
-&lt;h2&gt;需要哪些預備知識&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Python 或其他程式語言概念
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://github.com/numpy/numpy&quot;&gt;Numpy&lt;/a&gt;，一個方便進行向量 / 矩陣運算的 library&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Linear Algebra（線性代數）
-
-&lt;ul&gt;
-&lt;li&gt;基本矩陣運算&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Calculus（微積分）
-
-&lt;ul&gt;
-&lt;li&gt;微分知識比較重要，知道 $\frac{d}{dx}f(x)$ 的意義&lt;/li&gt;
-&lt;li&gt;特別是 Matrix Calculus（矩陣微積分），但這可以邊讀邊學&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Probability（機率）
-
-&lt;ul&gt;
-&lt;li&gt;條件機率跟貝氏定理較為重要，也可以邊讀邊學&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;不需要特地去重上一堂課，可以找些簡單的教學影片或文章複習一下就好。有直覺就能讀下去！&lt;/p&gt;
-
-&lt;p&gt;這邊有一些比較完整的英文筆記，可以事先閱讀，或是讀到一半覺得不行了需要釐清概念：&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Numpy
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://cs231n.github.io/python-numpy-tutorial/&quot;&gt;Python Numpy Tutorial (with Jupyter and Colab)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Calculus
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://web.stanford.edu/class/cs224n/readings/review-differential-calculus.pdf&quot;&gt;Review of differential calculus theory&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Linear Algebra &amp;amp; Matrix Calculus
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://cs229.stanford.edu/summer2020/cs229-linalg.pdf&quot;&gt;Linear Algebra Review and Reference&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Matrix calculus in Deep Learning
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;http://cs231n.stanford.edu/handouts/derivatives.pdf&quot;&gt;Derivatives, Backpropagation, and Vectorization&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://web.stanford.edu/class/cs224n/readings/gradient-notes.pdf&quot;&gt;Computing Neural Network Gradients&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;http://cs229.stanford.edu/summer2020/cs229-prob.pdf&quot;&gt;Review of Probability Theory&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2&gt;還有哪些需要注意的嗎？&lt;/h2&gt;
-
-&lt;p&gt;文章的架構大致為引言、主內容、Checkpoint、參考資料、延伸閱讀，後三者可有可無。歡迎利用 Checkpoint 來自我檢驗是否理解文中的內容了，參考資料深入探究不懂的地方，以及延伸閱讀來拓展知識。&lt;/p&gt;
-
-&lt;p&gt;參考資料和延伸閱讀，寫得真的很棒的資料，前面會加 👍，有興趣的人可以點連結閱讀。&lt;/p&gt;
-
-&lt;p&gt;另外，文中的部分專業名詞會用 English，就不翻成中文了。有些翻成中文很彆扭的詞我也會用英文，上面有示範 paper 和 project。反正你們以後查資料也應該要用英文，何必浪費時間再翻譯一次。&lt;/p&gt;
-
-&lt;h2&gt;Code 連結&lt;/h2&gt;
-
-&lt;p&gt;原始碼都放在 GitHub：&lt;a href=&quot;https://github.com/pyliaorachel/knock-knock-deep-learning&quot;&gt;pyliaorachel/knock-knock-deep-learning&lt;/a&gt;。&lt;/p&gt;
-</description>
-        <pubDate>Tue, 15 Sep 2020 00:00:00 -0700</pubDate>
-        <link>/blog/tech/ai/2020/09/15/day0-preread.html</link>
-        <guid isPermaLink="true">/blog/tech/ai/2020/09/15/day0-preread.html</guid>
-        
-        <category>AI</category>
-        
-        <category>Deep Learning</category>
-        
-        <category>Knock Knock! Deep Learning</category>
-        
-        
-        <category>Blog</category>
-        
-        <category>Tech</category>
-        
-        <category>AI</category>
-        
-      </item>
     
       <item>
         <title>用 Python 玩硬體：MicroPython 簡介與實作</title>
@@ -2087,6 +1814,848 @@ int slow_calc(int x, int a = 0, int b = 0);
         <category>Tech</category>
         
         <category>DeepLearning</category>
+        
+      </item>
+    
+      <item>
+        <title>Python的import陷阱</title>
+        <description>&lt;p&gt;在脫離Python幼幼班準備建立稍大型的專案的時候，學習如何組織化你的Python專案是一大要點。Python提供的&lt;strong&gt;module（模組）&lt;/strong&gt;與&lt;strong&gt;package（套件）&lt;/strong&gt;是建立架構的基本元件，但在module之間為了重複使用一些function（函數）或class（類別）而必須互相&lt;strong&gt;import（匯入）&lt;/strong&gt;，使用上一個不注意就會掉入混亂的import陷阱。&lt;/p&gt;
+
+&lt;p&gt;此篇將會從基本module和package介紹起，提點基本import語法及absolute import和relative import的用法與差異，最後舉出幾個常見因為錯誤import觀念造成的錯誤。&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;&lt;em&gt;* 請注意，以下只針對Python3進行講解與測試。&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2&gt;Module與Package&lt;/h2&gt;
+
+&lt;p&gt;基本上一個file就是一個module，裡頭可以定義function，class，和variable。&lt;br&gt;
+把一個module想成一個file，那一個package就是一個folder了。Package可裝有subpackage和module，讓你的專案更條理更組織化，最後一坨打包好還能分給別人使用。&lt;/p&gt;
+
+&lt;p&gt;先看看module。假設有一個module &lt;code&gt;sample_module.py&lt;/code&gt; 裡頭定義了一個function &lt;code&gt;sample_func&lt;/code&gt; ：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sample_func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Hello!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;現在你在同一個目錄裡下有另一個module &lt;code&gt;sample_module_import.py&lt;/code&gt; 想要重複使用這個function，這時可以直接從 &lt;code&gt;sample_module&lt;/code&gt; import拿取：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;sample_module&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sample_func&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'__main__'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sample_func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;跑 &lt;code&gt;python3 sample_module_import.py&lt;/code&gt; 會得到：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;Hello!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;再來是package。我們把上面兩個檔案包在一個新的folder &lt;code&gt;sample_package&lt;/code&gt; 底下：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;sample_package/
+├── __init__.py
+├── sample_module.py
+└── sample_module_import.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;很重要的是新增那個 &lt;code&gt;__init__.py&lt;/code&gt; 檔。它是空的沒關係，但一定要有，有點宣稱自己是一個package的味道。&lt;/p&gt;
+
+&lt;p&gt;這時候如果是進到 &lt;code&gt;sample_package&lt;/code&gt; 裡面跑一樣的指令，那沒差。但既然都打包成package了，通常是需要在package以外的地方下指令的，這時候裡面的import就要稍微做因應。&lt;/p&gt;
+
+&lt;p&gt;假設這時我們在跟 &lt;code&gt;sample_package&lt;/code&gt; 同一個folder底下，讓我們修正一下 &lt;code&gt;sample_package/sample_module_import.py&lt;/code&gt; ：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;s&quot;&gt;'''跑在`sample_package`底下（非常見情況）'''&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# from sample_module import sample_func&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;'''跑在跟`sample_package`同folder底下'''&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.sample_module&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sample_func&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;'''或'''&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# from sample_package.sample_module import sample_func&lt;/span&gt;
+
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'__main__'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sample_func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;這邊兩種解來自於absolute import和relative import的選擇，等等再提。總之我們可以跑了：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python3 -m sample_package.sample_module_import
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;修好了。這邊&lt;a href=&quot;https://docs.python.org/2/using/cmdline.html#cmdoption-m&quot;&gt;&lt;code&gt;-m&lt;/code&gt;&lt;/a&gt;是為了讓Python先import你要的package或module給你，然後再執行script。所以這邊 &lt;code&gt;sample_module_import&lt;/code&gt; 在跑的時候，是以 &lt;code&gt;sample_package&lt;/code&gt; 為環境的，這樣那些import才不會出錯。&lt;/p&gt;
+
+&lt;h2&gt;基本import語法&lt;/h2&gt;
+
+&lt;p&gt;前面有看過了，這邊統整介紹一下。如果你想使用在其他module裡定義的function、class、variable等等，就需要在使用它們之前先進行import。通常都會把需要import的module們列在整個file的最一開始，但不是必須。&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;s&quot;&gt;'''語法1：import [module]'''&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Import整個`random`module&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;random&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# 使用`random`module底下的`randint`function&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;random&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;randint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;'''語法2：from [module] import [name1, name2, ...]'''&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 從`random`module裡import其中一個function`randint`&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;random&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;randint&lt;/span&gt; 
+
+&lt;span class=&quot;c&quot;&gt;# 不一樣的是，使用`randint`的時候就不需要先寫`random`了&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;randint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;'''語法3：import [module] as [new_name]'''&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Import整個`random`module，但這個名字可能跟其他地方有衝突，改名成`rd`&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;random&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;rd&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# 使用`rd`這個名稱取代原本的`random`&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;randint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;'''語法4（不推薦）：from [module] import *'''&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Import所有`random`module底下的東西&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;random&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# 使用`randint`的時候也不需要先寫`random`&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;randint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;語法4不推薦原因是容易造成名稱衝突，降低可讀性和可維護性。&lt;/p&gt;
+
+&lt;h2&gt;Absolute Import v.s. Relative Import&lt;/h2&gt;
+
+&lt;p&gt;Python有兩種import方法，&lt;strong&gt;absolute import&lt;/strong&gt;及&lt;strong&gt;relative import&lt;/strong&gt;。Absolute import就是完整使用module路徑，relative import則是使用以當前package為參考的相對路徑。Relative import的需求在於，有時候在改變專案架構的時候，裡面的package和module會拉來拉去，這時候如果這些package裡面使用的是relative import的話，他們的相對關係就不會改變，也就是不需要再一一進入module裡更改路徑。但因為relative import的路徑取決於當前package，所以在哪裡執行就會造成不一樣的結果，一不小心又要噴一堆error；這時absolute import就會減少許多困擾。&lt;/p&gt;
+
+&lt;p&gt;這邊參考&lt;a href=&quot;https://www.python.org/dev/peps/pep-0328/#guido-s-decision&quot;&gt;PEP328&lt;/a&gt;提供的範例。Package架構如下：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;package/
+    __init__.py
+    subpackage1/
+        __init__.py
+        moduleX.py
+        moduleY.py
+    subpackage2/
+        __init__.py
+        moduleZ.py
+    moduleA.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;現在假設&lt;code&gt;package/subpackage1/moduleX.py&lt;/code&gt;想要從其他module裡import一些東西，則使用下列語法：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;s&quot;&gt;'''[A]表Absolute import範例；[R]表Relative import範例'''&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# Import同一個package底下的sibling module `moduleY`&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;package.subpackage1&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moduleY&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moduleY&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.moduleY&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# 從同一個package底下的sibling module `moduleY` import `spam`這個function&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;package.subpackage1.moduleY&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;spam&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.moduleY&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;spam&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# 從隔壁package底下的module `moduleZ` import `eggs`這個function&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;package.subpackage2.moduleZ&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eggs&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;..subpackage2.moduleZ&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eggs&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Import parent package底下的module `moduleA`&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moduleA&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;R&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;..&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moduleA&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;或&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;...package&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;moduleA&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;要點：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Relative import裡，&lt;code&gt;.&lt;/code&gt;代表上一層，幾個&lt;code&gt;.&lt;/code&gt;就代表上幾層。&lt;/li&gt;
+&lt;li&gt;Relative import一律採用 &lt;code&gt;from ... import ...&lt;/code&gt; 語法，即使是從 &lt;code&gt;.&lt;/code&gt; import也要寫 &lt;code&gt;from . import some_module&lt;/code&gt; 而非 &lt;code&gt;import .some_module&lt;/code&gt;。原因是&lt;code&gt;.some_module&lt;/code&gt;這個名稱在expression裡無法出現。Absolute import則無限制。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;常見import陷阱&lt;/h2&gt;
+
+&lt;h4&gt;Circular Import&lt;/h4&gt;
+
+&lt;p&gt;想像一個module &lt;code&gt;A&lt;/code&gt; 在一開始要import另一個module &lt;code&gt;B&lt;/code&gt; 裡的東西，但在匯入module &lt;code&gt;B&lt;/code&gt; 的途中必須先執行它，而很不巧的它也需要從module &lt;code&gt;A&lt;/code&gt; import一些東西。但module &lt;code&gt;A&lt;/code&gt;還正在執行途中，自己都還沒定義好自己的function啊！於是你不讓我我不讓你，這種類似deadlock的情形正是常見的&lt;strong&gt;circular import（循環匯入）&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;讓我們看看範例。現在在 &lt;code&gt;sample_package&lt;/code&gt; 裡有 &lt;code&gt;A&lt;/code&gt; 和 &lt;code&gt;B&lt;/code&gt; 兩個module想互打招呼，程式碼分別如下：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;# A.py&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.B&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B_greet_back&lt;/span&gt;
+
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;A_say_hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'A says hello!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;B_greet_back&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;A_greet_back&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'A says hello back!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'__main__'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;A_say_hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;# B.py&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.A&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A_greet_back&lt;/span&gt;
+
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;B_say_hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'B says hello!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;A_greet_back&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;B_greet_back&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'B says hello back!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;__name__&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'__main__'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;B_say_hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;內容都一樣，只是&lt;code&gt;A/B&lt;/code&gt;互換。&lt;code&gt;B&lt;/code&gt; 很有禮貌想先打招呼。在與 &lt;code&gt;sample_package&lt;/code&gt; 同目錄底下執行：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python3 -m sample_package.B
+
+&amp;gt;&amp;gt;&amp;gt;
+Traceback &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;most recent call last&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/usr/local/Cellar/python3/3.6.2/Frameworks/Python.framework/Versions/3.6/lib/python3.6/runpy.py&quot;&lt;/span&gt;, line 193, &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;_run_module_as_main
+    &lt;span class=&quot;s2&quot;&gt;&quot;__main__&quot;&lt;/span&gt;, mod_spec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/usr/local/Cellar/python3/3.6.2/Frameworks/Python.framework/Versions/3.6/lib/python3.6/runpy.py&quot;&lt;/span&gt;, line 85, &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;_run_code
+    &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;code, run_globals&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/path/to/sample_package/B.py&quot;&lt;/span&gt;, line 2, &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &amp;lt;module&amp;gt;
+    from .A import A_greet_back
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/path/to/sample_package/A.py&quot;&lt;/span&gt;, line 1, &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &amp;lt;module&amp;gt;
+    from .B import B_greet_back
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/path/to/sample_package/B.py&quot;&lt;/span&gt;, line 2, &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &amp;lt;module&amp;gt;
+    from .A import A_greet_back
+ImportError: cannot import name &lt;span class=&quot;s1&quot;&gt;'A_greet_back'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;觀察到了嗎？&lt;code&gt;B&lt;/code&gt; 試圖import &lt;code&gt;A_greet_back&lt;/code&gt;，但途中先進到 &lt;code&gt;A&lt;/code&gt; 執行，而因為Python是從頭開始一行一行執行下來的，於是在定義 &lt;code&gt;A_greet_back&lt;/code&gt; 之前會先碰到自己的import statement，於是又進入 &lt;code&gt;B&lt;/code&gt;，然後陷入死胡同。&lt;/p&gt;
+
+&lt;p&gt;常見解決這種circular import的方法如下：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Import整個module而非單一attribute  &lt;/p&gt;
+
+&lt;p&gt;把 &lt;code&gt;B.py&lt;/code&gt; 更改成如下：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;# from .A import A_greet_back&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;B_say_hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'B says hello!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;# A_greet_back()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A_greet_back&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;就不會發生錯誤：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python3 -m sample_package.B
+
+&amp;gt;&amp;gt;&amp;gt;
+B says hello!
+A says hello back!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;理由是，執行 &lt;code&gt;from .A import A_greet_back&lt;/code&gt; 被迫要從load進來的 &lt;code&gt;A&lt;/code&gt; module object中找出 &lt;code&gt;A_greet_back&lt;/code&gt; 的定義，但此時這個module object還是空的；而 &lt;code&gt;from . import A&lt;/code&gt; 就只會檢查 &lt;code&gt;A&lt;/code&gt; module object 存不存在，至於 &lt;code&gt;A_greet_back&lt;/code&gt; 存不存在等到需要執行的時候再去找就行了。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;延遲import  &lt;/p&gt;
+
+&lt;p&gt;把 &lt;code&gt;B.py&lt;/code&gt; 更改成如下：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;# 前面全刪&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;B_say_hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.A&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A_greet_back&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'B says hello!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;A_greet_back&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;也會成功跑出結果。跟前面類似，Python在跑到這行時才會import &lt;code&gt;A&lt;/code&gt; module，這時因為 &lt;code&gt;B&lt;/code&gt; module都已經load完了，所以不會有circular import的問題。但這個方法比較hacky一點，大概只能在hackathon中使用，否則正式專案裡看到這種難維護的code可能會有生命危險。 &lt;/p&gt;
+
+&lt;p&gt;另一方面，把所有import statement擺到整個module最後面也是類似效果，但也會被打。&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;好好釐清架構，避免circular import&lt;/p&gt;
+
+&lt;p&gt;是的，治本方法還是好好思考自己寫的code為什麼會陷入這種危機，然後重新refactor吧。&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;Relative Import above Top-level Package&lt;/h4&gt;
+
+&lt;p&gt;還不熟悉relative import的人常常會見到這個error：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;ValueError: attempted relative import beyond top-level package
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;讓我們重現一下這個error。把 &lt;code&gt;B.py&lt;/code&gt; 前頭更改成如下：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;c&quot;&gt;# from . import A&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;..sample_package&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;現在我們的路徑位置在與 &lt;code&gt;sample_package&lt;/code&gt; 同目錄底下。跑：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python3 -m sample_package.B
+
+&amp;gt;&amp;gt;&amp;gt;
+Traceback &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;most recent call last&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/usr/local/Cellar/python3/3.6.2/Frameworks/Python.framework/Versions/3.6/lib/python3.6/runpy.py&quot;&lt;/span&gt;, line 193, &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;_run_module_as_main
+    &lt;span class=&quot;s2&quot;&gt;&quot;__main__&quot;&lt;/span&gt;, mod_spec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/usr/local/Cellar/python3/3.6.2/Frameworks/Python.framework/Versions/3.6/lib/python3.6/runpy.py&quot;&lt;/span&gt;, line 85, &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;_run_code
+    &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;code, run_globals&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  File &lt;span class=&quot;s2&quot;&gt;&quot;/path/to/sample_package/B.py&quot;&lt;/span&gt;, line 5, &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &amp;lt;module&amp;gt;
+    from ..sample_package import A
+ValueError: attempted relative import beyond top-level package
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;所謂的 &lt;code&gt;top-level package&lt;/code&gt; 就是你所執行的package中最高的那一層，也就是 &lt;code&gt;sample_package&lt;/code&gt;。超過這一層的relative import是不被允許的，指的就是 &lt;code&gt;..sample_package&lt;/code&gt; 這行嘗試跳兩層上去而超過 &lt;code&gt;sample_package&lt;/code&gt;了。  &lt;/p&gt;
+
+&lt;p&gt;可以試試更改當前目錄到上一層（&lt;code&gt;cd ..&lt;/code&gt;），假設叫 &lt;code&gt;parent_folder&lt;/code&gt; ，然後執行 &lt;code&gt;python3 -m parent_folder.sample_package.B&lt;/code&gt;，就會發現error消失了，因為現在的 &lt;code&gt;top-level package&lt;/code&gt; 已經變成 &lt;code&gt;parent_folder&lt;/code&gt;了。&lt;/p&gt;
+
+&lt;h2&gt;結語&lt;/h2&gt;
+
+&lt;p&gt;Import是各大語言必備功能，看似簡單，使用上來說陷阱卻頗多。如果搞不清楚Python中的import是怎麼運作的，除了在整體專案架構上難以靈活設計，更可能要陷入可怕的error海了。&lt;/p&gt;
+
+&lt;p&gt;我寫了一些額外的sample code放上&lt;a href=&quot;https://github.com/pyliaorachel/python-import-traps&quot;&gt;github&lt;/a&gt;了，有不清楚的地方可以直接參考。&lt;/p&gt;
+
+&lt;h2&gt;參考資料&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.python.org/2/tutorial/modules.html&quot;&gt;Python Documentation - Modules&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.python.org/3/reference/import.html&quot;&gt;Python Documnetation - the Import System&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.tutorialspoint.com/python/python_modules.htm&quot;&gt;tutorialspoint - Python Modules&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.python.org/dev/peps/pep-0328/#guido-s-decision&quot;&gt;PEP328 -- Imports: Multi-Line and Absolute/Relative&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://effbot.org/zone/import-confusion.htm&quot;&gt;Importing Python Modules&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.blog.pythonlibrary.org/2016/03/01/python-101-all-about-imports/&quot;&gt;Python 101: All about imports&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 15 Sep 2017 00:00:00 -0700</pubDate>
+        <link>/blog/tech/python/2017/09/15/pythons-import-trap.html</link>
+        <guid isPermaLink="true">/blog/tech/python/2017/09/15/pythons-import-trap.html</guid>
+        
+        <category>Python</category>
+        
+        <category>PyLadies</category>
+        
+        
+        <category>Blog</category>
+        
+        <category>Tech</category>
+        
+        <category>Python</category>
+        
+      </item>
+    
+      <item>
+        <title>Getting Started with Docker Running Flask, RedisDB, and NGINX</title>
+        <description>&lt;p&gt;&lt;strong&gt;Docker&lt;/strong&gt; is a trending term nowadays. 
+The concept is called container, which provides isolation for different applications and
+makes possible for the application to be shipped and run on a diversity of platforms.&lt;/p&gt;
+
+&lt;p&gt;In this tutorial, the basic concepts of Docker will be covered, some basic commands introduced, and finally a tutorial on
+how to deploy a &lt;strong&gt;Flask&lt;/strong&gt; app connected to a &lt;strong&gt;Redis&lt;/strong&gt; database and served on &lt;strong&gt;NGINX&lt;/strong&gt; with docker network will be covered.&lt;/p&gt;
+
+&lt;!--more--&gt;
+
+&lt;h2&gt;Content&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Introducing Docker &amp;amp; Setup&lt;/li&gt;
+&lt;li&gt;Basic Commands&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Hands On Time: A Flask Project on Docker&lt;/em&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;Introducing Docker&lt;/h2&gt;
+
+&lt;h4&gt;The Purpose of Containers&lt;/h4&gt;
+
+&lt;p&gt;For biginners, you can think of &lt;strong&gt;container&lt;/strong&gt; as a &lt;strong&gt;virtual machine&lt;/strong&gt;, or even just a machine. 
+The underlying infrastructure and mechanism is of course not the same, but you will know the purpose of using containers: &lt;strong&gt;running applications independently&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;For developers, you often bump into the problem when you want to ship a single application to a different platform 
+-- everything regarding the environment might need to be reconfigured again, which means another round of pain. 
+With docker, all the dependencies are packed together with the code into a single container, which you can just lift and go.&lt;/p&gt;
+
+&lt;p&gt;Unlike bulky VMs, which include the entire OS kernel, containers are more lightweight and require less resource.&lt;/p&gt;
+
+&lt;p align=&quot;center&quot;&gt;
+  &lt;img src=&quot;https://www.docker.com/sites/default/files/Container%402x.png&quot; alt=&quot;container infrastructure&quot; width=&quot;300px&quot; height=&quot;300px&quot; /&gt;
+  &lt;img src=&quot;https://www.docker.com/sites/default/files/VM%402x.png&quot; alt=&quot;vm infrastructure&quot; width=&quot;300px&quot; height=&quot;300px&quot; /&gt;
+&lt;/p&gt;
+
+&lt;h4&gt;Setup&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/get-started/#setup&quot;&gt;Install &amp;amp; Setup Docker&lt;/a&gt; &lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/compose/install/&quot;&gt;Install Docker Compose&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;Glossary&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https://hub.docker.com/&quot;&gt;DockerHub&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;A place for sharing images&lt;/strong&gt;.
+Share your image, or pull existing images from here.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/engine/userguide/storagedriver/imagesandcontainers/&quot;&gt;Image&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;A package including code, libraries, environment variables, and config files that can be run&lt;/strong&gt;.
+Think of it as a set of configurations for a single environment. Hence images can be created, downloaded, shared, etc.
+All it waits for is to be executed, which becomes a container.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/engine/userguide/storagedriver/imagesandcontainers/&quot;&gt;Container&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;A running instance of an image&lt;/strong&gt;.
+Images are configurations residing in storage, and containers bring them into memory.
+Think of &lt;strong&gt;image&lt;/strong&gt; as a certain static environment configuration, and &lt;strong&gt;containers&lt;/strong&gt; are created once you load and run the environment; there can be many container instances running a certain image, but one image defines only one environment.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/engine/swarm/how-swarm-mode-works/services/&quot;&gt;Service&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;An image for a microservice in the context of some larger applications which you with to run in distributed environment&lt;/strong&gt;. You can scale services by starting a set of replicated containers. Docker compose is used to define a set of services.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/engine/tutorials/dockervolumes/#data-volumes&quot;&gt;Volume&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;A directory providing persistent and sharable data&lt;/strong&gt;.
+With out volumes, data will be destroyed once the container is removed.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/get-started/part2/#dockerfile&quot;&gt;Dockerfile&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;An environment configuration file for starting your container.&lt;/strong&gt; 
+The file is composed of a set of instructions related to setting up the environment, 
+such as &lt;em&gt;move this and that to docker&lt;/em&gt;, &lt;em&gt;make this and that port accessible&lt;/em&gt;, &lt;em&gt;run this and that commands when starting&lt;/em&gt;, etc.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/engine/userguide/networking/&quot;&gt;Docker Network&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;A mechanism for a cluster of containers to communicate with each other.&lt;/strong&gt; 
+For a single project, it may contain several containers, one for web app, one for database, one for proxy server, etc.
+Docker network provides a way for them to communicate with each other, while different docker networks remain isolated. More conveniently, while the IP address of each container is dynamic, the name of it in a network is static, hence provide a way to access, for example, container &lt;code&gt;example&lt;/code&gt; with port &lt;code&gt;8080&lt;/code&gt; published, via &lt;code&gt;http://example:8080&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/compose/overview/&quot;&gt;Docker Compose&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;A tool for defining and running a cluster of containers.&lt;/strong&gt;
+For the single project consisting of serveral containers, you may have to &lt;code&gt;docker run&lt;/code&gt; them individually to start the single service.
+Docker compose lets you create and run your services with a single command. Definitions are written in &lt;code&gt;docker-compose.yml&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4&gt;Don&amp;#39;t Mix Up...&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/21553353/what-is-the-difference-between-cmd-and-entrypoint-in-a-dockerfile&quot;&gt;&lt;code&gt;ENTRYPOINT&lt;/code&gt; v.s. &lt;code&gt;CMD&lt;/code&gt;&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Both somehow specify which commands to run when started. 
+The default &lt;code&gt;ENTRYPOINT&lt;/code&gt;, or &lt;code&gt;entrypoint&lt;/code&gt; in &lt;code&gt;docker-compose.yml&lt;/code&gt;, is &lt;code&gt;/bin/sh -c&lt;/code&gt;; the default &lt;code&gt;CMD&lt;/code&gt; is &lt;code&gt;bash&lt;/code&gt;. 
+Consider the command &lt;code&gt;docker run -it some-image /bin/bash&lt;/code&gt;; everything after &lt;code&gt;some-image&lt;/code&gt; is the &lt;code&gt;CMD&lt;/code&gt; (in this case &lt;code&gt;/bin/bash&lt;/code&gt;). 
+Running this command will run &lt;code&gt;ENTRYPOINT + CMD&lt;/code&gt;, i.e. &lt;code&gt;/bin/sh -c /bin/bash&lt;/code&gt;.
+E.g. if you specify the &lt;code&gt;ENTRYPOINT&lt;/code&gt; as &lt;code&gt;ls&lt;/code&gt; and &lt;code&gt;CMD&lt;/code&gt; as &lt;code&gt;.&lt;/code&gt;, the full command looks like &lt;code&gt;docker run --entrypoint=&amp;quot;ls&amp;quot; some-image .&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/22111060/difference-between-expose-and-publish-in-docker&quot;&gt;&lt;code&gt;EXPOSE&lt;/code&gt; v.s. &lt;code&gt;-p&lt;/code&gt;&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;EXPOSE&lt;/code&gt;, or &lt;code&gt;expose&lt;/code&gt; in &lt;code&gt;docker-compose.yml&lt;/code&gt;, is for inter-container communications, e.g. using docker network; 
+the port exposed won&amp;#39;t be accessible to outside of the docker. 
+&lt;code&gt;-p&lt;/code&gt;, or &lt;code&gt;ports&lt;/code&gt; in &lt;code&gt;docker-compose.yml&lt;/code&gt;, publishes the port to the world, including all other containers.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;Basic Commands&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://docs.docker.com/engine/reference/commandline/image/&quot;&gt;Image&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;# List the current images you have and their details&lt;/span&gt;
+docker images
+
+&lt;span class=&quot;c&quot;&gt;# Download/upload an image from registry&lt;/span&gt;
+docker pull &amp;lt;image-name&amp;gt;[:&amp;lt;tag&amp;gt;]
+    &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; docker pull nginx:latest
+    &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; docker pull someuser/his-image
+
+docker push &amp;lt;image-name&amp;gt;[:&amp;lt;tag&amp;gt;]
+    &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; docker push me/my-image
+
+&lt;span class=&quot;c&quot;&gt;# Remove images&lt;/span&gt;
+docker rmi &amp;lt;image-name|image-id|image-tag&amp;gt;
+
+&lt;span class=&quot;c&quot;&gt;# Remove all images&lt;/span&gt;
+docker rmi &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;docker images -q&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# Create image using Dockerfile under specified path&lt;/span&gt;
+docker build -t &amp;lt;image-name&amp;gt;[:&amp;lt;tag&amp;gt;] &amp;lt;path-to-directory-containing-dockerfile&amp;gt;
+    &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; docker build -t me/my-image .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://docs.docker.com/engine/reference/run/&quot;&gt;Container&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;# List all running containers&lt;/span&gt;
+docker ps
+
+&lt;span class=&quot;c&quot;&gt;# Show container details&lt;/span&gt;
+docker inspect &amp;lt;container-name|container-id&amp;gt;
+
+&lt;span class=&quot;c&quot;&gt;# Run an image&lt;/span&gt;
+docker run &amp;lt;image-name&amp;gt;
+
+&lt;span class=&quot;c&quot;&gt;# Run an image with container name assigned&lt;/span&gt;
+docker run --name &amp;lt;container-name&amp;gt; &amp;lt;image-name&amp;gt;
+
+&lt;span class=&quot;c&quot;&gt;# Run an image in interative mode, interact with the bash shell created in the container&lt;/span&gt;
+docker run -it &amp;lt;image-name&amp;gt; /bin/bash
+
+&lt;span class=&quot;c&quot;&gt;# Run an image in detached mode, i.e. in background&lt;/span&gt;
+docker run -d &amp;lt;image-name&amp;gt;
+
+&lt;span class=&quot;c&quot;&gt;# Automatically remove the container when it exits&lt;/span&gt;
+docker run --rm &amp;lt;image-name&amp;gt;
+
+&lt;span class=&quot;c&quot;&gt;# Run an image on published port, mapping the port exposed by the container to the host port on my machine&lt;/span&gt;
+docker run -p &amp;lt;host-port&amp;gt;:&amp;lt;container-exposed-port&amp;gt; &amp;lt;image-name&amp;gt;
+    &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; docker run -p 80:8080 nginx
+
+&lt;span class=&quot;c&quot;&gt;# Run an image with volume specified, sharing the directory in the user's path to the container's path&lt;/span&gt;
+docker run -v &amp;lt;user-path&amp;gt;:&amp;lt;container-path&amp;gt; &amp;lt;image-name&amp;gt;
+    &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; docker run -v /etc/nginx:/etc/nginx nginx
+
+&lt;span class=&quot;c&quot;&gt;# Stop a container&lt;/span&gt;
+docker stop &amp;lt;container-name&amp;gt;
+
+&lt;span class=&quot;c&quot;&gt;# Remove a container&lt;/span&gt;
+docker rm &amp;lt;container-name|container-id&amp;gt;
+
+&lt;span class=&quot;c&quot;&gt;# Remove all containers&lt;/span&gt;
+docker rm &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;docker ps -a -q&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://docs.docker.com/engine/reference/commandline/network/&quot;&gt;Docker Network&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;# List all networks&lt;/span&gt;
+docker network ls
+
+&lt;span class=&quot;c&quot;&gt;# Create a network&lt;/span&gt;
+docker network create &amp;lt;network-name&amp;gt;
+
+&lt;span class=&quot;c&quot;&gt;# Connect a network to a container&lt;/span&gt;
+docker network connect &amp;lt;network-name&amp;gt; &amp;lt;container-name&amp;gt;
+
+&lt;span class=&quot;c&quot;&gt;# Or, run a container with network specified&lt;/span&gt;
+docker run --net &amp;lt;network-name&amp;gt; &amp;lt;image-name&amp;gt;
+
+&lt;span class=&quot;c&quot;&gt;# Show network details&lt;/span&gt;
+docker network inspect &amp;lt;network-name&amp;gt;
+
+&lt;span class=&quot;c&quot;&gt;# Remove a network&lt;/span&gt;
+docker network rm &amp;lt;network-name&amp;gt;
+
+&lt;span class=&quot;c&quot;&gt;# Disconnet a container from a network&lt;/span&gt;
+docker network disconnect &amp;lt;network-name&amp;gt; &amp;lt;container-name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&quot;https://docs.docker.com/compose/reference/overview/&quot;&gt;Docker Compose&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;# (Re)create and run the service&lt;/span&gt;
+docker-compose up
+
+&lt;span class=&quot;c&quot;&gt;# Remove stopped services&lt;/span&gt;
+docker-compose rm
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2&gt;Hands On Time: A Flask Project on Docker&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/pyliaorachel/docker-flask-redis-nginx-ssl&quot;&gt;Source code&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In this tutorial, we will create a network first so that containers can communicate within this network. Then we create and test the 3 containers, flask app, redis db, and nginx server, one by one. Finally, we demonstrate how to use docker compose to start the 3 services all at once.&lt;/p&gt;
+
+&lt;h4&gt;Init Project&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Create project named &lt;code&gt;example&lt;/code&gt; with the structure below. Different services are seperated into different folders, each running a container (or serveral containers, if you want to scale).&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;.
+├── README.md
+└── src
+    ├── docker-compose.yml                      &lt;span class=&quot;c&quot;&gt;# docker compose configuration&lt;/span&gt;
+    ├── flaskapp                                &lt;span class=&quot;c&quot;&gt;# Service 1&lt;/span&gt;
+    │   ├── Dockerfile                            &lt;span class=&quot;c&quot;&gt;# image configuration&lt;/span&gt;
+    │   ├── __init__.py
+    │   ├── example
+    │   │   ├── __init__.py
+    │   │   ├── app.py                            &lt;span class=&quot;c&quot;&gt;# flask app entry&lt;/span&gt;
+    │   │   ├── db.py                             &lt;span class=&quot;c&quot;&gt;# APIs to redis db&lt;/span&gt;
+    │   │   └── wsgi.py                           &lt;span class=&quot;c&quot;&gt;# WSGI server entry&lt;/span&gt;
+    │   ├── requirements.txt                      &lt;span class=&quot;c&quot;&gt;# dependency information (production)&lt;/span&gt;
+    │   └── setup.py                              &lt;span class=&quot;c&quot;&gt;# dependency information (development)&lt;/span&gt;
+    ├── nginx                                   &lt;span class=&quot;c&quot;&gt;# Service 2&lt;/span&gt;
+    │   ├── Dockerfile                            &lt;span class=&quot;c&quot;&gt;# image configuration&lt;/span&gt;
+    │   ├── __init__.py
+    │   └── nginx.conf                            &lt;span class=&quot;c&quot;&gt;# nginx server configuration&lt;/span&gt;
+    └── redisdb                                 &lt;span class=&quot;c&quot;&gt;# Service 3&lt;/span&gt;
+        ├── Dockerfile                            &lt;span class=&quot;c&quot;&gt;# image configuration&lt;/span&gt;
+        ├── __init__.py
+        └── redis.conf                            &lt;span class=&quot;c&quot;&gt;# redis server configuration&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Create &lt;code&gt;virtualenv&lt;/code&gt; for each container. Since only &lt;code&gt;flaskapp&lt;/code&gt; need a python environment, we only create this one.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;src/flaskapp
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;virtualenv venv
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Install Packages in &lt;code&gt;virtualenv&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;src/flaskapp
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source &lt;/span&gt;venv/bin/activate
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;venv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pip3 install -e . &lt;span class=&quot;c&quot;&gt;# dev mode&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;venv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;deactivate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Note that &lt;code&gt;virtualenv&lt;/code&gt; is optional. It can help you test your project in isolated python environment before you deploy it on docker.&lt;/p&gt;
+
+&lt;h4&gt;Create Docker Network&lt;/h4&gt;
+
+&lt;p&gt;Create a &lt;a href=&quot;https://docs.docker.com/engine/userguide/networking/&quot;&gt;Docker network&lt;/a&gt; for communication between the 3 containers below. We will name the network &lt;code&gt;example&lt;/code&gt;, which is the same as our project name.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker network create example
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker network ls
+&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;NETWORK ID          NAME                DRIVER              SCOPE
+&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;...
+&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;abcdefghijkl        example             bridge              &lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Flask App Container&lt;/h4&gt;
+
+&lt;p&gt;The following assumes &lt;code&gt;venv&lt;/code&gt; in &lt;code&gt;src/flaskapp&lt;/code&gt; is activated.&lt;/p&gt;
+
+&lt;h6&gt;Add Flask App &amp;amp; Gunicorn&lt;/h6&gt;
+
+&lt;p&gt;See &lt;code&gt;src/flaskapp/example/app.py&lt;/code&gt; and &lt;code&gt;src/flaskapp/example/wsgi.py&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;venv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;src/flaskapp
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;venv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gunicorn --bind 0.0.0.0:8080 example.wsgi
+
+&lt;span class=&quot;c&quot;&gt;# Open browser and go to `localhost:8080`. You should see `Hello World!`.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Freeze dependencies into &lt;code&gt;requirements.txt&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;venv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pip3 freeze | grep -v &lt;span class=&quot;s1&quot;&gt;'exampleflask'&lt;/span&gt; &amp;gt; requirements.txt &lt;span class=&quot;c&quot;&gt;# ignore dependency on itself&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h6&gt;&lt;a href=&quot;https://www.smartfile.com/blog/dockerizing-a-python-flask-application/&quot;&gt;Deploy on Docker&lt;/a&gt;&lt;/h6&gt;
+
+&lt;p&gt;See &lt;code&gt;src/flaskapp/Dockerfile&lt;/code&gt;. &lt;code&gt;venv&lt;/code&gt; is made ignored by adding it in &lt;code&gt;.dockerignore&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Build image with tag &lt;code&gt;yourusername/exampleflask&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;src/flaskapp
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker build -t yourusername/exampleflask .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Run container on image &lt;code&gt;yourusername/exampleflask&lt;/code&gt; with name &lt;code&gt;exampleflask&lt;/code&gt;, publish port &lt;code&gt;8080&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -d --rm -p 8080:8080 --name exampleflask yourusername/exampleflask
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Open browser and go to &lt;code&gt;localhost:8080&lt;/code&gt;. You should see &lt;code&gt;Hello World!&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Redis DB Container&lt;/h4&gt;
+
+&lt;p&gt;The following assumes &lt;code&gt;venv&lt;/code&gt; in &lt;code&gt;src/flaskapp&lt;/code&gt; is activated.&lt;/p&gt;
+
+&lt;h6&gt;Add Redis DB to Flask App&lt;/h6&gt;
+
+&lt;p&gt;See &lt;code&gt;src/flaskapp/example/db.py&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Install &lt;a href=&quot;https://redis.io/topics/quickstart&quot;&gt;redis-server&lt;/a&gt; on your local machine first for testing&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;# Start the server on default port `6397`&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;redis-server
+
+&lt;span class=&quot;c&quot;&gt;# Start the flask app&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;venv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;src/flaskapp
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;venv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gunicorn --bind 0.0.0.0:8080 example.wsgi
+
+&lt;span class=&quot;c&quot;&gt;# Open browser and go to `localhost:8080/&amp;lt;your-name&amp;gt;`. You should see `Hello &amp;lt;your-name&amp;gt;!`.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h6&gt;&lt;a href=&quot;https://docs.docker.com/samples/redis/#start-a-redis-instance&quot;&gt;Deploy on Docker&lt;/a&gt;&lt;/h6&gt;
+
+&lt;p&gt;See &lt;code&gt;src/redisdb/Dockerfile&lt;/code&gt; and &lt;code&gt;src/redisdb/redis.conf&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Build image with tag &lt;code&gt;yourusername/exampleredis&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;redisdb
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker build -t yourusername/exampleredis .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Run container on image &lt;code&gt;yourusername/exampleredis&lt;/code&gt; with name &lt;code&gt;exampleredis&lt;/code&gt;, publish port &lt;code&gt;6379&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -d --rm -p 6379:6379 --name exampleredis yourusername/exampleredis
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;redis-cli
+&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;127.0.0.1:6379&amp;gt;
+
+&lt;span class=&quot;c&quot;&gt;# This is wrong&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;&amp;gt; &lt;/span&gt;not connected&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Stop the containers, now run &lt;code&gt;flaskapp&lt;/code&gt; and &lt;code&gt;redisdb&lt;/code&gt; in docker network &lt;code&gt;example&lt;/code&gt; for communication&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker stop exampleflask exampleredis
+
+&lt;span class=&quot;c&quot;&gt;# No need to publish port for redis, &lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# as the port is `EXPOSE`d in `Dockerfile` to other containers in the same docker network&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -d --rm --net example --name exampleredis yourusername/exampleredis
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -d --rm -p 8080:8080 --net example --name exampleflask yourusername/exampleflask
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Open browser and go to &lt;code&gt;localhost:8080/&amp;lt;your-name&amp;gt;&lt;/code&gt;. You should see &lt;code&gt;Hello &amp;lt;your-name&amp;gt;!&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;em&gt;Note&lt;/em&gt; that &lt;code&gt;Dockerfile&lt;/code&gt; is needed only when you want to use your customized redis server configuration written in &lt;code&gt;redis.conf&lt;/code&gt;. 
+If you don&amp;#39;t need a customized configuration, you don&amp;#39;t need to build a new image yourself and can simply use the base image of &lt;code&gt;redis&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -d --rm --net example --name exampleredis redis redis-server
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then modify &lt;code&gt;docker-compose.yml&lt;/code&gt; accordingly.&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yml&quot; data-lang=&quot;yml&quot;&gt;&lt;span class=&quot;nn&quot;&gt;...&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;redis&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;exampleredis&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note&lt;/em&gt; that &lt;code&gt;bind 127.0.0.1&lt;/code&gt; in the &lt;code&gt;redis.conf&lt;/code&gt; file &lt;strong&gt;SHOULD&lt;/strong&gt; be changed into &lt;code&gt;bind 0.0.0.0&lt;/code&gt; or else other containers still cannot access the redis server.&lt;/p&gt;
+
+&lt;h4&gt;NGINX Container&lt;/h4&gt;
+
+&lt;h6&gt;Setup an NGINX Server&lt;/h6&gt;
+
+&lt;p&gt;For &lt;code&gt;HTTP&lt;/code&gt; requests, see &lt;code&gt;src/nginx/nginx.conf.sample&lt;/code&gt; and follow &lt;a href=&quot;https://pyliaorachel.github.io/blog/tech/system/2017/07/07/flask-app-with-gunicorn-on-nginx-server-upon-aws-ec2-linux.html&quot;&gt;this tutorial&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;For &lt;code&gt;HTTPS&lt;/code&gt;requests, see &lt;code&gt;src/nginx/nginx-ssl.conf.sample&lt;/code&gt; and follow &lt;a href=&quot;https://pyliaorachel.github.io/blog/tech/system/2017/07/14/nginx-server-ssl-setup-on-aws-ec2-linux-with-letsencrypt.html&quot;&gt;this tutoiral&lt;/a&gt;. Make sure that you have used &lt;a href=&quot;https://letsencrypt.org/&quot;&gt;letsencrypt&lt;/a&gt; or other means to retrieve the certificate and keys.&lt;/p&gt;
+
+&lt;p&gt;Choose either of them, modify the &lt;code&gt;&amp;lt;your-domain-name&amp;gt;&lt;/code&gt; (and &lt;code&gt;your.domain.name&lt;/code&gt; for &lt;code&gt;HTTPS&lt;/code&gt;) in the &lt;code&gt;*.sample&lt;/code&gt; file, and name it &lt;code&gt;nginx.conf&lt;/code&gt;. For HTTPS, if you did not use &lt;code&gt;letsencrypt&lt;/code&gt;, also change the &lt;code&gt;ssl_certificate&lt;/code&gt; and &lt;code&gt;ssl_certificate_key&lt;/code&gt; to the corresponding paths.&lt;/p&gt;
+
+&lt;h6&gt;&lt;a href=&quot;https://hub.docker.com/_/nginx/&quot;&gt;Deploy on Docker&lt;/a&gt;&lt;/h6&gt;
+
+&lt;p&gt;See &lt;code&gt;src/nginx/Dockerfile&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Build image with tag &lt;code&gt;yourusername/examplenginx&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;src/nginx
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker build -t yourusername/examplenginx .
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Run container on image &lt;code&gt;yourusername/examplenginx&lt;/code&gt; with name &lt;code&gt;examplenginx&lt;/code&gt;, publish port &lt;code&gt;80&lt;/code&gt; (and &lt;code&gt;443&lt;/code&gt; for &lt;code&gt;HTTPS&lt;/code&gt;). (&lt;em&gt;Note that -p 8080:8080 is not needed anymore in starting the flask app container, as we will not access this port directly from the browser anymore but instead access this nginx proxy server&lt;/em&gt;)&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;# HTTP&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -d --rm --net example -p 80:80 --name examplenginx yourusername/examplenginx
+
+&lt;span class=&quot;c&quot;&gt;# HTTPS, share the directory containing SSL certificate with -v&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker run -d --rm --net example -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt --name examplenginx yourusername/examplenginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;HTTP&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Open browser and go to &lt;code&gt;http://localhost&lt;/code&gt;. You should see &lt;code&gt;Hello World!&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;HTTPS&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Open browser and go to &lt;code&gt;https://localhost&lt;/code&gt;. You should see &lt;code&gt;Hello World!&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4&gt;Wrap up the Project with Docker Compose&lt;/h4&gt;
+
+&lt;p&gt;After testing individual containers, you can wrap all the commands up into a single &lt;code&gt;docker-compose.yml&lt;/code&gt; file, and everything can be started in a single command. All the parameters passed in to the commands when you started the containers are now specified in &lt;code&gt;docker-compose.yml&lt;/code&gt;. &lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Docker network is not needed anymore, as docker compose creates a default network for all its services. But to build up a more complex network topology, you can create your custom networks in the &lt;code&gt;docker-compose.yml&lt;/code&gt; file as well.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h6&gt;&lt;a href=&quot;https://runnable.com/docker/docker-compose-networking&quot;&gt;Deploy with Docker Compose&lt;/a&gt;&lt;/h6&gt;
+
+&lt;p&gt;See &lt;code&gt;src/docker-compose.yml&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Start docker compose&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;src
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;docker-compose up
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Test&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;HTTP&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Open browser and go to &lt;code&gt;http://localhost&lt;/code&gt;. You should see &lt;code&gt;Hello World!&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;HTTPS&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Open browser and go to &lt;code&gt;https://localhost&lt;/code&gt;. You should see &lt;code&gt;Hello World!&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+&lt;h4&gt;Debug Tips&lt;/h4&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Use &lt;code&gt;-it&lt;/code&gt; to run containers in interactive mode so that you can test, view logs, curl other containers, etc. under the environment the app is run in&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;docker run -it --rm -p 8080:8080 --net example --name exampleflask yourusername/exampleflask /bin/bash
+  &amp;gt; root@abcdefghijkl:~#
+
+  &lt;span class=&quot;c&quot;&gt;# try curl other containers in the same network&lt;/span&gt;
+  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;root@abcdefghijkl:~# apt-get -qq update &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; apt-get -yqq install curl
+  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;root@abcdefghijkl:~# curl &amp;lt;other-container&amp;gt;:&amp;lt;port&amp;gt;
+  &amp;gt; ...
+
+  &lt;span class=&quot;c&quot;&gt;# list networks&lt;/span&gt;
+  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;root@abcdefghijkl:~# cat /etc/hosts
+  &amp;gt; ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Print the logs of a container&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;docker logs exampleflask
+  &amp;gt; ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;List the running containers to ensure they didn&amp;#39;t encounter errors&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;docker ps
+  CONTAINER ID        IMAGE                       COMMAND                  CREATED             STATUS              PORTS                    NAMES
+  abcdefghijkl        yourusername/exampleflask   &lt;span class=&quot;s2&quot;&gt;&quot;gunicorn --bind 0...&quot;&lt;/span&gt;   some &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;ago       Up some &lt;span class=&quot;nb&quot;&gt;time        &lt;/span&gt;0.0.0.0:8080-&amp;gt;8080/tcp   exampleflask
+  mnopqrstuvwx        yourusername/exampleredis   &lt;span class=&quot;s2&quot;&gt;&quot;docker-entrypoint...&quot;&lt;/span&gt;   some &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;ago       Up some &lt;span class=&quot;nb&quot;&gt;time        &lt;/span&gt;6379/tcp                 exampleredis
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;List information of the network to ensure the containers are run within&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;  &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;docker network inspect example
+  &amp;gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&quot;Name&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;example&quot;&lt;/span&gt;,
+          &lt;span class=&quot;s2&quot;&gt;&quot;Id&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;...&quot;&lt;/span&gt;,
+          &lt;span class=&quot;s2&quot;&gt;&quot;Created&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;...&quot;&lt;/span&gt;,
+          &lt;span class=&quot;s2&quot;&gt;&quot;Scope&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;local&quot;&lt;/span&gt;,
+          &lt;span class=&quot;s2&quot;&gt;&quot;Driver&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;bridge&quot;&lt;/span&gt;,
+          &lt;span class=&quot;s2&quot;&gt;&quot;EnableIPv6&quot;&lt;/span&gt;: &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;,
+          // ...other properties
+          &lt;span class=&quot;s2&quot;&gt;&quot;Containers&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+              &lt;span class=&quot;s2&quot;&gt;&quot;xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&quot;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                  &lt;span class=&quot;s2&quot;&gt;&quot;Name&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;exampleredis&quot;&lt;/span&gt;,
+                  &lt;span class=&quot;s2&quot;&gt;&quot;EndpointID&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy&quot;&lt;/span&gt;,
+                  &lt;span class=&quot;s2&quot;&gt;&quot;MacAddress&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;aa:bb:cc:dd:ee:ff&quot;&lt;/span&gt;,
+                  &lt;span class=&quot;s2&quot;&gt;&quot;IPv4Address&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;w.x.y.z/a&quot;&lt;/span&gt;,
+                  &lt;span class=&quot;s2&quot;&gt;&quot;IPv6Address&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;
+              &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,
+              // ...other container info
+          &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,
+          // ...other properties
+      &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;h2&gt;References&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/&quot;&gt;Official Doc&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://www.patricksoftwareblog.com/how-to-configure-nginx-for-a-flask-web-application/&quot;&gt;How to Configure NGINX for a Flask Web Application&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://blog.codeship.com/orchestrate-containers-for-development-with-docker-compose/&quot;&gt;Orchestrate Containers for Development with Docker Compose&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.smartfile.com/blog/dockerizing-a-python-flask-application/&quot;&gt;Dockerizing a Python Flask Application&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.docker.com/samples/redis/&quot;&gt;Docker Redis Samples&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://runnable.com/docker/docker-compose-networking&quot;&gt;Docker Compose Networking&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 04 Aug 2017 00:00:00 -0700</pubDate>
+        <link>/tutorial/devops/docker/2017/08/04/getting-started-with-docker-running-flask-redisdb-and-nginx.html</link>
+        <guid isPermaLink="true">/tutorial/devops/docker/2017/08/04/getting-started-with-docker-running-flask-redisdb-and-nginx.html</guid>
+        
+        <category>docker</category>
+        
+        <category>flask</category>
+        
+        <category>redisdb</category>
+        
+        <category>nginx</category>
+        
+        
+        <category>Tutorial</category>
+        
+        <category>DevOps</category>
+        
+        <category>Docker</category>
         
       </item>
     
